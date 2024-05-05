@@ -1,0 +1,6 @@
+<properties>
+    <property type="string" id="appVersion">2023.9.8</property>
+    <property type="number" id="Init">0</property>
+    <property type="number" id="Th">0</property>
+    <property type="number" id="ListMoveDown">0</property>
+</properties>

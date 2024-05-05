@@ -1,0 +1,41 @@
+<strings>
+    <string id="AppName">Todo- / Shopping Lists</string>
+
+    <string id="SettingsTh">Theme</string>
+    <string id="ThGrey">Grey</string>
+    <string id="ThRed">Red</string>
+    <string id="ThBaW">Black &amp; White</string>
+
+    <string id="ListRec">List received.</string>
+    <string id="EStorageFull">Storage full!</string>
+    <string id="EStorageError">List could not be stored!</string>
+    <string id="ListDel">List deleted.</string>
+
+    <string id="NoLists">No lists found!</string>
+    <string id="NoListsLink">Double-Tap to open Android AppStore on your Phone</string>
+
+    <string id="ListNotFound">List not found!</string>
+    <string id="ListEmpty">The list is empty.</string>
+
+    <string id="LMSub">%s items</string>
+    
+    <string id="StTitle">Settings</string>
+    <string id="StMoveBottom">Move completed items to the bottom</string>
+    <string id="StDelList">Delete list</string>
+    <string id="DeleteConfirm">Delete the list?</string>
+
+    <string id="StDelAll">Delete all lists</string>
+    <string id="StDelAllConfirm">Delete all lists?</string>
+    <string id="StDelAllDone">All lists where deleted.</string>
+    <string id="StAppStore">Go to Android AppStore</string>
+    <string id="StAppVersion">App Version</string>
+
+    <string id="Yes">Yes</string>
+    <string id="No">No</string>
+
+    <string id="ListDateFormatShort">%D. %M %d.</string>
+    <string id="ListDateFormat">%D. %M %d, %y</string>
+    <string id="ListTimeFormat">%h:%i %ampm</string>
+    <string id="oclock"></string>
+
+</strings>

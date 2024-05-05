@@ -1,0 +1,11 @@
+<drawables>
+    <bitmap id="LauncherIcon" filename="launcher_icon.png" />    
+    <bitmap id="Attention" filename="Attention.png"  packingFormat="default" />
+    <bitmap id="Error" filename="Error.png"  packingFormat="default" />
+    <bitmap id="Success" filename="Success.png"  packingFormat="default" />
+    <bitmap id="Item" filename="Item.png"  packingFormat="default" />
+    <bitmap id="ItemDone" filename="ItemDone.png"  packingFormat="default" />
+    <bitmap id="LineBlue" filename="LineBlue.png"  packingFormat="default" />
+    <bitmap id="LineRed" filename="LineRed.png"  packingFormat="default" />
+    <bitmap id="LineWhite" filename="LineWhite.png"  packingFormat="default" />
+</drawables>

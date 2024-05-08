@@ -1,9 +1,6 @@
-module Themes
-{
-    class Grey extends ThemeSettingsBase
-    {
-        function initialize()
-        {
+module Themes {
+    class Grey extends ThemeSettingsBase {
+        function initialize() {
             self.LineBitmap = Application.loadResource(Rez.Drawables.LineBlue);
 
             self.MainColor = 0xd7d7d7;
@@ -13,7 +10,7 @@ module Themes
             self.ListBackground = 0x383838;
             self.BackgroundColor = 0x282828;
             self.ButtonBorder = 0x12a1ff;
-            self.LineSeparatorColor = 0x667cff;;
+            self.LineSeparatorColor = 0x667cff;
 
             self.ScrollbarBackground = 0x525252;
             self.ScrollbarThumbColor = 0x999999;

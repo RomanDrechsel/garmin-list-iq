@@ -1,6 +1,3 @@
 <fonts>
     <font id="Icons" filename="Icons.fnt" antialias="true" />
-    <font id="Normal" filename="Normal.fnt" antialias="true" />
-    <font id="Small" filename="Small.fnt" antialias="true" />
-    <font id="Large" filename="Large.fnt" antialias="true" />
 </fonts>

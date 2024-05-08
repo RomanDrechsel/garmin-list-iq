@@ -1,160 +1,127 @@
 import Toybox.Graphics;
 import Toybox.Lang;
+import Toybox.WatchUi;
 import Lists;
-import Views.Controls;
-import Gfx;
+import Controls;
+import Helper;
 
-module Views
-{
-    class ListDetailsView extends CustomView
-    {
-        var VerticalPadding = 10;
+module Views {
+    class ListDetailsView extends Controls.CustomView {
         var ScrollMode = SCROLL_DRAG;
 
         var ListUuid = null;
         private var _listFound = false;
 
         private var _noListLabel = null;
-        private var _itemIcon = Application.loadResource(Rez.Drawables.Item);
-        private var _itemIconDone = Application.loadResource(Rez.Drawables.ItemDone);
+        private var _itemIcon as WatchUi.BitmapResource or Graphics.BitmapReference = Application.loadResource(Rez.Drawables.Item);
+        private var _itemIconDone as WatchUi.BitmapResource or Graphics.BitmapReference = Application.loadResource(Rez.Drawables.ItemDone);
 
-        protected var _fontoverride = Fonts.get(Gfx.FONT_LARGE);
+        protected var _fontoverride = Fonts.Large();
 
-        function initialize(uuid as String)
-        {
+        function initialize(uuid as String) {
             CustomView.initialize();
             self.ListUuid = uuid;
         }
 
-        function onLayout(dc as Dc)
-        {
+        function onLayout(dc as Dc) {
             CustomView.onLayout(dc);
             self._verticalPadding = dc.getHeight() / 15;
         }
 
-        function onShow() as Void
-        {
+        function onShow() as Void {
             CustomView.onShow();
             $.getApp().ListsManager.OnListsChanged.add(self);
-            self.createItems(false);
+            self.publishItems(false);
         }
 
-        function onHide() as Void
-        {
+        function onHide() as Void {
             CustomView.onHide();
             $.getApp().ListsManager.OnListsChanged.remove(self);
         }
 
-        function onUpdate(dc as Dc) as Void
-        {
+        function onUpdate(dc as Dc) as Void {
             CustomView.onUpdate(dc);
             dc.setColor(getTheme().BackgroundColor, getTheme().BackgroundColor);
             dc.clear();
 
-            if (self._listFound == false || self.Items.size() == 0)
-            {
+            if (self._listFound == false || self.Items.size() == 0) {
                 self.noLists(dc);
-            }
-            else
-            {
-                self.drawList();
+            } else {
+                self.drawList(dc);
             }
         }
 
-        function onListTap(position as Number, item as ViewItem) as Void
-        {
-            if (item != null)
-            {
-                if (item.BoundObject == false)
-                {
+        function onListTap(position as Number, item as ViewItem?) as Void {
+            if (item != null) {
+                if (item.BoundObject == false) {
                     item.ColorOverride = getTheme().DisabledColor;
-                    item.setIcon(self.MainLayer, self._itemIconDone);
-                }
-                else
-                {
+                    item.setIcon(self._itemIconDone);
+                } else {
                     item.ColorOverride = null;
-                    item.setIcon(self.MainLayer, self._itemIcon);
+                    item.setIcon(self._itemIcon);
                 }
                 item.BoundObject = !item.BoundObject;
 
                 $.getApp().ListsManager.updateList(self.ListUuid, item.ItemPosition, item.BoundObject);
-                self.createItems(true);
+                self.publishItems(true);
 
                 WatchUi.requestUpdate();
             }
         }
 
-        function onListsChanged(index as ListIndexType) as Void
-        {
-            self.createItems(true);
+        function onListsChanged(index as ListIndexType) as Void {
+            self.publishItems(true);
         }
 
-        function showSettings() as Void
-        {
+        function showSettings() as Void {
             var view = new ListSettingsView(self.ListUuid);
             var delegate = new ListSettingsViewDelegate(view);
             WatchUi.pushView(view, delegate, WatchUi.SLIDE_BLINK);
         }
 
-        private function createItems(update as Boolean) as Void
-        {
+        private function publishItems(request_update as Boolean) as Void {
             self.Items = [];
 
-            var list = getApp().ListsManager.getList(self.ListUuid) as List;
-            if (list == null)
-            {
+            var list = getApp().ListsManager.getList(self.ListUuid) as List?;
+            if (list == null) {
                 self._listFound = false;
-            }
-            else
-            {
+            } else {
                 Application.Storage.setValue("LastList", self.ListUuid);
 
                 self._listFound = true;
-                if (list.hasKey("name"))
-                {
+                if (list.hasKey("name")) {
                     self.setTitle(list.get("name"));
                 }
 
-                if (list.hasKey("items"))
-                {
+                if (list.hasKey("items")) {
                     var settings_movedown = Application.Properties.getValue("ListMoveDown") as Number;
                     var movedown = settings_movedown != null && settings_movedown == 1 ? true : false;
 
                     var ordered = [];
                     var done = [];
 
-                    for (var i = 0; i < list["items"].size(); i++)
-                    {
+                    for (var i = 0; i < list["items"].size(); i++) {
                         var item = list["items"][i];
-                        //System.println(item.)
                         item.put("pos", i);
-                        if (movedown && item.hasKey("d") && item.get("d") == true)
-                        {
+                        if (movedown && item.hasKey("d") && item.get("d") == true) {
                             done.add(item);
-                        }
-                        else
-                        {
+                        } else {
                             ordered.add(item);
                         }
                     }
 
-                    if (done.size() > 0)
-                    {
+                    if (done.size() > 0) {
                         ordered.addAll(done);
                     }
 
-                    for (var i = 0; i < ordered.size(); i++)
-                    {
+                    for (var i = 0; i < ordered.size(); i++) {
                         var item = ordered[i];
                         var icon, obj;
 
-                        if (item.hasKey("d") && item.get("d") == true)
-                        {
+                        if (item.hasKey("d") && item.get("d") == true) {
                             icon = self._itemIconDone;
                             obj = true;
-                        }
-                        else
-                        {
+                        } else {
                             icon = self._itemIcon;
                             obj = false;
                         }
@@ -162,24 +129,18 @@ module Views
                         var text = null;
                         var note = null;
                         var itemobj = item.get("i");
-                        if (itemobj instanceof String)
-                        {
+                        if (itemobj instanceof String) {
                             text = itemobj;
-                        }
-                        else if (itemobj instanceof Array)
-                        {
+                        } else if (itemobj instanceof Array) {
                             text = itemobj[0];
-                            if (itemobj.size() > 1)
-                            {
+                            if (itemobj.size() > 1) {
                                 note = itemobj[1];
                             }
                         }
 
-                        if (text != null)
-                        {
+                        if (text != null) {
                             self.addItem(text, note, obj, icon, item.get("pos"));
-                            if (obj == true)
-                            {
+                            if (obj == true) {
                                 self.Items[self.Items.size() - 1].ColorOverride = getTheme().DisabledColor;
                             }
                         }
@@ -187,31 +148,25 @@ module Views
                 }
             }
 
-            if (update)
-            {
+            if (request_update) {
                 WatchUi.requestUpdate();
             }
         }
 
-        private function noLists(dc as Dc) as Void
-        {
-            if (self._noListLabel == null)
-            {
+        private function noLists(dc as Dc) as Void {
+            if (self._noListLabel == null) {
                 var text;
-                if (self._listFound == false)
-                {
+                if (self._listFound == false) {
                     text = Application.loadResource(Rez.Strings.ListNotFound);
-                }
-                else
-                {
+                } else {
                     text = Application.loadResource(Rez.Strings.ListEmpty);
                 }
-                self._noListLabel = new MultilineLabel(dc, text, dc.getWidth() * 0.8, Fonts.get(Gfx.FONT_NORMAL));
+                self._noListLabel = new MultilineLabel(text, (dc.getWidth() * 0.8).toNumber(), Fonts.Normal());
                 self._noListLabel.Justification = Graphics.TEXT_JUSTIFY_CENTER;
             }
 
             var y = (dc.getHeight() - self._noListLabel.getHeight()) / 2;
-            self._noListLabel.drawText(dc, dc.getWidth() * 0.1, y, 0xffffff);
+            self._noListLabel.drawText(dc, (dc.getWidth() * 0.1).toNumber(), y, $.getTheme().MainColor);
         }
     }
 }

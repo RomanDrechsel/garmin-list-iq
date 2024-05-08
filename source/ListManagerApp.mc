@@ -5,47 +5,40 @@ import Views;
 import Comm;
 import Lists;
 
-class ListManagerApp extends Application.AppBase 
-{
+class ListManagerApp extends Application.AppBase {
     private var ListsReceiver as ListsReceiver;
 
     var ListsManager as ListsManager;
     var startupList = null;
 
-    function initialize() 
-    {
+    function initialize() {
         AppBase.initialize();
         Application.Properties.setValue("appVersion", "2023.9.8");
         self.ListsManager = new ListsManager();
         self.ListsReceiver = new ListsReceiver();
-        self.ListsReceiver.Start();        
+        self.ListsReceiver.Start();
     }
 
-    function onStart(state as Lang.Dictionary?) as Void
-    {
+    function onStart(state as Lang.Dictionary?) as Void {
         self.startupList = Application.Storage.getValue("LastList");
         Application.Storage.deleteValue("LastList");
     }
 
-    function getInitialView() as Array<WatchUi.Views or WatchUi.InputDelegates>? 
-    {
-        var listview = new ListsSelectView();
-        return [ listview, new ListsSelectViewDelegate(listview) ] as Array<WatchUi.Views or InputDelegates>;
+    function getInitialView() as Array<WatchUi.Views or WatchUi.InputDelegates>? {
+        var listview = new Views.ListsSelectView();
+        return [listview, new Views.ListsSelectViewDelegate(listview)] as Array<WatchUi.Views or InputDelegates>;
     }
 
-    function onSettingsChanged() as Void 
-    {
+    function onSettingsChanged() as Void {
         Themes.ThemesLoader.loadTheme();
         WatchUi.requestUpdate();
     }
 }
 
-function getApp() as ListManagerApp 
-{
+function getApp() as ListManagerApp {
     return Application.getApp() as ListManagerApp;
 }
 
-function getAppStore() as String
-{
+function getAppStore() as String {
     return "https://roman-drechsel.de";
 }

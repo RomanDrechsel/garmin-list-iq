@@ -55,6 +55,15 @@ module Controls {
             return self._height;
         }
 
+        function getFullText() as String {
+            var text = "";
+            for (var i = 0; i < self._lines.size(); i++) {
+                text += self._lines[i];
+            }
+
+            return text;
+        }
+
         private function wrapText(dc as Dc, fulltext as String) as Array<String> {
             var ret = [] as Array<String>;
             var _lines = Helper.StringUtil.splitLines(fulltext);

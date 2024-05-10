@@ -9,7 +9,7 @@ module Controls {
 
         function initialize(layer as LayerDef, title as String, identifier as Object, padding as Number) {
             self._padding = (layer.getWidth() * 0.03).toNumber();
-            var maxwidth = layer.getWidth() - 2 * layer.getWidth() * self.TitlePaddingFactor - CustomView.ScrollbarSpace - 2 * self._padding;
+            var maxwidth = layer.getWidth() - 2 * layer.getWidth() * self.TitlePaddingFactor - CustomView.ScrollbarWidth - 2 * self._padding;
             self.Title = new MultilineLabel(title, maxwidth.toNumber(), Fonts.Normal());
             self.Title.Justification = Graphics.TEXT_JUSTIFY_CENTER;
 
@@ -17,6 +17,7 @@ module Controls {
         }
 
         function draw(dc as Dc, ytop as Number, drawline as Boolean) as Number {
+            self.setY(ytop);
             var y = ytop + self._verticalPadding;
 
             self.drawBackground(dc, y);
@@ -32,8 +33,6 @@ module Controls {
                 y = self.drawLine(dc, y);
             }
 
-            self.setBoundaries(ytop, y);
-            self._Visible = true;
             return y;
         }
 

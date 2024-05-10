@@ -18,16 +18,16 @@ module Views {
         function onLayout(dc as Dc) as Void {
             CustomView.onLayout(dc);
 
-            self._verticalPadding = dc.getHeight() / 10;
+            self._verticalMargin = dc.getHeight() / 10;
 
             self.setTitle(Application.loadResource(Rez.Strings.StTitle));
-            self.Items.add(new ButtonViewItem(self._mainLayer, Application.loadResource(Rez.Strings.StDelAll), SETTINGS_DELETEALL, self._verticalPadding));
-            self.Items.add(new ButtonViewItem(self._mainLayer, Application.loadResource(Rez.Strings.StAppStore), SETTINGS_APPSTORE, self._verticalPadding));
+            self.Items.add(new ButtonViewItem(self._mainLayer, Application.loadResource(Rez.Strings.StDelAll), SETTINGS_DELETEALL, self._verticalMargin));
+            self.Items.add(new ButtonViewItem(self._mainLayer, Application.loadResource(Rez.Strings.StAppStore), SETTINGS_APPSTORE, self._verticalMargin));
 
             var str = Application.loadResource(Rez.Strings.StAppVersion);
             var version = Application.Properties.getValue("appVersion");
             str += "\n" + version;
-            var item = new ViewItem(self._mainLayer, null, str, null, null, self._verticalPadding, -1, null);
+            var item = new ViewItem(self._mainLayer, null, str, null, null, self._verticalMargin, -1, null);
             item.Subtitle.Justification = Graphics.TEXT_JUSTIFY_CENTER;
             self.Items.add(item);
         }

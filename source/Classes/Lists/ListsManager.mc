@@ -36,15 +36,16 @@ module Lists {
             list.put("name", listname);
             var items = [];
             for (var i = 0; i < listitems.size(); i++) {
-                if (listitems[i].hasKey("item")) {
-                    if (!listitems[i].hasKey("note")) {
+                var listitem = listitems[i];
+                if (listitem.hasKey("item")) {
+                    if (!listitem.hasKey("note") || listitem["note"] == null) {
                         //only an item
-                        items.add({ "i" => listitems[i]["item"], "d" => false });
+                        items.add({ "i" => listitem["item"], "d" => false });
                     } else {
                         //item with note
                         var item = [] as Array<String>;
-                        item.add(listitems[i]["item"].toString());
-                        item.add(listitems[i]["note"].toString());
+                        item.add(listitem["item"].toString());
+                        item.add(listitem["note"].toString());
                         items.add({ "i" => item, "d" => false });
                     }
                 }

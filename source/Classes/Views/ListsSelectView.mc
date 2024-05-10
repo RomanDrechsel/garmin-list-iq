@@ -8,13 +8,13 @@ import Helper;
 
 module Views {
     class ListsSelectView extends Controls.CustomView {
-        var ScrollMode = SCROLL_SNAP;
         private var _listIconCode = 48;
 
         private var _noListsLabel as MultilineLabel? = null;
         private var _noListsLabel2 as MultilineLabel? = null;
 
         function initialize() {
+            self.ScrollMode = SCROLL_SNAP;
             CustomView.initialize();
         }
 
@@ -112,32 +112,33 @@ module Views {
         }
 
         private function noLists(dc as Dc) as Void {
-            var width = dc.getWidth() - 2 * self._margin;
-            var height = dc.getHeight() - 2 * self._margin;
-            var padding = 0;
-            if (self._margin == 0) {
-                padding = width * 0.1;
+            var width = dc.getWidth() - 2 * self._horizonalMargin;
+            var height = dc.getHeight() - 2 * self._verticalMargin;
+
+            var hor_padding;
+            if (self._horizonalMargin == 0) {
+                hor_padding = width * 0.1;
             }
 
             if (self._noListsLabel == null) {
-                self._noListsLabel = new MultilineLabel(Application.loadResource(Rez.Strings.NoLists), width - 2 * padding, Fonts.Normal());
+                self._noListsLabel = new MultilineLabel(Application.loadResource(Rez.Strings.NoLists), width - 2 * hor_padding, Fonts.Normal());
                 self._noListsLabel.Justification = Graphics.TEXT_JUSTIFY_CENTER;
 
                 var init = Application.Properties.getValue("Init") as Number;
                 if (init == null || init < 1) {
-                    self._noListsLabel2 = new MultilineLabel(Application.loadResource(Rez.Strings.NoListsLink), width - 2 * padding, Fonts.Small());
+                    self._noListsLabel2 = new MultilineLabel(Application.loadResource(Rez.Strings.NoListsLink), width - 2 * hor_padding, Fonts.Small());
                     self._noListsLabel2.Justification = Graphics.TEXT_JUSTIFY_CENTER;
                 } else {
                     self._noListsLabel2 = null;
                 }
             }
 
-            var y = ((height - self._noListsLabel.getHeight(dc)) * 0.3 + self._margin).toNumber();
-            self._noListsLabel.drawText(dc, self._margin + padding, y, 0xffffff);
+            var y = ((height - self._noListsLabel.getHeight(dc)) * 0.3 + self._verticalMargin).toNumber();
+            self._noListsLabel.drawText(dc, self._horizonalMargin + hor_padding, y, 0xffffff);
 
             if (self._noListsLabel2 != null) {
-                y = height - self._noListsLabel2.getHeight(dc) - 20 + self._margin;
-                self._noListsLabel2.drawText(dc, self._margin + padding, y, 0xbdbdbd);
+                y = height - self._noListsLabel2.getHeight(dc) - 20 + self._verticalMargin;
+                self._noListsLabel2.drawText(dc, self._horizonalMargin + hor_padding, y, 0xbdbdbd);
             }
         }
 

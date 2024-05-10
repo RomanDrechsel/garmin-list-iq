@@ -26,7 +26,7 @@ module Views {
 
         function onLayout(dc as Dc) as Void {
             CustomView.onLayout(dc);
-            self._verticalPadding = dc.getHeight() / 10;
+            self._verticalMargin = dc.getHeight() / 10;
 
             var settings_movedown = Application.Properties.getValue("ListMoveDown") as Number;
             if (settings_movedown != null && settings_movedown == 1) {
@@ -37,7 +37,7 @@ module Views {
 
             self.setTitle(Application.loadResource(Rez.Strings.StTitle));
             self.addItem(Application.loadResource(Rez.Strings.StMoveBottom), null, SETTINGS_MOVEDOWN, self._settingsMoveDown ? self._itemIconCheck : self._itemIconUncheck, -1);
-            self.Items.add(new ButtonViewItem(self._mainLayer, Application.loadResource(Rez.Strings.StDelList), SETTINGS_DELETE, self._verticalPadding));
+            self.Items.add(new ButtonViewItem(self._mainLayer, Application.loadResource(Rez.Strings.StDelList), SETTINGS_DELETE, self._verticalMargin));
         }
 
         function onUpdate(dc as Dc) as Void {

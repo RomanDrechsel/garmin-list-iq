@@ -25,7 +25,7 @@ module Views {
 
         function onLayout(dc as Dc) {
             CustomView.onLayout(dc);
-            self._verticalPadding = dc.getHeight() / 15;
+            self._verticalMargin = dc.getHeight() / 15;
         }
 
         function onShow() as Void {

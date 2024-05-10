@@ -17,26 +17,51 @@ module Controls {
         var ScrollMode = SCROLL_DRAG;
         var UI_dragThreshold = 40;
 
-        static var ScrollbarSpace;
+        static var ScrollbarWidth;
 
-        private var _snapPosition = 0;
-        private var _scrollOffset = 0;
-        private var _paddingTop = null;
-        private var _paddingBottom = null;
+        /** index of the centered item on SCROLL_SNAP - mode */
+        private var _snapPosition as Number? = 0;
+        /** top-padding of the list in SCROLL_SNAP - mode  */
+        private var _paddingTop as Number? = null;
+        /** bottom-padding of the list in SCROLL_SNAP - mode */
+        private var _paddingBottom as Number? = null;
+        /** scroll offset */
+        private var _scrollOffset as Number = 0;
 
-        protected var _margin = 0;
-        protected var _verticalPadding = 0;
-        protected var _BarWidthFactor = 0.05;
-        protected var _fontoverride = null;
+        /** additional vertical margin of the list */
+        protected var _verticalMargin as Number = 0;
+        /** horizontal margin of the list in SCROLL_SNAP - mode */
+        protected var _horizonalMargin as Number = 0;
 
-        protected var _scrollbar;
-        protected var _hasTitle = false;
+        /** percentage of the width of the scrollbar */
+        protected var _BarWidthFactor as Float = 0.05;
 
+        /** special font for the Title-label of the items */
+        protected var _fontoverride as FontResource? = null;
+
+        /** scrollbar drawer */
+        protected var _scrollbar as Scrollbar.Round or Scrollbar.Rectangle;
+        /** is there already a title-item in items-list */
+        protected var _hasTitle as Boolean = false;
+
+        /** main layer for the list */
         protected var _mainLayer as LayerDef?;
+        /** layer for the scrollbar */
         protected var _scrollbarLayer as LayerDef?;
 
-        protected var _totalHeight as Number? = null;
+        /**
+         * total height of the list, with Padding of top and bottom
+         * null means there is a calculation nessesary
+         */
+        protected var _viewHeight as Number? = null;
+        /**
+         * is a scrollbar needed?
+         * null means there is a calculation nessesary
+         */
         protected var _needScrollbar as Boolean? = null;
+
+        /** is a new validation needed? */
+        private var _needValidation as Boolean = true;
 
         function initialize() {
             View.initialize();
@@ -44,33 +69,32 @@ module Controls {
         }
 
         function onLayout(dc as Dc) {
+            View.onLayout(dc);
             dc.setAntiAlias(true);
 
-            View.onLayout(dc);
-
             self.UI_dragThreshold = (dc.getHeight() / 6).toNumber();
-            self._verticalPadding = dc.getHeight() / 30;
+            self._verticalMargin = dc.getHeight() / 30;
 
-            self._margin = 0;
             if (System.getDeviceSettings().screenShape == System.SCREEN_SHAPE_ROUND) {
                 var radius = dc.getWidth() / 2;
-                self._margin = (radius - radius * Math.sin(Math.toRadians(45))).toNumber();
+                self._horizonalMargin = (radius - radius * Math.sin(Math.toRadians(45))).toNumber();
             }
 
-            self.ScrollbarSpace = ((dc.getWidth() - 2 * self._margin) * self._BarWidthFactor).toNumber();
+            self.ScrollbarWidth = ((dc.getWidth() - 2 * self._horizonalMargin) * self._BarWidthFactor).toNumber();
 
-            var layerwidth = dc.getWidth() - 2 * self._margin;
-            self._mainLayer = new LayerDef(dc, self._margin, 0, layerwidth, dc.getHeight());
+            var layerwidth = dc.getWidth() - 2 * self._horizonalMargin - self.ScrollbarWidth;
+            self._mainLayer = new LayerDef(dc, self._horizonalMargin, 0, layerwidth, dc.getHeight());
             if (System.getDeviceSettings().screenShape == System.SCREEN_SHAPE_ROUND) {
                 self._scrollbarLayer = new LayerDef(dc, dc.getWidth() / 2, 0, dc.getWidth() / 2, dc.getHeight());
-                self._scrollbar = new Scrollbar.Round(self._scrollbarLayer, self.ScrollbarSpace);
-                self.ScrollbarSpace = 0;
+                self._scrollbar = new Scrollbar.Round(self._scrollbarLayer, self.ScrollbarWidth);
+                self.ScrollbarWidth = 0;
             } else {
-                var barX = self._mainLayer.getX() + self._mainLayer.getWidth() - self.ScrollbarSpace;
-                self._scrollbarLayer = new LayerDef(dc, barX, self._mainLayer.getY(), self.ScrollbarSpace, self._mainLayer.getHeight());
+                var barX = self._mainLayer.getX() + self._mainLayer.getWidth();
+                self._scrollbarLayer = new LayerDef(dc, barX, self._mainLayer.getY(), self.ScrollbarWidth, self._mainLayer.getHeight());
                 self._scrollbar = new Scrollbar.Rectangle(self._scrollbarLayer);
             }
 
+            self._needValidation = true;
             self.validate(dc);
         }
 
@@ -79,53 +103,27 @@ module Controls {
                 return;
             }
 
-            self.validate(dc);
-
             dc.setColor(getTheme().ListBackground, getTheme().ListBackground);
             dc.clear();
-            dc.setAntiAlias(true);
+
+            self.validate(dc);
 
             if (self.Items.size() > 0) {
-                var y;
-                if (self.ScrollMode == SCROLL_SNAP) {
-                    y = self.getCenterItem(dc, self._snapPosition);
-                    if (self._snapPosition == 0 && y < self._margin) {
-                        y = self._margin;
-                    }
-                } else {
-                    y = self._scrollOffset + self._margin;
-                }
-
-                var scrollY = y - self.getPaddingTop(dc) - self._margin;
-                scrollY *= -1;
-
                 for (var i = 0; i < self.Items.size(); i++) {
-                    var item = self.Items[i];
-                    if (y > dc.getHeight()) {
-                        //outside lower screenborder
-                        item.setBoundaries(-1, -1);
-                    } else if (y < item.getHeight(dc) * -1) {
-                        //outside upper screenborder
-                        item.setBoundaries(-1, -1);
-                        y += item.getHeight(dc);
-                    } else {
-                        y = item.draw(dc, y, i != self.Items.size() - 1);
-                    }
+                    self.Items[i].draw(dc, self._scrollOffset, i != self.Items.size() - 1);
                 }
 
-                if (self._scrollbar != null && self._scrollbarLayer != null) {
-                    var totalheight = self.getTotalHeight();
-                    var viewport = dc.getHeight() - self._margin * 2;
-                    var maxscroll = totalheight - viewport;
-                    self._scrollbar.draw(dc, scrollY.toFloat(), maxscroll.toFloat(), totalheight.toFloat(), viewport);
+                if (self._needScrollbar) {
+                    self._scrollbar.draw(dc, self._scrollOffset, self._viewHeight);
                 }
             }
         }
 
         function addItem(title as String, substring as String?, identifier as Object?, icon as Number or BitmapResource or Null, position as Number) as Void {
-            self.Items.add(new ViewItem(self._mainLayer, title, substring, identifier, icon, self._verticalPadding, position, self._fontoverride));
-            self._totalHeight = null;
-            self._needScrollbar = null;
+            self.Items.add(new ViewItem(self._mainLayer, title, substring, identifier, icon, self._verticalMargin, position, self._fontoverride));
+            self._needValidation = true;
+            self._paddingTop = null;
+            self._paddingBottom = null;
         }
 
         function setTitle(title as String?) as Void {
@@ -143,8 +141,7 @@ module Controls {
                 if (items.size() > 0) {
                     self.Items.addAll(items);
                 }
-                self._totalHeight = null;
-                self._needScrollbar = null;
+                self._needValidation = true;
             }
         }
 
@@ -160,25 +157,23 @@ module Controls {
                 return;
             }
 
+            var startoffset = self._scrollOffset;
+
             if (self.ScrollMode == SCROLL_SNAP) {
                 self.moveIterator(delta > 0 ? 1 : -1);
             } else if (self.needScrollbar()) {
-                var startoffset = self._scrollOffset;
+                //delta is negative when scrolling down, else positive
+                if (delta > self._scrollOffset) {
+                    delta = self._scrollOffset;
+                }
                 self._scrollOffset -= delta;
-
-                var viewport = self._mainLayer.getHeight() - self._margin * 2;
-                var maxscroll = self.getTotalHeight() - viewport;
-                var minY = -maxscroll;
-
-                if (self._scrollOffset < minY) {
-                    self._scrollOffset = minY;
-                } else if (self._scrollOffset > 0) {
-                    self._scrollOffset = 0;
+                if (self._scrollOffset > self._viewHeight - self._mainLayer.getHeight()) {
+                    self._scrollOffset = self._viewHeight - self._mainLayer.getHeight();
                 }
+            }
 
-                if (startoffset != self._scrollOffset) {
-                    WatchUi.requestUpdate();
-                }
+            if (startoffset != self._scrollOffset) {
+                WatchUi.requestUpdate();
             }
         }
 
@@ -186,14 +181,6 @@ module Controls {
         function onDoubleTap(x as Number, y as Number) as Void;
 
         function onTap(x as Number, y as Number) as Boolean {
-            if (self._mainLayer == null) {
-                return false;
-            }
-
-            if (x < self._mainLayer.getX() || x > self._mainLayer.getX() + self._mainLayer.getWidth() || y < self._mainLayer.getY() || y > self._mainLayer.getY() + self._mainLayer.getHeight()) {
-                return false;
-            }
-
             for (var i = 0; i < self.Items.size(); i++) {
                 var item = self.Items[i];
                 if (item.Clicked(y)) {
@@ -210,7 +197,6 @@ module Controls {
                 self._snapPosition = 0;
                 return;
             }
-            var pos = self._snapPosition;
             self._snapPosition += delta;
             if (self._snapPosition < 0) {
                 self._snapPosition = 0;
@@ -219,33 +205,38 @@ module Controls {
             if (self._snapPosition > self.Items.size() - 1) {
                 self._snapPosition = self.Items.size() - 1;
             }
+            self.centerItem(self._snapPosition);
+        }
 
-            if (pos != self._snapPosition) {
-                WatchUi.requestUpdate();
+        private function getHeight() {
+            if (self._viewHeight != null) {
+                return self._viewHeight;
+            } else {
+                return 0;
             }
         }
 
-        private function getCenterItem(dc as Dc, index as Number) as Number {
-            var y = 0;
-            for (var i = 0; i < index; i++) {
-                y -= (self.Items[i] as ViewItem).getHeight(dc);
-            }
+        private function centerItem(index as Number) {
+            var y = self.Items[index].getListY(); //upper edge of the item
+            var h = self.Items[index].getHeight(null); // height of the item
+            var c = y + h / 2; // center point of the item
 
-            y += (self._mainLayer.getHeight() - (self.Items[index] as ViewItem).getHeight(dc)) / 2;
-            return y;
+            self._scrollOffset = c - self._mainLayer.getHeight() / 2;
+            if (self._scrollOffset < 0) {
+                self._scrollOffset = 0;
+            } else if (self._scrollOffset > self._viewHeight - self._mainLayer.getHeight()) {
+                self._scrollOffset = self._viewHeight - self._mainLayer.getHeight();
+            }
+            Log("Center item " + index + " at offset " + self._scrollOffset);
         }
 
-        private function getTotalHeight() as Number {
-            if (self._totalHeight == null) {
-                return -1;
-            }
-            return self._totalHeight;
-        }
-
+        /**
+         * on SCROLL_SNAP - mode returns the padding of the top of the first item
+         */
         private function getPaddingTop(dc as Dc) as Number {
             if (self._paddingTop == null) {
                 if (self.ScrollMode == SCROLL_SNAP && self.Items.size() > 0) {
-                    self._paddingTop = self._mainLayer.getHeight() / 2 - self._margin - (self.Items[0].getHeight(dc) / 2).toNumber();
+                    self._paddingTop = self._mainLayer.getHeight() / 2 - self._verticalMargin - (self.Items[0].getHeight(dc) / 2).toNumber();
                 } else {
                     self._paddingTop = 0;
                 }
@@ -254,10 +245,13 @@ module Controls {
             return self._paddingTop;
         }
 
+        /**
+         * on SCROLL_SNAP - mode returns the padding of the bottom of the last item
+         */
         private function getPaddingBottom(dc as Dc) as Number {
             if (self._paddingBottom == null) {
                 if (self.ScrollMode == SCROLL_SNAP && self.Items.size() > 0) {
-                    self._paddingBottom = self._mainLayer.getHeight() / 2 - self._margin - (self.Items[self.Items.size() - 1].getHeight(dc) / 2).toNumber();
+                    self._paddingBottom = self._mainLayer.getHeight() / 2 - self._verticalMargin - (self.Items[self.Items.size() - 1].getHeight(dc) / 2).toNumber();
                 } else {
                     self._paddingBottom = 0;
                 }
@@ -265,18 +259,31 @@ module Controls {
             return self._paddingBottom;
         }
 
-        protected function validate(dc as Dc) {
-            if (self._totalHeight == null) {
-                self._totalHeight = 0;
-                for (var i = 0; i < self.Items.size(); i++) {
-                    self._totalHeight += (self.Items[i] as ViewItem).getHeight(dc);
-                }
-
-                self._totalHeight += self.getPaddingTop(dc) + self.getPaddingBottom(dc);
+        /** returns the height of all listitems */
+        private function getListHeight(dc as Dc) as Number {
+            var height = 0;
+            for (var i = 0; i < self.Items.size(); i++) {
+                height += (self.Items[i] as ViewItem).getHeight(dc);
             }
 
-            if (self._needScrollbar == null) {
-                self._needScrollbar = self._mainLayer.getHeight() - self._margin * 2 < self._totalHeight;
+            return height;
+        }
+
+        /**
+         * calculate the total height of the list and if a scrollbar is needed
+         * and set the relative y-coordinates for all items
+         */
+        protected function validate(dc as Dc) {
+            if (self._needValidation == true) {
+                var y = self._verticalMargin + self.getPaddingTop(dc);
+                for (var i = 0; i < self.Items.size(); i++) {
+                    var item = self.Items[i];
+                    item.setListY(y);
+                    y += item.getHeight(dc);
+                }
+
+                self._viewHeight = y + self.getPaddingBottom(dc) + self._verticalMargin;
+                self._needScrollbar = self._mainLayer.getHeight() < self._viewHeight;
             }
         }
     }

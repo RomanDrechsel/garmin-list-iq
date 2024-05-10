@@ -9,16 +9,12 @@ module Controls {
                 self._layer = layer;
             }
 
-            function draw(dc as Dc, value as Float, maxvalue as Float, totalheight as Float, viewport as Number) as Void {
-                if (totalheight <= viewport) {
-                    return;
-                }
-
+            function draw(dc as Dc, value as Float, maxvalue as Float) as Void {
                 //background
                 dc.setColor(getTheme().ScrollbarBackground, Graphics.COLOR_TRANSPARENT);
                 dc.fillRectangle(self._layer.getX(), self._layer.getY(), self._layer.getWidth(), self._layer.getHeight());
 
-                var viewratio = viewport / totalheight;
+                /*var viewratio = viewport / totalheight;
                 var thumbHeight = (self._layer.getHeight() * viewratio).toNumber();
                 if (thumbHeight < 10) {
                     thumbHeight = 10;
@@ -28,11 +24,16 @@ module Controls {
 
                 var posratio = value / maxvalue;
                 var thumbY = posratio * self._layer.getHeight();
-                thumbY -= thumbHeight * posratio;
+                thumbY -= thumbHeight * posratio;*/
+
+                var thumbHeight = (self._layer.getHeight() * self._layer.getHeight()) / maxvalue;
+                var thumbCenter = (value / maxvalue) * self._layer.getHeight();
+                thumbCenter *= 1 - value / maxvalue;
+                var thumbTop = thumbCenter - thumbHeight / 2;
 
                 //thumb background
                 dc.setColor(getTheme().ScrollbarThumbBorder, Graphics.COLOR_TRANSPARENT);
-                dc.fillRoundedRectangle(self._layer.getX(), self._layer.getY() + thumbY, self._layer.getWidth(), thumbHeight, self._layer.getWidth() / 3);
+                dc.fillRoundedRectangle(self._layer.getX(), self._layer.getY() + thumbTop, self._layer.getWidth(), thumbHeight, self._layer.getWidth() / 3);
 
                 //thumb
                 var borderwidth_y = thumbHeight / 8;
@@ -45,7 +46,7 @@ module Controls {
                 }
 
                 dc.setColor(getTheme().ScrollbarThumbColor, Graphics.COLOR_TRANSPARENT);
-                dc.fillRoundedRectangle(self._layer.getX() + borderwidth_x, self._layer.getY() + thumbY + borderwidth_y, self._layer.getWidth() - borderwidth_x * 2, thumbHeight - borderwidth_y * 2, self._layer.getWidth() / 3);
+                dc.fillRoundedRectangle(self._layer.getX() + borderwidth_x, self._layer.getY() + thumbTop + borderwidth_y, self._layer.getWidth() - borderwidth_x * 2, thumbHeight - borderwidth_y * 2, self._layer.getWidth() / 3);
             }
         }
     }

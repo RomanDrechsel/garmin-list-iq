@@ -2,8 +2,11 @@
     "tabWidth": 4,
     "semi": true,
     "singleQuote": false,
+    "bracketSpacing": true,
     "trailingComma": "all",
     "bracketSameLine": true,
     "printWidth": 350,
-    "singleAttributePerLine": false
+    "singleAttributePerLine": false,
+    "jsxBracketSameLine": false,
+    "arrowParens": "avoid"
 }

@@ -47,7 +47,7 @@ module Controls {
             self.calcVisible(dc, yOffset);
 
             if (self._isVisible == false) {
-                Log("Item: " + self.Title.getFullText() + " is not visible");
+                Log("Item: " + self.ItemPosition + " is not visible");
                 return self.getHeight(dc);
             }
 
@@ -87,8 +87,6 @@ module Controls {
             if (drawline) {
                 viewport_y = self.drawLine(dc, viewport_y);
             }
-
-            self._Height = viewport_y - self._listY - yOffset; //TODO: Height ist nich richtig berechnet ...
             return self._Height;
         }
 
@@ -112,12 +110,12 @@ module Controls {
                 self._isVisible = true;
             }
 
-            Log(self.Title.getFullText());
+            /*Log(self.Title.getFullText());
             Log("Height: " + height);
             Log("Offset: " + yOffset);
             Log("ListY: " + self._listY);
             Log("IsVisible: " + self._isVisible);
-            Log("-----");
+            Log("-----");*/
 
             return self._isVisible;
         }
@@ -145,7 +143,6 @@ module Controls {
                         self._Height += 2;
                     }
                 }
-
                 return self._Height;
             } else if (self._Height != null && self._Height >= 0) {
                 return self._Height;

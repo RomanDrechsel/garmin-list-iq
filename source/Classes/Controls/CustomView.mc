@@ -162,12 +162,11 @@ module Controls {
             if (self.ScrollMode == SCROLL_SNAP) {
                 self.moveIterator(delta > 0 ? 1 : -1);
             } else if (self.needScrollbar()) {
-                //delta is negative when scrolling down, else positive
-                if (delta > self._scrollOffset) {
-                    delta = self._scrollOffset;
-                }
-                self._scrollOffset -= delta;
-                if (self._scrollOffset > self._viewHeight - self._mainLayer.getHeight()) {
+                //delta is negative when scrolling up, else positive
+                self._scrollOffset += delta;
+                if (self._scrollOffset < 0) {
+                    self._scrollOffset = 0;
+                } else if (self._scrollOffset > self._viewHeight - self._mainLayer.getHeight()) {
                     self._scrollOffset = self._viewHeight - self._mainLayer.getHeight();
                 }
             }

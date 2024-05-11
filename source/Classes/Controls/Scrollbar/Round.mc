@@ -14,8 +14,8 @@ module Controls {
                 self._layer = layer;
             }
 
-            function draw(dc as Dc, value as Float, maxvalue as Float, totalheight as Float, viewport as Number) as Void {
-                if (totalheight < viewport) {
+            function draw(dc as Dc, value as Number, maxvalue as Number) as Void {
+                if (maxvalue == 0) {
                     return;
                 }
 
@@ -27,23 +27,21 @@ module Controls {
                 self.drawDot(dc, self._startDegree, radius, self._scrollbarWidth);
                 self.drawDot(dc, -self._startDegree, radius, self._scrollbarWidth);
 
+                //calculate thumb
                 var scrollbarheight = self._startDegree * 2;
-                var viewratio = viewport / totalheight;
-
-                var thumbHeight = (scrollbarheight * viewratio).toNumber();
+                var thumbHeight = (scrollbarheight * scrollbarheight) / maxvalue;
                 if (thumbHeight < 12) {
                     thumbHeight = 12;
                 } else if (thumbHeight > scrollbarheight) {
                     thumbHeight = scrollbarheight;
                 }
 
-                var posratio = value / maxvalue;
-                var thumbY = posratio * scrollbarheight;
-                thumbY -= thumbHeight * posratio;
+                var thumbTop = (value.toFloat() / maxvalue.toFloat()) * (scrollbarheight - thumbHeight);
 
                 //thumb background
-                var startdegree = self._startDegree - thumbY;
+                var startdegree = self._startDegree - thumbTop;
                 var enddegree = startdegree - thumbHeight;
+                var drawY = thumbTop;
 
                 dc.setColor(getTheme().ScrollbarThumbBorder, Graphics.COLOR_TRANSPARENT);
                 dc.drawArc(self._layer.getX(), self._layer.getY() + self._layer.getHeight() / 2, radius, Graphics.ARC_CLOCKWISE, startdegree, enddegree);
@@ -61,9 +59,9 @@ module Controls {
                     thumbHeight = 4;
                 }
 
-                thumbY += borderwidth;
+                drawY += borderwidth;
 
-                startdegree = self._startDegree - thumbY;
+                startdegree = self._startDegree - drawY;
                 enddegree = startdegree - thumbHeight;
 
                 var pen = self._scrollbarWidth - 2 * borderwidth;

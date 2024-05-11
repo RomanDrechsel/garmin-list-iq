@@ -13,21 +13,10 @@ module Controls {
                 if (maxvalue == 0) {
                     return;
                 }
+
                 //background
                 dc.setColor(getTheme().ScrollbarBackground, Graphics.COLOR_TRANSPARENT);
                 dc.fillRectangle(self._layer.getX(), self._layer.getY(), self._layer.getWidth(), self._layer.getHeight());
-
-                /*var viewratio = viewport / totalheight;
-                var thumbHeight = (self._layer.getHeight() * viewratio).toNumber();
-                if (thumbHeight < 10) {
-                    thumbHeight = 10;
-                } else if (thumbHeight > self._layer.getHeight()) {
-                    thumbHeight = self._layer.getHeight();
-                }
-
-                var posratio = value / maxvalue;
-                var thumbY = posratio * self._layer.getHeight();
-                thumbY -= thumbHeight * posratio;*/
 
                 var thumbHeight = (self._layer.getHeight() * self._layer.getHeight()) / maxvalue;
                 if (thumbHeight < 10) {

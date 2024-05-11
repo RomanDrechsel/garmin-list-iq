@@ -114,7 +114,7 @@ module Controls {
                 }
 
                 if (self._needScrollbar) {
-                    self._scrollbar.draw(dc, self._scrollOffset, self._viewHeight);
+                    self._scrollbar.draw(dc, self._scrollOffset, self._viewHeight - self._mainLayer.getHeight());
                 }
             }
         }

@@ -4,6 +4,7 @@ import Toybox.Lang;
 import Toybox.Time;
 import Lists;
 import Controls;
+import Controls.Listitems;
 import Helper;
 
 module Views {
@@ -48,7 +49,7 @@ module Views {
             }
         }
 
-        function onListTap(position as Number, item as ViewItem?) as Void {
+        function onListTap(position as Number, item as Item?) as Void {
             if (item != null) {
                 self.GotoList(item.BoundObject);
             }
@@ -83,7 +84,7 @@ module Views {
             var lists = index.values() as Array<ListIndexItemType>;
             lists = Helper.MergeSort.Sort(lists, "order");
 
-            self.Items = [] as Array<ViewItem>;
+            self.Items = [] as Array<Item>;
             for (var i = 0; i < lists.size(); i++) {
                 var list = lists[i] as ListIndexItemType;
                 var substring = "";
@@ -112,33 +113,37 @@ module Views {
         }
 
         private function noLists(dc as Dc) as Void {
-            var width = dc.getWidth() - 2 * self._horizonalMargin;
-            var height = dc.getHeight() - 2 * self._verticalMargin;
+            var width = self._mainLayer.getWidth();
 
-            var hor_padding;
-            if (self._horizonalMargin == 0) {
+            var hor_padding = 0;
+            if ($.isRoundDisplay == false) {
                 hor_padding = width * 0.1;
             }
 
             if (self._noListsLabel == null) {
                 self._noListsLabel = new MultilineLabel(Application.loadResource(Rez.Strings.NoLists), width - 2 * hor_padding, Fonts.Normal());
-                self._noListsLabel.Justification = Graphics.TEXT_JUSTIFY_CENTER;
 
-                var init = Application.Properties.getValue("Init") as Number;
+                var init = Application.Properties.getValue("Init") as Number?;
                 if (init == null || init < 1) {
                     self._noListsLabel2 = new MultilineLabel(Application.loadResource(Rez.Strings.NoListsLink), width - 2 * hor_padding, Fonts.Small());
-                    self._noListsLabel2.Justification = Graphics.TEXT_JUSTIFY_CENTER;
                 } else {
                     self._noListsLabel2 = null;
                 }
             }
 
-            var y = ((height - self._noListsLabel.getHeight(dc)) * 0.3 + self._verticalMargin).toNumber();
-            self._noListsLabel.drawText(dc, self._horizonalMargin + hor_padding, y, 0xffffff);
+            var y = self._mainLayer.getY();
+            if ($.isRoundDisplay == false) {
+                y += self._verticalItemMargin;
+            }
+
+            self._noListsLabel.drawText(dc, self._mainLayer.getX() + hor_padding, y, getTheme().MainColor, Graphics.TEXT_JUSTIFY_CENTER);
 
             if (self._noListsLabel2 != null) {
-                y = height - self._noListsLabel2.getHeight(dc) - 20 + self._verticalMargin;
-                self._noListsLabel2.drawText(dc, self._horizonalMargin + hor_padding, y, 0xbdbdbd);
+                y = dc.getHeight() - self._noListsLabel2.getHeight(dc) - self._mainLayer.getY();
+                if ($.isRoundDisplay == false) {
+                    y -= self._verticalItemMargin;
+                }
+                self._noListsLabel2.drawText(dc, self._mainLayer.getX() + hor_padding, y, getTheme().SecondColor, Graphics.TEXT_JUSTIFY_CENTER);
             }
         }
 

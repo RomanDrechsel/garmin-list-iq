@@ -2,6 +2,7 @@ import Toybox.Graphics;
 import Toybox.Lang;
 import Lists;
 import Controls;
+import Controls.Listitems;
 import Helper;
 
 module Views {
@@ -24,9 +25,8 @@ module Views {
             self.ListUuid = uuid;
         }
 
-        function onLayout(dc as Dc) as Void {
+        function onLayout(dc as Dc) {
             CustomView.onLayout(dc);
-            self._verticalMargin = dc.getHeight() / 10;
 
             var settings_movedown = Application.Properties.getValue("ListMoveDown") as Number;
             if (settings_movedown != null && settings_movedown == 1) {
@@ -36,11 +36,14 @@ module Views {
             }
 
             self.setTitle(Application.loadResource(Rez.Strings.StTitle));
-            self.addItem(Application.loadResource(Rez.Strings.StMoveBottom), null, SETTINGS_MOVEDOWN, self._settingsMoveDown ? self._itemIconCheck : self._itemIconUncheck, -1);
-            self.Items.add(new ButtonViewItem(self._mainLayer, Application.loadResource(Rez.Strings.StDelList), SETTINGS_DELETE, self._verticalMargin));
+
+            var movedown = new Listitems.Item(self._mainLayer, Application.loadResource(Rez.Strings.StMoveBottom), null, SETTINGS_MOVEDOWN, self._settingsMoveDown ? self._itemIconCheck : self._itemIconUncheck, self._verticalItemMargin, 0, null);
+            self.Items.add(movedown);
+
+            self.Items.add(new Listitems.Button(self._mainLayer, Application.loadResource(Rez.Strings.StDelList), SETTINGS_DELETE, self._verticalItemMargin, false));
         }
 
-        function onUpdate(dc as Dc) as Void {
+        function onUpdate(dc as Dc) {
             CustomView.onUpdate(dc);
 
             dc.setColor(getTheme().BackgroundColor, getTheme().BackgroundColor);
@@ -48,7 +51,7 @@ module Views {
             self.drawList(dc);
         }
 
-        function onListTap(position as Number, item as ViewItem?) as Void {
+        function onListTap(position as Number, item as Item?) as Void {
             if (item != null) {
                 if (item.BoundObject == SETTINGS_MOVEDOWN) {
                     if (self._settingsMoveDown) {

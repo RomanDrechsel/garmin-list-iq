@@ -12,13 +12,13 @@
     <string id="ListDel">List deleted.</string>
 
     <string id="NoLists">No lists found!</string>
-    <string id="NoListsLink">Double-Tap to open Android AppStore on your Phone</string>
+    <string id="NoListsLink">Double-Tap to open Android PlayStore on your Phone</string>
 
     <string id="ListNotFound">List not found!</string>
     <string id="ListEmpty">The list is empty.</string>
 
     <string id="LMSub">%s items</string>
-    
+
     <string id="StTitle">Settings</string>
     <string id="StMoveBottom">Move completed items to the bottom</string>
     <string id="StDelList">Delete list</string>

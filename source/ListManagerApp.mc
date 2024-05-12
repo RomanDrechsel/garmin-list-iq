@@ -1,6 +1,7 @@
 import Toybox.Application;
 import Toybox.Lang;
 import Toybox.WatchUi;
+import Toybox.System;
 import Views;
 import Comm;
 import Lists;
@@ -34,6 +35,8 @@ class ListManagerApp extends Application.AppBase {
         WatchUi.requestUpdate();
     }
 }
+
+var isRoundDisplay = System.getDeviceSettings().screenShape == System.SCREEN_SHAPE_ROUND;
 
 function getApp() as ListManagerApp {
     return Application.getApp() as ListManagerApp;

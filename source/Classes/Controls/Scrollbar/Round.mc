@@ -15,7 +15,7 @@ module Controls {
             }
 
             function draw(dc as Dc, value as Number, maxvalue as Number) as Void {
-                if (maxvalue == 0) {
+                if (maxvalue <= 0) {
                     return;
                 }
 

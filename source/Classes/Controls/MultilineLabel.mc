@@ -5,37 +5,35 @@ module Controls {
     class MultilineLabel {
         private var _lines as Array<String> or String or Null = null;
         private var _maxWidth as Number;
-        private var _font as FontDefinition;
-        private var _height = -1;
+        private var _font as FontType;
+        private var _height as Number = -1;
+        private var _needValidation = true;
 
         private static const linewrappers = ['-'] as Array<Char>;
 
-        var Justification = Graphics.TEXT_JUSTIFY_LEFT;
-
-        function initialize(text as String, _maxWidth as Number, font as FontDefinition) {
+        function initialize(text as String, _maxWidth as Number, font as FontType) {
             self._maxWidth = _maxWidth;
             self._font = font;
             self._lines = text;
         }
 
-        function drawText(dc as Dc, x as Number, topY as Number, color as Number) as Number {
+        function drawText(dc as Dc, x as Number, topY as Number, color as Number, justification as TextJustification) as Number {
             dc.setColor(color, Graphics.COLOR_TRANSPARENT);
-
-            if (self._lines instanceof Lang.String) {
-                self._lines = self.wrapText(dc, self._lines);
-            }
+            self.validate(dc);
 
             var y = topY;
             for (var i = 0; i < self._lines.size(); i++) {
                 var xdraw = x;
-                if (self.Justification == Graphics.TEXT_JUSTIFY_CENTER) {
+                if (justification == Graphics.TEXT_JUSTIFY_CENTER) {
                     xdraw += self._maxWidth / 2;
-                } else if (self.Justification == Graphics.TEXT_JUSTIFY_RIGHT) {
+                } else if (justification == Graphics.TEXT_JUSTIFY_RIGHT) {
                     xdraw += self._maxWidth;
                 }
-                dc.drawText(xdraw, y, self._font, self._lines[i], self.Justification);
+                dc.drawText(xdraw, y, self._font, self._lines[i], justification);
                 y += Graphics.getFontAscent(self._font);
             }
+
+            y += Graphics.getFontDescent(self._font);
 
             self._height = y - topY;
             return self._height;
@@ -50,21 +48,26 @@ module Controls {
 
             if (self._height < 0) {
                 self._height = Graphics.getFontAscent(self._font) * self._lines.size();
+                self._height += Graphics.getFontDescent(self._font);
             }
 
             return self._height;
         }
 
         function getFullText() as String {
+            if (self._lines instanceof String) {
+                return self._lines;
+            }
+
             var text = "";
             for (var i = 0; i < self._lines.size(); i++) {
-                text += self._lines[i];
+                text += self._lines[i] + "\n";
             }
 
             return text;
         }
 
-        private function wrapText(dc as Dc, fulltext as String) as Array<String> {
+        function wrapText(dc as Dc, fulltext as String) as Array<String> {
             var ret = [] as Array<String>;
             var _lines = Helper.StringUtil.splitLines(fulltext);
             for (var j = 0; j < _lines.size(); j++) {
@@ -109,6 +112,22 @@ module Controls {
             }
 
             return ret;
+        }
+
+        function Invalidate() {
+            self._needValidation = true;
+        }
+
+        private function validate(dc as Dc) {
+            if (self._needValidation == true) {
+                if (self._lines instanceof Lang.String) {
+                    self._lines = self.wrapText(dc, self._lines);
+                } else {
+                    self._lines = self.wrapText(dc, self.getFullText());
+                }
+
+                self._needValidation = false;
+            }
         }
     }
 }

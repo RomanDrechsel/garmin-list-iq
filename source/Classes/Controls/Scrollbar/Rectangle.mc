@@ -9,8 +9,8 @@ module Controls {
                 self._layer = layer;
             }
 
-            function draw(dc as Dc, value as Number, maxvalue as Number) as Void {
-                if (maxvalue == 0) {
+            function draw(dc as Dc, value as Number, maxvalue as Number) {
+                if (maxvalue <= 0) {
                     return;
                 }
 

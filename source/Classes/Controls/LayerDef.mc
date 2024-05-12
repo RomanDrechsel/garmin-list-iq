@@ -29,16 +29,16 @@ module Controls {
             return self._width;
         }
 
+        public function setWidth(width as Number) {
+            self._width = width;
+        }
+
         public function getHeight() as Number {
             return self._height;
         }
 
         public function getDc() as Dc? {
             return self._dc;
-        }
-
-        public function Clip(dc as Dc) as Void {
-            dc.setClip(self._x, self._y, self._width, self._height);
         }
     }
 }

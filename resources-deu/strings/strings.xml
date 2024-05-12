@@ -12,13 +12,13 @@
     <string id="ListDel">Liste gelöscht.</string>
 
     <string id="NoLists">Keine Listen gefunden!</string>
-    <string id="NoListsLink">Tippe doppelt, um den Android AppStore auf dem Telefon zu öffnen</string>
+    <string id="NoListsLink">Tippe doppelt, um den Android PlayStore auf dem Telefon zu öffnen</string>
 
     <string id="ListNotFound">Liste nicht gefunden!</string>
     <string id="ListEmpty">Die Liste ist leer.</string>
 
     <string id="LMSub">%s Punkte</string>
-    
+
     <string id="StTitle">Einstellungen</string>
     <string id="StMoveBottom">erledigte Punkte nach unten schieben</string>
     <string id="StDelList">Liste löschen</string>

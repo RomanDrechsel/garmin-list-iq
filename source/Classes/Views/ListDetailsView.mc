@@ -3,6 +3,7 @@ import Toybox.Lang;
 import Toybox.WatchUi;
 import Lists;
 import Controls;
+import Controls.Listitems;
 import Helper;
 
 module Views {
@@ -25,7 +26,6 @@ module Views {
 
         function onLayout(dc as Dc) {
             CustomView.onLayout(dc);
-            self._verticalMargin = dc.getHeight() / 15;
         }
 
         function onShow() as Void {
@@ -51,13 +51,13 @@ module Views {
             }
         }
 
-        function onListTap(position as Number, item as ViewItem?) as Void {
+        function onListTap(position as Number, item as Item?) as Void {
             if (item != null) {
                 if (item.BoundObject == false) {
-                    item.ColorOverride = getTheme().DisabledColor;
+                    item.setColor(getTheme().DisabledColor);
                     item.setIcon(self._itemIconDone);
                 } else {
-                    item.ColorOverride = null;
+                    item.setColor(null);
                     item.setIcon(self._itemIcon);
                 }
                 item.BoundObject = !item.BoundObject;
@@ -141,7 +141,7 @@ module Views {
                         if (text != null) {
                             self.addItem(text, note, obj, icon, item.get("pos"));
                             if (obj == true) {
-                                self.Items[self.Items.size() - 1].ColorOverride = getTheme().DisabledColor;
+                                self.Items[self.Items.size() - 1].setColor(getTheme().DisabledColor);
                             }
                         }
                     }
@@ -162,11 +162,10 @@ module Views {
                     text = Application.loadResource(Rez.Strings.ListEmpty);
                 }
                 self._noListLabel = new MultilineLabel(text, (dc.getWidth() * 0.8).toNumber(), Fonts.Normal());
-                self._noListLabel.Justification = Graphics.TEXT_JUSTIFY_CENTER;
             }
 
             var y = (dc.getHeight() - self._noListLabel.getHeight()) / 2;
-            self._noListLabel.drawText(dc, (dc.getWidth() * 0.1).toNumber(), y, $.getTheme().MainColor);
+            self._noListLabel.drawText(dc, (dc.getWidth() * 0.1).toNumber(), y, $.getTheme().MainColor, Graphics.TEXT_JUSTIFY_CENTER);
         }
     }
 }

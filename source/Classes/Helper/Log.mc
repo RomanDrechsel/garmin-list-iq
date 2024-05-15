@@ -1,24 +1,21 @@
 import Toybox.Lang;
-
-enum ELogType {
-    DEBUG = "D",
-    NOTICE = "N",
-    IMPORTANT = "I",
-    ERROR = "E",
-}
+import Toybox.Graphics;
 
 (:debug)
-function Log(str as String) {
-    LogT(str, DEBUG);
-}
+module Debug {
+    function Log(str as String) {
+        Toybox.System.println(str);
+    }
 
-(:debug)
-function LogT(str as String, type as ELogType) {
-    Toybox.System.println("[" + type + "] " + str);
+    function Box(dc as Dc, x as Number, y as Number, w as Number, h as Number, c as ColorValue) {
+        dc.setColor(c, Graphics.COLOR_TRANSPARENT);
+        dc.setPenWidth(1);
+        dc.drawRectangle(x, y, w, h);
+    }
 }
 
 (:release)
-function Log(str as String) {}
-
-(:release)
-function LogT(str as String, type as ELogType) {}
+module Debug {
+    function Log(str as String) {}
+    function Box(dc as Dc, x as Number, y as Number, w as Number, h as Number, c as Number) {}
+}

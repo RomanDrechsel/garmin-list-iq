@@ -27,6 +27,7 @@ module Views {
             var version = Application.Properties.getValue("appVersion");
             var item = new Listitems.Item(self._mainLayer, str, version, null, null, self._verticalItemMargin, -1, null);
             item.DrawLine = false;
+            item.TitleJustification = Graphics.TEXT_JUSTIFY_CENTER;
             item.SubtitleJustification = Graphics.TEXT_JUSTIFY_CENTER;
             self.Items.add(item);
         }

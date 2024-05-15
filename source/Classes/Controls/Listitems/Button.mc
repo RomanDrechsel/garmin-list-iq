@@ -5,13 +5,12 @@ import Helper;
 module Controls {
     module Listitems {
         class Button extends Item {
-            private var _marginFactor = 0.1;
+            private var _marginFactor = 0.05;
             private var _paddingFactor = 0.05;
 
             function initialize(layer as LayerDef, title as String, identifier as Object, margin as Number, drawline as Boolean) {
                 Item.initialize(layer, null, null, identifier, null, margin, -1, null);
-
-                var maxwidth = layer.getWidth() - 2 * layer.getWidth() * self._marginFactor - 2 * self.getPadding();
+                var maxwidth = self.getButtonWidth() - 2 * self.getPadding();
                 self.Title = new MultilineLabel(title, maxwidth.toNumber(), self._font);
                 self.Subtitle = null;
                 self.DrawLine = drawline;
@@ -26,14 +25,13 @@ module Controls {
                 viewport_y += +self._verticalMargin;
 
                 if (self.isVisible() == false) {
-                    Log("Item (Button) " + self.ItemPosition + " is not visible");
                     return self.getHeight(dc);
                 }
 
                 var x = self._layer.getX() + self._layer.getWidth() * self._marginFactor;
 
                 //background
-                var button_width = self._layer.getWidth() - 2 * x;
+                var button_width = self.getButtonWidth();
                 var padding = self.getPadding();
                 var button_height = self.Title.getHeight(dc) + 2 * padding + Graphics.getFontDescent(self._font);
                 dc.setColor(getTheme().ButtonBackground, Graphics.COLOR_TRANSPARENT);
@@ -71,9 +69,23 @@ module Controls {
                 return self._height;
             }
 
+            private function getButtonWidth() as Number {
+                var x = self._layer.getX() + self._layer.getWidth() * self._marginFactor;
+                return self._layer.getWidth() - 2 * x;
+            }
+
             private function getPadding() {
                 var button_width = self._layer.getWidth() - 2 * self._layer.getWidth() * self._marginFactor;
                 return button_width * self._paddingFactor;
+            }
+
+            protected function validate(dc as Dc) {
+                if (self._needValidation == true) {
+                    if (self.Title instanceof MultilineLabel) {
+                        var maxwidth = self.getButtonWidth() - 2 * self.getPadding();
+                        self.Title.Invalidate(maxwidth);
+                    }
+                }
             }
         }
     }

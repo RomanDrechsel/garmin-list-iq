@@ -19,7 +19,7 @@ module Controls {
             protected static var _horizonalPaddingFactor = 0.05;
             protected static var _iconPaddingFactor = 0.4;
 
-            private var _needValidation as Boolean = true;
+            protected var _needValidation as Boolean = true;
             protected var _font as FontType;
             protected var _color as ColorType;
             protected var _colorSub as ColorType;
@@ -57,7 +57,7 @@ module Controls {
                 var viewport_y = self._listY - yOffset + self._layer.getY();
                 self._viewportY = viewport_y;
                 if (self.isVisible() == false) {
-                    Log("Item " + self.ItemPosition + " is not visible");
+                    //Debug.Log("Item " + self.ItemPosition + " is not visible");
                     return self.getHeight(dc);
                 }
 
@@ -89,10 +89,7 @@ module Controls {
 
                 self._height = viewport_y - self._viewportY;
 
-                dc.setColor(0xff0000, Graphics.COLOR_TRANSPARENT);
-                dc.setPenWidth(1);
-                dc.drawRectangle(self._layer.getX(), self._viewportY, self._layer.getWidth(), self._height);
-
+                //Debug.Box(dc, self._layer.getX(), self._viewportY, self._layer.getWidth(), self._height, Graphics.COLOR_RED);
                 return self._height;
             }
 
@@ -210,13 +207,13 @@ module Controls {
                     if (self.Title instanceof String && self.Title.length() > 0) {
                         self.Title = new MultilineLabel(self.Title, width - self.getIconWidth(dc), self._font);
                     } else if (self.Title instanceof MultilineLabel) {
-                        self.Title.Invalidate();
+                        self.Title.Invalidate(width - self.getIconWidth(dc));
                     }
 
                     if (self.Subtitle instanceof String && self.Subtitle.length() > 0) {
                         self.Subtitle = new MultilineLabel(self.Subtitle, width, Fonts.Small());
                     } else if (self.Subtitle instanceof MultilineLabel) {
-                        self.Subtitle.Invalidate();
+                        self.Subtitle.Invalidate(width);
                     }
                     self._needValidation = false;
                 }

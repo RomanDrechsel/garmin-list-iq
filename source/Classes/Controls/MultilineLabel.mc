@@ -36,6 +36,9 @@ module Controls {
             y += Graphics.getFontDescent(self._font);
 
             self._height = y - topY;
+
+            //Debug.Box(dc, x, topY, self._maxWidth, self._height, Graphics.COLOR_RED);
+
             return self._height;
         }
 
@@ -114,8 +117,11 @@ module Controls {
             return ret;
         }
 
-        function Invalidate() {
+        function Invalidate(maxwidth as Number?) {
             self._needValidation = true;
+            if (maxwidth != null) {
+                self._maxWidth = maxwidth;
+            }
         }
 
         private function validate(dc as Dc) {

@@ -235,7 +235,6 @@ module Controls {
             } else if (self._scrollOffset > self._viewHeight - self._mainLayer.getHeight()) {
                 self._scrollOffset = self._viewHeight - self._mainLayer.getHeight();
             }
-            Log("Center item " + index + " at offset " + self._scrollOffset);
         }
 
         /**

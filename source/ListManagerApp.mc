@@ -14,7 +14,7 @@ class ListManagerApp extends Application.AppBase {
 
     function initialize() {
         AppBase.initialize();
-        Application.Properties.setValue("appVersion", "2023.9.8");
+        Application.Properties.setValue("appVersion", "2024.5.1600");
         self.ListsManager = new ListsManager();
         self.ListsReceiver = new ListsReceiver();
         self.ListsReceiver.Start();

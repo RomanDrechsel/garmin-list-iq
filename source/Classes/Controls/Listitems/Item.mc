@@ -79,7 +79,7 @@ module Controls {
                 }
 
                 if (self.Subtitle instanceof MultilineLabel) {
-                    viewport_y += Graphics.getFontAscent(Fonts.Small()) / 3; //little space between title and subtitle
+                    viewport_y += Graphics.getFontAscent(Fonts.Small()) / 8; //little space between title and subtitle
                     viewport_y += self.Subtitle.drawText(dc, x, viewport_y, self._colorSub, self.SubtitleJustification);
                 }
 
@@ -131,7 +131,7 @@ module Controls {
                             self._height += self.Title.getHeight(dc);
                         }
                         if (self.Subtitle != null) {
-                            self._height += Graphics.getFontAscent(Fonts.Small()) / 3;
+                            self._height += Graphics.getFontAscent(Fonts.Small()) / 8;
                             self._height += self.Subtitle.getHeight(dc);
                         }
                         self._height += self.getLineHeight();

@@ -65,7 +65,9 @@ module Controls {
 
         function onLayout(dc as Dc) {
             View.onLayout(dc);
-            dc.setAntiAlias(true);
+            if (dc has :setAntialias) {
+                dc.setAntiAlias(true);
+            }
 
             self.UI_dragThreshold = (dc.getHeight() / 6).toNumber();
             self._verticalItemMargin = (dc.getHeight() * 0.05).toNumber();

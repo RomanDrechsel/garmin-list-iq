@@ -132,8 +132,23 @@ module Views {
             }
 
             var y = self._mainLayer.getY();
-            if ($.isRoundDisplay == false) {
-                y += self._verticalItemMargin;
+            if (self._noListsLabel2 != null) {
+                y = self._mainLayer.getY();
+                y += (self._mainLayer.getHeight() - self._noListsLabel2.getHeight(dc) - self._noListsLabel.getHeight(dc)) / 2;
+
+                //no overlapping of the labels
+                var label1_bottom = y + self._noListsLabel.getHeight(dc);
+                var label2_top = dc.getHeight() - self._noListsLabel2.getHeight(dc) - self._mainLayer.getY();
+                if ($.isRoundDisplay == false) {
+                    label2_top -= self._verticalItemMargin;
+                }
+                if (label1_bottom > label2_top) {
+                    y -= label1_bottom - label2_top;
+                }
+
+                if (y < self._mainLayer.getY()) {
+                    y = self._mainLayer.getY();
+                }
             }
 
             self._noListsLabel.drawText(dc, self._mainLayer.getX() + hor_padding, y, getTheme().MainColor, Graphics.TEXT_JUSTIFY_CENTER);

@@ -3,180 +3,166 @@ import Toybox.WatchUi;
 import Toybox.Lang;
 import Toybox.Time;
 import Lists;
-import Views.Controls;
+import Controls;
+import Controls.Listitems;
 import Helper;
-import Gfx;
 
-module Views 
-{
-    class ListsSelectView extends CustomView
-    {
-        var ScrollMode = SCROLL_SNAP;
+module Views {
+    class ListsSelectView extends Controls.CustomView {
         private var _listIconCode = 48;
 
-        private var _noListsLabel = null;
-        private var _noListsLabel2 = null;
+        private var _noListsLabel as MultilineLabel? = null;
+        private var _noListsLabel2 as MultilineLabel? = null;
 
-        function initialize()
-        {
+        function initialize() {
+            self.ScrollMode = SCROLL_SNAP;
             CustomView.initialize();
         }
 
-        function onLayout(dc as Dc) as Void
-        {
+        function onLayout(dc as Dc) as Void {
             CustomView.onLayout(dc);
             self.UI_dragThreshold = (dc.getHeight() / 6).toNumber();
         }
 
-        function onShow() as Void
-        {
+        function onShow() as Void {
             CustomView.onShow();
             $.getApp().ListsManager.OnListsChanged.add(self);
-            self.publishLists(getApp().ListsManager.GetLists(), false);
+            self.publishLists(getApp().ListsManager.GetLists(), true);
             Application.Storage.deleteValue("LastList");
         }
 
-        function onHide() as Void
-        {
+        function onHide() as Void {
             CustomView.onHide();
             $.getApp().ListsManager.OnListsChanged.remove(self);
         }
- 
-        function onUpdate(dc as Dc) as Void
-        {
-            View.onUpdate(dc);
-            
+
+        function onUpdate(dc as Dc) as Void {
+            CustomView.onUpdate(dc);
+
             dc.setColor(getTheme().BackgroundColor, getTheme().BackgroundColor);
             dc.clear();
 
-            if (self.Items.size() > 0)
-            {
-                self.drawList();
-            }
-            else
-            {
+            if (self.Items.size() > 0) {
+                self.drawList(dc);
+            } else {
                 self.noLists(dc);
             }
         }
 
-        function onListTap(position as Number, item as ViewItem) as Void
-        {
-            if (item != null)
-            {
+        function onListTap(position as Number, item as Item?) as Void {
+            if (item != null) {
                 self.GotoList(item.BoundObject);
             }
         }
 
-        function onDoubleTap(x as Number, y as Number) as Void
-        {
-            if (self.Items.size() == 0)
-            {
+        function onDoubleTap(x as Number, y as Number) as Void {
+            if (self.Items.size() == 0) {
                 var init = Application.Properties.getValue("Init") as Number;
-                if (init == null || init < 1)
-                {
+                if (init == null || init < 1) {
                     Communications.openWebPage(getAppStore(), null, null);
                 }
             }
         }
 
-        function onListsChanged(index as ListIndexType) as Void
-        {
+        function onListsChanged(index as ListIndexType) as Void {
             self.publishLists(index, false);
         }
 
-        private function publishLists(index as ListIndexType, init as Boolean) as Void
-        {
-            if (index == null)
-            {
+        private function publishLists(index as ListIndexType?, init as Boolean) as Void {
+            if (index == null) {
                 return;
             }
 
             var startlist = getApp().startupList;
             getApp().startupList = null;
-            if (startlist != null && startlist.length() > 0)
-            {
-                if (index.hasKey(startlist))
-                {
+            if (startlist != null && startlist.length() > 0) {
+                if (index.hasKey(startlist)) {
                     self.GotoList(startlist);
                 }
             }
 
             var lists = index.values() as Array<ListIndexItemType>;
-            lists = MergeSort.Sort(lists, "order");
+            lists = Helper.MergeSort.Sort(lists, "order");
 
-            self.Items = [] as Array<ViewItem>;
-            for (var i = 0; i < lists.size(); i++)
-            {
+            self.Items = [] as Array<Item>;
+            for (var i = 0; i < lists.size(); i++) {
                 var list = lists[i] as ListIndexItemType;
                 var substring = "";
                 var items = list.get("items") as Number;
-                if (items != null)
-                {
+                if (items != null) {
                     substring = Application.loadResource(Rez.Strings.LMSub) as String;
                     substring = Helper.StringUtil.stringReplace(substring, "%s", items.toString());
                 }
                 var date = list.get("date");
-                if (date != null)
-                {
-                    if (substring.length() > 0)
-                    {
+                if (date != null) {
+                    if (substring.length() > 0) {
                         substring += "\n";
                     }
-                    substring += DateUtil.toString(date, null);
+                    substring += Helper.DateUtil.toString(date, null);
                 }
                 self.addItem(list.get("name") as String, substring, list.get("key") as String, self._listIconCode, i);
             }
 
-            if (self.Items.size() > 0)
-            {
+            if (self.Items.size() > 0) {
                 self.moveIterator(null);
             }
 
-            if (!init)
-            {
+            if (!init) {
                 WatchUi.requestUpdate();
             }
         }
 
-        private function noLists(dc as Dc) as Void
-        {
-            var width = (dc.getWidth() - (2 * self._margin));
-            var height = (dc.getHeight() - (2 * self._margin));
-            var padding = 0;
-            if (self._margin == 0)
-            {
-                padding = width * 0.1;
+        private function noLists(dc as Dc) as Void {
+            var width = self._mainLayer.getWidth();
+
+            var hor_padding = 0;
+            if ($.isRoundDisplay == false) {
+                hor_padding = width * 0.1;
             }
 
-            if (self._noListsLabel == null)
-            {
-                self._noListsLabel = new MultilineLabel(dc, Application.loadResource(Rez.Strings.NoLists), width - (2 * padding), Fonts.get(Gfx.FONT_NORMAL));
-                self._noListsLabel.Justification = Graphics.TEXT_JUSTIFY_CENTER;
+            if (self._noListsLabel == null) {
+                self._noListsLabel = new MultilineLabel(Application.loadResource(Rez.Strings.NoLists), width - 2 * hor_padding, Fonts.Normal());
 
-                var init = Application.Properties.getValue("Init") as Number;
-                if (init == null || init < 1)
-                {
-                    self._noListsLabel2 = new MultilineLabel(dc, Application.loadResource(Rez.Strings.NoListsLink), width - (2 * padding), Fonts.get(Gfx.FONT_SMALL));
-                    self._noListsLabel2.Justification = Graphics.TEXT_JUSTIFY_CENTER;
-                }
-                else
-                {
+                var init = Application.Properties.getValue("Init") as Number?;
+                if (init == null || init < 1) {
+                    self._noListsLabel2 = new MultilineLabel(Application.loadResource(Rez.Strings.NoListsLink), width - 2 * hor_padding, Fonts.Small());
+                } else {
                     self._noListsLabel2 = null;
                 }
             }
 
-            var y = ((height - self._noListsLabel.getHeight()) * 0.3) + self._margin;
-            self._noListsLabel.drawText(dc, self._margin + padding, y, 0xffffff);
+            var y = self._mainLayer.getY();
+            if (self._noListsLabel2 != null) {
+                y = self._mainLayer.getY();
+                y += (self._mainLayer.getHeight() - self._noListsLabel2.getHeight(dc) - self._noListsLabel.getHeight(dc)) / 2;
 
-            if (self._noListsLabel2 != null)
-            {
-                y = height - self._noListsLabel2.getHeight() - 20 + self._margin;
-                self._noListsLabel2.drawText(dc, self._margin + padding, y, 0xbdbdbd);
+                //no overlapping of the labels
+                var label1_bottom = y + self._noListsLabel.getHeight(dc);
+                var label2_top = dc.getHeight() - self._noListsLabel2.getHeight(dc) - self._mainLayer.getY();
+                if ($.isRoundDisplay == false) {
+                    label2_top -= self._verticalItemMargin;
+                }
+                if (label1_bottom > label2_top) {
+                    y -= label1_bottom - label2_top;
+                }
+
+                if (y < self._mainLayer.getY()) {
+                    y = self._mainLayer.getY();
+                }
+            }
+
+            self._noListsLabel.drawText(dc, self._mainLayer.getX() + hor_padding, y, getTheme().MainColor, Graphics.TEXT_JUSTIFY_CENTER);
+
+            if (self._noListsLabel2 != null) {
+                y = dc.getHeight() - self._noListsLabel2.getHeight(dc) - self._mainLayer.getY();
+                if ($.isRoundDisplay == false) {
+                    y -= self._verticalItemMargin;
+                }
+                self._noListsLabel2.drawText(dc, self._mainLayer.getX() + hor_padding, y, getTheme().SecondColor, Graphics.TEXT_JUSTIFY_CENTER);
             }
         }
 
-        private function GotoList(uuid as String) as Void
-        {
+        private function GotoList(uuid as String) as Void {
             var view = new ListDetailsView(uuid);
             var delegate = new ListDetailsViewDelegate(view);
             WatchUi.pushView(view, delegate, WatchUi.SLIDE_LEFT);

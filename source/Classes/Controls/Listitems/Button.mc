@@ -14,6 +14,10 @@ module Controls {
                 self.Title = new MultilineLabel(title, maxwidth.toNumber(), self._font);
                 self.Subtitle = null;
                 self.DrawLine = drawline;
+                if ($.isRoundDisplay == true) {
+                    //double on round displays
+                    self._marginFactor += self._marginFactor;
+                }
             }
 
             /** returns height of the item */
@@ -70,13 +74,13 @@ module Controls {
             }
 
             private function getButtonWidth() as Number {
-                var x = self._layer.getX() + self._layer.getWidth() * self._marginFactor;
+                //var x = self._layer.getX() + self._layer.getWidth() * self._marginFactor;
+                var x = self._layer.getWidth() * self._marginFactor;
                 return self._layer.getWidth() - 2 * x;
             }
 
             private function getPadding() {
-                var button_width = self._layer.getWidth() - 2 * self._layer.getWidth() * self._marginFactor;
-                return button_width * self._paddingFactor;
+                return self.getButtonWidth() * self._paddingFactor;
             }
 
             protected function validate(dc as Dc) {

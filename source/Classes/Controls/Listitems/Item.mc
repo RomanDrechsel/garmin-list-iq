@@ -12,7 +12,7 @@ module Controls {
             var TitleJustification as TextJustification = Graphics.TEXT_JUSTIFY_LEFT;
             var Subtitle as MultilineLabel or String or Null = null;
             var SubtitleJustification as TextJustification = Graphics.TEXT_JUSTIFY_LEFT;
-            var BoundObject as Object = null;
+            var BoundObject as Object? = null;
             var ItemPosition as Number = -1;
             var DrawLine as Boolean = true;
 
@@ -57,7 +57,6 @@ module Controls {
                 var viewport_y = self._listY - yOffset + self._layer.getY();
                 self._viewportY = viewport_y;
                 if (self.isVisible() == false) {
-                    //Debug.Log("Item " + self.ItemPosition + " is not visible");
                     return self.getHeight(dc);
                 }
 
@@ -89,7 +88,6 @@ module Controls {
 
                 self._height = viewport_y - self._viewportY;
 
-                //Debug.Box(dc, self._layer.getX(), self._viewportY, self._layer.getWidth(), self._height, Graphics.COLOR_RED);
                 return self._height;
             }
 

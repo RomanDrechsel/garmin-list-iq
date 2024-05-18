@@ -36,9 +36,6 @@ module Controls {
             y += Graphics.getFontDescent(self._font);
 
             self._height = y - topY;
-
-            //Debug.Box(dc, x, topY, self._maxWidth, self._height, Graphics.COLOR_RED);
-
             return self._height;
         }
 

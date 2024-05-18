@@ -17,15 +17,15 @@ module Comm {
                     if (type.equals("list")) {
                         message.remove("type");
                         if (getApp().ListsManager.addList(message)) {
-                            System.println("Received list: " + message.toString());
+                            Debug.Log("Received list: " + message.toString());
                         }
                         return;
                     }
                 }
             } else if (message != null) {
-                System.println("Received invalid message: " + message.toString());
+                Debug.Log("Received invalid message: " + message.toString());
             } else {
-                System.println("Received invalid message!");
+                Debug.Log("Received invalid message!");
             }
         }
     }

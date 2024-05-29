@@ -9,8 +9,8 @@ module Controls {
                 self._layer = layer;
             }
 
-            function draw(dc as Dc, value as Number, maxvalue as Number) {
-                if (maxvalue <= 0) {
+            function draw(dc as Dc, value as Number, maxvalue as Number, viewport_height as Number) {
+                if (maxvalue <= viewport_height) {
                     return;
                 }
 
@@ -25,7 +25,7 @@ module Controls {
                     thumbHeight = self._layer.getHeight();
                 }
 
-                var thumbTop = (value.toFloat() / maxvalue.toFloat()) * (self._layer.getHeight() - thumbHeight);
+                var thumbTop = (value.toFloat() / (maxvalue - viewport_height).toFloat()) * (self._layer.getHeight() - thumbHeight);
 
                 //thumb background
                 dc.setColor(getTheme().ScrollbarThumbBorder, Graphics.COLOR_TRANSPARENT);

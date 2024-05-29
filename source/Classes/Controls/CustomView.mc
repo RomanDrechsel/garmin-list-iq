@@ -110,7 +110,12 @@ module Controls {
                 }
 
                 if (self._needScrollbar) {
-                    self._scrollbar.draw(dc, self._scrollOffset, self._viewHeight - self._mainLayer.getHeight());
+                    var viewport_height = dc.getHeight();
+                    if ($.isRoundDisplay) {
+                        var margin = self.getMargin(dc);
+                        viewport_height -= 2 * margin[1];
+                    }
+                    self._scrollbar.draw(dc, self._scrollOffset, self._viewHeight, viewport_height);
                 }
             }
         }
@@ -304,6 +309,7 @@ module Controls {
                 for (var i = 0; i < self.Items.size(); i++) {
                     var item = self.Items[i];
                     item.setListY(y);
+                    item.Invalidate();
                     y += item.getHeight(dc);
                 }
 

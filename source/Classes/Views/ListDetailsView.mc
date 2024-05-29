@@ -14,8 +14,8 @@ module Views {
         private var _listFound = false;
 
         private var _noListLabel = null;
-        private var _itemIcon as WatchUi.BitmapResource or Graphics.BitmapReference = Application.loadResource(Rez.Drawables.Item);
-        private var _itemIconDone as WatchUi.BitmapResource or Graphics.BitmapReference = Application.loadResource(Rez.Drawables.ItemDone);
+        private var _itemIcon as Listitems.ViewItemIcon = Application.loadResource(Rez.Drawables.Item);
+        private var _itemIconDone as Listitems.ViewItemIcon = Application.loadResource(Rez.Drawables.ItemDone);
 
         protected var _fontoverride = Fonts.Large();
 

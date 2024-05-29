@@ -68,7 +68,7 @@ module Controls {
                     var iconoffsety = (Graphics.getFontHeight(self._font) - dc.getFontHeight(Fonts.Icons())) / 2;
                     dc.setColor(getTheme().MainColor, Graphics.COLOR_TRANSPARENT);
                     dc.drawText(x, viewport_y + iconoffsety, Fonts.Icons(), self._icon, Graphics.TEXT_JUSTIFY_LEFT);
-                } else if (self._icon != null) {
+                } else if (self.isBitmap(self._icon)) {
                     var iconoffsety = (Graphics.getFontHeight(self._font) - self._icon.getHeight()) / 2;
                     dc.drawBitmap(x, viewport_y + iconoffsety, self._icon);
                 }
@@ -142,10 +142,10 @@ module Controls {
                 }
             }
 
-            function setIcon(icon as Number or BitmapResource or Graphics.BitmapReference or Null) as Void {
+            function setIcon(icon as Number or ViewItemIcon or Null) {
                 if (icon instanceof Number && icon >= 0) {
                     self._icon = icon.toChar().toString();
-                } else {
+                } else if (self.isBitmap(icon)) {
                     self._icon = icon;
                 }
             }
@@ -206,12 +206,16 @@ module Controls {
                         self.Title = new MultilineLabel(self.Title, width - self.getIconWidth(dc), self._font);
                     } else if (self.Title instanceof MultilineLabel) {
                         self.Title.Invalidate(width - self.getIconWidth(dc));
+                    } else {
+                        self.Title = null;
                     }
 
                     if (self.Subtitle instanceof String && self.Subtitle.length() > 0) {
                         self.Subtitle = new MultilineLabel(self.Subtitle, width, Fonts.Small());
                     } else if (self.Subtitle instanceof MultilineLabel) {
                         self.Subtitle.Invalidate(width);
+                    } else {
+                        self.Subtitle = null;
                     }
                     self._needValidation = false;
                 }
@@ -228,6 +232,14 @@ module Controls {
                 }
 
                 return iconwidth + iconwidth * self._iconPaddingFactor;
+            }
+
+            private function isBitmap(obj as Object) as Boolean {
+                if (obj instanceof WatchUi.BitmapResource || (Graphics has :BitmapReference && obj instanceof Graphics.BitmapReference)) {
+                    return true;
+                } else {
+                    return false;
+                }
             }
         }
     }

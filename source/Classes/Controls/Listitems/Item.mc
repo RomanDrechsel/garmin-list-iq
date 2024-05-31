@@ -17,14 +17,13 @@ module Controls {
             var DrawLine as Boolean = true;
 
             protected static var _horizonalPaddingFactor = 0.05;
-            protected static var _iconPaddingFactor = 0.4;
+            protected static var _iconPaddingFactor = 0.3;
 
             protected var _needValidation as Boolean = true;
             protected var _font as FontType;
             protected var _color as ColorType;
             protected var _colorSub as ColorType;
             protected var _verticalMargin as Number = 0;
-            protected var _horizontalMargin as Number = 0;
             protected var _icon as String or ViewItemIcon or Null = null;
             protected var _listY as Number? = null;
             protected var _height as Number? = null;
@@ -39,7 +38,6 @@ module Controls {
                 self.ItemPosition = position;
                 self._layer = layer;
                 self._verticalMargin = vert_margin;
-                self._horizontalMargin = (layer.getWidth() * 0.05).toNumber();
                 if (title instanceof String) {
                     self.Title = title;
                 }

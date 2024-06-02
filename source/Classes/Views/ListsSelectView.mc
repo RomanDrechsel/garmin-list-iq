@@ -131,10 +131,11 @@ module Views {
                 }
             }
 
-            var y = self._mainLayer.getY();
-            if (self._noListsLabel2 != null) {
-                y = self._mainLayer.getY();
-                y += (self._mainLayer.getHeight() - self._noListsLabel2.getHeight(dc) - self._noListsLabel.getHeight(dc)) / 2;
+            var y;
+            if (self._noListsLabel2 == null) {
+                y = self._mainLayer.getY() + (self._mainLayer.getHeight() - self._noListsLabel.getHeight(dc)) / 2;
+            } else {
+                y = self._mainLayer.getY() + (self._mainLayer.getHeight() - self._noListsLabel2.getHeight(dc) - self._noListsLabel.getHeight(dc)) / 2;
 
                 //no overlapping of the labels
                 var label1_bottom = y + self._noListsLabel.getHeight(dc);

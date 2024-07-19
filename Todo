@@ -1,7 +1,7 @@
-TODO: Doppeltap um Listitem erledigt zu setzen
+WIP: show notes?
 TODO: Memory anzeigen?!
-TODO: Settings: Notizen anzeigen?
 
-https://github.com/garmin/connectiq-apps/blob/master/device-apps/disc-golf/disc-golf-android/app/src/main/java/com/garmin/android/apps/samples/disgolf/SendRoundToDeviceActivity.java
+
+
 
 adb forward tcp:7381 tcp:7381

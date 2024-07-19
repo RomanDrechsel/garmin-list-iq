@@ -1,6 +1,8 @@
 <properties>
-    <property type="string" id="appVersion">2024.5.3000</property>
+    <property type="string" id="appVersion">2024.7.1900</property>
     <property type="number" id="Init">0</property>
-    <property type="number" id="Th">0</property>
-    <property type="number" id="ListMoveDown">0</property>
+    <property type="number" id="Theme">0</property>
+    <property type="number" id="ListMoveDown">1</property>
+    <property type="number" id="DoubleTapForDone">1</property>
+    <property type="number" id="ShowNotes">1</property>
 </properties>

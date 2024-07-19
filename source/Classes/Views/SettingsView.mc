@@ -40,16 +40,14 @@ module Views {
             self.drawList(dc);
         }
 
-        function onListTap(position as Number, item as Item?) as Void {
-            if (item != null) {
-                if (item.BoundObject == SETTINGS_DELETEALL) {
-                    var dialog = new WatchUi.Confirmation(Application.loadResource(Rez.Strings.StDelAllConfirm));
-                    var delegate = new ConfirmDelegate(self.method(:deleteAllLists));
-                    WatchUi.pushView(dialog, delegate, WatchUi.SLIDE_BLINK);
-                } else if (item.BoundObject == SETTINGS_APPSTORE) {
-                    Communications.openWebPage(getAppStore(), null, null);
-                    WatchUi.popView(WatchUi.SLIDE_RIGHT);
-                }
+        function onListTap(position as Number, item as Item, doubletap as Boolean) as Void {
+            if (item.BoundObject == SETTINGS_DELETEALL) {
+                var dialog = new WatchUi.Confirmation(Application.loadResource(Rez.Strings.StDelAllConfirm));
+                var delegate = new ConfirmDelegate(self.method(:deleteAllLists));
+                WatchUi.pushView(dialog, delegate, WatchUi.SLIDE_BLINK);
+            } else if (item.BoundObject == SETTINGS_APPSTORE) {
+                Communications.openWebPage(getAppStore(), null, null);
+                WatchUi.popView(WatchUi.SLIDE_RIGHT);
             }
         }
 

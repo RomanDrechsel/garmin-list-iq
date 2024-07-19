@@ -51,8 +51,8 @@ module Views {
             }
         }
 
-        function onListTap(position as Number, item as Item?) as Void {
-            if (item != null) {
+        function onListTap(position as Number, item as Item, doubletap as Boolean) as Void {
+            if (Helper.Properties.Boolean(Helper.Properties.DOUBLETAPFORDONE, true) == doubletap) {
                 if (item.BoundObject == false) {
                     item.setColor(getTheme().DisabledColor);
                     item.setIcon(self._itemIconDone);
@@ -94,16 +94,13 @@ module Views {
                 }
 
                 if (list.hasKey("items")) {
-                    var settings_movedown = Application.Properties.getValue("ListMoveDown") as Number;
-                    var movedown = settings_movedown != null && settings_movedown == 1 ? true : false;
-
                     var ordered = [];
                     var done = [];
 
                     for (var i = 0; i < list["items"].size(); i++) {
                         var item = list["items"][i];
                         item.put("pos", i);
-                        if (movedown && item.hasKey("d") && item.get("d") == true) {
+                        if (Helper.Properties.Boolean(Helper.Properties.LISTMOVEDOWN, true) == true) {
                             done.add(item);
                         } else {
                             ordered.add(item);

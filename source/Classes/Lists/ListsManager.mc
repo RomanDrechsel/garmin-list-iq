@@ -73,11 +73,6 @@ module Lists {
                     "date" => Time.now().value(),
                 }) as ListIndexItemType;
 
-            /*if (!listindex.hasKey(listuuid)) {
-                listindex.put(listuuid, indexitem as ListIndexItemType);
-            } else {
-                listindex[listuuid] = indexitem as ListIndexItemType;
-            }*/
             listindex.put(listuuid, indexitem);
 
             if (self.StoreIndex(listindex) == false) {

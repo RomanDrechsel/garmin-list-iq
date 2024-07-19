@@ -44,6 +44,7 @@ module Controls {
                 if (subtitle instanceof String) {
                     self.Subtitle = subtitle;
                 }
+
                 self.BoundObject = obj;
                 self.setIcon(icon);
                 self._needValidation = true;

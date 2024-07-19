@@ -88,5 +88,29 @@ module Helper {
 
             return false;
         }
+
+        static function trim(str as String) as String {
+            if (str.length() > 0) {
+                var chars = str.toCharArray();
+                var start = 0;
+                var end = str.length() - 1;
+                for (var i = 0; i < chars.size(); i++) {
+                    if (!self.isWhitespace(chars[i])) {
+                        start = i;
+                        break;
+                    }
+                }
+                for (var i = chars.size() - 1; i >= 0; i--)
+                {
+                    if (!self.isWhitespace(chars[i])) {
+                        end = i;
+                        break;
+                    }
+                }
+                str = str.substring(start, end + 1);
+            }
+
+            return str;
+        }
     }
 }

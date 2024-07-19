@@ -14,7 +14,8 @@ class ListManagerApp extends Application.AppBase {
 
     function initialize() {
         AppBase.initialize();
-        Application.Properties.setValue("appVersion", "2024.5.3000");
+        Application.Properties.setValue("appVersion", "2024.7.1900");
+        Helper.Properties.Load();
         self.ListsManager = new ListsManager();
         self.ListsReceiver = new ListsReceiver();
         self.ListsReceiver.Start();
@@ -31,6 +32,7 @@ class ListManagerApp extends Application.AppBase {
     }
 
     function onSettingsChanged() as Void {
+        Helper.Properties.Load();
         Themes.ThemesLoader.loadTheme();
         WatchUi.requestUpdate();
     }
@@ -43,5 +45,5 @@ function getApp() as ListManagerApp {
 }
 
 function getAppStore() as String {
-    return "https://roman-drechsel.de";
+    return "https://play.google.com/store/apps/details?id=de.romandrechsel.lists";
 }

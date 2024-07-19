@@ -186,14 +186,24 @@ module Controls {
             }
         }
 
-        function onListTap(position as Number, item as Item) as Void;
-        function onDoubleTap(x as Number, y as Number) as Void;
+        function onListTap(position as Number, item as Item, doubletap as Boolean) as Void;
+
+        function onDoubleTap(x as Number, y as Number) as Boolean {
+            for (var i = 0; i < self.Items.size(); i++) {
+                var item = self.Items[i];
+                if (item.Clicked(y)) {
+                    self.onListTap(i, item, true);
+                    return true;
+                }
+            }
+            return false;
+        }
 
         function onTap(x as Number, y as Number) as Boolean {
             for (var i = 0; i < self.Items.size(); i++) {
                 var item = self.Items[i];
                 if (item.Clicked(y)) {
-                    self.onListTap(i, item);
+                    self.onListTap(i, item, false);
                     return true;
                 }
             }

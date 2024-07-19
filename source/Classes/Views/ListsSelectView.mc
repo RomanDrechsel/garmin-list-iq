@@ -49,10 +49,8 @@ module Views {
             }
         }
 
-        function onListTap(position as Number, item as Item?) as Void {
-            if (item != null) {
-                self.GotoList(item.BoundObject);
-            }
+        function onListTap(position as Number, item as Item, doubletap as Boolean) as Void {
+            self.GotoList(item.BoundObject);
         }
 
         function onDoubleTap(x as Number, y as Number) as Void {

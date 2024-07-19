@@ -23,6 +23,8 @@
     <string id="StMoveBottom">erledigte Punkte nach unten schieben</string>
     <string id="StDelList">Liste löschen</string>
     <string id="DeleteConfirm">Liste löschen?</string>
+    <string id="StDoubleTapForDone">Doppelt auf einen Punkt tippen um ihn auf erledigt zu setzen</string>
+    <string id="StDShowNotes">Notizen von Punkten anzeigen</string>
 
     <string id="StDelAll">Alle Listen löschen</string>
     <string id="StDelAllConfirm">Listen löschen?</string>

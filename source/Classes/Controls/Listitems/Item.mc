@@ -31,7 +31,7 @@ module Controls {
             protected var _layer as LayerDef? = null;
             protected var _textOffsetX as Number = 0;
 
-            function initialize(layer as LayerDef, title as String?, subtitle as String?, obj as Object?, icon as Number or BitmapResource or Null, vert_margin as Number, position as Number, fontoverride as FontType?) {
+            function initialize(layer as LayerDef?, title as String?, subtitle as String?, obj as Object?, icon as Number or BitmapResource or Null, vert_margin as Number, position as Number, fontoverride as FontType?) {
                 self._font = fontoverride != null ? fontoverride : Fonts.Normal();
                 self._color = getTheme().MainColor;
                 self._colorSub = getTheme().SecondColor;
@@ -51,7 +51,10 @@ module Controls {
             }
 
             /** returns height of the item */
-            function draw(dc as Dc, yOffset as Number) {
+            function draw(dc as Dc, yOffset as Number) as Number {
+                if (self._layer == null) {
+                    return 0;
+                }
                 self.validate(dc);
                 var viewport_y = self._listY - yOffset + self._layer.getY();
                 self._viewportY = viewport_y;
@@ -106,6 +109,9 @@ module Controls {
             protected function isVisible() as Boolean {
                 if (self._viewportY == null || self._height == null) {
                     return true;
+                }
+                if (self._layer == null) {
+                    return false;
                 }
 
                 if (self._viewportY + self._height < 0) {
@@ -166,6 +172,10 @@ module Controls {
                 self._needValidation = true;
             }
 
+            function setLayer(layer as LayerDef) {
+                self._layer = layer;
+            }
+
             protected function drawLine(dc as Dc, y as Number) as Number {
                 var line = getTheme().LineBitmap;
                 if (line != null) {
@@ -197,7 +207,7 @@ module Controls {
             }
 
             protected function validate(dc as Dc) {
-                if (self._needValidation == true) {
+                if (self._needValidation == true && self._layer != null) {
                     var padding = self._layer.getWidth() * self._horizonalPaddingFactor;
                     var width = self._layer.getWidth() - 2 * padding;
 

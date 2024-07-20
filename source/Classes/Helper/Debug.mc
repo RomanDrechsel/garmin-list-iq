@@ -1,12 +1,15 @@
 import Toybox.Lang;
 import Toybox.Graphics;
+import Toybox.Time;
 
-(:debug)
 module Debug {
-    function Log(str as String) {
-        Toybox.System.println(str);
+    function Log(obj as Object) {
+        var info = Time.Gregorian.info(Time.now(), Time.FORMAT_SHORT);
+        var str = info.year + "-" + info.month.format("%02d") + "-" + info.day.format("%02d") + " " + info.hour.format("%02d") + ":" + info.min.format("%02d") + ":" + info.sec.format("%02d");
+        Toybox.System.println(str + ": " + obj);
     }
 
+    (:debug)
     function Box(dc as Dc, x as Number, y as Number, w as Number, h as Number, c as ColorValue?) {
         if (c == null) {
             c = Graphics.COLOR_RED;
@@ -15,10 +18,6 @@ module Debug {
         dc.setPenWidth(1);
         dc.drawRectangle(x, y, w, h);
     }
-}
-
-(:release)
-module Debug {
-    function Log(str as String) {}
+    (:release)
     function Box(dc as Dc, x as Number, y as Number, w as Number, h as Number, c as Number) {}
 }

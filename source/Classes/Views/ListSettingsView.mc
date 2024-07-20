@@ -13,6 +13,8 @@ module Views {
         private var _itemIconUncheck = Application.loadResource(Rez.Drawables.Item);
         private var _itemIconCheck = Application.loadResource(Rez.Drawables.ItemDone);
 
+        protected var TAG = "ListSettingsView";
+
         function initialize(uuid as String) {
             CustomView.initialize();
             self.ListUuid = uuid;

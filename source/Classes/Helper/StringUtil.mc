@@ -100,8 +100,7 @@ module Helper {
                         break;
                     }
                 }
-                for (var i = chars.size() - 1; i >= 0; i--)
-                {
+                for (var i = chars.size() - 1; i >= 0; i--) {
                     if (!self.isWhitespace(chars[i])) {
                         end = i;
                         break;
@@ -111,6 +110,16 @@ module Helper {
             }
 
             return str;
+        }
+
+        static function formatBytes(bytes as Number) as String {
+            if (bytes >= 1048576) {
+                return (bytes / 1048576).format("%.1f") + "Mb";
+            } else if (bytes >= 1024) {
+                return (bytes / 1024).format("%.1f") + "kB";
+            } else {
+                return bytes + "B";
+            }
         }
     }
 }

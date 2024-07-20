@@ -14,15 +14,18 @@ module Views {
         private var _noListsLabel as MultilineLabel? = null;
         private var _noListsLabel2 as MultilineLabel? = null;
 
+        protected var TAG = "ListsSelectView";
+
         function initialize() {
             self.ScrollMode = SCROLL_SNAP;
             CustomView.initialize();
         }
 
-        function onLayout(dc as Dc) as Void {
+        //TODO: remove?!
+        /*function onLayout(dc as Dc) as Void {
             CustomView.onLayout(dc);
             self.UI_dragThreshold = (dc.getHeight() / 6).toNumber();
-        }
+        }*/
 
         function onShow() as Void {
             CustomView.onShow();

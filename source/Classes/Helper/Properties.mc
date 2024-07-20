@@ -38,13 +38,14 @@ module Helper {
                 prop = 1;
             }
             self._props.put(SHOWNOTES, prop);
-            Toybox.System.println(self._props);
+            Debug.Log("Properties: " + self._props);
         }
 
-        public static function Save(prop as EProps, orginalValue as Application.PropertyValueType) {
-            var value = orginalValue instanceof Boolean ? (orginalValue ? 1 : 0) as Number : orginalValue;
+        public static function Save(prop as EProps, originalValue as Application.PropertyValueType) {
+            var value = originalValue instanceof Boolean ? (originalValue ? 1 : 0) as Number : originalValue;
             Application.Properties.setValue(prop as String, value);
             self._props.put(prop, value);
+            Debug.Log("Stored property " + prop + " with value " + value);
         }
 
         static function Number(prop as Helper.Properties.EProps, default_value as Number) as Number {

@@ -8,6 +8,8 @@ import Controls.Listitems;
 
 module Controls {
     class CustomView extends WatchUi.View {
+        protected var TAG = "CustomView";
+
         enum EScrollmode {
             SCROLL_SNAP,
             SCROLL_DRAG,
@@ -56,11 +58,12 @@ module Controls {
         protected var _needScrollbar as Boolean? = null;
 
         /** is a new validation needed? */
-        private var _needValidation as Boolean = true;
+        protected var _needValidation as Boolean = true;
 
         function initialize() {
             View.initialize();
             self.Items = [];
+            Debug.Log("Initialized " + self.TAG);
         }
 
         function onLayout(dc as Dc) {
@@ -92,6 +95,19 @@ module Controls {
 
             self._needValidation = true;
             self.validate(dc);
+        }
+
+        function onShow() as Void {
+            WatchUi.View.onShow();
+            Debug.Log("onShow " + self.TAG);
+        }
+
+        function onHide() as Void {
+            self.Items = [];
+            self._scrollOffset = 0;
+            self._snapPosition = 0;
+            WatchUi.View.onHide();
+            Debug.Log("OnHide " + self.TAG);
         }
 
         function drawList(dc as Dc) as Void {
@@ -318,6 +334,7 @@ module Controls {
                 var y = self.getPaddingTop(dc);
                 for (var i = 0; i < self.Items.size(); i++) {
                     var item = self.Items[i];
+                    item.setLayer(self._mainLayer);
                     item.setListY(y);
                     item.Invalidate();
                     y += item.getHeight(dc);

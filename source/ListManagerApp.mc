@@ -6,7 +6,7 @@ import Views;
 import Comm;
 import Lists;
 
-class ListManagerApp extends Application.AppBase {
+class ListsApp extends Application.AppBase {
     private var ListsReceiver as ListsReceiver;
 
     var ListsManager as ListsManager;
@@ -15,10 +15,18 @@ class ListManagerApp extends Application.AppBase {
     function initialize() {
         AppBase.initialize();
         Application.Properties.setValue("appVersion", "2024.7.1900");
+
+        var settings = System.getDeviceSettings();
+        var stats = System.getSystemStats();
+        Debug.Log("App started (" + Application.Properties.getValue("appVersion") + ")");
+        Debug.Log("Display: " + settings.screenShape);
+        Debug.Log("Firmware: " + settings.firmwareVersion);
+        Debug.Log("Monkey Version: " + settings.monkeyVersion);
+        Debug.Log("Memory: " + stats.usedMemory + " / " + stats.totalMemory);
+
         Helper.Properties.Load();
         self.ListsManager = new ListsManager();
         self.ListsReceiver = new ListsReceiver();
-        self.ListsReceiver.Start();
     }
 
     function onStart(state as Lang.Dictionary?) as Void {
@@ -40,8 +48,8 @@ class ListManagerApp extends Application.AppBase {
 
 var isRoundDisplay = System.getDeviceSettings().screenShape == System.SCREEN_SHAPE_ROUND;
 
-function getApp() as ListManagerApp {
-    return Application.getApp() as ListManagerApp;
+function getApp() as ListsApp {
+    return Application.getApp() as ListsApp;
 }
 
 function getAppStore() as String {

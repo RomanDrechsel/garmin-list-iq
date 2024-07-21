@@ -7,8 +7,9 @@ module Views {
         protected var TAG = "StatusView";
         private var _callbacks as Dictionary<Object, Method> = {};
 
-        function initialize(message as String, icon as String or Controls.Listitems.ViewItemIcon or Null, additional_items as Array<Listitems.Item> or Listitems.Item or Null, callbacks as Dictionary<Object, Method>?) {
+        function initialize(message as String, additional_items as Array<Listitems.Item> or Listitems.Item or Null, callbacks as Dictionary<Object, Method>?) {
             CustomView.initialize();
+
             var item_text = new Listitems.Item(null, message, null, null, null, self._verticalItemMargin, -1, null);
             item_text.DrawLine = false;
             item_text.TitleJustification = Graphics.TEXT_JUSTIFY_CENTER;
@@ -21,7 +22,6 @@ module Views {
                 self.Items.addAll(additional_items);
             }
             self._callbacks = callbacks;
-            Debug.Log("Callbacks: " + self._callbacks.size());
         }
 
         function onUpdate(dc as Dc) as Void {
@@ -39,7 +39,6 @@ module Views {
             Debug.Log(self._callbacks);
             if (item.BoundObject != null) {
                 var callback = self._callbacks.get(item.BoundObject);
-                Debug.Log(callback);
                 if (callback) {
                     callback.invoke();
                 }

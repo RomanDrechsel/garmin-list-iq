@@ -106,25 +106,6 @@ module Controls {
                 self._colorSub = color != null ? color : getTheme().SecondColor;
             }
 
-            protected function isVisible() as Boolean {
-                if (self._viewportY == null || self._height == null) {
-                    return true;
-                }
-                if (self._layer == null) {
-                    return false;
-                }
-
-                if (self._viewportY + self._height < 0) {
-                    //above the top edge of the display
-                    return false;
-                } else if (self._viewportY > self._layer.getDc().getHeight()) {
-                    //below the bottom edge of the display
-                    return false;
-                } else {
-                    return true;
-                }
-            }
-
             function getHeight(dc as Dc?) as Number {
                 if (dc != null) {
                     self.validate(dc);
@@ -174,6 +155,25 @@ module Controls {
 
             function setLayer(layer as LayerDef) {
                 self._layer = layer;
+            }
+
+            protected function isVisible() as Boolean {
+                if (self._viewportY == null || self._height == null) {
+                    return true;
+                }
+                if (self._layer == null) {
+                    return false;
+                }
+
+                if (self._viewportY + self._height < 0) {
+                    //above the top edge of the display
+                    return false;
+                } else if (self._viewportY > self._layer.getDc().getHeight()) {
+                    //below the bottom edge of the display
+                    return false;
+                } else {
+                    return true;
+                }
             }
 
             protected function drawLine(dc as Dc, y as Number) as Number {
@@ -230,7 +230,7 @@ module Controls {
                 }
             }
 
-            private function getIconWidth(dc as Dc) as Number {
+            protected function getIconWidth(dc as Dc) as Number {
                 var iconwidth;
                 if (self._icon instanceof String && self._icon.length() > 0) {
                     iconwidth = dc.getTextWidthInPixels(self._icon, Fonts.Icons());
@@ -243,7 +243,7 @@ module Controls {
                 return iconwidth + iconwidth * self._iconPaddingFactor;
             }
 
-            private function isBitmap(obj as Object) as Boolean {
+            protected function isBitmap(obj as Object) as Boolean {
                 if (obj instanceof WatchUi.BitmapResource || (Graphics has :BitmapReference && obj instanceof Graphics.BitmapReference)) {
                     return true;
                 } else {

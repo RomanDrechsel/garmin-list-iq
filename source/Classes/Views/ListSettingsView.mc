@@ -52,7 +52,7 @@ module Views {
                 } else {
                     item.setIcon(self._itemIconCheck);
                 }
-                Helper.Properties.Save(item.BoundObject, !prop);
+                Helper.Properties.SaveBoolean(item.BoundObject, !prop);
                 WatchUi.requestUpdate();
             } else if (item.BoundObject == "del") {
                 var dialog = new WatchUi.Confirmation(Application.loadResource(Rez.Strings.DeleteConfirm));

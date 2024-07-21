@@ -21,12 +21,6 @@ module Views {
             CustomView.initialize();
         }
 
-        //TODO: remove?!
-        /*function onLayout(dc as Dc) as Void {
-            CustomView.onLayout(dc);
-            self.UI_dragThreshold = (dc.getHeight() / 6).toNumber();
-        }*/
-
         function onShow() as Void {
             CustomView.onShow();
             $.getApp().ListsManager.OnListsChanged.add(self);

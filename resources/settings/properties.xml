@@ -1,5 +1,5 @@
 <properties>
-    <property type="string" id="appVersion">2024.7.1900</property>
+    <property type="string" id="appVersion">2024.7.2100</property>
     <property type="number" id="Init">0</property>
     <property type="number" id="Theme">0</property>
     <property type="number" id="ListMoveDown">1</property>

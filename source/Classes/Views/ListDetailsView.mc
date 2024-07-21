@@ -153,7 +153,7 @@ module Views {
                 WatchUi.requestUpdate();
             }
 
-            Debug.Log("Displaying list " + list.get("key") + " (" + list.get("name") + ")");
+            Debug.Log("Displaying list " + self.ListUuid + " (" + list.get("name") + ")");
         }
 
         private function noLists(dc as Dc) as Void {

@@ -139,7 +139,7 @@ module Lists {
             index.remove(uuid);
             if (self.StoreIndex(index)) {
                 Helper.ToastUtil.Toast(Rez.Strings.ListDel, Helper.ToastUtil.SUCCESS);
-                Debug.Log("Deleted list " + uuid + "!");
+                Debug.Log("Deleted list " + uuid);
             }
         }
 
@@ -152,11 +152,11 @@ module Lists {
         public function deleteOldestList() as Void {
             var index = self.GetLists();
             var keys = index.keys();
-            var oldest as String = "";
-            var oldest_ts as Number = 0;
+            var oldest = "";
+            var oldest_ts = 0;
             for (var i = 0; i < keys.size(); i++) {
                 var key = keys[i];
-                if (key == self._lastAddedUuid) {
+                if (key.equals(self._lastAddedUuid)) {
                     continue;
                 }
 
@@ -172,11 +172,21 @@ module Lists {
                 self.deleteList(oldest);
             }
 
+            self._lastAddedUuid = null;
             WatchUi.popView(WatchUi.SLIDE_BLINK);
         }
 
         public function deleteOtherLists() as Void {
-            Debug.Log("Delete all other lists");
+            var index = self.GetLists();
+            var keys = index.keys();
+            for (var i = 0; i < keys.size(); i++) {
+                var key = keys[i];
+                if (key.equals(self._lastAddedUuid)) {
+                    continue;
+                }
+                self.deleteList(key);
+            }
+            self._lastAddedUuid = null;
             WatchUi.popView(WatchUi.SLIDE_BLINK);
         }
 
@@ -208,7 +218,7 @@ module Lists {
                         index.remove(delete[i]);
                     }
 
-                    Debug.Log("Deleted " + delete.size() + " lists from index doe to invalid data: " + delete);
+                    Debug.Log("Deleted " + delete.size() + " lists from index: " + delete);
                     self.StoreIndex(index);
                 }
 
@@ -246,7 +256,7 @@ module Lists {
             var stats = System.getSystemStats();
             var occupied = stats.freeMemory.toFloat() / stats.totalMemory.toFloat();
             if (occupied > 0.1) {
-                Debug.Log("LOW MEMORY: " + (occupied * 100).format("%.2f") + "% -" + stats.freeMemory + " bytes / " + stats.totalMemory + " bytes");
+                Debug.Log("LOW MEMORY: " + (occupied * 100).format("%.2f") + "% (" + stats.usedMemory + " bytes / " + stats.totalMemory + " bytes)");
 
                 var str = Application.loadResource(Rez.Strings.lowmem);
                 str = Helper.StringUtil.stringReplace(str, "{{r}}", Helper.StringUtil.formatBytes(stats.freeMemory));
@@ -256,7 +266,7 @@ module Lists {
                 var btn_del = new Listitems.Button(null, Application.loadResource(Rez.Strings.lowmem_del), "del", margin, true);
                 var btn_delall = new Listitems.Button(null, Application.loadResource(Rez.Strings.lowmem_delall), "delall", margin, false);
 
-                var view = new Views.StatusView(str, null, [btn_del, btn_delall], { "del" => method(:deleteOldestList), "delall" => method(:deleteOtherLists) });
+                var view = new Views.StatusView(str, [btn_del, btn_delall], { "del" => method(:deleteOldestList), "delall" => method(:deleteOtherLists) });
                 var delegate = new Views.StatusViewDelegate(view);
                 WatchUi.pushView(view, delegate, WatchUi.SLIDE_BLINK);
             }

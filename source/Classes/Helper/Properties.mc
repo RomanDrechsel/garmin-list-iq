@@ -4,7 +4,7 @@ using Toybox.Application.Properties as Props;
 
 module Helper {
     class Properties {
-        private static var _props as Dictionary<EProps, Application.PropertyValueType> = {};
+        private static var _props as Dictionary<EProps, Number> = {};
 
         public enum EProps {
             THEME = "Theme",
@@ -41,16 +41,16 @@ module Helper {
             Debug.Log("Properties: " + self._props);
         }
 
-        public static function Save(prop as EProps, originalValue as Application.PropertyValueType) {
-            var value = originalValue instanceof Boolean ? (originalValue ? 1 : 0) as Number : originalValue;
+        public static function SaveBoolean(prop as EProps, originalValue as Boolean) {
+            var value = (originalValue ? 1 : 0) as Number;
             Application.Properties.setValue(prop as String, value);
             self._props.put(prop, value);
-            Debug.Log("Stored property " + prop + " with value " + value);
+            Debug.Log("Stored property " + prop + " as " + value);
         }
 
         static function Number(prop as Helper.Properties.EProps, default_value as Number) as Number {
             var ret = self._props.get(prop);
-            if (ret instanceof Number) {
+            if (ret != null) {
                 return ret;
             } else {
                 return default_value;
@@ -59,10 +59,9 @@ module Helper {
 
         static function Boolean(prop as Helper.Properties.EProps, default_value as Boolean) as Boolean {
             var ret = self._props.get(prop);
-            if (ret instanceof Number) {
-                return ret > 0;
-            } else {
-                return default_value;
+            Debug.Log("Get property " + prop + " as " + ret);
+            if (ret != null) {
+                return (ret > 0) as Boolean;
             }
         }
     }

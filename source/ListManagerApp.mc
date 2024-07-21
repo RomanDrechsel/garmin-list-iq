@@ -14,7 +14,7 @@ class ListsApp extends Application.AppBase {
 
     function initialize() {
         AppBase.initialize();
-        Application.Properties.setValue("appVersion", "2024.7.1900");
+        Application.Properties.setValue("appVersion", "2024.7.2100");
 
         var settings = System.getDeviceSettings();
         var stats = System.getSystemStats();

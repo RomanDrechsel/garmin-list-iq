@@ -98,14 +98,16 @@ module Controls {
         }
 
         function onShow() as Void {
+            if ($.getApp().GlobalStates.hasKey("movetop")) {
+                self._scrollOffset = 0;
+                self._snapPosition = 0;
+                $.getApp().GlobalStates.remove("movetop");
+            }
             WatchUi.View.onShow();
             Debug.Log("onShow " + self.TAG);
         }
 
         function onHide() as Void {
-            self.Items = [];
-            self._scrollOffset = 0;
-            self._snapPosition = 0;
             WatchUi.View.onHide();
             Debug.Log("OnHide " + self.TAG);
         }

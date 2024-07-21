@@ -31,7 +31,6 @@
     <string id="StDelAllDone">All lists where deleted.</string>
     <string id="StAppStore">Go to Android AppStore</string>
     <string id="StAppVersion">App Version</string>
-    <string id="StMemory">Memory</string>
 
     <string id="Yes">Yes</string>
     <string id="No">No</string>
@@ -40,9 +39,5 @@
     <string id="ListDateFormat">%D. %M %d, %y</string>
     <string id="ListTimeFormat">%h:%i %ampm</string>
     <string id="oclock"></string>
-
-    <string id="lowmem">There is only \n{{r}}\n of free memory available for the app.</string>
-    <string id="lowmem_del">Delete oldes list</string>
-    <string id="lowmem_delall">Delete all other lists</string>
 
 </strings>

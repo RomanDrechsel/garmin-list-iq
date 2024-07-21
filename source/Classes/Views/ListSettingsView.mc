@@ -54,7 +54,8 @@ module Views {
                 }
                 Helper.Properties.SaveBoolean(item.BoundObject, !prop);
                 WatchUi.requestUpdate();
-            } else if (item.BoundObject == "del") {
+                $.getApp().GlobalStates.put("movetop", true);
+            } else if (item.BoundObject.equals("del")) {
                 var dialog = new WatchUi.Confirmation(Application.loadResource(Rez.Strings.DeleteConfirm));
                 var delegate = new ConfirmDelegate(self.method(:deleteList));
                 WatchUi.pushView(dialog, delegate, WatchUi.SLIDE_BLINK);
@@ -63,6 +64,7 @@ module Views {
 
         function deleteList() {
             getApp().ListsManager.deleteList(self.ListUuid);
+            $.getApp().GlobalStates.put("movetop", true);
             WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
             WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
         }

@@ -32,15 +32,6 @@ module Views {
             item.TitleJustification = Graphics.TEXT_JUSTIFY_CENTER;
             item.SubtitleJustification = Graphics.TEXT_JUSTIFY_CENTER;
             self.Items.add(item);
-
-            var stats = System.getSystemStats();
-            str = Application.loadResource(Rez.Strings.StMemory);
-            var memory = Helper.StringUtil.formatBytes(stats.usedMemory) + " / " + Helper.StringUtil.formatBytes(stats.totalMemory);
-            var statsItem = new Listitems.Item(self._mainLayer, str, memory, null, null, self._verticalItemMargin, -1, null);
-            statsItem.DrawLine = false;
-            statsItem.TitleJustification = Graphics.TEXT_JUSTIFY_CENTER;
-            statsItem.SubtitleJustification = Graphics.TEXT_JUSTIFY_CENTER;
-            self.Items.add(statsItem);
         }
 
         function onUpdate(dc as Dc) as Void {

@@ -11,10 +11,11 @@ class ListsApp extends Application.AppBase {
 
     var ListsManager as ListsManager;
     var startupList = null;
+    var GlobalStates as Dictionary<String, Object> = {};
 
     function initialize() {
         AppBase.initialize();
-        Application.Properties.setValue("appVersion", "2024.7.2100");
+        Application.Properties.setValue("appVersion", "2024.7.2102");
 
         var settings = System.getDeviceSettings();
         var stats = System.getSystemStats();

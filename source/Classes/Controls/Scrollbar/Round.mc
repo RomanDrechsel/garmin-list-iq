@@ -14,8 +14,8 @@ module Controls {
                 self._layer = layer;
             }
 
-            function draw(dc as Dc, value as Number, maxvalue as Number) as Void {
-                if (maxvalue <= 0) {
+            function draw(dc as Dc, value as Number, maxvalue as Number, viewport_height as Number) as Void {
+                if (maxvalue <= viewport_height) {
                     return;
                 }
 
@@ -29,14 +29,14 @@ module Controls {
 
                 //calculate thumb
                 var scrollbarheight = self._startDegree * 2;
-                var thumbHeight = (scrollbarheight * scrollbarheight) / maxvalue;
+                var thumbHeight = (scrollbarheight * scrollbarheight) / (maxvalue - viewport_height);
                 if (thumbHeight < 12) {
                     thumbHeight = 12;
                 } else if (thumbHeight > scrollbarheight) {
                     thumbHeight = scrollbarheight;
                 }
 
-                var thumbTop = (value.toFloat() / maxvalue.toFloat()) * (scrollbarheight - thumbHeight);
+                var thumbTop = (value.toFloat() / (maxvalue - viewport_height).toFloat()) * (scrollbarheight - thumbHeight);
 
                 //thumb background
                 var startdegree = self._startDegree - thumbTop;

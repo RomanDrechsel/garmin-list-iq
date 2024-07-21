@@ -14,14 +14,11 @@ module Views {
         private var _noListsLabel as MultilineLabel? = null;
         private var _noListsLabel2 as MultilineLabel? = null;
 
+        protected var TAG = "ListsSelectView";
+
         function initialize() {
             self.ScrollMode = SCROLL_SNAP;
             CustomView.initialize();
-        }
-
-        function onLayout(dc as Dc) as Void {
-            CustomView.onLayout(dc);
-            self.UI_dragThreshold = (dc.getHeight() / 6).toNumber();
         }
 
         function onShow() as Void {
@@ -49,10 +46,8 @@ module Views {
             }
         }
 
-        function onListTap(position as Number, item as Item?) as Void {
-            if (item != null) {
-                self.GotoList(item.BoundObject);
-            }
+        function onListTap(position as Number, item as Item, doubletap as Boolean) as Void {
+            self.GotoList(item.BoundObject);
         }
 
         function onDoubleTap(x as Number, y as Number) as Void {
@@ -131,10 +126,11 @@ module Views {
                 }
             }
 
-            var y = self._mainLayer.getY();
-            if (self._noListsLabel2 != null) {
-                y = self._mainLayer.getY();
-                y += (self._mainLayer.getHeight() - self._noListsLabel2.getHeight(dc) - self._noListsLabel.getHeight(dc)) / 2;
+            var y;
+            if (self._noListsLabel2 == null) {
+                y = self._mainLayer.getY() + (self._mainLayer.getHeight() - self._noListsLabel.getHeight(dc)) / 2;
+            } else {
+                y = self._mainLayer.getY() + (self._mainLayer.getHeight() - self._noListsLabel2.getHeight(dc) - self._noListsLabel.getHeight(dc)) / 2;
 
                 //no overlapping of the labels
                 var label1_bottom = y + self._noListsLabel.getHeight(dc);

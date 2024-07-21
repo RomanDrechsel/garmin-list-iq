@@ -97,7 +97,10 @@ module Controls {
                             curr_line_width += part_width;
                         } else {
                             //line-break
-                            ret.add(curr_line);
+                            curr_line = Helper.StringUtil.trim(curr_line);
+                            if (curr_line.length() > 0) {
+                                ret.add(curr_line);
+                            }
                             if (Helper.StringUtil.isWhitespace(str)) {
                                 curr_line = "";
                                 curr_line_width = 0;
@@ -108,7 +111,9 @@ module Controls {
                         }
                     }
                 }
-                ret.add(curr_line);
+                if (curr_line.length() > 0) {
+                    ret.add(curr_line);
+                }
             }
 
             return ret;

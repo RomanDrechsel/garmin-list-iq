@@ -8,6 +8,8 @@ import Controls.Listitems;
 
 module Controls {
     class CustomView extends WatchUi.View {
+        protected var TAG = "CustomView";
+
         enum EScrollmode {
             SCROLL_SNAP,
             SCROLL_DRAG,
@@ -56,11 +58,12 @@ module Controls {
         protected var _needScrollbar as Boolean? = null;
 
         /** is a new validation needed? */
-        private var _needValidation as Boolean = true;
+        protected var _needValidation as Boolean = true;
 
         function initialize() {
             View.initialize();
             self.Items = [];
+            Debug.Log("Initialized " + self.TAG);
         }
 
         function onLayout(dc as Dc) {
@@ -94,6 +97,21 @@ module Controls {
             self.validate(dc);
         }
 
+        function onShow() as Void {
+            if ($.getApp().GlobalStates.hasKey("movetop")) {
+                self._scrollOffset = 0;
+                self._snapPosition = 0;
+                $.getApp().GlobalStates.remove("movetop");
+            }
+            WatchUi.View.onShow();
+            Debug.Log("onShow " + self.TAG);
+        }
+
+        function onHide() as Void {
+            WatchUi.View.onHide();
+            Debug.Log("OnHide " + self.TAG);
+        }
+
         function drawList(dc as Dc) as Void {
             if (self._mainLayer == null) {
                 return;
@@ -110,7 +128,12 @@ module Controls {
                 }
 
                 if (self._needScrollbar) {
-                    self._scrollbar.draw(dc, self._scrollOffset, self._viewHeight - self._mainLayer.getHeight());
+                    var viewport_height = dc.getHeight();
+                    if ($.isRoundDisplay) {
+                        var margin = self.getMargin(dc);
+                        viewport_height -= 2 * margin[1];
+                    }
+                    self._scrollbar.draw(dc, self._scrollOffset, self._viewHeight, viewport_height);
                 }
             }
         }
@@ -181,14 +204,24 @@ module Controls {
             }
         }
 
-        function onListTap(position as Number, item as Item) as Void;
-        function onDoubleTap(x as Number, y as Number) as Void;
+        function onListTap(position as Number, item as Item, doubletap as Boolean) as Void;
+
+        function onDoubleTap(x as Number, y as Number) as Boolean {
+            for (var i = 0; i < self.Items.size(); i++) {
+                var item = self.Items[i];
+                if (item.Clicked(y)) {
+                    self.onListTap(i, item, true);
+                    return true;
+                }
+            }
+            return false;
+        }
 
         function onTap(x as Number, y as Number) as Boolean {
             for (var i = 0; i < self.Items.size(); i++) {
                 var item = self.Items[i];
                 if (item.Clicked(y)) {
-                    self.onListTap(i, item);
+                    self.onListTap(i, item, false);
                     return true;
                 }
             }
@@ -303,7 +336,9 @@ module Controls {
                 var y = self.getPaddingTop(dc);
                 for (var i = 0; i < self.Items.size(); i++) {
                     var item = self.Items[i];
+                    item.setLayer(self._mainLayer);
                     item.setListY(y);
+                    item.Invalidate();
                     y += item.getHeight(dc);
                 }
 

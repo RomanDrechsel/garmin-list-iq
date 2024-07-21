@@ -1,12 +1,15 @@
 import Toybox;
 import Toybox.WatchUi;
 import Toybox.Lang;
+import Toybox.System;
+import Toybox.Application;
 using Toybox.Communications;
 
 module Comm {
-    class ListsReceiver {
-        function Start() as Void {
+    class ListsReceiver extends Toybox.Communications.ConnectionListener {
+        function initialize() {
             Communications.registerForPhoneAppMessages(method(:phoneMessageCallback));
+            Debug.Log("Started ListsReceiver");
         }
 
         function phoneMessageCallback(msg as Communications.Message) as Void {
@@ -28,5 +31,18 @@ module Comm {
                 Debug.Log("Received invalid message!");
             }
         }
+
+        /*function SendToPhone(value as Application.PersistableType) as Void {
+            Debug.Log("Send to phone: " + value);
+            Communications.transmit(value, {}, self);
+        }
+
+        function onComplete() as Void {
+            Debug.Log("Send to phone successful.");
+        }
+
+        function onError() as Void {
+            Debug.Log("Send to phone failed!");
+        }*/
     }
 }

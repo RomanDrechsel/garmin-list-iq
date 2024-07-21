@@ -32,7 +32,6 @@ module Controls {
             } else {
                 self._lastTap = now;
             }
-
             return tap;
         }
 

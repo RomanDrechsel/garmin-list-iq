@@ -3,7 +3,7 @@
         <settingConfig type="alphaNumeric" readonly="true" />
     </setting>
 
-    <setting propertyKey="@Properties.Th" title="@Strings.SettingsTh">
+    <setting propertyKey="@Properties.Theme" title="@Strings.SettingsTh">
         <settingConfig type="list">
             <listEntry value="0">@Strings.ThGrey</listEntry>
             <listEntry value="1">@Strings.ThRed</listEntry>
@@ -11,11 +11,26 @@
             <listEntry value="666">Blue screen of death</listEntry>
         </settingConfig>
     </setting>
-    
+
     <setting propertyKey="@Properties.ListMoveDown" title="@Strings.StMoveBottom">
         <settingConfig type="list">
             <listEntry value="1">@Strings.Yes</listEntry>
             <listEntry value="0">@Strings.No</listEntry>
         </settingConfig>
     </setting>
+
+    <setting propertyKey="@Properties.DoubleTapForDone" title="@Strings.StDoubleTapForDone">
+        <settingConfig type="list">
+            <listEntry value="1">@Strings.Yes</listEntry>
+            <listEntry value="0">@Strings.No</listEntry>
+        </settingConfig>
+    </setting>
+
+    <setting propertyKey="@Properties.ShowNotes" title="@Strings.StDShowNotes">
+        <settingConfig type="list">
+            <listEntry value="1">@Strings.Yes</listEntry>
+            <listEntry value="0">@Strings.No</listEntry>
+        </settingConfig>
+    </setting>
+
 </settings>

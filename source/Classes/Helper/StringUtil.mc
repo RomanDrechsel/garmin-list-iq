@@ -88,5 +88,38 @@ module Helper {
 
             return false;
         }
+
+        static function trim(str as String) as String {
+            if (str.length() > 0) {
+                var chars = str.toCharArray();
+                var start = 0;
+                var end = str.length() - 1;
+                for (var i = 0; i < chars.size(); i++) {
+                    if (!self.isWhitespace(chars[i])) {
+                        start = i;
+                        break;
+                    }
+                }
+                for (var i = chars.size() - 1; i >= 0; i--) {
+                    if (!self.isWhitespace(chars[i])) {
+                        end = i;
+                        break;
+                    }
+                }
+                str = str.substring(start, end + 1);
+            }
+
+            return str;
+        }
+
+        static function formatBytes(bytes as Number) as String {
+            if (bytes >= 1048576) {
+                return (bytes / 1048576).format("%.1f") + "Mb";
+            } else if (bytes >= 1024) {
+                return (bytes / 1024).format("%.1f") + "kB";
+            } else {
+                return bytes + "B";
+            }
+        }
     }
 }

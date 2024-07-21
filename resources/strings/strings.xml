@@ -23,6 +23,8 @@
     <string id="StMoveBottom">Move completed items to the bottom</string>
     <string id="StDelList">Delete list</string>
     <string id="DeleteConfirm">Delete the list?</string>
+    <string id="StDoubleTapForDone">Double Tap on item to set it done</string>
+    <string id="StDShowNotes">Display item notes</string>
 
     <string id="StDelAll">Delete all lists</string>
     <string id="StDelAllConfirm">Delete all lists?</string>

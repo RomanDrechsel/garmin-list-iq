@@ -17,14 +17,13 @@ module Controls {
             var DrawLine as Boolean = true;
 
             protected static var _horizonalPaddingFactor = 0.05;
-            protected static var _iconPaddingFactor = 0.4;
+            protected static var _iconPaddingFactor = 0.3;
 
             protected var _needValidation as Boolean = true;
             protected var _font as FontType;
             protected var _color as ColorType;
             protected var _colorSub as ColorType;
             protected var _verticalMargin as Number = 0;
-            protected var _horizontalMargin as Number = 0;
             protected var _icon as String or ViewItemIcon or Null = null;
             protected var _listY as Number? = null;
             protected var _height as Number? = null;
@@ -32,27 +31,30 @@ module Controls {
             protected var _layer as LayerDef? = null;
             protected var _textOffsetX as Number = 0;
 
-            function initialize(layer as LayerDef, title as String?, subtitle as String?, obj as Object?, icon as Number or BitmapResource or Null, vert_margin as Number, position as Number, fontoverride as FontType?) {
+            function initialize(layer as LayerDef?, title as String?, subtitle as String?, obj as Object?, icon as Number or BitmapResource or Null, vert_margin as Number, position as Number, fontoverride as FontType?) {
                 self._font = fontoverride != null ? fontoverride : Fonts.Normal();
                 self._color = getTheme().MainColor;
                 self._colorSub = getTheme().SecondColor;
                 self.ItemPosition = position;
                 self._layer = layer;
                 self._verticalMargin = vert_margin;
-                self._horizontalMargin = (layer.getWidth() * 0.05).toNumber();
                 if (title instanceof String) {
                     self.Title = title;
                 }
                 if (subtitle instanceof String) {
                     self.Subtitle = subtitle;
                 }
+
                 self.BoundObject = obj;
                 self.setIcon(icon);
                 self._needValidation = true;
             }
 
             /** returns height of the item */
-            function draw(dc as Dc, yOffset as Number) {
+            function draw(dc as Dc, yOffset as Number) as Number {
+                if (self._layer == null) {
+                    return 0;
+                }
                 self.validate(dc);
                 var viewport_y = self._listY - yOffset + self._layer.getY();
                 self._viewportY = viewport_y;
@@ -68,7 +70,7 @@ module Controls {
                     var iconoffsety = (Graphics.getFontHeight(self._font) - dc.getFontHeight(Fonts.Icons())) / 2;
                     dc.setColor(getTheme().MainColor, Graphics.COLOR_TRANSPARENT);
                     dc.drawText(x, viewport_y + iconoffsety, Fonts.Icons(), self._icon, Graphics.TEXT_JUSTIFY_LEFT);
-                } else if (self._icon != null) {
+                } else if (self.isBitmap(self._icon)) {
                     var iconoffsety = (Graphics.getFontHeight(self._font) - self._icon.getHeight()) / 2;
                     dc.drawBitmap(x, viewport_y + iconoffsety, self._icon);
                 }
@@ -104,22 +106,6 @@ module Controls {
                 self._colorSub = color != null ? color : getTheme().SecondColor;
             }
 
-            protected function isVisible() as Boolean {
-                if (self._viewportY == null || self._height == null) {
-                    return true;
-                }
-
-                if (self._viewportY + self._height < 0) {
-                    //above the top edge of the display
-                    return false;
-                } else if (self._viewportY > self._layer.getDc().getHeight()) {
-                    //below the bottom edge of the display
-                    return false;
-                } else {
-                    return true;
-                }
-            }
-
             function getHeight(dc as Dc?) as Number {
                 if (dc != null) {
                     self.validate(dc);
@@ -142,10 +128,10 @@ module Controls {
                 }
             }
 
-            function setIcon(icon as Number or BitmapResource or Graphics.BitmapReference or Null) as Void {
+            function setIcon(icon as Number or ViewItemIcon or Null) {
                 if (icon instanceof Number && icon >= 0) {
                     self._icon = icon.toChar().toString();
-                } else {
+                } else if (self.isBitmap(icon)) {
                     self._icon = icon;
                 }
             }
@@ -165,6 +151,29 @@ module Controls {
 
             function Invalidate() {
                 self._needValidation = true;
+            }
+
+            function setLayer(layer as LayerDef) {
+                self._layer = layer;
+            }
+
+            protected function isVisible() as Boolean {
+                if (self._viewportY == null || self._height == null) {
+                    return true;
+                }
+                if (self._layer == null) {
+                    return false;
+                }
+
+                if (self._viewportY + self._height < 0) {
+                    //above the top edge of the display
+                    return false;
+                } else if (self._viewportY > self._layer.getDc().getHeight()) {
+                    //below the bottom edge of the display
+                    return false;
+                } else {
+                    return true;
+                }
             }
 
             protected function drawLine(dc as Dc, y as Number) as Number {
@@ -198,7 +207,7 @@ module Controls {
             }
 
             protected function validate(dc as Dc) {
-                if (self._needValidation == true) {
+                if (self._needValidation == true && self._layer != null) {
                     var padding = self._layer.getWidth() * self._horizonalPaddingFactor;
                     var width = self._layer.getWidth() - 2 * padding;
 
@@ -206,18 +215,22 @@ module Controls {
                         self.Title = new MultilineLabel(self.Title, width - self.getIconWidth(dc), self._font);
                     } else if (self.Title instanceof MultilineLabel) {
                         self.Title.Invalidate(width - self.getIconWidth(dc));
+                    } else {
+                        self.Title = null;
                     }
 
                     if (self.Subtitle instanceof String && self.Subtitle.length() > 0) {
                         self.Subtitle = new MultilineLabel(self.Subtitle, width, Fonts.Small());
                     } else if (self.Subtitle instanceof MultilineLabel) {
                         self.Subtitle.Invalidate(width);
+                    } else {
+                        self.Subtitle = null;
                     }
                     self._needValidation = false;
                 }
             }
 
-            private function getIconWidth(dc as Dc) as Number {
+            protected function getIconWidth(dc as Dc) as Number {
                 var iconwidth;
                 if (self._icon instanceof String && self._icon.length() > 0) {
                     iconwidth = dc.getTextWidthInPixels(self._icon, Fonts.Icons());
@@ -228,6 +241,14 @@ module Controls {
                 }
 
                 return iconwidth + iconwidth * self._iconPaddingFactor;
+            }
+
+            protected function isBitmap(obj as Object) as Boolean {
+                if (obj instanceof WatchUi.BitmapResource || (Graphics has :BitmapReference && obj instanceof Graphics.BitmapReference)) {
+                    return true;
+                } else {
+                    return false;
+                }
             }
         }
     }

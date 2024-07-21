@@ -13,12 +13,7 @@ module Views {
         private var _itemIconUncheck = Application.loadResource(Rez.Drawables.Item);
         private var _itemIconCheck = Application.loadResource(Rez.Drawables.ItemDone);
 
-        private var _settingsMoveDown = false;
-
-        private enum {
-            SETTINGS_MOVEDOWN,
-            SETTINGS_DELETE,
-        }
+        protected var TAG = "ListSettingsView";
 
         function initialize(uuid as String) {
             CustomView.initialize();
@@ -27,20 +22,18 @@ module Views {
 
         function onLayout(dc as Dc) {
             CustomView.onLayout(dc);
-
-            var settings_movedown = Application.Properties.getValue("ListMoveDown") as Number;
-            if (settings_movedown != null && settings_movedown == 1) {
-                self._settingsMoveDown = true;
-            } else {
-                self._settingsMoveDown = false;
-            }
-
             self.setTitle(Application.loadResource(Rez.Strings.StTitle));
 
-            var movedown = new Listitems.Item(self._mainLayer, Application.loadResource(Rez.Strings.StMoveBottom), null, SETTINGS_MOVEDOWN, self._settingsMoveDown ? self._itemIconCheck : self._itemIconUncheck, self._verticalItemMargin, 0, null);
+            var movedown = new Listitems.Item(self._mainLayer, Application.loadResource(Rez.Strings.StMoveBottom), null, Helper.Properties.LISTMOVEDOWN, Helper.Properties.Boolean(Helper.Properties.LISTMOVEDOWN, true) ? self._itemIconCheck : self._itemIconUncheck, self._verticalItemMargin, 0, null);
             self.Items.add(movedown);
 
-            self.Items.add(new Listitems.Button(self._mainLayer, Application.loadResource(Rez.Strings.StDelList), SETTINGS_DELETE, self._verticalItemMargin, false));
+            var doubletap = new Listitems.Item(self._mainLayer, Application.loadResource(Rez.Strings.StDoubleTapForDone), null, Helper.Properties.DOUBLETAPFORDONE, Helper.Properties.Boolean(Helper.Properties.DOUBLETAPFORDONE, true) ? self._itemIconCheck : self._itemIconUncheck, self._verticalItemMargin, 0, null);
+            self.Items.add(doubletap);
+
+            var shownotes = new Listitems.Item(self._mainLayer, Application.loadResource(Rez.Strings.StDShowNotes), null, Helper.Properties.SHOWNOTES, Helper.Properties.Boolean(Helper.Properties.SHOWNOTES, true) ? self._itemIconCheck : self._itemIconUncheck, self._verticalItemMargin, 0, null);
+            self.Items.add(shownotes);
+
+            self.Items.add(new Listitems.Button(self._mainLayer, Application.loadResource(Rez.Strings.StDelList), "del", self._verticalItemMargin, false));
         }
 
         function onUpdate(dc as Dc) {
@@ -51,27 +44,27 @@ module Views {
             self.drawList(dc);
         }
 
-        function onListTap(position as Number, item as Item?) as Void {
-            if (item != null) {
-                if (item.BoundObject == SETTINGS_MOVEDOWN) {
-                    if (self._settingsMoveDown) {
-                        item.setIcon(self._itemIconUncheck);
-                    } else {
-                        item.setIcon(self._itemIconCheck);
-                    }
-                    self._settingsMoveDown = !self._settingsMoveDown;
-                    Application.Properties.setValue("ListMoveDown", self._settingsMoveDown ? 1 : 2);
-                    WatchUi.requestUpdate();
-                } else if (item.BoundObject == SETTINGS_DELETE) {
-                    var dialog = new WatchUi.Confirmation(Application.loadResource(Rez.Strings.DeleteConfirm));
-                    var delegate = new ConfirmDelegate(self.method(:deleteList));
-                    WatchUi.pushView(dialog, delegate, WatchUi.SLIDE_BLINK);
+        function onListTap(position as Number, item as Item, doubletab as Boolean) as Void {
+            if ([Helper.Properties.LISTMOVEDOWN, Helper.Properties.DOUBLETAPFORDONE, Helper.Properties.SHOWNOTES].indexOf(item.BoundObject) >= 0) {
+                var prop = Helper.Properties.Boolean(item.BoundObject, true);
+                if (prop) {
+                    item.setIcon(self._itemIconUncheck);
+                } else {
+                    item.setIcon(self._itemIconCheck);
                 }
+                Helper.Properties.SaveBoolean(item.BoundObject, !prop);
+                WatchUi.requestUpdate();
+                $.getApp().GlobalStates.put("movetop", true);
+            } else if (item.BoundObject.equals("del")) {
+                var dialog = new WatchUi.Confirmation(Application.loadResource(Rez.Strings.DeleteConfirm));
+                var delegate = new ConfirmDelegate(self.method(:deleteList));
+                WatchUi.pushView(dialog, delegate, WatchUi.SLIDE_BLINK);
             }
         }
 
         function deleteList() {
             getApp().ListsManager.deleteList(self.ListUuid);
+            $.getApp().GlobalStates.put("movetop", true);
             WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
             WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
         }

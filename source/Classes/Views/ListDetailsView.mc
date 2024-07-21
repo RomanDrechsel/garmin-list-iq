@@ -1,6 +1,7 @@
 import Toybox.Graphics;
 import Toybox.Lang;
 import Toybox.WatchUi;
+import Toybox.Application;
 import Lists;
 import Controls;
 import Controls.Listitems;
@@ -14,10 +15,11 @@ module Views {
         private var _listFound = false;
 
         private var _noListLabel = null;
-        private var _itemIcon as WatchUi.BitmapResource or Graphics.BitmapReference = Application.loadResource(Rez.Drawables.Item);
-        private var _itemIconDone as WatchUi.BitmapResource or Graphics.BitmapReference = Application.loadResource(Rez.Drawables.ItemDone);
+        private var _itemIcon as Listitems.ViewItemIcon = Application.loadResource(Rez.Drawables.Item);
+        private var _itemIconDone as Listitems.ViewItemIcon = Application.loadResource(Rez.Drawables.ItemDone);
 
         protected var _fontoverride = Fonts.Large();
+        protected var TAG = "ListDetailsView";
 
         function initialize(uuid as String) {
             CustomView.initialize();
@@ -51,8 +53,8 @@ module Views {
             }
         }
 
-        function onListTap(position as Number, item as Item?) as Void {
-            if (item != null) {
+        function onListTap(position as Number, item as Item, doubletap as Boolean) as Void {
+            if (Helper.Properties.Boolean(Helper.Properties.DOUBLETAPFORDONE, true) == doubletap) {
                 if (item.BoundObject == false) {
                     item.setColor(getTheme().DisabledColor);
                     item.setIcon(self._itemIconDone);
@@ -87,6 +89,8 @@ module Views {
                 self._listFound = false;
             } else {
                 Application.Storage.setValue("LastList", self.ListUuid);
+                var show_notes = Helper.Properties.Boolean(Helper.Properties.SHOWNOTES, true);
+                var move_down = Helper.Properties.Boolean(Helper.Properties.LISTMOVEDOWN, true);
 
                 self._listFound = true;
                 if (list.hasKey("name")) {
@@ -94,16 +98,13 @@ module Views {
                 }
 
                 if (list.hasKey("items")) {
-                    var settings_movedown = Application.Properties.getValue("ListMoveDown") as Number;
-                    var movedown = settings_movedown != null && settings_movedown == 1 ? true : false;
-
                     var ordered = [];
                     var done = [];
 
                     for (var i = 0; i < list["items"].size(); i++) {
                         var item = list["items"][i];
                         item.put("pos", i);
-                        if (movedown && item.hasKey("d") && item.get("d") == true) {
+                        if (move_down == true && item.get("d") == true) {
                             done.add(item);
                         } else {
                             ordered.add(item);
@@ -133,7 +134,7 @@ module Views {
                             text = itemobj;
                         } else if (itemobj instanceof Array) {
                             text = itemobj[0];
-                            if (itemobj.size() > 1) {
+                            if (show_notes == true && itemobj.size() > 1) {
                                 note = itemobj[1];
                             }
                         }
@@ -151,6 +152,8 @@ module Views {
             if (request_update) {
                 WatchUi.requestUpdate();
             }
+
+            Debug.Log("Displaying list " + self.ListUuid + " (" + list.get("name") + ")");
         }
 
         private function noLists(dc as Dc) as Void {

@@ -1,19 +1,8 @@
-- ggf. Uhr anzeigen --> order kann man zwischen WatchFace und App wechseln?
-- Memory anzeigen?!
-- Background?
-- Settings: Notizen anzeigen?
+WIP: show notes?
+BUG: always scroll to top onShow
+TODO: Memory anzeigen?!
 
 
-https://github.com/garmin/connectiq-apps/blob/master/device-apps/disc-golf/disc-golf-android/app/src/main/java/com/garmin/android/apps/samples/disgolf/SendRoundToDeviceActivity.java
-
-
-https://wiki.ubuntuusers.de/adb/
-
-Emulator:
-adb -s emulator-5554 forward tcp:7381 tcp:7381
-
-Live:
-adb -s R5CW31K1TPT forward tcp:7381 tcp:7381
 
 
 adb forward tcp:7381 tcp:7381

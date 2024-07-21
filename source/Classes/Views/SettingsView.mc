@@ -7,6 +7,8 @@ import Helper;
 
 module Views {
     class SettingsView extends Controls.CustomView {
+        protected var TAG = "SettingsView";
+
         private enum {
             SETTINGS_DELETEALL,
             SETTINGS_APPSTORE,
@@ -26,7 +28,7 @@ module Views {
             var str = Application.loadResource(Rez.Strings.StAppVersion);
             var version = Application.Properties.getValue("appVersion");
             var item = new Listitems.Item(self._mainLayer, str, version, null, null, self._verticalItemMargin, -1, null);
-            item.DrawLine = false;
+
             item.TitleJustification = Graphics.TEXT_JUSTIFY_CENTER;
             item.SubtitleJustification = Graphics.TEXT_JUSTIFY_CENTER;
             self.Items.add(item);
@@ -40,21 +42,19 @@ module Views {
             self.drawList(dc);
         }
 
-        function onListTap(position as Number, item as Item?) as Void {
-            if (item != null) {
-                if (item.BoundObject == SETTINGS_DELETEALL) {
-                    var dialog = new WatchUi.Confirmation(Application.loadResource(Rez.Strings.StDelAllConfirm));
-                    var delegate = new ConfirmDelegate(self.method(:deleteAllLists));
-                    WatchUi.pushView(dialog, delegate, WatchUi.SLIDE_BLINK);
-                } else if (item.BoundObject == SETTINGS_APPSTORE) {
-                    Communications.openWebPage(getAppStore(), null, null);
-                    WatchUi.popView(WatchUi.SLIDE_RIGHT);
-                }
+        function onListTap(position as Number, item as Item, doubletap as Boolean) as Void {
+            if (item.BoundObject == SETTINGS_DELETEALL) {
+                var dialog = new WatchUi.Confirmation(Application.loadResource(Rez.Strings.StDelAllConfirm));
+                var delegate = new ConfirmDelegate(self.method(:deleteAllLists));
+                WatchUi.pushView(dialog, delegate, WatchUi.SLIDE_BLINK);
+            } else if (item.BoundObject == SETTINGS_APPSTORE) {
+                Communications.openWebPage(getAppStore(), null, null);
+                WatchUi.popView(WatchUi.SLIDE_RIGHT);
             }
         }
 
         function deleteAllLists() {
-            getApp().ListsManager.clearAll();
+            $.getApp().ListsManager.clearAll();
             WatchUi.popView(WatchUi.SLIDE_RIGHT);
         }
     }

@@ -8,10 +8,9 @@ module Controls {
             private var _marginFactor = 0.05;
             private var _paddingFactor = 0.05;
 
-            function initialize(layer as LayerDef, title as String, identifier as Object, margin as Number, drawline as Boolean) {
+            function initialize(layer as LayerDef?, title as String, identifier as Object, margin as Number, drawline as Boolean) {
                 Item.initialize(layer, null, null, identifier, null, margin, -1, null);
-                var maxwidth = self.getButtonWidth() - 2 * self.getPadding();
-                self.Title = new MultilineLabel(title, maxwidth.toNumber(), self._font);
+                self.Title = title;
                 self.Subtitle = null;
                 self.DrawLine = drawline;
                 if ($.isRoundDisplay == true) {
@@ -21,7 +20,10 @@ module Controls {
             }
 
             /** returns height of the item */
-            function draw(dc as Dc, yOffset as Number) {
+            function draw(dc as Dc, yOffset as Number) as Number {
+                if (self._layer == null) {
+                    return 0;
+                }
                 self.validate(dc);
 
                 var viewport_y = self._listY - yOffset + self._layer.getY();
@@ -58,7 +60,10 @@ module Controls {
             }
 
             function getHeight(dc as Dc?) as Number {
-                if (dc != null) {
+                if (dc != null && self._layer != null) {
+                    if (self.Title instanceof String) {
+                        return dc.getFontHeight(self._font);
+                    }
                     if (self._height == null || self._height <= 0) {
                         var marginX = self._layer.getWidth() * self._marginFactor;
                         var button_width = self._layer.getWidth() - 2 * marginX;
@@ -74,7 +79,9 @@ module Controls {
             }
 
             private function getButtonWidth() as Number {
-                //var x = self._layer.getX() + self._layer.getWidth() * self._marginFactor;
+                if (self._layer == null) {
+                    return 0;
+                }
                 var x = self._layer.getWidth() * self._marginFactor;
                 return self._layer.getWidth() - 2 * x;
             }
@@ -85,7 +92,10 @@ module Controls {
 
             protected function validate(dc as Dc) {
                 if (self._needValidation == true) {
-                    if (self.Title instanceof MultilineLabel) {
+                    if (self.Title instanceof String) {
+                        var maxwidth = self.getButtonWidth() - 2 * self.getPadding();
+                        self.Title = new MultilineLabel(self.Title, maxwidth.toNumber(), self._font);
+                    } else if (self.Title instanceof MultilineLabel) {
                         var maxwidth = self.getButtonWidth() - 2 * self.getPadding();
                         self.Title.Invalidate(maxwidth);
                     }

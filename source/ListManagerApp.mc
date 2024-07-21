@@ -6,18 +6,28 @@ import Views;
 import Comm;
 import Lists;
 
-class ListManagerApp extends Application.AppBase {
+class ListsApp extends Application.AppBase {
     private var ListsReceiver as ListsReceiver;
 
     var ListsManager as ListsManager;
     var startupList = null;
+    var GlobalStates as Dictionary<String, Object> = {};
 
     function initialize() {
         AppBase.initialize();
-        Application.Properties.setValue("appVersion", "2024.5.1800");
+        Application.Properties.setValue("appVersion", "2024.7.2102");
+
+        var settings = System.getDeviceSettings();
+        var stats = System.getSystemStats();
+        Debug.Log("App started (" + Application.Properties.getValue("appVersion") + ")");
+        Debug.Log("Display: " + settings.screenShape);
+        Debug.Log("Firmware: " + settings.firmwareVersion);
+        Debug.Log("Monkey Version: " + settings.monkeyVersion);
+        Debug.Log("Memory: " + stats.usedMemory + " / " + stats.totalMemory);
+
+        Helper.Properties.Load();
         self.ListsManager = new ListsManager();
         self.ListsReceiver = new ListsReceiver();
-        self.ListsReceiver.Start();
     }
 
     function onStart(state as Lang.Dictionary?) as Void {
@@ -31,6 +41,7 @@ class ListManagerApp extends Application.AppBase {
     }
 
     function onSettingsChanged() as Void {
+        Helper.Properties.Load();
         Themes.ThemesLoader.loadTheme();
         WatchUi.requestUpdate();
     }
@@ -38,10 +49,10 @@ class ListManagerApp extends Application.AppBase {
 
 var isRoundDisplay = System.getDeviceSettings().screenShape == System.SCREEN_SHAPE_ROUND;
 
-function getApp() as ListManagerApp {
-    return Application.getApp() as ListManagerApp;
+function getApp() as ListsApp {
+    return Application.getApp() as ListsApp;
 }
 
 function getAppStore() as String {
-    return "https://roman-drechsel.de";
+    return "https://play.google.com/store/apps/details?id=de.romandrechsel.lists";
 }

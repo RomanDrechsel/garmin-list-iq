@@ -5,6 +5,7 @@
     <string id="ThGrey">Grau</string>
     <string id="ThRed">Rot</string>
     <string id="ThBaW">Schwarz-Weiß</string>
+    <string id="ThWaB">Weiß-Schwarz</string>
 
     <string id="ListRec">Liste empfangen.</string>
     <string id="EStorageFull">Der Speicher ist voll!</string>

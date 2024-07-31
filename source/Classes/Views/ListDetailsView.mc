@@ -15,8 +15,8 @@ module Views {
         private var _listFound = false;
 
         private var _noListLabel = null;
-        private var _itemIcon as Listitems.ViewItemIcon = Application.loadResource(Rez.Drawables.Item);
-        private var _itemIconDone as Listitems.ViewItemIcon = Application.loadResource(Rez.Drawables.ItemDone);
+        private var _itemIcon as Listitems.ViewItemIcon;
+        private var _itemIconDone as Listitems.ViewItemIcon;
 
         protected var _fontoverride = Fonts.Large();
         protected var TAG = "ListDetailsView";
@@ -24,6 +24,8 @@ module Views {
         function initialize(uuid as String) {
             CustomView.initialize();
             self.ListUuid = uuid;
+            self._itemIcon = $.getTheme().DarkTheme ? Application.loadResource(Rez.Drawables.Item) : Application.loadResource(Rez.Drawables.bItem);
+            self._itemIconDone = $.getTheme().DarkTheme ? Application.loadResource(Rez.Drawables.ItemDone) : Application.loadResource(Rez.Drawables.bItemDone);
         }
 
         function onLayout(dc as Dc) {
@@ -79,6 +81,12 @@ module Views {
             var view = new ListSettingsView(self.ListUuid);
             var delegate = new ListSettingsViewDelegate(view);
             WatchUi.pushView(view, delegate, WatchUi.SLIDE_BLINK);
+        }
+
+        function onSettingsChanged() as Void {
+            self._itemIcon = $.getTheme().DarkTheme ? Application.loadResource(Rez.Drawables.Item) : Application.loadResource(Rez.Drawables.bItem);
+            self._itemIconDone = $.getTheme().DarkTheme ? Application.loadResource(Rez.Drawables.ItemDone) : Application.loadResource(Rez.Drawables.bItemDone);
+            self.publishItems(false);
         }
 
         private function publishItems(request_update as Boolean) as Void {

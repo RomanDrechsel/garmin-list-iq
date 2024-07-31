@@ -61,6 +61,7 @@ module Controls {
 
             function getHeight(dc as Dc?) as Number {
                 if (dc != null && self._layer != null) {
+                    self.validate(dc);
                     if (self.Title instanceof String) {
                         return dc.getFontHeight(self._font);
                     }

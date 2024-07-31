@@ -20,18 +20,7 @@ module Views {
 
         function onLayout(dc as Dc) as Void {
             CustomView.onLayout(dc);
-
-            self.setTitle(Application.loadResource(Rez.Strings.StTitle));
-            self.Items.add(new Listitems.Button(self._mainLayer, Application.loadResource(Rez.Strings.StDelAll), SETTINGS_DELETEALL, self._verticalItemMargin, true));
-            self.Items.add(new Listitems.Button(self._mainLayer, Application.loadResource(Rez.Strings.StAppStore), SETTINGS_APPSTORE, self._verticalItemMargin, true));
-
-            var str = Application.loadResource(Rez.Strings.StAppVersion);
-            var version = Application.Properties.getValue("appVersion");
-            var item = new Listitems.Item(self._mainLayer, str, version, null, null, self._verticalItemMargin, -1, null);
-
-            item.TitleJustification = Graphics.TEXT_JUSTIFY_CENTER;
-            item.SubtitleJustification = Graphics.TEXT_JUSTIFY_CENTER;
-            self.Items.add(item);
+            self.loadVisuals();
         }
 
         function onUpdate(dc as Dc) as Void {
@@ -53,9 +42,29 @@ module Views {
             }
         }
 
-        function deleteAllLists() {
+        function deleteAllLists() as Void {
             $.getApp().ListsManager.clearAll();
             WatchUi.popView(WatchUi.SLIDE_RIGHT);
+        }
+
+        function onSettingsChanged() as Void {
+            self.loadVisuals();
+        }
+
+        private function loadVisuals() as Void {
+            self.Items = [];
+
+            self.setTitle(Application.loadResource(Rez.Strings.StTitle));
+            self.Items.add(new Listitems.Button(self._mainLayer, Application.loadResource(Rez.Strings.StDelAll), SETTINGS_DELETEALL, self._verticalItemMargin, true));
+            self.Items.add(new Listitems.Button(self._mainLayer, Application.loadResource(Rez.Strings.StAppStore), SETTINGS_APPSTORE, self._verticalItemMargin, true));
+
+            var str = Application.loadResource(Rez.Strings.StAppVersion);
+            var version = Application.Properties.getValue("appVersion");
+            var item = new Listitems.Item(self._mainLayer, str, version, null, null, self._verticalItemMargin, -1, null);
+
+            item.TitleJustification = Graphics.TEXT_JUSTIFY_CENTER;
+            item.SubtitleJustification = Graphics.TEXT_JUSTIFY_CENTER;
+            self.Items.add(item);
         }
     }
 }

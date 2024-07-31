@@ -17,6 +17,9 @@ module Themes {
                 case 2:
                     CurrentTheme = new BlackAndWhite();
                     break;
+                case 3:
+                    CurrentTheme = new WhiteAndBlack();
+                    break;
                 case 666:
                     CurrentTheme = new BSoD();
                     break;

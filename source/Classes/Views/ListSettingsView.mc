@@ -10,30 +10,21 @@ module Views {
         var ListUuid = null;
         var ScrollMode = SCROLL_DRAG;
 
-        private var _itemIconUncheck = Application.loadResource(Rez.Drawables.Item);
-        private var _itemIconCheck = Application.loadResource(Rez.Drawables.ItemDone);
+        private var _itemIconUncheck as Listitems.ViewItemIcon;
+        private var _itemIconCheck as Listitems.ViewItemIcon;
 
         protected var TAG = "ListSettingsView";
 
         function initialize(uuid as String) {
             CustomView.initialize();
             self.ListUuid = uuid;
+            self._itemIconUncheck = $.getTheme().DarkTheme ? Application.loadResource(Rez.Drawables.Item) : Application.loadResource(Rez.Drawables.bItem);
+            self._itemIconCheck = $.getTheme().DarkTheme ? Application.loadResource(Rez.Drawables.ItemDone) : Application.loadResource(Rez.Drawables.bItemDone);
         }
 
         function onLayout(dc as Dc) {
             CustomView.onLayout(dc);
-            self.setTitle(Application.loadResource(Rez.Strings.StTitle));
-
-            var movedown = new Listitems.Item(self._mainLayer, Application.loadResource(Rez.Strings.StMoveBottom), null, Helper.Properties.LISTMOVEDOWN, Helper.Properties.Boolean(Helper.Properties.LISTMOVEDOWN, true) ? self._itemIconCheck : self._itemIconUncheck, self._verticalItemMargin, 0, null);
-            self.Items.add(movedown);
-
-            var doubletap = new Listitems.Item(self._mainLayer, Application.loadResource(Rez.Strings.StDoubleTapForDone), null, Helper.Properties.DOUBLETAPFORDONE, Helper.Properties.Boolean(Helper.Properties.DOUBLETAPFORDONE, true) ? self._itemIconCheck : self._itemIconUncheck, self._verticalItemMargin, 0, null);
-            self.Items.add(doubletap);
-
-            var shownotes = new Listitems.Item(self._mainLayer, Application.loadResource(Rez.Strings.StDShowNotes), null, Helper.Properties.SHOWNOTES, Helper.Properties.Boolean(Helper.Properties.SHOWNOTES, true) ? self._itemIconCheck : self._itemIconUncheck, self._verticalItemMargin, 0, null);
-            self.Items.add(shownotes);
-
-            self.Items.add(new Listitems.Button(self._mainLayer, Application.loadResource(Rez.Strings.StDelList), "del", self._verticalItemMargin, false));
+            self.loadItems();
         }
 
         function onUpdate(dc as Dc) {
@@ -62,11 +53,31 @@ module Views {
             }
         }
 
-        function deleteList() {
+        function deleteList() as Void {
             getApp().ListsManager.deleteList(self.ListUuid);
             $.getApp().GlobalStates.put("movetop", true);
             WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
             WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
+        }
+
+        function onSettingsChanged() as Void {
+            self.loadItems();
+        }
+
+        private function loadItems() as Void {
+            self.Items = [];
+            self.setTitle(Application.loadResource(Rez.Strings.StTitle));
+
+            var movedown = new Listitems.Item(self._mainLayer, Application.loadResource(Rez.Strings.StMoveBottom), null, Helper.Properties.LISTMOVEDOWN, Helper.Properties.Boolean(Helper.Properties.LISTMOVEDOWN, true) ? self._itemIconCheck : self._itemIconUncheck, self._verticalItemMargin, 0, null);
+            self.Items.add(movedown);
+
+            var doubletap = new Listitems.Item(self._mainLayer, Application.loadResource(Rez.Strings.StDoubleTapForDone), null, Helper.Properties.DOUBLETAPFORDONE, Helper.Properties.Boolean(Helper.Properties.DOUBLETAPFORDONE, true) ? self._itemIconCheck : self._itemIconUncheck, self._verticalItemMargin, 0, null);
+            self.Items.add(doubletap);
+
+            var shownotes = new Listitems.Item(self._mainLayer, Application.loadResource(Rez.Strings.StDShowNotes), null, Helper.Properties.SHOWNOTES, Helper.Properties.Boolean(Helper.Properties.SHOWNOTES, true) ? self._itemIconCheck : self._itemIconUncheck, self._verticalItemMargin, 0, null);
+            self.Items.add(shownotes);
+
+            self.Items.add(new Listitems.Button(self._mainLayer, Application.loadResource(Rez.Strings.StDelList), "del", self._verticalItemMargin, false));
         }
     }
 }

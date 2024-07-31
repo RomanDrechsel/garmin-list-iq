@@ -104,11 +104,13 @@ module Controls {
                 $.getApp().GlobalStates.remove("movetop");
             }
             WatchUi.View.onShow();
+            $.onSettingsChanged.add(self);
             Debug.Log("onShow " + self.TAG);
         }
 
         function onHide() as Void {
             WatchUi.View.onHide();
+            $.onSettingsChanged.remove(self);
             Debug.Log("OnHide " + self.TAG);
         }
 
@@ -229,6 +231,8 @@ module Controls {
             return false;
         }
 
+        function onSettingsChanged() as Void;
+
         protected function moveIterator(delta as Number?) as Void {
             if (delta == null) {
                 self._snapPosition = 0;
@@ -340,6 +344,7 @@ module Controls {
                     item.setListY(y);
                     item.Invalidate();
                     y += item.getHeight(dc);
+                    Debug.Log("Y: " + y);
                 }
 
                 self._viewHeight = y + self.getPaddingBottom(dc);

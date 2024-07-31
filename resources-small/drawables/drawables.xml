@@ -1,8 +1,11 @@
 <drawables>
     <bitmap id="LauncherIcon" filename="launcher_icon.png" />
-    <bitmap id="Item" filename="Item.png"  packingFormat="default" />
-    <bitmap id="ItemDone" filename="ItemDone.png"  packingFormat="default" />
-    <bitmap id="LineBlue" filename="LineBlue.png"  packingFormat="default" />
-    <bitmap id="LineRed" filename="LineRed.png"  packingFormat="default" />
-    <bitmap id="LineWhite" filename="LineWhite.png"  packingFormat="default" />
+    <bitmap id="Item" filename="Item.png" packingFormat="default" />
+    <bitmap id="ItemDone" filename="ItemDone.png" packingFormat="default" />
+    <bitmap id="bItem" filename="bItem.png" packingFormat="default" />
+    <bitmap id="bItemDone" filename="bItemDone.png" packingFormat="default" />
+    <bitmap id="LineBlue" filename="LineBlue.png" packingFormat="default" />
+    <bitmap id="LineRed" filename="LineRed.png" packingFormat="default" />
+    <bitmap id="LineWhite" filename="LineWhite.png" packingFormat="default" />
+    <bitmap id="LineBlack" filename="LineBlack.png" packingFormat="default" />
 </drawables>

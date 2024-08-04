@@ -1,8 +1,1 @@
-WIP: show notes?
-BUG: always scroll to top onShow
-TODO: Memory anzeigen?!
-
-
-
-
 adb forward tcp:7381 tcp:7381

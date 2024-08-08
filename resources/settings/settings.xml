@@ -8,6 +8,7 @@
             <listEntry value="0">@Strings.ThGrey</listEntry>
             <listEntry value="1">@Strings.ThRed</listEntry>
             <listEntry value="2">@Strings.ThBaW</listEntry>
+            <listEntry value="3">@Strings.ThWaB</listEntry>
             <listEntry value="666">Blue screen of death</listEntry>
         </settingConfig>
     </setting>

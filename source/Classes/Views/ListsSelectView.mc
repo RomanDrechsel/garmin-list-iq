@@ -24,7 +24,7 @@ module Views {
         function onShow() as Void {
             CustomView.onShow();
             $.getApp().ListsManager.OnListsChanged.add(self);
-            self.publishLists(getApp().ListsManager.GetLists(), true);
+            self.publishLists($.getApp().ListsManager.GetLists(), true);
             Application.Storage.deleteValue("LastList");
         }
 
@@ -63,7 +63,11 @@ module Views {
             self.publishLists(index, false);
         }
 
-        private function publishLists(index as ListIndexType?, init as Boolean) as Void {
+        function onSettingsChanged() as Void {
+            self.publishLists($.getApp().ListsManager.GetLists(), false);
+        }
+
+        private function publishLists(index as ListIndexType?, request_update as Boolean) as Void {
             if (index == null) {
                 return;
             }
@@ -102,7 +106,7 @@ module Views {
                 self.moveIterator(null);
             }
 
-            if (!init) {
+            if (!request_update) {
                 WatchUi.requestUpdate();
             }
         }

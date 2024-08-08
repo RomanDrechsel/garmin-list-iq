@@ -1,10 +1,8 @@
 import Toybox.Lang;
 import Toybox.Application;
 
-module Themes
-{
-    class ThemeSettingsBase
-    {
+module Themes {
+    class ThemeSettingsBase {
         var MainColor = 0xd7d7d7;
         var SecondColor = 0xbdbdbd;
         var DisabledColor = 0x5e5e5e;
@@ -21,5 +19,7 @@ module Themes
 
         var ButtonBorder = 0x1255ff;
         var ButtonBackground = 0x6b6b6b;
+
+        var DarkTheme = true;
     }
 }

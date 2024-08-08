@@ -15,7 +15,7 @@ class ListsApp extends Application.AppBase {
 
     function initialize() {
         AppBase.initialize();
-        Application.Properties.setValue("appVersion", "2024.7.2102");
+        Application.Properties.setValue("appVersion", "2024.8.0400");
 
         var settings = System.getDeviceSettings();
         var stats = System.getSystemStats();
@@ -43,11 +43,22 @@ class ListsApp extends Application.AppBase {
     function onSettingsChanged() as Void {
         Helper.Properties.Load();
         Themes.ThemesLoader.loadTheme();
+
+        Debug.Log("Settings changed");
+        if ($.onSettingsChanged instanceof Array) {
+            for (var i = 0; i < $.onSettingsChanged.size(); i++) {
+                if ($.onSettingsChanged[i] has :onSettingsChanged) {
+                    $.onSettingsChanged[i].onSettingsChanged();
+                }
+            }
+        }
+
         WatchUi.requestUpdate();
     }
 }
 
 var isRoundDisplay = System.getDeviceSettings().screenShape == System.SCREEN_SHAPE_ROUND;
+var onSettingsChanged as Array<Object> = [];
 
 function getApp() as ListsApp {
     return Application.getApp() as ListsApp;

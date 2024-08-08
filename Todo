@@ -1,8 +1,3 @@
-WIP: show notes?
-BUG: always scroll to top onShow
-TODO: Memory anzeigen?!
-
-
-
+WIP: Change Theme in app
 
 adb forward tcp:7381 tcp:7381

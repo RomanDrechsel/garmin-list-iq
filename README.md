@@ -1,4 +1,4 @@
-![](Assets/Images/title.jpg)
+<img src="Assets/Images/title.jpg" width="300" />
 
 This is my app to display todo- or shopping-lists on your garmin watch.<br />
 The lists are managed on your smartphone.<br /><br />

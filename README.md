@@ -22,5 +22,5 @@ You can manage your lists on your android smartphone with the [companion app](ht
 ![Square Screenshot 2](github/sq2.jpg)
 
 <br /><br />
-If you like the watchface, you can support me at<br /><br />
+If you like this app, you can support me at<br /><br />
 [Paypal](https://paypal.me/RomanDrechsel) or [Buy me a coffee](https://www.buymeacoffee.com/romandrechsel)

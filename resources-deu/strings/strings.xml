@@ -6,6 +6,7 @@
     <string id="ThRed">Rot</string>
     <string id="ThBaW">Schwarz-Weiß</string>
     <string id="ThWaB">Weiß-Schwarz</string>
+    <string id="ThBsoD">Blue Screen of Death</string>
 
     <string id="ListRec">Liste empfangen.</string>
     <string id="EStorageFull">Der Speicher ist voll!</string>
@@ -24,17 +25,17 @@
     <string id="StMoveBottom">erledigte Punkte nach unten schieben</string>
     <string id="StDelList">Liste löschen</string>
     <string id="DeleteConfirm">Liste löschen?</string>
-    <string id="StDoubleTapForDone">Doppelt auf einen Punkt tippen um ihn auf erledigt zu setzen</string>
+    <string id="StDoubleTapForDone">Doppelt, anstatt einfach, auf einen Punkt tippen um ihn auf erledigt zu setzen</string>
     <string id="StDShowNotes">Notizen von Punkten anzeigen</string>
 
     <string id="StDelAll">Alle Listen löschen</string>
     <string id="StDelAllConfirm">Listen löschen?</string>
     <string id="StDelAllDone">Alle Listen gelöscht.</string>
+    <string id="StTheme">Thema auswählen</string>
     <string id="StAppStore">zum Android AppStore</string>
     <string id="StAppVersion">App Version</string>
 
-    <string id="Yes">Ja</string>
-    <string id="No">Nein</string>
+    <string id="SelTheme">Thema</string>
 
     <string id="ListDateFormatShort">%D. %d. %M.</string>
     <string id="ListDateFormat">%D. %d. %M %y</string>

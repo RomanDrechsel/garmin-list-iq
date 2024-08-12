@@ -37,13 +37,13 @@ module Views {
 
         function onListTap(position as Number, item as Item, doubletab as Boolean) as Void {
             if ([Helper.Properties.LISTMOVEDOWN, Helper.Properties.DOUBLETAPFORDONE, Helper.Properties.SHOWNOTES].indexOf(item.BoundObject) >= 0) {
-                var prop = Helper.Properties.Boolean(item.BoundObject, true);
-                if (prop) {
+                var prop = Helper.Properties.Get(item.BoundObject, true);
+                if (prop == true || prop == 1) {
                     item.setIcon(self._itemIconUncheck);
                 } else {
                     item.setIcon(self._itemIconCheck);
                 }
-                Helper.Properties.SaveBoolean(item.BoundObject, !prop);
+                Helper.Properties.Store(item.BoundObject, !prop);
                 WatchUi.requestUpdate();
                 $.getApp().GlobalStates.put("movetop", true);
             } else if (item.BoundObject.equals("del")) {
@@ -68,13 +68,32 @@ module Views {
             self.Items = [];
             self.setTitle(Application.loadResource(Rez.Strings.StTitle));
 
-            var movedown = new Listitems.Item(self._mainLayer, Application.loadResource(Rez.Strings.StMoveBottom), null, Helper.Properties.LISTMOVEDOWN, Helper.Properties.Boolean(Helper.Properties.LISTMOVEDOWN, true) ? self._itemIconCheck : self._itemIconUncheck, self._verticalItemMargin, 0, null);
+            var icon;
+            var prop = Helper.Properties.Get(Helper.Properties.LISTMOVEDOWN, true);
+            if (prop == true || prop == 1) {
+                icon = self._itemIconCheck;
+            } else {
+                icon = self._itemIconUncheck;
+            }
+            var movedown = new Listitems.Item(self._mainLayer, Application.loadResource(Rez.Strings.StMoveBottom), null, Helper.Properties.LISTMOVEDOWN, icon, self._verticalItemMargin, 0, null);
             self.Items.add(movedown);
 
-            var doubletap = new Listitems.Item(self._mainLayer, Application.loadResource(Rez.Strings.StDoubleTapForDone), null, Helper.Properties.DOUBLETAPFORDONE, Helper.Properties.Boolean(Helper.Properties.DOUBLETAPFORDONE, true) ? self._itemIconCheck : self._itemIconUncheck, self._verticalItemMargin, 0, null);
+            prop = Helper.Properties.Get(Helper.Properties.DOUBLETAPFORDONE, true);
+            if (prop == true || prop == 1) {
+                icon = self._itemIconCheck;
+            } else {
+                icon = self._itemIconUncheck;
+            }
+            var doubletap = new Listitems.Item(self._mainLayer, Application.loadResource(Rez.Strings.StDoubleTapForDone), null, Helper.Properties.DOUBLETAPFORDONE, icon, self._verticalItemMargin, 0, null);
             self.Items.add(doubletap);
 
-            var shownotes = new Listitems.Item(self._mainLayer, Application.loadResource(Rez.Strings.StDShowNotes), null, Helper.Properties.SHOWNOTES, Helper.Properties.Boolean(Helper.Properties.SHOWNOTES, true) ? self._itemIconCheck : self._itemIconUncheck, self._verticalItemMargin, 0, null);
+            prop = Helper.Properties.Get(Helper.Properties.SHOWNOTES, true);
+            if (prop == true || prop == 1) {
+                icon = self._itemIconCheck;
+            } else {
+                icon = self._itemIconUncheck;
+            }
+            var shownotes = new Listitems.Item(self._mainLayer, Application.loadResource(Rez.Strings.StDShowNotes), null, Helper.Properties.SHOWNOTES, icon, self._verticalItemMargin, 0, null);
             self.Items.add(shownotes);
 
             self.Items.add(new Listitems.Button(self._mainLayer, Application.loadResource(Rez.Strings.StDelList), "del", self._verticalItemMargin, false));

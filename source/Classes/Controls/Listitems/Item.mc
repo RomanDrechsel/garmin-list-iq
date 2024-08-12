@@ -151,6 +151,7 @@ module Controls {
 
             function Invalidate() {
                 self._needValidation = true;
+                self._height = -1;
             }
 
             function setLayer(layer as LayerDef) {
@@ -165,7 +166,7 @@ module Controls {
                     return false;
                 }
 
-                if (self._viewportY + self._height < 0) {
+                if (self._viewportY + self._height <= 0) {
                     //above the top edge of the display
                     return false;
                 } else if (self._viewportY > self._layer.getDc().getHeight()) {
@@ -196,10 +197,10 @@ module Controls {
 
             protected function getLineHeight() {
                 if (self.DrawLine == true) {
-                    var line = getTheme().LineBitmap;
+                    var line = $.getTheme().LineBitmap;
                     if (line != null) {
                         return line.getHeight() + self._verticalMargin;
-                    } else if (getTheme().LineSeparatorColor != null) {
+                    } else if ($.getTheme().LineSeparatorColor != null) {
                         return 2 + self._verticalMargin;
                     }
                 }
@@ -207,26 +208,33 @@ module Controls {
             }
 
             protected function validate(dc as Dc) {
-                if (self._needValidation == true && self._layer != null) {
+                if (self._layer != null) {
                     var padding = self._layer.getWidth() * self._horizonalPaddingFactor;
                     var width = self._layer.getWidth() - 2 * padding;
+                    if (self._needValidation == true) {
+                        self._height = -1;
 
-                    if (self.Title instanceof String && self.Title.length() > 0) {
-                        self.Title = new MultilineLabel(self.Title, width - self.getIconWidth(dc), self._font);
-                    } else if (self.Title instanceof MultilineLabel) {
+                        if (self.Title instanceof String && self.Title.length() > 0) {
+                            self.Title = new MultilineLabel(self.Title, width - self.getIconWidth(dc), self._font);
+                        } else if (self.Title instanceof MultilineLabel == false) {
+                            self.Title = null;
+                        }
+
+                        if (self.Subtitle instanceof String && self.Subtitle.length() > 0) {
+                            self.Subtitle = new MultilineLabel(self.Subtitle, width, Fonts.Small());
+                        } else if (self.Subtitle instanceof MultilineLabel == false) {
+                            self.Subtitle = null;
+                        }
+                        self._needValidation = false;
+                    }
+
+                    if (self.Title instanceof MultilineLabel) {
                         self.Title.Invalidate(width - self.getIconWidth(dc));
-                    } else {
-                        self.Title = null;
                     }
 
-                    if (self.Subtitle instanceof String && self.Subtitle.length() > 0) {
-                        self.Subtitle = new MultilineLabel(self.Subtitle, width, Fonts.Small());
-                    } else if (self.Subtitle instanceof MultilineLabel) {
-                        self.Subtitle.Invalidate(width);
-                    } else {
-                        self.Subtitle = null;
+                    if (self.Subtitle instanceof MultilineLabel) {
+                        self.Subtitle.Invalidate(width - self.getIconWidth(dc));
                     }
-                    self._needValidation = false;
                 }
             }
 

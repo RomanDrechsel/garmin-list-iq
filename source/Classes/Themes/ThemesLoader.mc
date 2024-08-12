@@ -6,7 +6,7 @@ module Themes {
 
     class ThemesLoader {
         static function loadTheme() as Void {
-            switch (Helper.Properties.Number(Helper.Properties.THEME, 0)) {
+            switch (Helper.Properties.Get(Helper.Properties.THEME, 0)) {
                 default:
                 case 0:
                     CurrentTheme = new Grey();

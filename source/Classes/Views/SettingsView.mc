@@ -11,6 +11,7 @@ module Views {
 
         private enum {
             SETTINGS_DELETEALL,
+            SETTINGS_THEME,
             SETTINGS_APPSTORE,
         }
 
@@ -31,6 +32,10 @@ module Views {
             self.drawList(dc);
         }
 
+        function onShow() as Void {
+            self.loadVisuals();
+        }
+
         function onListTap(position as Number, item as Item, doubletap as Boolean) as Void {
             if (item.BoundObject == SETTINGS_DELETEALL) {
                 var dialog = new WatchUi.Confirmation(Application.loadResource(Rez.Strings.StDelAllConfirm));
@@ -39,6 +44,10 @@ module Views {
             } else if (item.BoundObject == SETTINGS_APPSTORE) {
                 Communications.openWebPage(getAppStore(), null, null);
                 WatchUi.popView(WatchUi.SLIDE_RIGHT);
+            } else if (item.BoundObject == SETTINGS_THEME) {
+                var view = new SettingsThemeView();
+                var delegate = new SettingsThemeViewDelegate(view);
+                WatchUi.pushView(view, delegate, WatchUi.SLIDE_LEFT);
             }
         }
 
@@ -56,6 +65,7 @@ module Views {
 
             self.setTitle(Application.loadResource(Rez.Strings.StTitle));
             self.Items.add(new Listitems.Button(self._mainLayer, Application.loadResource(Rez.Strings.StDelAll), SETTINGS_DELETEALL, self._verticalItemMargin, true));
+            self.Items.add(new Listitems.Button(self._mainLayer, Application.loadResource(Rez.Strings.StTheme), SETTINGS_THEME, self._verticalItemMargin, true));
             self.Items.add(new Listitems.Button(self._mainLayer, Application.loadResource(Rez.Strings.StAppStore), SETTINGS_APPSTORE, self._verticalItemMargin, true));
 
             var str = Application.loadResource(Rez.Strings.StAppVersion);
@@ -64,7 +74,9 @@ module Views {
 
             item.TitleJustification = Graphics.TEXT_JUSTIFY_CENTER;
             item.SubtitleJustification = Graphics.TEXT_JUSTIFY_CENTER;
+            item.DrawLine = false;
             self.Items.add(item);
+            self._needValidation = true;
         }
     }
 }

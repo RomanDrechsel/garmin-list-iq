@@ -28,7 +28,7 @@ module Controls {
 
                 var viewport_y = self._listY - yOffset + self._layer.getY();
                 self._viewportY = viewport_y;
-                viewport_y += +self._verticalMargin;
+                viewport_y += self._verticalMargin;
 
                 if (self.isVisible() == false) {
                     return self.getHeight(dc);
@@ -66,10 +66,7 @@ module Controls {
                         return dc.getFontHeight(self._font);
                     }
                     if (self._height == null || self._height <= 0) {
-                        var marginX = self._layer.getWidth() * self._marginFactor;
-                        var button_width = self._layer.getWidth() - 2 * marginX;
-                        var padding = button_width * self._paddingFactor;
-                        self._height = self.Title.getHeight(dc) + 2 * padding + Graphics.getFontDescent(self._font);
+                        self._height = self._verticalMargin + self.Title.getHeight(dc) + 2 * self.getPadding() + Graphics.getFontDescent(self._font);
                         self._height += self.getLineHeight();
                     }
                 } else if (self._height == null) {
@@ -92,14 +89,12 @@ module Controls {
             }
 
             protected function validate(dc as Dc) {
-                if (self._needValidation == true) {
-                    if (self.Title instanceof String) {
-                        var maxwidth = self.getButtonWidth() - 2 * self.getPadding();
-                        self.Title = new MultilineLabel(self.Title, maxwidth.toNumber(), self._font);
-                    } else if (self.Title instanceof MultilineLabel) {
-                        var maxwidth = self.getButtonWidth() - 2 * self.getPadding();
-                        self.Title.Invalidate(maxwidth);
-                    }
+                if (self.Title instanceof String) {
+                    var maxwidth = self.getButtonWidth() - 2 * self.getPadding();
+                    self.Title = new MultilineLabel(self.Title, maxwidth.toNumber(), self._font);
+                } else if (self.Title instanceof MultilineLabel) {
+                    var maxwidth = self.getButtonWidth() - 2 * self.getPadding();
+                    self.Title.Invalidate(maxwidth);
                 }
             }
         }

@@ -93,8 +93,8 @@ module Controls {
                 self._scrollbar = new Scrollbar.Rectangle(self._scrollbarLayer);
             }
 
-            self._needValidation = true;
-            self.validate(dc);
+            /*self._needValidation = true;
+            self.validate(dc);*/
         }
 
         function onShow() as Void {
@@ -152,6 +152,8 @@ module Controls {
                     } else {
                         item.DrawLine = false;
                     }
+                } else {
+                    item.DrawLine = false;
                 }
             }
             self._needValidation = true;
@@ -344,7 +346,6 @@ module Controls {
                     item.setListY(y);
                     item.Invalidate();
                     y += item.getHeight(dc);
-                    Debug.Log("Y: " + y);
                 }
 
                 self._viewHeight = y + self.getPaddingBottom(dc);
@@ -368,6 +369,7 @@ module Controls {
                         self.Items[i].Invalidate();
                     }
                 }
+                self._needValidation = false;
             }
         }
     }

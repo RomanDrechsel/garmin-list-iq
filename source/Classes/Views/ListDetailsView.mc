@@ -56,7 +56,8 @@ module Views {
         }
 
         function onListTap(position as Number, item as Item, doubletap as Boolean) as Void {
-            if (Helper.Properties.Boolean(Helper.Properties.DOUBLETAPFORDONE, true) == doubletap) {
+            var prop = Helper.Properties.Get(Helper.Properties.DOUBLETAPFORDONE, 1);
+            if (doubletap || prop == 0 || prop == false) {
                 if (item.BoundObject == false) {
                     item.setColor(getTheme().DisabledColor);
                     item.setIcon(self._itemIconDone);
@@ -97,8 +98,8 @@ module Views {
                 self._listFound = false;
             } else {
                 Application.Storage.setValue("LastList", self.ListUuid);
-                var show_notes = Helper.Properties.Boolean(Helper.Properties.SHOWNOTES, true);
-                var move_down = Helper.Properties.Boolean(Helper.Properties.LISTMOVEDOWN, true);
+                var show_notes = Helper.Properties.Get(Helper.Properties.SHOWNOTES, true);
+                var move_down = Helper.Properties.Get(Helper.Properties.LISTMOVEDOWN, true);
 
                 self._listFound = true;
                 if (list.hasKey("name")) {
@@ -112,7 +113,7 @@ module Views {
                     for (var i = 0; i < list["items"].size(); i++) {
                         var item = list["items"][i];
                         item.put("pos", i);
-                        if (move_down == true && item.get("d") == true) {
+                        if ((move_down == true || move_down == 1) && item.get("d") == true) {
                             done.add(item);
                         } else {
                             ordered.add(item);
@@ -142,7 +143,7 @@ module Views {
                             text = itemobj;
                         } else if (itemobj instanceof Array) {
                             text = itemobj[0];
-                            if (show_notes == true && itemobj.size() > 1) {
+                            if ((show_notes == true || show_notes == 1) && itemobj.size() > 1) {
                                 note = itemobj[1];
                             }
                         }

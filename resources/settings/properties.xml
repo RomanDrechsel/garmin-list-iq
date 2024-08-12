@@ -1,8 +1,8 @@
 <properties>
-    <property type="string" id="appVersion">2024.8.1100</property>
+    <property type="string" id="appVersion">2024.8.1201</property>
     <property type="number" id="Init">0</property>
     <property type="number" id="Theme">0</property>
-    <property type="number" id="ListMoveDown">1</property>
-    <property type="number" id="DoubleTapForDone">1</property>
-    <property type="number" id="ShowNotes">1</property>
+    <property type="boolean" id="ListMoveDown">true</property>
+    <property type="boolean" id="DoubleTapForDone">true</property>
+    <property type="boolean" id="ShowNotes">true</property>
 </properties>

@@ -47,10 +47,15 @@ module Controls {
             }
 
             if (self._height < 0) {
+                if (dc != null) {
+                    self.validate(dc);
+                }
+                if (self._lines == null) {
+                    return 0;
+                }
                 self._height = Graphics.getFontAscent(self._font) * self._lines.size();
                 self._height += Graphics.getFontDescent(self._font);
             }
-
             return self._height;
         }
 
@@ -119,10 +124,10 @@ module Controls {
             return ret;
         }
 
-        function Invalidate(maxwidth as Number?) {
-            self._needValidation = true;
-            if (maxwidth != null) {
+        function Invalidate(maxwidth as Number) {
+            if (maxwidth != self._maxWidth) {
                 self._maxWidth = maxwidth;
+                self._needValidation = true;
             }
         }
 
@@ -132,6 +137,7 @@ module Controls {
                     self._lines = self.wrapText(dc, self._lines);
                 } else {
                     self._lines = self.wrapText(dc, self.getFullText());
+                    self._height = -1;
                 }
 
                 self._needValidation = false;

@@ -6,6 +6,7 @@
     <string id="ThRed">Red</string>
     <string id="ThBaW">Black &amp; White</string>
     <string id="ThWaB">White &amp; Black</string>
+    <string id="ThBsoD">Blue screen of death</string>
 
     <string id="ListRec">List received.</string>
     <string id="EStorageFull">Storage full!</string>
@@ -24,17 +25,17 @@
     <string id="StMoveBottom">Move completed items to the bottom</string>
     <string id="StDelList">Delete list</string>
     <string id="DeleteConfirm">Delete the list?</string>
-    <string id="StDoubleTapForDone">Double Tap on item to set it done</string>
+    <string id="StDoubleTapForDone">Double tap instead of single tap on an item to set it to done</string>
     <string id="StDShowNotes">Display item notes</string>
 
     <string id="StDelAll">Delete all lists</string>
     <string id="StDelAllConfirm">Delete all lists?</string>
     <string id="StDelAllDone">All lists where deleted.</string>
+    <string id="StTheme">Select Theme</string>
     <string id="StAppStore">Go to Android AppStore</string>
     <string id="StAppVersion">App Version</string>
 
-    <string id="Yes">Yes</string>
-    <string id="No">No</string>
+    <string id="SelTheme">Theme</string>
 
     <string id="ListDateFormatShort">%D. %M %d.</string>
     <string id="ListDateFormat">%D. %M %d, %y</string>

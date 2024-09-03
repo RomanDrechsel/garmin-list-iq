@@ -3,8 +3,8 @@
 <iq:manifest version="3" xmlns:iq="http://www.garmin.com/xml/connectiq">
     <!-- Beta-->
     <iq:application id="64655bbc-555c-484d-827b-4aef68ff6f5e" type="watch-app" name="@Strings.AppName" entry="ListsApp" launcherIcon="@Drawables.LauncherIcon" minApiLevel="3.1.0">
-    <!-- Release -->
-    <!--<iq:application id="f9b0d002-4a4d-45ab-9330-bbed2c3af49f" type="watch-app" name="@Strings.AppName" entry="ListsApp" launcherIcon="@Drawables.LauncherIcon" minApiLevel="3.1.0">-->
+        <!-- Release -->
+        <!--<iq:application id="f9b0d002-4a4d-45ab-9330-bbed2c3af49f" type="watch-app" name="@Strings.AppName" entry="ListsApp" launcherIcon="@Drawables.LauncherIcon" minApiLevel="3.1.0">-->
         <iq:products>
             <iq:product id="approachs7042mm"/>
             <iq:product id="approachs7047mm"/>

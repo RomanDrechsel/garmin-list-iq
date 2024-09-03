@@ -1,5 +1,1 @@
-BUG: Wenn man in den ListsSettings eine Checkbox wieder aktiviert, stürzt die App ab
-
-
-
 adb forward tcp:7381 tcp:7381

@@ -1,1 +1,7 @@
-adb forward tcp:7381 tcp:7381
+For Emulator:
+adb -e forward tcp:7381 tcp:7381
+
+For Smartphone
+adb -d forward tcp:7381 tcp:7381
+
+TODO: Reset list every day

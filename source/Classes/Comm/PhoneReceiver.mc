@@ -6,10 +6,10 @@ import Toybox.Application;
 using Toybox.Communications;
 
 module Comm {
-    class ListsReceiver extends Toybox.Communications.ConnectionListener {
+    class PhoneReceiver extends Toybox.Communications.ConnectionListener {
         function initialize() {
             Communications.registerForPhoneAppMessages(method(:phoneMessageCallback));
-            Debug.Log("Started ListsReceiver");
+            Debug.Log("Started PhoneReceiver");
         }
 
         function phoneMessageCallback(msg as Communications.Message) as Void {
@@ -23,6 +23,15 @@ module Comm {
                             Debug.Log("Received list: " + message.toString());
                         }
                         return;
+                    } else if (type.equals("request")) {
+                        var request = message.get("request") as String?;
+                        if (request != null && request.equals("logs")) {
+                            var tid = message.get("tid") as String?;
+                            var resp = ({}) as Dictionary<String, String or Array<String> >;
+                            resp.put("tid", tid);
+                            resp.put("logs", Debug.DebugStorage.GetLogs());
+                            self.SendToPhone(resp);
+                        }
                     }
                 }
             } else if (message != null) {
@@ -32,8 +41,8 @@ module Comm {
             }
         }
 
-        /*function SendToPhone(value as Application.PersistableType) as Void {
-            Debug.Log("Send to phone: " + value);
+        function SendToPhone(value as Application.PersistableType) as Void {
+            Debug.Log("Send to phone...");
             Communications.transmit(value, {}, self);
         }
 
@@ -43,6 +52,6 @@ module Comm {
 
         function onError() as Void {
             Debug.Log("Send to phone failed!");
-        }*/
+        }
     }
 }

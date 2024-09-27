@@ -7,7 +7,7 @@ import Comm;
 import Lists;
 
 class ListsApp extends Application.AppBase {
-    private var ListsReceiver as ListsReceiver;
+    private var PhoneReceiver as PhoneReceiver;
 
     var ListsManager as ListsManager;
     var startupList = null;
@@ -15,19 +15,15 @@ class ListsApp extends Application.AppBase {
 
     function initialize() {
         AppBase.initialize();
-        Application.Properties.setValue("appVersion", "2024.8.1201");
+        Application.Properties.setValue("appVersion", "2024.9.2700");
 
-        var settings = System.getDeviceSettings();
-        var stats = System.getSystemStats();
-        Debug.Log("App started (" + Application.Properties.getValue("appVersion") + ")");
-        Debug.Log("Display: " + settings.screenShape);
-        Debug.Log("Firmware: " + settings.firmwareVersion);
-        Debug.Log("Monkey Version: " + settings.monkeyVersion);
-        Debug.Log("Memory: " + stats.usedMemory + " / " + stats.totalMemory);
+        var logs = self.getInfo();
+        for (var i = 0; i < logs.size(); i++) {
+            Debug.Log(logs[i]);
+        }
 
-        Helper.Properties.Load();
         self.ListsManager = new ListsManager();
-        self.ListsReceiver = new ListsReceiver();
+        self.PhoneReceiver = new PhoneReceiver();
     }
 
     function onStart(state as Lang.Dictionary?) as Void {
@@ -54,6 +50,19 @@ class ListsApp extends Application.AppBase {
         }
 
         WatchUi.requestUpdate();
+    }
+
+    function getInfo() as Array<String> {
+        var settings = System.getDeviceSettings();
+        var stats = System.getSystemStats();
+
+        var ret = [] as Array<String>;
+        ret.add("Version: " + Application.Properties.getValue("appVersion"));
+        ret.add("Display: " + settings.screenShape);
+        ret.add("Firmware: " + settings.firmwareVersion);
+        ret.add("Monkey Version: " + settings.monkeyVersion);
+        ret.add("Memory: " + stats.usedMemory + " / " + stats.totalMemory);
+        return ret;
     }
 }
 

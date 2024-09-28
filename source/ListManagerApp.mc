@@ -5,24 +5,22 @@ import Toybox.System;
 import Views;
 import Comm;
 import Lists;
+import Debug;
 
 class ListsApp extends Application.AppBase {
     private var PhoneReceiver as PhoneReceiver;
-
     var ListsManager as ListsManager;
+    var Debug as DebugStorage;
     var startupList = null;
     var GlobalStates as Dictionary<String, Object> = {};
 
     function initialize() {
         AppBase.initialize();
-        Application.Properties.setValue("appVersion", "2024.9.2700");
+        Application.Properties.setValue("appVersion", "2024.9.2803");
 
-        var logs = self.getInfo();
-        for (var i = 0; i < logs.size(); i++) {
-            Debug.Log(logs[i]);
-        }
-
+        self.Debug = new DebugStorage();
         self.ListsManager = new ListsManager();
+        Debug.Log(self.getInfo());
         self.PhoneReceiver = new PhoneReceiver();
     }
 
@@ -37,7 +35,7 @@ class ListsApp extends Application.AppBase {
     }
 
     function onSettingsChanged() as Void {
-        Helper.Properties.Load();
+        self.Debug.onSettingsChanged();
         Themes.ThemesLoader.loadTheme();
 
         Debug.Log("Settings changed");
@@ -56,12 +54,29 @@ class ListsApp extends Application.AppBase {
         var settings = System.getDeviceSettings();
         var stats = System.getSystemStats();
 
+        var screenShape = settings.screenShape;
+        switch (screenShape) {
+            case System.SCREEN_SHAPE_ROUND:
+                screenShape = "Round";
+                break;
+            case System.SCREEN_SHAPE_RECTANGLE:
+                screenShape = "Square";
+                break;
+            case System.SCREEN_SHAPE_SEMI_OCTAGON:
+                screenShape = "Semi-Octagon";
+                break;
+            case System.SCREEN_SHAPE_SEMI_ROUND:
+                screenShape = "Semi-Round";
+                break;
+        }
+
         var ret = [] as Array<String>;
         ret.add("Version: " + Application.Properties.getValue("appVersion"));
-        ret.add("Display: " + settings.screenShape);
+        ret.add("Display: " + screenShape);
         ret.add("Firmware: " + settings.firmwareVersion);
         ret.add("Monkey Version: " + settings.monkeyVersion);
         ret.add("Memory: " + stats.usedMemory + " / " + stats.totalMemory);
+        ret.add("Lists in Storage: " + self.ListsManager.GetLists().size());
         return ret;
     }
 }

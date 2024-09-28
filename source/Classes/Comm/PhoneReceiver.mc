@@ -29,7 +29,7 @@ module Comm {
                             var tid = message.get("tid") as String?;
                             var resp = ({}) as Dictionary<String, String or Array<String> >;
                             resp.put("tid", tid);
-                            resp.put("logs", Debug.DebugStorage.GetLogs());
+                            resp.put("logs", $.getApp().Debug.GetLogs());
                             self.SendToPhone(resp);
                         }
                     }

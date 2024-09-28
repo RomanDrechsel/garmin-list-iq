@@ -136,6 +136,10 @@ module Controls {
                 }
             }
 
+            function getIcon() as Number or ViewItemIcon or Null {
+                return self._icon;
+            }
+
             function Clicked(tapy as Number) as Boolean {
                 if (self._viewportY == null || self._height == null || self.isVisible() == false) {
                     //not visible or not validated

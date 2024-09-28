@@ -3,20 +3,26 @@ import Toybox.Lang;
 import Lists;
 import Controls;
 import Controls.Listitems;
-import Helper;
 
 module Views {
     class SettingsView extends Controls.CustomView {
         protected var TAG = "SettingsView";
 
+        private var _itemIcon as Listitems.ViewItemIcon;
+        private var _itemIconDone as Listitems.ViewItemIcon;
+
         private enum {
             SETTINGS_DELETEALL,
             SETTINGS_THEME,
+            SETTINGS_LOGS,
+            SETTINGS_PERSISTANTLOGS,
             SETTINGS_APPSTORE,
         }
 
         function initialize() {
             CustomView.initialize();
+            self._itemIcon = $.getTheme().DarkTheme ? Application.loadResource(Rez.Drawables.Item) : Application.loadResource(Rez.Drawables.bItem);
+            self._itemIconDone = $.getTheme().DarkTheme ? Application.loadResource(Rez.Drawables.ItemDone) : Application.loadResource(Rez.Drawables.bItemDone);
         }
 
         function onLayout(dc as Dc) as Void {
@@ -48,6 +54,24 @@ module Views {
                 var view = new SettingsThemeView();
                 var delegate = new SettingsThemeViewDelegate(view);
                 WatchUi.pushView(view, delegate, WatchUi.SLIDE_LEFT);
+            } else if (item.BoundObject == SETTINGS_LOGS) {
+                if (item.getIcon() == self._itemIcon) {
+                    Helper.Properties.Store(Helper.Properties.LOGS, true);
+                    item.setIcon(self._itemIconDone);
+                } else {
+                    Helper.Properties.Store(Helper.Properties.LOGS, false);
+                    item.setIcon(self._itemIcon);
+                }
+                WatchUi.requestUpdate();
+            } else if (item.BoundObject == SETTINGS_PERSISTANTLOGS) {
+                if (item.getIcon() == self._itemIcon) {
+                    Helper.Properties.Store(Helper.Properties.PERSISTENTLOGS, true);
+                    item.setIcon(self._itemIconDone);
+                } else {
+                    Helper.Properties.Store(Helper.Properties.PERSISTENTLOGS, false);
+                    item.setIcon(self._itemIcon);
+                }
+                WatchUi.requestUpdate();
             }
         }
 
@@ -66,6 +90,15 @@ module Views {
             self.setTitle(Application.loadResource(Rez.Strings.StTitle));
             self.Items.add(new Listitems.Button(self._mainLayer, Application.loadResource(Rez.Strings.StDelAll), SETTINGS_DELETEALL, self._verticalItemMargin, true));
             self.Items.add(new Listitems.Button(self._mainLayer, Application.loadResource(Rez.Strings.StTheme), SETTINGS_THEME, self._verticalItemMargin, true));
+
+            var setting = Helper.Properties.Get(Helper.Properties.LOGS, false);
+            self.addItem(Application.loadResource(Rez.Strings.StLogs), null, SETTINGS_LOGS, setting ? self._itemIconDone : self._itemIcon, 2);
+            setting = Helper.Properties.Get(Helper.Properties.PERSISTENTLOGS, false);
+            self.addItem(Application.loadResource(Rez.Strings.StPersistentLogs1), Application.loadResource(Rez.Strings.StPersistentLogs2), SETTINGS_PERSISTANTLOGS, setting ? self._itemIconDone : self._itemIcon, 3);
+
+            self.Items[2].DrawLine = true;
+            self.Items[4].DrawLine = true;
+
             self.Items.add(new Listitems.Button(self._mainLayer, Application.loadResource(Rez.Strings.StAppStore), SETTINGS_APPSTORE, self._verticalItemMargin, true));
 
             var str = Application.loadResource(Rez.Strings.StAppVersion);

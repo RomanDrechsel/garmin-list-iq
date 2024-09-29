@@ -1,5 +1,5 @@
 <properties>
-    <property type="string" id="appVersion">2024.9.2900</property>
+    <property type="string" id="appVersion">2024.9.2901</property>
     <property type="number" id="Init">0</property>
     <property type="number" id="Theme">0</property>
     <property type="boolean" id="ListMoveDown">true</property>
@@ -7,4 +7,5 @@
     <property type="boolean" id="ShowNotes">true</property>
     <property type="boolean" id="Logs">false</property>
     <property type="boolean" id="PersistentLogs">false</property>
+    <property type="string" id="LastList"></property>
 </properties>

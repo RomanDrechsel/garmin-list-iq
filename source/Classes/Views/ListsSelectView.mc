@@ -23,7 +23,7 @@ module Views {
             CustomView.onShow();
             $.getApp().ListsManager.OnListsChanged.add(self);
             self.publishLists($.getApp().ListsManager.GetLists(), true);
-            Application.Storage.deleteValue("LastList");
+            Helper.Properties.Store(Helper.Properties.LASTLIST, "");
         }
 
         function onHide() as Void {

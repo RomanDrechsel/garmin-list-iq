@@ -10,9 +10,8 @@ module Controls {
         private var _needValidation = true;
 
         private static const linewrappers = ['-'] as Array<Char>;
-
-        function initialize(text as String, _maxWidth as Number, font as FontType) {
-            self._maxWidth = _maxWidth;
+        function initialize(text as String or Array<String>, maxWidth as Number, font as FontType) {
+            self._maxWidth = maxWidth;
             self._font = font;
             self._lines = text;
         }
@@ -66,10 +65,17 @@ module Controls {
 
             var text = "";
             for (var i = 0; i < self._lines.size(); i++) {
-                text += self._lines[i] + "\n";
+                text += self._lines[i];
+                if (i < self._lines.size() - 1) {
+                    text += "\n";
+                }
             }
 
             return text;
+        }
+
+        function getText() as String or Array<String> or Null {
+            return self._lines;
         }
 
         function wrapText(dc as Dc, fulltext as String) as Array<String> {
@@ -133,11 +139,13 @@ module Controls {
 
         private function validate(dc as Dc) {
             if (self._needValidation == true) {
-                if (self._lines instanceof Lang.String) {
-                    self._lines = self.wrapText(dc, self._lines);
-                } else {
-                    self._lines = self.wrapText(dc, self.getFullText());
-                    self._height = -1;
+                if (self._lines instanceof Array == false) {
+                    if (self._lines instanceof Lang.String) {
+                        self._lines = self.wrapText(dc, self._lines);
+                    } else {
+                        self._lines = self.wrapText(dc, self.getFullText());
+                        self._height = -1;
+                    }
                 }
 
                 self._needValidation = false;

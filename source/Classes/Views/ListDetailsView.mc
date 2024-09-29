@@ -11,10 +11,11 @@ module Views {
     class ListDetailsView extends Controls.CustomView {
         var ScrollMode = SCROLL_DRAG;
 
-        var ListUuid = null;
+        var ListUuid as String? = null;
         private var _listFound = false;
+        private var _listOptimized = false;
 
-        private var _noListLabel = null;
+        private var _noListLabel as MultilineLabel? = null;
         private var _itemIcon as Listitems.ViewItemIcon;
         private var _itemIconDone as Listitems.ViewItemIcon;
 
@@ -51,6 +52,35 @@ module Views {
                 self.noLists(dc);
             } else {
                 self.drawList(dc);
+
+                //store the wraped text
+                if (self._listOptimized == false) {
+                    var optimized1 = ({}) as Dictionary<Number, Array<String> >;
+                    var optimized2 = ({}) as Dictionary<Number, Array<String> >;
+                    for (var i = 0; i < self.Items.size(); i++) {
+                        var item = self.Items[i];
+                        if (item instanceof Listitems.Item) {
+                            var text = item.Title instanceof MultilineLabel ? item.Title.getText() : null;
+                            var note = item.Subtitle instanceof MultilineLabel ? item.Subtitle.getText() : null;
+                            if (text instanceof Array) {
+                                if (text.size() == 1) {
+                                    text = text[0];
+                                }
+                                optimized1.put(item.ItemPosition, text);
+                            }
+                            if (note instanceof Array) {
+                                if (note.size() == 1) {
+                                    note = note[0];
+                                }
+                                optimized2.put(item.ItemPosition, note);
+                            }
+                        }
+                    }
+                    if (optimized1.size() > 0) {
+                        $.getApp().ListsManager.Optimize(self.ListUuid, optimized1, optimized2);
+                    }
+                    self._listOptimized = true;
+                }
             }
         }
 
@@ -96,14 +126,15 @@ module Views {
             if (list == null) {
                 self._listFound = false;
             } else {
-                Application.Storage.setValue("LastList", self.ListUuid);
+                Helper.Properties.Store(Helper.Properties.LASTLIST, self.ListUuid);
                 var show_notes = Helper.Properties.Get(Helper.Properties.SHOWNOTES, true);
                 var move_down = Helper.Properties.Get(Helper.Properties.LISTMOVEDOWN, true);
-
                 self._listFound = true;
                 if (list.hasKey("name")) {
                     self.setTitle(list.get("name"));
                 }
+
+                self._listOptimized = list.hasKey("opt");
 
                 if (list.hasKey("items")) {
                     var ordered = [];
@@ -155,13 +186,12 @@ module Views {
                         }
                     }
                 }
+                Debug.Log("Displaying list " + self.ListUuid + " (" + list.get("name") + ")");
             }
 
             if (request_update) {
                 WatchUi.requestUpdate();
             }
-
-            Debug.Log("Displaying list " + self.ListUuid + " (" + list.get("name") + ")");
         }
 
         private function noLists(dc as Dc) as Void {
@@ -175,7 +205,7 @@ module Views {
                 self._noListLabel = new MultilineLabel(text, (dc.getWidth() * 0.8).toNumber(), Fonts.Normal());
             }
 
-            var y = (dc.getHeight() - self._noListLabel.getHeight()) / 2;
+            var y = (dc.getHeight() - self._noListLabel.getHeight(dc)) / 2;
             self._noListLabel.drawText(dc, (dc.getWidth() * 0.1).toNumber(), y, $.getTheme().MainColor, Graphics.TEXT_JUSTIFY_CENTER);
         }
     }

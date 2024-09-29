@@ -115,8 +115,13 @@ module Lists {
         }
 
         function getList(uuid as String) as List? {
-            var list = Application.Storage.getValue(uuid) as List;
-            return list;
+            try {
+                var list = Application.Storage.getValue(uuid);
+                return list;
+            } catch (ex instanceof Lang.Exception) {
+                Debug.Log("Could not load list " + uuid + ": " + ex.getErrorMessage());
+                return null;
+            }
         }
 
         function updateList(uuid as String, position as Number, state as Boolean) as Void {
@@ -161,6 +166,37 @@ module Lists {
             Application.Storage.clearValues();
             Debug.Log("Deleted all lists!");
             Helper.ToastUtil.Toast(Rez.Strings.StDelAllDone, Helper.ToastUtil.SUCCESS);
+        }
+
+        function Optimize(uuid as String, titles as Dictionary<Number, Array<String> >, notes as Dictionary<Number, Array<String> >) {
+            var list = self.getList(uuid);
+            if (list != null) {
+                var items = list.get("items");
+                if (items != null) {
+                    for (var i = 0; i < items.size(); i++) {
+                        var text = titles.hasKey(i) ? titles.get(i) : null;
+                        var note = notes.hasKey(i) ? notes.get(i) : null;
+                        var item = list["items"][i];
+                        if (item.hasKey("i")) {
+                            var t = item.get("i");
+                            if (t instanceof Array) {
+                                t[0] = text != null ? text : t[0];
+                                if (t.size() > 1) {
+                                    t[1] = note != null ? note : t[1];
+                                } else if (note != null) {
+                                    t.put(note);
+                                }
+                            } else if (text != null) {
+                                t = text;
+                            }
+                            item.put("i", t);
+                        }
+                        list["items"][i] = item;
+                    }
+                }
+                list.put("opt", true);
+                Application.Storage.setValue(uuid, list);
+            }
         }
 
         private function checkListIndex(index as ListIndexType?) as ListIndexType {

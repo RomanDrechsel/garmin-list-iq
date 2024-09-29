@@ -8,9 +8,9 @@ module Controls {
         typedef ViewItemIcon as WatchUi.BitmapResource or Graphics.BitmapReference;
 
         class Item {
-            var Title as MultilineLabel or String or Null = null;
+            var Title as MultilineLabel or String or Array<String> or Null = null;
             var TitleJustification as TextJustification = Graphics.TEXT_JUSTIFY_LEFT;
-            var Subtitle as MultilineLabel or String or Null = null;
+            var Subtitle as MultilineLabel or String or Array<String> or Null = null;
             var SubtitleJustification as TextJustification = Graphics.TEXT_JUSTIFY_LEFT;
             var BoundObject as Object? = null;
             var ItemPosition as Number = -1;
@@ -31,20 +31,15 @@ module Controls {
             protected var _layer as LayerDef? = null;
             protected var _textOffsetX as Number = 0;
 
-            function initialize(layer as LayerDef?, title as String?, subtitle as String?, obj as Object?, icon as Number or BitmapResource or Null, vert_margin as Number, position as Number, fontoverride as FontType?) {
+            function initialize(layer as LayerDef?, title as String or Array<String> or Null, subtitle as String or Array<String> or Null, obj as Object?, icon as Number or BitmapResource or Null, vert_margin as Number, position as Number, fontoverride as FontType?) {
                 self._font = fontoverride != null ? fontoverride : Fonts.Normal();
                 self._color = getTheme().MainColor;
                 self._colorSub = getTheme().SecondColor;
                 self.ItemPosition = position;
                 self._layer = layer;
                 self._verticalMargin = vert_margin;
-                if (title instanceof String) {
-                    self.Title = title;
-                }
-                if (subtitle instanceof String) {
-                    self.Subtitle = subtitle;
-                }
-
+                self.Title = title;
+                self.Subtitle = subtitle;
                 self.BoundObject = obj;
                 self.setIcon(icon);
                 self._needValidation = true;
@@ -217,14 +212,13 @@ module Controls {
                     var width = self._layer.getWidth() - 2 * padding;
                     if (self._needValidation == true) {
                         self._height = -1;
-
-                        if (self.Title instanceof String && self.Title.length() > 0) {
+                        if (self.Title != null && self.Title instanceof MultilineLabel == false) {
                             self.Title = new MultilineLabel(self.Title, width - self.getIconWidth(dc), self._font);
                         } else if (self.Title instanceof MultilineLabel == false) {
                             self.Title = null;
                         }
 
-                        if (self.Subtitle instanceof String && self.Subtitle.length() > 0) {
+                        if (self.Subtitle != null && self.Subtitle instanceof MultilineLabel == false) {
                             self.Subtitle = new MultilineLabel(self.Subtitle, width, Fonts.Small());
                         } else if (self.Subtitle instanceof MultilineLabel == false) {
                             self.Subtitle = null;

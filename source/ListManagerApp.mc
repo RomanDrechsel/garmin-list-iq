@@ -11,12 +11,12 @@ class ListsApp extends Application.AppBase {
     private var PhoneReceiver as PhoneReceiver;
     var ListsManager as ListsManager;
     var Debug as DebugStorage;
-    var startupList = null;
+    var startupList = null as String?;
     var GlobalStates as Dictionary<String, Object> = {};
 
     function initialize() {
         AppBase.initialize();
-        Application.Properties.setValue("appVersion", "2024.9.2900");
+        Application.Properties.setValue("appVersion", "2024.9.2901");
 
         self.Debug = new DebugStorage();
         self.ListsManager = new ListsManager();
@@ -25,8 +25,8 @@ class ListsApp extends Application.AppBase {
     }
 
     function onStart(state as Lang.Dictionary?) as Void {
-        self.startupList = Application.Storage.getValue("LastList");
-        Application.Storage.deleteValue("LastList");
+        self.startupList = Helper.Properties.Get(Helper.Properties.LASTLIST, "");
+        Helper.Properties.Store(Helper.Properties.LASTLIST, "");
     }
 
     function getInitialView() as Array<WatchUi.Views or WatchUi.InputDelegates>? {

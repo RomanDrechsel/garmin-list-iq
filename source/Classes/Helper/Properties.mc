@@ -4,13 +4,14 @@ using Toybox.Application.Properties as Props;
 
 module Helper {
     class Properties {
-        typedef PropType as Number or Boolean;
+        typedef PropType as Number or Boolean or String;
 
         public enum EProps {
             THEME = "Theme",
             LISTMOVEDOWN = "ListMoveDown",
             DOUBLETAPFORDONE = "DoubleTapForDone",
             SHOWNOTES = "ShowNotes",
+            LASTLIST = "LastList",
             LOGS = "Logs",
             PERSISTENTLOGS = "PersistentLogs",
         }

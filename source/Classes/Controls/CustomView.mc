@@ -89,9 +89,6 @@ module Controls {
                 self._scrollbarLayer = new LayerDef(dc, barX, 0, scrollbarwidth, dc.getHeight());
                 self._scrollbar = new Scrollbar.Rectangle(self._scrollbarLayer);
             }
-
-            /*self._needValidation = true;
-            self.validate(dc);*/
         }
 
         function onShow() as Void {
@@ -124,7 +121,7 @@ module Controls {
                     self.Items[i].draw(dc, self._scrollOffset);
                 }
 
-                if (self._needScrollbar) {
+                if (self.needScrollbar()) {
                     var viewport_height = dc.getHeight();
                     if ($.isRoundDisplay) {
                         var margin = self.getMargin(dc);
@@ -135,7 +132,7 @@ module Controls {
             }
         }
 
-        function addItem(title as String, substring as String?, identifier as Object?, icon as Number or BitmapResource or Null, position as Number) as Void {
+        function addItem(title as String or Array<String>, substring as String or Array<String> or Null, identifier as Object?, icon as Number or BitmapResource or Null, position as Number) as Void {
             self.Items.add(new Listitems.Item(self._mainLayer, title, substring, identifier, icon, self._verticalItemMargin, position, self._fontoverride));
 
             //no line below the last item
@@ -345,25 +342,6 @@ module Controls {
 
                 self._viewHeight = y + self.getPaddingBottom(dc);
                 self._needScrollbar = self._mainLayer.getHeight() < self._viewHeight;
-
-                var layerwidth;
-
-                if ($.isRoundDisplay) {
-                    var margin = self.getMargin(dc);
-                    layerwidth = dc.getWidth() - 2 * margin[0];
-                } else {
-                    layerwidth = dc.getWidth();
-                    if (self._needScrollbar == true) {
-                        var scrollbarwidth = (dc.getWidth() * self._BarWidthFactor).toNumber();
-                        layerwidth -= scrollbarwidth;
-                    }
-                }
-                if (layerwidth != self._mainLayer.getWidth()) {
-                    self._mainLayer.setWidth(layerwidth);
-                    for (var i = 0; i < self.Items.size(); i++) {
-                        self.Items[i].Invalidate();
-                    }
-                }
                 self._needValidation = false;
             }
         }

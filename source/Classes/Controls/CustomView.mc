@@ -8,8 +8,6 @@ import Controls.Listitems;
 
 module Controls {
     class CustomView extends WatchUi.View {
-        protected var TAG = "CustomView";
-
         enum EScrollmode {
             SCROLL_SNAP,
             SCROLL_DRAG,
@@ -63,7 +61,6 @@ module Controls {
         function initialize() {
             View.initialize();
             self.Items = [];
-            Debug.Log("Initialized " + self.TAG);
         }
 
         function onLayout(dc as Dc) {
@@ -105,13 +102,11 @@ module Controls {
             }
             WatchUi.View.onShow();
             $.onSettingsChanged.add(self);
-            Debug.Log("onShow " + self.TAG);
         }
 
         function onHide() as Void {
             WatchUi.View.onHide();
             $.onSettingsChanged.remove(self);
-            Debug.Log("OnHide " + self.TAG);
         }
 
         function drawList(dc as Dc) as Void {

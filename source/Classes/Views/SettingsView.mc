@@ -6,8 +6,6 @@ import Controls.Listitems;
 
 module Views {
     class SettingsView extends Controls.CustomView {
-        protected var TAG = "SettingsView";
-
         private var _itemIcon as Listitems.ViewItemIcon;
         private var _itemIconDone as Listitems.ViewItemIcon;
 

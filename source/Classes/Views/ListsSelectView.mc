@@ -14,8 +14,6 @@ module Views {
         private var _noListsLabel as MultilineLabel? = null;
         private var _noListsLabel2 as MultilineLabel? = null;
 
-        protected var TAG = "ListsSelectView";
-
         function initialize() {
             self.ScrollMode = SCROLL_SNAP;
             CustomView.initialize();

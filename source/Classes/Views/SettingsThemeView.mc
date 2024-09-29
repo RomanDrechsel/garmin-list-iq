@@ -7,8 +7,6 @@ import Helper;
 
 module Views {
     class SettingsThemeView extends Controls.CustomView {
-        protected var TAG = "SettingsThemeView";
-
         private var _themes as Dictionary<Number, String> = {};
 
         function initialize() {

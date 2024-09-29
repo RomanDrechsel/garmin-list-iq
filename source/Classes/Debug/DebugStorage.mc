@@ -22,6 +22,7 @@ module Debug {
                 if (!(self._logs instanceof Array)) {
                     self._logs = [] as Array<String>;
                 }
+                self._totalCount = self._logs.size();
             }
         }
 
@@ -48,7 +49,7 @@ module Debug {
         }
 
         public function GetLogs() as Array<String> {
-            if (self._logs.size() >= self.LogCount) {
+            if (self._totalCount > self.LogCount) {
                 return $.getApp().getInfo().addAll(self._logs);
             } else {
                 if (self._storeLogs == false) {

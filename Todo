@@ -5,4 +5,5 @@ For Smartphone
 adb -d forward tcp:7381 tcp:7381
 
 TODO: Initialize Log entfernen
+TODO: Zeilenumbrüche in Texten Speichern, um schneller zu laden
 TODO: Reset list every day

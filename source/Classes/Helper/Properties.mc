@@ -16,8 +16,12 @@ module Helper {
         }
 
         public static function Store(prop as EProps, value as PropType) {
-            Props.setValue(prop as String, value);
-            Debug.Log("Stored property " + prop + " as " + value);
+            try {
+                Props.setValue(prop as String, value);
+                Debug.Log("Stored property " + prop + " as " + value);
+            } catch (ex instanceof Lang.Exception) {
+                Debug.Log("Could not store property " + prop + " as " + value + ": " + ex.getErrorMessage());
+            }
         }
 
         public static function Get(prop as EProps, default_value as PropType?) {

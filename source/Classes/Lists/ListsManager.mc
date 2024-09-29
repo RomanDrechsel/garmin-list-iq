@@ -28,7 +28,20 @@ module Lists {
                 listuuid = data.get("uuid") as String?;
                 listitems = data.get("items") as ListIndexType?;
                 if (listname == null || listorder == null || listuuid == null || listitems == null) {
-                    Debug.Log("Could not add list: missing property, " + data);
+                    var missing = [] as Array<String>;
+                    if (listname == null) {
+                        missing.add("name");
+                    }
+                    if (listorder == null) {
+                        missing.add("order");
+                    }
+                    if (listuuid == null) {
+                        missing.add("uuid");
+                    }
+                    if (listitems == null) {
+                        missing.add("items");
+                    }
+                    Debug.Log("Could not add list: missing properties, " + missing);
                     return false;
                 }
             } else {
@@ -60,11 +73,11 @@ module Lists {
             try {
                 Application.Storage.setValue(listuuid, list);
             } catch (e instanceof Lang.StorageFullException) {
-                Debug.Log("Could not update list " + listuuid + ": storage is full: " + e);
+                Debug.Log("Could not update list " + listuuid + " (" + listname + "): storage is full: " + e);
                 Helper.ToastUtil.Toast(Rez.Strings.EStorageFull, Helper.ToastUtil.ERROR);
                 return false;
             } catch (e) {
-                Debug.Log("Could not update list " + listuuid + ": " + e);
+                Debug.Log("Could not update list " + listuuid + " (" + listname + "): " + e);
                 Helper.ToastUtil.Toast(Rez.Strings.EStorageError, Helper.ToastUtil.ERROR);
                 return false;
             }
@@ -89,7 +102,7 @@ module Lists {
 
             Application.Properties.setValue("Init", 1);
 
-            Debug.Log("Added list " + listuuid);
+            Debug.Log("Added list " + listuuid + "(" + listname + ")");
             Helper.ToastUtil.Toast(Rez.Strings.ListRec, Helper.ToastUtil.SUCCESS);
 
             return true;
@@ -116,15 +129,19 @@ module Lists {
                 if (items.size() > position) {
                     items[position].put("d", state);
                     list.put("items", items);
+                    var name = list.get("name");
+                    if (name == null) {
+                        name = "";
+                    }
                     try {
                         Application.Storage.setValue(uuid, list);
                         Debug.Log("Updated list " + uuid);
                     } catch (e instanceof Lang.StorageFullException) {
                         Helper.ToastUtil.Toast(Rez.Strings.EStorageFull, Helper.ToastUtil.ERROR);
-                        Debug.Log("Could not update list " + uuid + ": storage is full: " + e);
-                    } catch (e) {
+                        Debug.Log("Could not update list " + uuid + " (" + name + "): storage is full: " + e.getErrorMessage());
+                    } catch (e instanceof Lang.Exception) {
                         Helper.ToastUtil.Toast(Rez.Strings.EStorageError, Helper.ToastUtil.ERROR);
-                        Debug.Log("Could not update list " + uuid + ": " + e);
+                        Debug.Log("Could not update list " + uuid + "(" + name + "): " + e.getErrorMessage());
                     }
                 }
             }
@@ -190,10 +207,10 @@ module Lists {
                 Debug.Log("Stored list index with " + index.size() + " items in it");
             } catch (e instanceof Lang.StorageFullException) {
                 Helper.ToastUtil.Toast(Rez.Strings.EStorageFull, Helper.ToastUtil.ERROR);
-                Debug.Log("Could not store list index, storage is full: " + e);
+                Debug.Log("Could not store list index, storage is full: " + e.getErrorMessage());
                 return false;
-            } catch (e) {
-                Debug.Log("Could not store list index: " + e);
+            } catch (e instanceof Lang.Exception) {
+                Debug.Log("Could not store list index: " + e.getErrorMessage());
                 Helper.ToastUtil.Toast(Rez.Strings.EStorageError, Helper.ToastUtil.ERROR);
                 return false;
             }

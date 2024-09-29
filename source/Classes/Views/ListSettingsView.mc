@@ -13,8 +13,6 @@ module Views {
         private var _itemIconUncheck as Listitems.ViewItemIcon;
         private var _itemIconCheck as Listitems.ViewItemIcon;
 
-        protected var TAG = "ListSettingsView";
-
         function initialize(uuid as String) {
             CustomView.initialize();
             self.ListUuid = uuid;

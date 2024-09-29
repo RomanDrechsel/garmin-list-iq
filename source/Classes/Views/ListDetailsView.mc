@@ -19,7 +19,6 @@ module Views {
         private var _itemIconDone as Listitems.ViewItemIcon;
 
         protected var _fontoverride = Fonts.Large();
-        protected var TAG = "ListDetailsView";
 
         function initialize(uuid as String) {
             CustomView.initialize();

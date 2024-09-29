@@ -9,7 +9,6 @@ module Comm {
     class PhoneReceiver extends Toybox.Communications.ConnectionListener {
         function initialize() {
             Communications.registerForPhoneAppMessages(method(:phoneMessageCallback));
-            Debug.Log("Started PhoneReceiver");
         }
 
         function phoneMessageCallback(msg as Communications.Message) as Void {
@@ -19,13 +18,14 @@ module Comm {
                 if (type != null) {
                     if (type.equals("list")) {
                         message.remove("type");
-                        if (getApp().ListsManager.addList(message)) {
-                            Debug.Log("Received list: " + message.toString());
+                        Debug.Log("Received list: " + message.toString().length() + " bytes");
+                        if ($.getApp().ListsManager.addList(message) == false) {
+                            Debug.Log("Could not store list");
                         }
-                        return;
                     } else if (type.equals("request")) {
                         var request = message.get("request") as String?;
                         if (request != null && request.equals("logs")) {
+                            Debug.Log("Received request for logs: " + message.toString().length() + " bytes");
                             var tid = message.get("tid") as String?;
                             var resp = ({}) as Dictionary<String, String or Array<String> >;
                             resp.put("tid", tid);
@@ -35,9 +35,9 @@ module Comm {
                     }
                 }
             } else if (message != null) {
-                Debug.Log("Received invalid message: " + message.toString());
+                Debug.Log("Received invalid message " + message.toString() + " from phone");
             } else {
-                Debug.Log("Received invalid message!");
+                Debug.Log("Received empty message from phone!");
             }
         }
 

@@ -32,6 +32,8 @@ module Comm {
                             resp.put("logs", $.getApp().Debug.GetLogs());
                             self.SendToPhone(resp);
                         }
+                    } else {
+                        Debug.Log("Received unknown message " + message.toString() + " from phone");
                     }
                 }
             } else if (message != null) {

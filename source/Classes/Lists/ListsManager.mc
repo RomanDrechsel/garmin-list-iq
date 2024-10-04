@@ -152,12 +152,14 @@ module Lists {
             }
         }
 
-        function deleteList(uuid as String) as Void {
+        function deleteList(uuid as String, with_toast as Boolean) as Void {
             Application.Storage.deleteValue(uuid);
             var index = self.GetLists();
             index.remove(uuid);
             if (self.StoreIndex(index)) {
-                Helper.ToastUtil.Toast(Rez.Strings.ListDel, Helper.ToastUtil.SUCCESS);
+                if (with_toast == true) {
+                    Helper.ToastUtil.Toast(Rez.Strings.ListDel, Helper.ToastUtil.SUCCESS);
+                }
                 Debug.Log("Deleted list " + uuid);
             }
         }

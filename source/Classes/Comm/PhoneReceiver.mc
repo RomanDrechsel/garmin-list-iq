@@ -22,6 +22,16 @@ module Comm {
                         if ($.getApp().ListsManager.addList(message) == false) {
                             Debug.Log("Could not store list");
                         }
+                    } else if (type.equals("dellist")) {
+                        var uuid = message.get("uuid") as String?;
+                        if (uuid != null) {
+                            Debug.Log("Received delete list request for list " + uuid);
+                            if ($.getApp().ListsManager.deleteList(uuid, false) == false) {
+                                Debug.Log("Could not delete list " + uuid);
+                            }
+                        } else {
+                            Debug.Log("Received delete list but no uuid privided - ignoring");
+                        }
                     } else if (type.equals("request")) {
                         var request = message.get("request") as String?;
                         if (request != null && request.equals("logs")) {

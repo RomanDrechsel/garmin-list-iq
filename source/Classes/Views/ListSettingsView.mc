@@ -52,7 +52,7 @@ module Views {
         }
 
         function deleteList() as Void {
-            getApp().ListsManager.deleteList(self.ListUuid);
+            getApp().ListsManager.deleteList(self.ListUuid, true);
             $.getApp().GlobalStates.put("movetop", true);
             WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
             WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);

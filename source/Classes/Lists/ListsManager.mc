@@ -120,6 +120,16 @@ module Lists {
                 Debug.Log("Could not add list reset: invalid type - " + reset);
             }
 
+            var date = data.get("date") as Number?;
+            if (date != null) {
+                if (date > 999999999) {
+                    // date is in milliseconds
+                    date /= 1000;
+                }
+            } else {
+                date = Time.now().value();
+            }
+
             if (self.saveList(listuuid, list)) {
                 //Store Index...
                 var listindex = self.GetLists();
@@ -129,7 +139,7 @@ module Lists {
                         "name" => listname,
                         "order" => listorder,
                         "items" => listitems.size(),
-                        "date" => Time.now().value(),
+                        "date" => date,
                     }) as ListIndexItemType;
 
                 listindex.put(listuuid, indexitem);

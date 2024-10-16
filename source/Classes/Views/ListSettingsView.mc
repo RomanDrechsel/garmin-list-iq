@@ -107,12 +107,14 @@ module Views {
                 }
 
                 var interval = null;
-                if (self._resetInterval.equals("d")) {
-                    interval = Application.loadResource(Rez.Strings.StResetDaily);
-                } else if (self._resetInterval.equals("w")) {
-                    interval = Application.loadResource(Rez.Strings.StResetWeekly);
-                } else if (self._resetInterval.equals("m")) {
-                    interval = Application.loadResource(Rez.Strings.StResetMonthly);
+                if (self._resetInterval != null) {
+                    if (self._resetInterval.equals("d")) {
+                        interval = Application.loadResource(Rez.Strings.StResetDaily);
+                    } else if (self._resetInterval.equals("w")) {
+                        interval = Application.loadResource(Rez.Strings.StResetWeekly);
+                    } else if (self._resetInterval.equals("m")) {
+                        interval = Application.loadResource(Rez.Strings.StResetMonthly);
+                    }
                 }
 
                 self.Items[self.Items.size() - 1].DrawLine = true;
@@ -126,8 +128,13 @@ module Views {
             var list = $.getApp().ListsManager.getList(self.ListUuid) as Lists.List?;
             if (list != null) {
                 var active = list.get("r_a");
-                self._resetActive = active != null && active == true;
-                self._resetInterval = list.get("r_i");
+                if (active != null) {
+                    self._resetActive = active;
+                    self._resetInterval = list.get("r_i");
+                } else {
+                    self._resetActive = null;
+                    self._resetInterval = null;
+                }
             } else {
                 self._resetActive = null;
                 self._resetInterval = null;

@@ -9,7 +9,7 @@ import Views;
 
 module Lists {
     typedef ListItemsItem as String or Dictionary<String, String>;
-    typedef List as Dictionary<String, String or Array<Dictionary<String, String or Boolean or Number or ListItemsItem> > or Boolean>;
+    typedef List as Dictionary<String, String or Array<Dictionary<String, String or Boolean or Number or ListItemsItem> > or Boolean or Number>;
     typedef ListIndexItemType as Dictionary<String, String or Number>;
     typedef ListIndexType as Dictionary<String, ListIndexItemType>;
 
@@ -115,6 +115,7 @@ module Lists {
                     } else if (interval.equals("m")) {
                         list.put("r_d", day);
                     }
+                    list.put("r_last", Time.now().value());
                 }
             } else if (reset != null) {
                 Debug.Log("Could not add list reset: invalid type - " + reset);

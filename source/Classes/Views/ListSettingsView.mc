@@ -1,5 +1,6 @@
 import Toybox.Graphics;
 import Toybox.Lang;
+import Toybox.Time;
 import Lists;
 import Controls;
 import Controls.Listitems;
@@ -59,6 +60,7 @@ module Views {
                     var active = list.get("r_a") as Boolean?;
                     if (active != null) {
                         list.put("r_a", !active);
+                        list.put("r_last", Time.now().value());
                         $.getApp().ListsManager.saveList(self.ListUuid, list);
                         item.setIcon(!active ? self._itemIconCheck : self._itemIconUncheck);
                         WatchUi.requestUpdate();

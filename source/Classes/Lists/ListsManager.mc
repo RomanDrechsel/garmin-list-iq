@@ -110,9 +110,9 @@ module Lists {
                     list.put("r_i", interval);
                     list.put("r_h", hour);
                     list.put("r_m", minute);
-                    if (interval == "w") {
+                    if (interval.equals("w")) {
                         list.put("r_m", weekday);
-                    } else if (interval == "m") {
+                    } else if (interval.equals("m")) {
                         list.put("r_d", day);
                     }
                 }

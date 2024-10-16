@@ -47,4 +47,9 @@
     <string id="StPersistentLogs1">Logs über die Sitzung hinweg speichern</string>
     <string id="StPersistentLogs2">Dies erhöht den Speicherverbrauch der App erheblich.</string>
 
+    <string id="StReset">Liste automatisch zurücksetzen</string>
+    <string id="StResetDaily">Täglich</string>
+    <string id="StResetWeekly">Wöchentlich</string>
+    <string id="StResetMonthly">Monatlich</string>
+
 </strings>

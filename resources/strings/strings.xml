@@ -47,4 +47,9 @@
     <string id="StPersistentLogs1">Store logs across sessions.</string>
     <string id="StPersistentLogs2">This significantly increases the app's memory consumption.</string>
 
+    <string id="StReset">Reset list automatically</string>
+    <string id="StResetDaily">Daily</string>
+    <string id="StResetWeekly">Weekly</string>
+    <string id="StResetMonthly">Monthly</string>
+
 </strings>

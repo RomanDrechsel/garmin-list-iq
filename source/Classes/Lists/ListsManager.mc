@@ -9,7 +9,7 @@ import Views;
 
 module Lists {
     typedef ListItemsItem as String or Dictionary<String, String>;
-    typedef List as Dictionary<String, String or Array<Dictionary<String, String or Boolean or Number or ListItemsItem> > >;
+    typedef List as Dictionary<String, String or Array<Dictionary<String, String or Boolean or Number or ListItemsItem> > or Boolean>;
     typedef ListIndexItemType as Dictionary<String, String or Number>;
     typedef ListIndexType as Dictionary<String, ListIndexItemType>;
 
@@ -41,7 +41,7 @@ module Lists {
                     if (listitems == null) {
                         missing.add("items");
                     }
-                    Debug.Log("Could not add list: missing properties, " + missing);
+                    Debug.Log("Could not add list: missing properties - " + missing);
                     return false;
                 }
             } else {
@@ -52,6 +52,8 @@ module Lists {
             //Store list
             var list = {};
             list.put("name", listname);
+
+            //items
             var items = [];
             for (var i = 0; i < listitems.size(); i++) {
                 var listitem = listitems[i];
@@ -70,42 +72,82 @@ module Lists {
             }
             list.put("items", items);
 
-            try {
-                Application.Storage.setValue(listuuid, list);
-            } catch (e instanceof Lang.StorageFullException) {
-                Debug.Log("Could not update list " + listuuid + " (" + listname + "): storage is full: " + e);
-                Helper.ToastUtil.Toast(Rez.Strings.EStorageFull, Helper.ToastUtil.ERROR);
-                return false;
-            } catch (e) {
-                Debug.Log("Could not update list " + listuuid + " (" + listname + "): " + e);
-                Helper.ToastUtil.Toast(Rez.Strings.EStorageError, Helper.ToastUtil.ERROR);
-                return false;
+            //reset list automatically
+            var reset = data.get("reset") as Dictionary<String, String or Number or Boolean>?;
+            if (reset instanceof Dictionary) {
+                var active = reset.get("active") as Boolean?;
+                var interval = reset.get("interval") as String?;
+                var hour = reset.get("hour") as Number?;
+                var minute = reset.get("minute") as Number?;
+                var weekday = reset.get("weekday") as Number?;
+                var day = reset.get("day") as Number?;
+                var missing = [] as Array<String>;
+                if (active != null && interval != null && hour != null && minute != null) {
+                    if (interval == "w" && weekday == null) {
+                        missing.add("weekday");
+                    } else if (interval == "m" && day == null) {
+                        missing.add("day");
+                    }
+                } else {
+                    if (active == null) {
+                        missing.add("active");
+                    }
+                    if (interval == null) {
+                        missing.add("interval");
+                    }
+                    if (hour == null) {
+                        missing.add("hour");
+                    }
+                    if (minute == null) {
+                        missing.add("minute");
+                    }
+                }
+
+                if (missing.size() > 0) {
+                    Debug.Log("Could not add list reset: missing properties - " + missing);
+                } else {
+                    list.put("r_a", active);
+                    list.put("r_i", interval);
+                    list.put("r_h", hour);
+                    list.put("r_m", minute);
+                    if (interval == "w") {
+                        list.put("r_m", weekday);
+                    } else if (interval == "m") {
+                        list.put("r_d", day);
+                    }
+                }
+            } else if (reset != null) {
+                Debug.Log("Could not add list reset: invalid type - " + reset);
             }
 
-            //Store Index...
-            var listindex = self.GetLists();
-            var indexitem =
-                ({
-                    "key" => listuuid,
-                    "name" => listname,
-                    "order" => listorder,
-                    "items" => listitems.size(),
-                    "date" => Time.now().value(),
-                }) as ListIndexItemType;
+            if (self.saveList(listuuid, list)) {
+                //Store Index...
+                var listindex = self.GetLists();
+                var indexitem =
+                    ({
+                        "key" => listuuid,
+                        "name" => listname,
+                        "order" => listorder,
+                        "items" => listitems.size(),
+                        "date" => Time.now().value(),
+                    }) as ListIndexItemType;
 
-            listindex.put(listuuid, indexitem);
+                listindex.put(listuuid, indexitem);
 
-            if (self.StoreIndex(listindex) == false) {
-                Application.Storage.deleteValue(listuuid);
+                if (self.StoreIndex(listindex) == false) {
+                    Application.Storage.deleteValue(listuuid);
+                    return false;
+                }
+
+                Application.Properties.setValue("Init", 1);
+
+                Debug.Log("Added list " + listuuid + "(" + listname + ")");
+                Helper.ToastUtil.Toast(Rez.Strings.ListRec, Helper.ToastUtil.SUCCESS);
+
+                return true;
+            } else {
                 return false;
             }
-
-            Application.Properties.setValue("Init", 1);
-
-            Debug.Log("Added list " + listuuid + "(" + listname + ")");
-            Helper.ToastUtil.Toast(Rez.Strings.ListRec, Helper.ToastUtil.SUCCESS);
-
-            return true;
         }
 
         function GetLists() as ListIndexType {
@@ -152,6 +194,26 @@ module Lists {
             }
         }
 
+        function saveList(uuid as String, list as List) as Boolean {
+            var listname = list.get("name");
+            if (listname == null) {
+                listname = "?";
+            }
+            try {
+                Application.Storage.setValue(uuid, list);
+                Debug.Log("Saved list " + uuid + "(" + listname + ")");
+                return true;
+            } catch (e instanceof Lang.StorageFullException) {
+                Debug.Log("Could not update list " + uuid + " (" + listname + "): storage is full: " + e);
+                Helper.ToastUtil.Toast(Rez.Strings.EStorageFull, Helper.ToastUtil.ERROR);
+                return false;
+            } catch (e) {
+                Debug.Log("Could not update list " + uuid + " (" + listname + "): " + e);
+                Helper.ToastUtil.Toast(Rez.Strings.EStorageError, Helper.ToastUtil.ERROR);
+                return false;
+            }
+        }
+
         function deleteList(uuid as String, with_toast as Boolean) as Void {
             Application.Storage.deleteValue(uuid);
             var index = self.GetLists();
@@ -186,7 +248,7 @@ module Lists {
                                 if (t.size() > 1) {
                                     t[1] = note != null ? note : t[1];
                                 } else if (note != null) {
-                                    t.put(note);
+                                    t.add(note);
                                 }
                             } else if (text != null) {
                                 t = text;

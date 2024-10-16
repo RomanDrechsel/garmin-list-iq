@@ -76,9 +76,9 @@ module Debug {
         var info = Time.Gregorian.info(Time.now(), Time.FORMAT_SHORT);
         var date = info.year + "-" + info.month.format("%02d") + "-" + info.day.format("%02d") + " " + info.hour.format("%02d") + ":" + info.min.format("%02d") + ":" + info.sec.format("%02d");
 
-        if (obj instanceof Array) {
+        if (obj instanceof Lang.Array) {
             for (var i = 0; i < obj.size(); i++) {
-                if (obj[i] instanceof String) {
+                if (obj[i] instanceof Lang.String) {
                     obj[i] = date + ": " + obj[i];
                 }
                 Toybox.System.println(obj[i]);

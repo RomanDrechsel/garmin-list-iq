@@ -2,6 +2,8 @@ import Toybox.Graphics;
 import Toybox.Lang;
 import Toybox.WatchUi;
 import Toybox.Application;
+import Toybox.Time;
+import Toybox.System;
 import Lists;
 import Controls;
 import Controls.Listitems;
@@ -123,6 +125,10 @@ module Views {
             self.Items = [];
 
             var list = getApp().ListsManager.getList(self.ListUuid) as List?;
+
+            //check if the time for an autoreset is come
+            self.checkAutoreset(list);
+
             if (list == null) {
                 self._listFound = false;
             } else {
@@ -192,6 +198,54 @@ module Views {
             if (request_update) {
                 WatchUi.requestUpdate();
             }
+        }
+
+        private function checkAutoreset(list as List?) as Void {
+            if (list == null) {
+                return;
+            }
+
+            var do_reset = false;
+
+            var active = list.get("r_a") as Boolean?;
+            var interval = list.get("r_i") as String?;
+            var reset_hour = list.get("r_h") as Number?;
+            var reset_minute = list.get("r_m") as Number?;
+            if (active != null && active == true && interval != null && reset_hour != null && reset_minute != null) {
+                var last_reset = list.get("r_last") as Number?;
+                if (last_reset == null) {
+                    list.put("r_last", Time.now().value());
+                    $.getApp().ListsManager.saveList(self.ListUuid, list);
+                    return;
+                }
+                last_reset = 1729173431;
+                var last_moment = new Time.Moment(last_reset);
+                var next_reset = null;
+                if (interval.equals("w")) {
+                    //TODO: weekly reset
+                } else if (interval.equals("m")) {
+                    //TODO: monthly reset
+                } else {
+                    //daily reset
+                    //check, if the last reset is more than 1 day ago...
+                    if (Time.now().value() - last_reset > Time.Gregorian.SECONDS_PER_DAY) {
+                        do_reset = true;
+                    } else {
+                        //this is the moment, when the reset should happen today...
+                        next_reset = Helper.DateUtil.TimezoneOffset(Time.Gregorian.moment({ :hour => reset_hour, :minute => reset_minute }));
+                    }
+                }
+
+                //check, if the last reset was before this moment, and the moment has passed
+                if (next_reset != null) {
+                    Debug.Log("Next list reset for list " + self.ListUuid + " is " + Helper.DateUtil.toString(next_reset, null));
+                    Debug.Log("Last reset was " + Helper.DateUtil.toString(last_moment, null));
+                    if (Time.now().compare(next_reset) >= 0 && last_moment.compare(next_reset) < 0) {
+                        do_reset = true;
+                    }
+                }
+            }
+            Debug.Log("RESET LIST? " + do_reset);
         }
 
         private function noLists(dc as Dc) as Void {

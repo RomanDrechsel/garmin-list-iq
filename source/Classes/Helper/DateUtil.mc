@@ -5,8 +5,8 @@ import Toybox.System;
 
 module Helper {
     class DateUtil {
-        static function toString(timestamp as Number, date_separator as String?) as String {
-            var moment = new Time.Moment(timestamp);
+        static function toString(timestamp as Number or Time.Moment, date_separator as String?) as String {
+            var moment = timestamp instanceof Time.Moment ? timestamp : new Time.Moment(timestamp);
             var greg = Time.Gregorian.info(moment, Time.Gregorian.FORMAT_SHORT);
             var greg_long = Time.Gregorian.info(moment, Time.Gregorian.FORMAT_LONG);
             var greg_now = Time.Gregorian.info(Time.now(), Time.Gregorian.FORMAT_SHORT);
@@ -34,7 +34,11 @@ module Helper {
                 var suffix = Application.loadResource(Rez.Strings.oclock) as String;
                 time = StringUtil.stringReplace(time, "%ampm", suffix);
             } else {
-                time = StringUtil.stringReplace(time, "%h", (greg.hour % 12).format("%02d"));
+                var hour = greg.hour % 12;
+                if (hour == 0) {
+                    hour = 12;
+                }
+                time = StringUtil.stringReplace(time, "%h", hour.toNumber().toString());
                 if (greg.hour < 12) {
                     time = StringUtil.stringReplace(time, "%ampm", "AM");
                 } else {
@@ -52,12 +56,13 @@ module Helper {
             return date + date_separator + time;
         }
 
-        private static function AMPM(hour as Number) as String {
-            if (hour < 12) {
-                return "AM";
-            } else {
-                return "PM";
+        static function TimezoneOffset(moment as Time.Moment) as Time.Moment {
+            var offset_seconds = System.ClockTime.timeZoneOffset;
+            offset_seconds = 7200;
+            if (offset_seconds != null && offset_seconds != 0) {
+                return moment.subtract(new Time.Duration(offset_seconds));
             }
+            return moment;
         }
     }
 }

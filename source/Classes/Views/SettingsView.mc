@@ -115,10 +115,8 @@ module Views {
 
             // Delete all lists
             self.Items.add(new Listitems.Button(self._mainLayer, Application.loadResource(Rez.Strings.StDelAll), SETTINGS_DELETEALL, self._verticalItemMargin, true));
-            self.Items[self.Items.size() - 1].DrawLine = true;
 
             var icon;
-
             //move items down when done
             var prop = Helper.Properties.Get(Helper.Properties.LISTMOVEDOWN, true);
             if (prop == true || prop == 1) {
@@ -156,6 +154,7 @@ module Views {
             //store logs persistent
             prop = Helper.Properties.Get(Helper.Properties.PERSISTENTLOGS, false);
             self.addItem(Application.loadResource(Rez.Strings.StPersistentLogs1), Application.loadResource(Rez.Strings.StPersistentLogs2), SETTINGS_PERSISTANTLOGS, prop ? self._itemIconDone : self._itemIcon, 3);
+            self.Items[self.Items.size() - 1].DrawLine = true;
 
             // Change Theme
             self.Items.add(new Listitems.Button(self._mainLayer, Application.loadResource(Rez.Strings.StTheme), SETTINGS_THEME, self._verticalItemMargin, true));

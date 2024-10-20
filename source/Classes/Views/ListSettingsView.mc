@@ -123,6 +123,11 @@ module Views {
                 self.Items.add(new Listitems.Item(self._mainLayer, Application.loadResource(Rez.Strings.StReset), interval, "reset", icon, self._verticalItemMargin, 0, null));
             }
 
+            //no lone below the last items
+            if (self.Items.size() > 0) {
+                self.Items[self.Items.size() - 1].DrawLine = false;
+            }
+
             WatchUi.requestUpdate();
         }
 

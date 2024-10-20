@@ -16,7 +16,7 @@ class ListsApp extends Application.AppBase {
 
     function initialize() {
         AppBase.initialize();
-        Application.Properties.setValue("appVersion", "2024.10.0400");
+        Application.Properties.setValue("appVersion", "2024.10.2000");
 
         self.Debug = new Debug.DebugStorage();
         self.ListsManager = new ListsManager();
@@ -91,3 +91,8 @@ function getApp() as ListsApp {
 function getAppStore() as String {
     return "https://play.google.com/store/apps/details?id=de.romandrechsel.lists";
 }
+
+(:debug)
+var isDebug = true;
+(:release)
+var isDebug = false;

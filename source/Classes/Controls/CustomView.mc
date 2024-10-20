@@ -134,20 +134,6 @@ module Controls {
 
         function addItem(title as String or Array<String>, substring as String or Array<String> or Null, identifier as Object?, icon as Number or BitmapResource or Null, position as Number) as Void {
             self.Items.add(new Listitems.Item(self._mainLayer, title, substring, identifier, icon, self._verticalItemMargin, position, self._fontoverride));
-
-            //no line below the last item
-            for (var i = 0; i < self.Items.size(); i++) {
-                var item = self.Items[i];
-                if (item instanceof Listitems.Button == false && item instanceof Listitems.Title == false) {
-                    if (i < self.Items.size() - 1) {
-                        item.DrawLine = true;
-                    } else {
-                        item.DrawLine = false;
-                    }
-                } else {
-                    item.DrawLine = false;
-                }
-            }
             self._needValidation = true;
             self._paddingTop = null;
             self._paddingBottom = null;

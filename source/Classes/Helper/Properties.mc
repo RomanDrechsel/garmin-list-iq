@@ -7,6 +7,7 @@ module Helper {
         typedef PropType as Number or Boolean or String;
 
         public enum EProps {
+            INIT = "Init",
             THEME = "Theme",
             LISTMOVEDOWN = "ListMoveDown",
             DOUBLETAPFORDONE = "DoubleTapForDone",

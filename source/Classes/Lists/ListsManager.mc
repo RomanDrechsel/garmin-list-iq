@@ -8,7 +8,7 @@ import Controls.Listitems;
 import Views;
 
 module Lists {
-    typedef ListItemsItem as String or Dictionary<String, String>;
+    typedef ListItemsItem as String or Dictionary<String, String or Array<String> or Boolean>;
     typedef List as Dictionary<String, String or Array<Dictionary<String, String or Boolean or Number or ListItemsItem> > or Boolean or Number>;
     typedef ListIndexItemType as Dictionary<String, String or Number>;
     typedef ListIndexType as Dictionary<String, ListIndexItemType>;
@@ -23,10 +23,10 @@ module Lists {
             var listorder = null;
             var listitems = null;
             if (data instanceof Dictionary) {
-                listname = data.get("name") as String?;
-                listorder = data.get("order") as Number?;
-                listuuid = data.get("uuid") as String?;
-                listitems = data.get("items") as ListIndexType?;
+                listname = data.get("name");
+                listorder = data.get("order");
+                listuuid = data.get("uuid");
+                listitems = data.get("items");
                 if (listname == null || listorder == null || listuuid == null || listitems == null) {
                     var missing = [] as Array<String>;
                     if (listname == null) {
@@ -111,7 +111,7 @@ module Lists {
                     list.put("r_h", hour);
                     list.put("r_m", minute);
                     if (interval.equals("w")) {
-                        list.put("r_m", weekday);
+                        list.put("r_wd", weekday);
                     } else if (interval.equals("m")) {
                         list.put("r_d", day);
                     }
@@ -150,7 +150,7 @@ module Lists {
                     return false;
                 }
 
-                Application.Properties.setValue("Init", 1);
+                Helper.Properties.Store(Helper.Properties.INIT, 1);
 
                 Debug.Log("Added list " + listuuid + "(" + listname + ")");
                 Helper.ToastUtil.Toast(Rez.Strings.ListRec, Helper.ToastUtil.SUCCESS);

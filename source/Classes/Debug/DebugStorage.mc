@@ -74,7 +74,7 @@ module Debug {
 
     function Log(obj as Object) {
         var info = Time.Gregorian.info(Time.now(), Time.FORMAT_SHORT);
-        var date = info.year + "-" + info.month.format("%02d") + "-" + info.day.format("%02d") + " " + info.hour.format("%02d") + ":" + info.min.format("%02d") + ":" + info.sec.format("%02d");
+        var date = Helper.DateUtil.toLogString(info, null);
 
         if (obj instanceof Lang.Array) {
             for (var i = 0; i < obj.size(); i++) {

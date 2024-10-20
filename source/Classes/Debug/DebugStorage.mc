@@ -45,6 +45,7 @@ module Debug {
                 }
             } else {
                 self._logs = [];
+                self._totalCount = 0;
             }
         }
 

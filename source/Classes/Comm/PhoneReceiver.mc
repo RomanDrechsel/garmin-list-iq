@@ -17,12 +17,14 @@ module Comm {
                 var type = message.get("type") as String?;
                 if (type != null) {
                     if (type.equals("list")) {
+                        //add or edit a list
                         message.remove("type");
                         Debug.Log("Received list: " + message.toString().length() + " bytes");
                         if ($.getApp().ListsManager.addList(message) == false) {
                             Debug.Log("Could not store list");
                         }
                     } else if (type.equals("dellist")) {
+                        //request for deleting a lists
                         var uuid = message.get("uuid") as String?;
                         if (uuid != null) {
                             Debug.Log("Received delete list request for list " + uuid);
@@ -35,6 +37,7 @@ module Comm {
                     } else if (type.equals("request")) {
                         var request = message.get("request") as String?;
                         if (request != null && request.equals("logs")) {
+                            //request for logs
                             Debug.Log("Received request for logs: " + message.toString().length() + " bytes");
                             var tid = message.get("tid") as String?;
                             var resp = ({}) as Dictionary<String, String or Array<String> >;

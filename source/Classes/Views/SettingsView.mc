@@ -153,8 +153,10 @@ module Views {
 
             //store logs persistent
             prop = Helper.Properties.Get(Helper.Properties.PERSISTENTLOGS, false);
-            self.addItem(Application.loadResource(Rez.Strings.StPersistentLogs1), Application.loadResource(Rez.Strings.StPersistentLogs2), SETTINGS_PERSISTANTLOGS, prop ? self._itemIconDone : self._itemIcon, 3);
-            self.Items[self.Items.size() - 1].DrawLine = true;
+            var persistent = new Listitems.Item(self._mainLayer, Application.loadResource(Rez.Strings.StPersistentLogs1), Application.loadResource(Rez.Strings.StPersistentLogs2), SETTINGS_PERSISTANTLOGS, prop ? self._itemIconDone : self._itemIcon, self._verticalItemMargin, 3, null);
+            persistent.DrawLine = true;
+            persistent.SubtitleJustification = Graphics.TEXT_JUSTIFY_CENTER;
+            self.Items.add(persistent);
 
             // Change Theme
             self.Items.add(new Listitems.Button(self._mainLayer, Application.loadResource(Rez.Strings.StTheme), SETTINGS_THEME, self._verticalItemMargin, true));
@@ -165,11 +167,11 @@ module Views {
             var str = Application.loadResource(Rez.Strings.StAppVersion);
             var version = Application.Properties.getValue("appVersion");
             var item = new Listitems.Item(self._mainLayer, str, version, null, null, self._verticalItemMargin, -1, null);
-
             item.TitleJustification = Graphics.TEXT_JUSTIFY_CENTER;
             item.SubtitleJustification = Graphics.TEXT_JUSTIFY_CENTER;
             item.DrawLine = false;
             self.Items.add(item);
+
             self._needValidation = true;
         }
     }

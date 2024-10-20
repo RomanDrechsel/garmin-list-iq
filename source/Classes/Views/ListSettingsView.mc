@@ -121,6 +121,7 @@ module Views {
 
                 self.Items[self.Items.size() - 1].DrawLine = true;
                 self.Items.add(new Listitems.Item(self._mainLayer, Application.loadResource(Rez.Strings.StReset), interval, "reset", icon, self._verticalItemMargin, 0, null));
+                self.Items[self.Items.size() - 1].SubtitleJustification = Graphics.TEXT_JUSTIFY_CENTER;
             }
 
             //no lone below the last items

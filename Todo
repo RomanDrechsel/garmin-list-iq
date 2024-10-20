@@ -4,5 +4,6 @@ adb -e forward tcp:7381 tcp:7381
 For Smartphone
 adb -d forward tcp:7381 tcp:7381
 
-WIP: Reset list every day
-TODO: Neue Devices
+TEST: Reset list every day
+TODO: center List-Reset-Item note
+TODO: Device-Zeug nicht doppelt ins Log packen

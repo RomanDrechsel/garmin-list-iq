@@ -250,7 +250,7 @@ module Views {
                         reset_weekday = reset_weekday.toNumber();
                         if (Time.now().value() - last_reset > Time.Gregorian.SECONDS_PER_DAY * 7) {
                             //last reset is more than 7 days ago ...
-                            Debug.Log("Next reset for list " + self.ListUuid + " is NOW, 7+ days ago");
+                            Debug.Log("Next weekly reset for list " + self.ListUuid + " is NOW, 7+ days ago");
                             do_reset = true;
                         } else {
                             next_reset = Time.Gregorian.moment({ :year => last_reset_info.year, :month => last_reset_info.month, :day => last_reset_info.day, :hour => reset_hour, :minute => reset_minute, :second => 0 });
@@ -269,7 +269,7 @@ module Views {
                     reset_day = reset_day.toNumber();
                     if (Time.now().value() - last_reset > Time.Gregorian.SECONDS_PER_DAY * 31) {
                         //last reset is more than 31 days ago ...
-                        Debug.Log("Next reset for list " + self.ListUuid + " is NOW, 31+ days ago");
+                        Debug.Log("Next monthly reset for list " + self.ListUuid + " is NOW, 31+ days ago");
                         do_reset = true;
                     } else {
                         //How many days does the month of the last reset have...
@@ -281,13 +281,8 @@ module Views {
 
                         next_reset = Time.Gregorian.moment({ :year => last_reset_info.year, :month => last_reset_info.month, :day => day, :hour => reset_hour, :minute => reset_minute, :second => 0 });
                         next_reset = Helper.DateUtil.ShiftTimezoneToGMT(next_reset);
-
-                        System.println("Last: " + last_reset_moment.value());
-                        System.println("Next: " + next_reset.value());
-                        System.println("Compare: " + next_reset.compare(last_reset_moment));
-
-                        if (next_reset.compare(last_reset_moment) > 0) {
-                            //the reset was already in this month, so we reset 1 month later
+                        if (next_reset.compare(last_reset_moment) < 0) {
+                            //the last reset is newer than the next reset, so we add 1 month
                             var next_reset_info = Time.Gregorian.info(next_reset, Time.FORMAT_SHORT);
                             var year = next_reset_info.year;
                             var month = next_reset_info.month + 1;
@@ -307,7 +302,7 @@ module Views {
                     //daily reset
                     if (Time.now().value() - last_reset > Time.Gregorian.SECONDS_PER_DAY) {
                         //last reset is more than 1 day ago...
-                        Debug.Log("Next reset for list " + self.ListUuid + " is NOW, 1+ day ago");
+                        Debug.Log("Next daily reset for list " + self.ListUuid + " is NOW, 1+ day ago");
                         do_reset = true;
                     } else {
                         //this is the moment, when the reset should happen today...
@@ -317,7 +312,19 @@ module Views {
 
                 //check, if the last reset was before this moment, and the moment has passed
                 if (next_reset != null) {
-                    Debug.Log("Next scheduled reset for list " + self.ListUuid + " is " + Helper.DateUtil.toLogString(next_reset, true) + " (" + next_reset.value() + ")");
+                    var interval_str = "";
+                    switch (interval) {
+                        case "d":
+                            interval_str = "daily";
+                            break;
+                        case "w":
+                            interval_str = "weekly";
+                            break;
+                        case "m":
+                            interval_str = "monthly";
+                            break;
+                    }
+                    Debug.Log("Next scheduled " + interval_str + " reset for list " + self.ListUuid + " is " + Helper.DateUtil.toLogString(next_reset, true) + " (" + next_reset.value() + ")");
                     if (Time.now().compare(next_reset) >= 0 && last_reset_moment.compare(next_reset) < 0) {
                         do_reset = true;
                     }

@@ -22,7 +22,7 @@ module Helper {
 
             date = StringUtil.stringReplace(date, "%y", greg.year.toString());
             date = StringUtil.stringReplace(date, "%M", greg_long.month);
-            date = StringUtil.stringReplace(date, "%m", greg.month);
+            date = StringUtil.stringReplace(date, "%m", greg.month.format("%02d"));
             date = StringUtil.stringReplace(date, "%d", greg.day.format("%02d"));
             date = StringUtil.stringReplace(date, "%D", greg_long.day_of_week);
             date = StringUtil.stringReplace(date, " ", nbsp);

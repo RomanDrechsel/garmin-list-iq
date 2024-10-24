@@ -65,6 +65,12 @@
         <iq:languages>
             <iq:language>deu</iq:language>
             <iq:language>eng</iq:language>
+            <iq:language>fre</iq:language>
+            <iq:language>jpn</iq:language>
+            <iq:language>spa</iq:language>
+            <iq:language>ukr</iq:language>
+            <iq:language>zhs</iq:language>
+            <iq:language>zht</iq:language>
         </iq:languages>
         <iq:barrels/>
     </iq:application>

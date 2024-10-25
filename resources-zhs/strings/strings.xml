@@ -45,7 +45,7 @@
     <string id="StLogs">保­存日志­­</string>
     <string id="StPersistentLogs">在会话之间保­存日志­。­这会显著增加应­用­的存­储使用量­。­</string>
     <string id="StPersistentLogs1">在会话之间保­存日志­­</string>
-    <string id="StPersistentLogs2">这会显著增加应用的存­储使用量­。­</string>
+    <string id="StPersistentLogs2">这­会­显­著­增­加­应­用­的­存­储­使­用­量­。­</string>
 
     <string id="StReset">自动重置列­表­­</string>
     <string id="StResetDaily">每天­­</string>

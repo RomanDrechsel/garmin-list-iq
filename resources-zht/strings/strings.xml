@@ -43,9 +43,9 @@
     <string id="oclock"></string>
 
     <string id="StLogs">­保­存日志­­</string>
-    <string id="StPersistentLogs">­在会话之间保­存日志­。­这会显著增加应­用­的存­储使用量­。­</string>
+    <string id="StPersistentLogs">­在会话之间保­存日志­。這會顯著增加應用的存儲使用量。­</string>
     <string id="StPersistentLogs1">­在会话之间保­存日志­­</string>
-    <string id="StPersistentLogs2">­这会显著增加应用的存­储使用量­。­</string>
+    <string id="StPersistentLogs2">這會顯著增加應­用的存儲使用量。</string>
 
     <string id="StReset">­自动重置列­表­­</string>
     <string id="StResetDaily">­每天­­</string>

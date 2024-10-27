@@ -1,0 +1,55 @@
+<strings>
+    <string id="AppName">听­</string>
+
+    <string id="SettingsTh">主题­</string>
+    <string id="ThGrey">灰色­</string>
+    <string id="ThRed">红色­</string>
+    <string id="ThBaW">黑白­</string>
+    <string id="ThWaB">白黑­</string>
+    <string id="ThBsoD">蓝屏死机­</string>
+
+    <string id="ListRec">列­表已接收­。­</string>
+    <string id="EStorageFull">存储已满­！­</string>
+    <string id="EStorageError">无法保­存列表­！­</string>
+    <string id="ListDel">列­表已删除­。­</string>
+
+    <string id="NoLists">未找­到列表­！­</string>
+    <string id="NoListsLink">双击以在手­机上开­放Android Play商店­</string>
+
+    <string id="ListNotFound">未找­到列表­！­</string>
+    <string id="ListEmpty">列­表为空­。­</string>
+
+    <string id="LMSub">%s 点­­</string>
+
+    <string id="StTitle">设­置­</string>
+    <string id="StMoveBottom">将完­成的项­目移­动到底部­­</string>
+    <string id="StDelList">删­除列表­­</string>
+    <string id="DeleteConfirm">删­除列­表？­­</string>
+    <string id="StDoubleTapForDone">双击而不­是单­击项­目以将其­标记­为已完­成­的­项­目­­</string>
+    <string id="StDShowNotes">显­示项­目的注­释­­</string>
+
+    <string id="StDelAll">删­除所有列­表­­</string>
+    <string id="StDelAllConfirm">删­除所有列表？­­</string>
+    <string id="StDelAllDone">所有列表已删除­。­­</string>
+    <string id="StTheme">选­择主题­­</string>
+    <string id="StAppStore">到 Android PlayStore</string>
+    <string id="StAppVersion">应用版­本­­</string>
+
+    <string id="SelTheme">主题­­</string>
+
+    <string id="ListDateFormatShort">%D, %m月%d日­。</string>
+    <string id="ListDateFormat">%D, %y年%m月%d日­。</string>
+    <string id="ListTimeFormat">%h:%i</string>
+    <string id="oclock"></string>
+
+    <string id="StLogs">保­存日志­­</string>
+    <string id="StPersistentLogs">在会话之间保­存日志­。­这会显著增加应­用­的存­储使用量­。­</string>
+    <string id="StPersistentLogs1">在会话之间保­存日志­­</string>
+    <string id="StPersistentLogs2">这­会­显­著­增­加­应­用­的­存­储­使­用­量­。­</string>
+
+    <string id="StReset">自动重置列­表­­</string>
+    <string id="StResetDaily">每天­­</string>
+    <string id="StResetWeekly">每周­­</string>
+    <string id="StResetMonthly">每月­­</string>
+
+</strings>

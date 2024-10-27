@@ -1,0 +1,55 @@
+<strings>
+    <string id="AppName">リス­ト</string>
+
+    <string id="SettingsTh">テ­ー­マ</string>
+    <string id="ThGrey">グ­レ­ー</string>
+    <string id="ThRed">レ­ッ­ド</string>
+    <string id="ThBaW">白黒</string>
+    <string id="ThWaB">黒白</string>
+    <string id="ThBsoD">死の青画面</string>
+
+    <string id="ListRec">リ­ス­ト­を受­信­し­ま­し­た。</string>
+    <string id="EStorageFull">スト­レ­ージが­満杯です！</string>
+    <string id="EStorageError">リス­ト­を­保­存で­き­ま­せ­んで­し­た！</string>
+    <string id="ListDel">リ­ス­ト­が削­除­さ­れ­ま­し­た。</string>
+
+    <string id="NoLists">リ­ス­ト­が­見つか­り­ま­せ­ん！</string>
+    <string id="NoListsLink">電­話­で­An­droid Play­Sto­re­を開­くに­はダブ­ルタッ­プ</string>
+
+    <string id="ListNotFound">リ­ス­ト­が­見つか­り­ま­せ­ん！</string>
+    <string id="ListEmpty">リ­ス­トが­空です。</string>
+
+    <string id="LMSub">%s 点</string>
+
+    <string id="StTitle">設­定</string>
+    <string id="StMoveBottom">完­了­項­目­を­下­へ­移動</string>
+    <string id="StDelList">リ­ス­ト­を削­除</string>
+    <string id="DeleteConfirm">リ­ス­ト­を­削­除­し­ま­す­か？</string>
+    <string id="StDoubleTapForDone">項­目を­完了­に­す­るに­はシン­グル­タッ­プの代­わ­りにダブ­ルタッ­プ</string>
+    <string id="StDShowNotes">項­目­のノ­ート­を­表示</string>
+
+    <string id="StDelAll">す­べ­てのリ­ス­ト­を削­除</string>
+    <string id="StDelAllConfirm">リ­ス­ト­を­削­除­し­ま­す­か？</string>
+    <string id="StDelAllDone">す­べ­てのリ­ス­ト­が­削­除­さ­れ­ま­し­た。</string>
+    <string id="StTheme">テ­ー­マを­選択</string>
+    <string id="StAppStore">アンドロイド­PlayStoreへ</string>
+    <string id="StAppVersion">ア­プ­リバ­ー­ジョン</string>
+
+    <string id="SelTheme">テ­ー­マ</string>
+
+    <string id="ListDateFormatShort">%D. %d. %M.</string>
+    <string id="ListDateFormat">%D. %d. %M %y</string>
+    <string id="ListTimeFormat">%h:%i %ampm</string>
+    <string id="oclock"></string>
+
+    <string id="StLogs">ログ­を保­存</string>
+    <string id="StPersistentLogs">セ­ッ­ション­を­通じて­ログ­を­保­存­す­る。これ­はア­プ­リのス­ト­レ­ー­ジ使­用量­を大幅に増加させ­ま­す。</string>
+    <string id="StPersistentLogs1">セ­ッ­ション­を­超え­てロ­グを­保­存­す­る</string>
+    <string id="StPersistentLogs2">これ­はア­プ­リのス­ト­レ­ー­ジ使­用量­を大幅に増加させ­ま­す。</string>
+
+    <string id="StReset">リ­ス­ト­を自動的に­リ­セッ­ト</string>
+    <string id="StResetDaily">毎日</string>
+    <string id="StResetWeekly">毎週</string>
+    <string id="StResetMonthly">毎月</string>
+
+</strings>

@@ -1,8 +1,10 @@
 <settings>
+    <!-- App version (readonly) -->
     <setting propertyKey="@Properties.appVersion" title="@Strings.StAppVersion">
         <settingConfig type="alphaNumeric" readonly="true" />
     </setting>
 
+    <!-- ´theme -->
     <setting propertyKey="@Properties.Theme" title="@Strings.SettingsTh">
         <settingConfig type="list">
             <listEntry value="0">@Strings.ThGrey</listEntry>
@@ -13,15 +15,28 @@
         </settingConfig>
     </setting>
 
+    <!-- move done items to the end -->
     <setting propertyKey="@Properties.ListMoveDown" title="@Strings.StMoveBottom">
        <settingConfig type="boolean" />
     </setting>
 
+    <!-- double tap set items done -->
     <setting propertyKey="@Properties.DoubleTapForDone" title="@Strings.StDoubleTapForDone">
         <settingConfig type="boolean" />
     </setting>
 
+    <!-- show item notes -->
     <setting propertyKey="@Properties.ShowNotes" title="@Strings.StDShowNotes">
+        <settingConfig type="boolean" />
+    </setting>
+
+    <!-- store logs -->
+    <setting propertyKey="@Properties.Logs" title="@Strings.StLogs">
+        <settingConfig type="boolean" />
+    </setting>
+
+    <!-- store persistent logs-->
+    <setting propertyKey="@Properties.PersistentLogs" title="@Strings.StPersistentLogs">
         <settingConfig type="boolean" />
     </setting>
 

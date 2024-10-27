@@ -8,8 +8,6 @@ import Controls.Listitems;
 
 module Controls {
     class CustomView extends WatchUi.View {
-        protected var TAG = "CustomView";
-
         enum EScrollmode {
             SCROLL_SNAP,
             SCROLL_DRAG,
@@ -63,7 +61,6 @@ module Controls {
         function initialize() {
             View.initialize();
             self.Items = [];
-            Debug.Log("Initialized " + self.TAG);
         }
 
         function onLayout(dc as Dc) {
@@ -92,9 +89,6 @@ module Controls {
                 self._scrollbarLayer = new LayerDef(dc, barX, 0, scrollbarwidth, dc.getHeight());
                 self._scrollbar = new Scrollbar.Rectangle(self._scrollbarLayer);
             }
-
-            /*self._needValidation = true;
-            self.validate(dc);*/
         }
 
         function onShow() as Void {
@@ -105,13 +99,11 @@ module Controls {
             }
             WatchUi.View.onShow();
             $.onSettingsChanged.add(self);
-            Debug.Log("onShow " + self.TAG);
         }
 
         function onHide() as Void {
             WatchUi.View.onHide();
             $.onSettingsChanged.remove(self);
-            Debug.Log("OnHide " + self.TAG);
         }
 
         function drawList(dc as Dc) as Void {
@@ -129,7 +121,7 @@ module Controls {
                     self.Items[i].draw(dc, self._scrollOffset);
                 }
 
-                if (self._needScrollbar) {
+                if (self.needScrollbar()) {
                     var viewport_height = dc.getHeight();
                     if ($.isRoundDisplay) {
                         var margin = self.getMargin(dc);
@@ -140,22 +132,8 @@ module Controls {
             }
         }
 
-        function addItem(title as String, substring as String?, identifier as Object?, icon as Number or BitmapResource or Null, position as Number) as Void {
+        function addItem(title as String or Array<String>, substring as String or Array<String> or Null, identifier as Object?, icon as Number or BitmapResource or Null, position as Number) as Void {
             self.Items.add(new Listitems.Item(self._mainLayer, title, substring, identifier, icon, self._verticalItemMargin, position, self._fontoverride));
-
-            //no line below the last item
-            for (var i = 0; i < self.Items.size(); i++) {
-                var item = self.Items[i];
-                if (item instanceof Listitems.Button == false && item instanceof Listitems.Title == false) {
-                    if (i < self.Items.size() - 1) {
-                        item.DrawLine = true;
-                    } else {
-                        item.DrawLine = false;
-                    }
-                } else {
-                    item.DrawLine = false;
-                }
-            }
             self._needValidation = true;
             self._paddingTop = null;
             self._paddingBottom = null;
@@ -350,25 +328,6 @@ module Controls {
 
                 self._viewHeight = y + self.getPaddingBottom(dc);
                 self._needScrollbar = self._mainLayer.getHeight() < self._viewHeight;
-
-                var layerwidth;
-
-                if ($.isRoundDisplay) {
-                    var margin = self.getMargin(dc);
-                    layerwidth = dc.getWidth() - 2 * margin[0];
-                } else {
-                    layerwidth = dc.getWidth();
-                    if (self._needScrollbar == true) {
-                        var scrollbarwidth = (dc.getWidth() * self._BarWidthFactor).toNumber();
-                        layerwidth -= scrollbarwidth;
-                    }
-                }
-                if (layerwidth != self._mainLayer.getWidth()) {
-                    self._mainLayer.setWidth(layerwidth);
-                    for (var i = 0; i < self.Items.size(); i++) {
-                        self.Items[i].Invalidate();
-                    }
-                }
                 self._needValidation = false;
             }
         }

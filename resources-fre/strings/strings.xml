@@ -32,7 +32,7 @@
     <string id="StDelAllConfirm">Supprimer les listes ?</string>
     <string id="StDelAllDone">Toutes les listes supprimées.</string>
     <string id="StTheme">Sélectionner un thème</string>
-    <string id="StAppStore">vers le magasin d'applications Android</string>
+    <string id="StAppStore">vers le PlayStore Android</string>
     <string id="StAppVersion">Version de l'application</string>
 
     <string id="SelTheme">Thème</string>

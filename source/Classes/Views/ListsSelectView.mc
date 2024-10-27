@@ -57,7 +57,7 @@ module Views {
             }
         }
 
-        function onListsChanged(index as ListIndexType) as Void {
+        function onListsChanged(index as ListIndex) as Void {
             self.publishLists(index, true);
         }
 
@@ -65,7 +65,7 @@ module Views {
             self.publishLists($.getApp().ListsManager.GetLists(), true);
         }
 
-        private function publishLists(index as ListIndexType?, initialize as Boolean) as Void {
+        private function publishLists(index as ListIndex?, initialize as Boolean) as Void {
             if (index == null) {
                 return;
             }
@@ -78,12 +78,12 @@ module Views {
                 }
             }
 
-            var lists = index.values() as Array<ListIndexItemType>;
+            var lists = index.values() as Array<ListIndexItem>;
             lists = Helper.MergeSort.Sort(lists, "order");
 
             self.Items = [] as Array<Item>;
             for (var i = 0; i < lists.size(); i++) {
-                var list = lists[i] as ListIndexItemType;
+                var list = lists[i] as ListIndexItem;
                 var substring = "";
                 var items = list.get("items") as Number;
                 if (items != null) {

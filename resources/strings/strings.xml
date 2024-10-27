@@ -32,7 +32,7 @@
     <string id="StDelAllConfirm">Delete all lists?</string>
     <string id="StDelAllDone">All lists where deleted.</string>
     <string id="StTheme">Select Theme</string>
-    <string id="StAppStore">Go to Android AppStore</string>
+    <string id="StAppStore">Go to Android Play</string>
     <string id="StAppVersion">App Version</string>
 
     <string id="SelTheme">Theme</string>

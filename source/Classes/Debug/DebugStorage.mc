@@ -6,7 +6,7 @@ import Toybox.Application;
 module Debug {
     class DebugStorage {
         private var _logs as Array<String> = [];
-        public var LogCount = 50;
+        public var LogCount = 100;
         public var _totalCount = 0;
         private var _persistentLogs = false;
         private var _storeLogs = false;

@@ -8,10 +8,10 @@ import Controls.Listitems;
 import Views;
 
 module Lists {
-    typedef ListItemsItem as String or Dictionary<String, String or Array<String> or Boolean>;
-    typedef List as Dictionary<String, String or Array<Dictionary<String, String or Boolean or Number or ListItemsItem> > or Boolean or Number>;
-    typedef ListIndexItemType as Dictionary<String, String or Number>;
-    typedef ListIndexType as Dictionary<String, ListIndexItemType>;
+    typedef ListItemsItem as Dictionary<String, String or Array<String> or Boolean or Number>; /* a list item (with key "i" for item-text, "n" for note-text, "d" for done?) */
+    typedef List as Dictionary<String, String or Array<ListItemsItem> or Boolean or Number>; /* a list */
+    typedef ListIndexItem as Dictionary<String, String or Number>; /* data of a list, stored in list index */
+    typedef ListIndex as Dictionary<String, ListIndexItem>; /* the list-index, with list uuid as key, and some list data as value */
 
     class ListsManager {
         var OnListsChanged as Array<Object> = [];
@@ -60,13 +60,10 @@ module Lists {
                 if (listitem.hasKey("item")) {
                     if (!listitem.hasKey("note") || listitem["note"] == null) {
                         //only an item
-                        items.add({ "i" => listitem["item"], "d" => false });
+                        items.add({ "i" => listitem["item"].toString(), "d" => false });
                     } else {
                         //item with note
-                        var item = [] as Array<String>;
-                        item.add(listitem["item"].toString());
-                        item.add(listitem["note"].toString());
-                        items.add({ "i" => item, "d" => false });
+                        items.add({ "i" => listitem["item"].toString(), "n" => listitem["note"].toString(), "d" => false });
                     }
                 }
             }
@@ -126,6 +123,7 @@ module Lists {
                 if (date > 999999999) {
                     // date is in milliseconds
                     date /= 1000;
+                    date = date.toNumber();
                 }
             } else {
                 date = Time.now().value();
@@ -141,7 +139,7 @@ module Lists {
                         "order" => listorder,
                         "items" => listitems.size(),
                         "date" => date,
-                    }) as ListIndexItemType;
+                    }) as ListIndexItem;
 
                 listindex.put(listuuid, indexitem);
 
@@ -161,8 +159,8 @@ module Lists {
             }
         }
 
-        function GetLists() as ListIndexType {
-            var index = Application.Storage.getValue("listindex") as ListIndexType;
+        function GetLists() as ListIndex {
+            var index = Application.Storage.getValue("listindex") as ListIndex;
             index = self.checkListIndex(index);
             return index;
         }
@@ -247,26 +245,18 @@ module Lists {
             var list = self.getList(uuid);
             if (list != null) {
                 var items = list.get("items");
-                if (items != null) {
+                if (items != null && items instanceof Array) {
                     for (var i = 0; i < items.size(); i++) {
                         var text = titles.hasKey(i) ? titles.get(i) : null;
                         var note = notes.hasKey(i) ? notes.get(i) : null;
-                        var item = list["items"][i];
-                        if (item.hasKey("i")) {
-                            var t = item.get("i");
-                            if (t instanceof Array) {
-                                t[0] = text != null ? text : t[0];
-                                if (t.size() > 1) {
-                                    t[1] = note != null ? note : t[1];
-                                } else if (note != null) {
-                                    t.add(note);
-                                }
-                            } else if (text != null) {
-                                t = text;
+                        if (text != null) {
+                            var item = list["items"][i];
+                            item.put("i", text);
+                            if (note != null) {
+                                item.put("n", note);
                             }
-                            item.put("i", t);
+                            list["items"][i] = item;
                         }
-                        list["items"][i] = item;
                     }
                 }
                 list.put("opt", true);
@@ -274,7 +264,7 @@ module Lists {
             }
         }
 
-        private function checkListIndex(index as ListIndexType?) as ListIndexType {
+        private function checkListIndex(index as ListIndex?) as ListIndex {
             if (index != null && index.size() > 0) {
                 var delete = [] as Array<String>;
                 for (var i = 0; i < index.keys().size(); i++) {
@@ -309,10 +299,10 @@ module Lists {
                 return index;
             }
 
-            return ({}) as ListIndexType;
+            return ({}) as ListIndex;
         }
 
-        private function StoreIndex(index as ListIndexType) as Boolean {
+        private function StoreIndex(index as ListIndex) as Boolean {
             try {
                 Application.Storage.setValue("listindex", index);
                 Debug.Log("Stored list index with " + index.size() + " items in it");

@@ -105,7 +105,7 @@ module Views {
             }
         }
 
-        function onListsChanged(index as ListIndexType) as Void {
+        function onListsChanged(index as ListIndex) as Void {
             self.publishItems(false);
         }
 
@@ -174,17 +174,8 @@ module Views {
                             obj = false;
                         }
 
-                        var text = null;
-                        var note = null;
-                        var itemobj = item.get("i");
-                        if (itemobj instanceof String) {
-                            text = itemobj;
-                        } else if (itemobj instanceof Array) {
-                            text = itemobj[0];
-                            if ((show_notes == true || show_notes == 1) && itemobj.size() > 1) {
-                                note = itemobj[1];
-                            }
-                        }
+                        var text = item.get("i");
+                        var note = show_notes == true ? item.get("n") : null;
 
                         if (text != null) {
                             self.addItem(text, note, obj, icon, item.get("pos"));

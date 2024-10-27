@@ -32,7 +32,7 @@
     <string id="StDelAllConfirm">リ­ス­ト­を­削­除­し­ま­す­か？</string>
     <string id="StDelAllDone">す­べ­てのリ­ス­ト­が­削­除­さ­れ­ま­し­た。</string>
     <string id="StTheme">テ­ー­マを­選択</string>
-    <string id="StAppStore">An­droid AppSto­reへ</string>
+    <string id="StAppStore">アンドロイド­PlayStoreへ</string>
     <string id="StAppVersion">ア­プ­リバ­ー­ジョン</string>
 
     <string id="SelTheme">テ­ー­マ</string>
@@ -40,7 +40,7 @@
     <string id="ListDateFormatShort">%D. %d. %M.</string>
     <string id="ListDateFormat">%D. %d. %M %y</string>
     <string id="ListTimeFormat">%h:%i %ampm</string>
-    <string id="oclock">時</string>
+    <string id="oclock"></string>
 
     <string id="StLogs">ログ­を保­存</string>
     <string id="StPersistentLogs">セ­ッ­ション­を­通じて­ログ­を­保­存­す­る。これ­はア­プ­リのス­ト­レ­ー­ジ使­用量­を大幅に増加させ­ま­す。</string>

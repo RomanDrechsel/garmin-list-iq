@@ -65,9 +65,9 @@ module Views {
                         item.setIcon(!active ? self._itemIconCheck : self._itemIconUncheck);
                         WatchUi.requestUpdate();
                         if (active) {
-                            Debug.Log("Activeded list " + self.ListUuid + " auto reset");
+                            Debug.Log("Activeded auto reset for list " + self.ListUuid);
                         } else {
-                            Debug.Log("Deactivated ist " + self.ListUuid + " auto reset");
+                            Debug.Log("Deactivated auto reset for list " + self.ListUuid);
                         }
                     } else {
                         Debug.Log("List " + self.ListUuid + " has no reset settings.");
@@ -89,7 +89,7 @@ module Views {
             self.loadItems();
         }
 
-        function onListsChanged(index as ListIndexType) as Void {
+        function onListsChanged(index as ListIndex) as Void {
             self.readList();
             self.loadItems();
         }

@@ -231,7 +231,7 @@ module Controls {
                     }
 
                     if (self.Subtitle instanceof MultilineLabel) {
-                        self.Subtitle.Invalidate(width - self.getIconWidth(dc));
+                        self.Subtitle.Invalidate(width);
                     }
                 }
             }

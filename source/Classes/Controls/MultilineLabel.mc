@@ -8,8 +8,8 @@ module Controls {
         private var _font as FontType;
         private var _height as Number = -1;
         private var _needValidation = true;
-
         private static const linewrappers = ['-'] as Array<Char>;
+
         function initialize(text as String or Array<String>, maxWidth as Number, font as FontType) {
             self._maxWidth = maxWidth;
             self._font = font;

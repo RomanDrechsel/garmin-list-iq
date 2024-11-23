@@ -4,4 +4,4 @@ adb -e forward tcp:7381 tcp:7381
 For Smartphone
 adb -d forward tcp:7381 tcp:7381
 
-WIP: Mehrzeilige Items werden nicht richtig angezeigt
+TEST: Italienisch

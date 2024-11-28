@@ -2,10 +2,8 @@ import Toybox.Lang;
 
 module Helper {
     class MergeSort {
-        static function Sort(array as Array?, propertykey as String?) as Array? {
-            if (array == null || !(array instanceof Lang.Array)) {
-                return null;
-            } else if (array.size() <= 1) {
+        static function Sort(array as Array<Object>, propertykey as String?) as Array? {
+            if (array.size() <= 1) {
                 return array;
             }
 

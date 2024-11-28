@@ -43,7 +43,7 @@ module Comm {
                             var resp = ({}) as Dictionary<String, String or Array<String> >;
                             resp.put("tid", tid);
                             resp.put("logs", $.getApp().Debug.GetLogs());
-                            self.SendToPhone(resp);
+                            self.SendToPhone(resp as Application.PersistableType);
                         }
                     } else {
                         Debug.Log("Received unknown message " + message.toString() + " from phone");

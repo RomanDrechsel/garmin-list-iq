@@ -141,7 +141,7 @@ module Controls {
 
         function setTitle(title as String?) as Void {
             if (title != null && title.length() > 0) {
-                var items;
+                var items = [];
                 if (self.Items.size() > 0 && self.Items[0] instanceof Listitems.Title) {
                     items = self.Items.slice(1, null);
                 } else {

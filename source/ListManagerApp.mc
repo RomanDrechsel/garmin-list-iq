@@ -19,7 +19,7 @@ class ListsApp extends Application.AppBase {
         Application.Properties.setValue("appVersion", "2024.11.2800");
         self.Debug = new Debug.DebugStorage();
         self.ListsManager = new ListsManager();
-        Debug.Log(self.getInfo() as Object);
+        Debug.Log(self.getInfo());
         self.PhoneReceiver = new PhoneReceiver();
     }
 

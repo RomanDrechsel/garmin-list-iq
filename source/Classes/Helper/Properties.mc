@@ -17,7 +17,7 @@ module Helper {
             PERSISTENTLOGS = "PersistentLogs",
         }
 
-        public static function Store(prop as EProps, value as PropType) {
+        public static function Store(prop as EProps, value as PropType) as Void {
             try {
                 Props.setValue(prop as String, value);
                 Debug.Log("Stored property " + prop + " as " + value);
@@ -26,7 +26,7 @@ module Helper {
             }
         }
 
-        public static function Get(prop as EProps, default_value as PropType?) {
+        public static function Get(prop as EProps, default_value as PropType?) as PropType {
             try {
                 return Props.getValue(prop as String);
             } catch (ex instanceof Lang.Exception) {

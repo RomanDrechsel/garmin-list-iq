@@ -1,0 +1,54 @@
+<strings>
+    <string id="AppName">Ascolta</string>
+
+    <string id="SettingsTh">Tema</string>
+    <string id="ThGrey">Grigio</string>
+    <string id="ThRed">Rosso</string>
+    <string id="ThBaW">Nero-Bianco</string>
+    <string id="ThWaB">Bianco-Nero</string>
+    <string id="ThBsoD">Schermata Blu della Morte</string>
+
+    <string id="ListRec">Lista ricevuta.</string>
+    <string id="EStorageFull">La memoria è piena!</string>
+    <string id="EStorageError">Impossibile salvare la lista!</string>
+    <string id="ListDel">Lista eliminata.</string>
+
+    <string id="NoLists">Nessuna lista trovata!</string>
+    <string id="NoListsLink">Tocca due volte per aprire il Play Store su Android</string>
+
+    <string id="ListNotFound">Lista non trovata!</string>
+    <string id="ListEmpty">La lista è vuota.</string>
+
+    <string id="LMSub">%s punti</string>
+
+    <string id="StTitle">Impostazioni</string>
+    <string id="StMoveBottom">Sposta i punti completati in fondo</string>
+    <string id="StDelList">Elimina lista</string>
+    <string id="DeleteConfirm">Eliminare la lista?</string>
+    <string id="StDoubleTapForDone">Tocca due volte anziché una volta per segnare un punto come completato</string>
+    <string id="StDShowNotes">Mostra le note dei punti</string>
+
+    <string id="StDelAll">Elimina tutte le liste</string>
+    <string id="StDelAllConfirm">Eliminare tutte le liste?</string>
+    <string id="StDelAllDone">Tutte le liste sono state eliminate.</string>
+    <string id="StTheme">Seleziona tema</string>
+    <string id="StAppStore">al Play Store Android</string>
+    <string id="StAppVersion">Versione dell'app</string>
+
+    <string id="SelTheme">Tema</string>
+
+    <string id="ListDateFormatShort">%D, %d %M</string>
+    <string id="ListDateFormat">%D, %d %M %y</string>
+    <string id="ListTimeFormat">%h:%i</string>
+    <string id="oclock"></string>
+
+    <string id="StLogs">Salva log</string>
+    <string id="StPersistentLogs">Salva i log tra le sessioni. Questo aumenta significativamente l'uso della memoria dell'app.</string>
+    <string id="StPersistentLogs1">Salva i log tra le sessioni</string>
+    <string id="StPersistentLogs2">Questo aumenta significativamente l'uso della memoria dell'app.</string>
+
+    <string id="StReset">Reimposta automaticamente la lista</string>
+    <string id="StResetDaily">Quotidianamente</string>
+    <string id="StResetWeekly">Settimanalmente</string>
+    <string id="StResetMonthly">Mensilmente</string>
+</strings>

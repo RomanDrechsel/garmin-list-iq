@@ -128,7 +128,7 @@ module Views {
             self.Items.add(movedown);
 
             //Double tap for set items done
-            prop = Helper.Properties.Get(Helper.Properties.DOUBLETAPFORDONE, true);
+            prop = Helper.Properties.Get(Helper.Properties.DOUBLETAPFORDONE, false);
             if (prop == true || prop == 1) {
                 icon = self._itemIconDone;
             } else {

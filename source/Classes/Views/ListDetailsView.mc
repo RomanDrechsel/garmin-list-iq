@@ -87,7 +87,7 @@ module Views {
         }
 
         function onListTap(position as Number, item as Item, doubletap as Boolean) as Void {
-            var prop = Helper.Properties.Get(Helper.Properties.DOUBLETAPFORDONE, 1);
+            var prop = Helper.Properties.Get(Helper.Properties.DOUBLETAPFORDONE, false);
             if (doubletap || prop == 0 || prop == false) {
                 if (item.BoundObject == false) {
                     item.setColor(getTheme().DisabledColor);
@@ -139,7 +139,7 @@ module Views {
                 var move_down = Helper.Properties.Get(Helper.Properties.LISTMOVEDOWN, true);
                 self._listFound = true;
                 if (list.hasKey("name")) {
-                    self.setTitle(list.get("name"));
+                    self.setTitle(list.get("name") as String);
                 }
 
                 self._listOptimized = list.hasKey("opt");

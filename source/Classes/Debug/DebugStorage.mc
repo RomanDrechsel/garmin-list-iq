@@ -73,7 +73,7 @@ module Debug {
         }
     }
 
-    function Log(obj as Object) {
+    function Log(obj as Lang.Object) {
         var info = Time.Gregorian.info(Time.now(), Time.FORMAT_SHORT);
         var date = Helper.DateUtil.toLogString(info, null);
 

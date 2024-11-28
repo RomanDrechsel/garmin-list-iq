@@ -16,11 +16,10 @@ class ListsApp extends Application.AppBase {
 
     function initialize() {
         AppBase.initialize();
-        Application.Properties.setValue("appVersion", "2024.10.2700");
-
+        Application.Properties.setValue("appVersion", "2024.11.2800");
         self.Debug = new Debug.DebugStorage();
         self.ListsManager = new ListsManager();
-        Debug.Log(self.getInfo());
+        Debug.Log(self.getInfo() as Object);
         self.PhoneReceiver = new PhoneReceiver();
     }
 

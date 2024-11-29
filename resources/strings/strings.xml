@@ -32,7 +32,7 @@
     <string id="StDelAllConfirm">Delete all lists?</string>
     <string id="StDelAllDone">All lists where deleted.</string>
     <string id="StTheme">Select Theme</string>
-    <string id="StAppStore">Go to Android AppStore</string>
+    <string id="StAppStore">Go to Android Play</string>
     <string id="StAppVersion">App Version</string>
 
     <string id="SelTheme">Theme</string>
@@ -41,5 +41,15 @@
     <string id="ListDateFormat">%D. %M %d, %y</string>
     <string id="ListTimeFormat">%h:%i %ampm</string>
     <string id="oclock"></string>
+
+    <string id="StLogs">Store logs</string>
+    <string id="StPersistentLogs">Store logs across sessions. This significantly increases the app's memory consumption.</string>
+    <string id="StPersistentLogs1">Store logs across sessions.</string>
+    <string id="StPersistentLogs2">This significantly increases the app's memory consumption.</string>
+
+    <string id="StReset">Reset list automatically</string>
+    <string id="StResetDaily">Daily</string>
+    <string id="StResetWeekly">Weekly</string>
+    <string id="StResetMonthly">Monthly</string>
 
 </strings>

@@ -1,0 +1,54 @@
+<strings>
+    <string id="AppName">Listas</string>
+
+    <string id="SettingsTh">Tema</string>
+    <string id="ThGrey">Gris</string>
+    <string id="ThRed">Rojo</string>
+    <string id="ThBaW">Blanco y Negro</string>
+    <string id="ThWaB">Negro y Blanco</string>
+    <string id="ThBsoD">Pantalla Azul de la Muerte</string>
+
+    <string id="ListRec">Lista recibida.</string>
+    <string id="EStorageFull">¡El almacenamiento está lleno!</string>
+    <string id="EStorageError">¡No se pudo guardar la lista!</string>
+    <string id="ListDel">Lista eliminada.</string>
+
+    <string id="NoLists">¡No se encontraron listas!</string>
+    <string id="NoListsLink">Toca dos veces para abrir la tienda Play de Android en el teléfono</string>
+
+    <string id="ListNotFound">¡Lista no encontrada!</string>
+    <string id="ListEmpty">La lista está vacía.</string>
+
+    <string id="LMSub">%s puntos</string>
+
+    <string id="StTitle">Configuración</string>
+    <string id="StMoveBottom">mover elementos completados hacia abajo</string>
+    <string id="StDelList">Eliminar lista</string>
+    <string id="DeleteConfirm">¿Eliminar lista?</string>
+    <string id="StDoubleTapForDone">Toca dos veces, en lugar de una vez, en un elemento para marcarlo como completado</string>
+    <string id="StDShowNotes">Mostrar notas de elementos</string>
+
+    <string id="StDelAll">Eliminar todas las listas</string>
+    <string id="StDelAllConfirm">¿Eliminar listas?</string>
+    <string id="StDelAllDone">Todas las listas eliminadas.</string>
+    <string id="StTheme">Seleccionar tema</string>
+    <string id="StAppStore">a la PlayStore de Android</string>
+    <string id="StAppVersion">Versión de la aplicación</string>
+
+    <string id="SelTheme">Tema</string>
+
+    <string id="ListDateFormatShort">%D. %d. %M.</string>
+    <string id="ListDateFormat">%D. %d. %M %y</string>
+    <string id="ListTimeFormat">%h:%i %ampm</string>
+    <string id="oclock"></string>
+
+    <string id="StLogs">Guardar registros</string>
+    <string id="StPersistentLogs">Guardar registros entre sesiones. Esto aumenta significativamente el uso de almacenamiento de la aplicación.</string>
+    <string id="StPersistentLogs1">Guardar registros entre sesiones</string>
+    <string id="StPersistentLogs2">Esto aumenta significativamente el uso de almacenamiento de la aplicación.</string>
+
+    <string id="StReset">Restablecer lista automáticamente</string>
+    <string id="StResetDaily">Diariamente</string>
+    <string id="StResetWeekly">Semanalmente</string>
+    <string id="StResetMonthly">Mensualmente</string>
+</strings>

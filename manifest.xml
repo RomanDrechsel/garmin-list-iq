@@ -13,6 +13,7 @@
             <iq:product id="d2mach1"/>
             <iq:product id="descentmk343mm"/>
             <iq:product id="descentmk351mm"/>
+            <iq:product id="enduro3"/>
             <iq:product id="epix2"/>
             <iq:product id="epix2pro42mm"/>
             <iq:product id="epix2pro47mm"/>
@@ -26,6 +27,11 @@
             <iq:product id="fenix7x"/>
             <iq:product id="fenix7xpro"/>
             <iq:product id="fenix7xpronowifi"/>
+            <iq:product id="fenix843mm"/>
+            <iq:product id="fenix847mm"/>
+            <iq:product id="fenix8solar47mm"/>
+            <iq:product id="fenix8solar51mm"/>
+            <iq:product id="fenixe"/>
             <iq:product id="fr165"/>
             <iq:product id="fr165m"/>
             <iq:product id="fr265"/>
@@ -59,6 +65,13 @@
         <iq:languages>
             <iq:language>deu</iq:language>
             <iq:language>eng</iq:language>
+            <iq:language>fre</iq:language>
+            <iq:language>ita</iq:language>
+            <iq:language>jpn</iq:language>
+            <iq:language>spa</iq:language>
+            <iq:language>ukr</iq:language>
+            <iq:language>zhs</iq:language>
+            <iq:language>zht</iq:language>
         </iq:languages>
         <iq:barrels/>
     </iq:application>

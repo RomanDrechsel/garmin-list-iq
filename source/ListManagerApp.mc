@@ -5,34 +5,27 @@ import Toybox.System;
 import Views;
 import Comm;
 import Lists;
+import Debug;
 
 class ListsApp extends Application.AppBase {
-    private var ListsReceiver as ListsReceiver;
-
+    private var PhoneReceiver as PhoneReceiver;
     var ListsManager as ListsManager;
-    var startupList = null;
+    var Debug as DebugStorage;
+    var startupList = null as String?;
     var GlobalStates as Dictionary<String, Object> = {};
 
     function initialize() {
         AppBase.initialize();
-        Application.Properties.setValue("appVersion", "2024.8.1201");
-
-        var settings = System.getDeviceSettings();
-        var stats = System.getSystemStats();
-        Debug.Log("App started (" + Application.Properties.getValue("appVersion") + ")");
-        Debug.Log("Display: " + settings.screenShape);
-        Debug.Log("Firmware: " + settings.firmwareVersion);
-        Debug.Log("Monkey Version: " + settings.monkeyVersion);
-        Debug.Log("Memory: " + stats.usedMemory + " / " + stats.totalMemory);
-
-        Helper.Properties.Load();
+        Application.Properties.setValue("appVersion", "2024.11.2800");
+        self.Debug = new Debug.DebugStorage();
         self.ListsManager = new ListsManager();
-        self.ListsReceiver = new ListsReceiver();
+        Debug.Log(self.getInfo());
+        self.PhoneReceiver = new PhoneReceiver();
     }
 
     function onStart(state as Lang.Dictionary?) as Void {
-        self.startupList = Application.Storage.getValue("LastList");
-        Application.Storage.deleteValue("LastList");
+        self.startupList = Helper.Properties.Get(Helper.Properties.LASTLIST, "");
+        Helper.Properties.Store(Helper.Properties.LASTLIST, "");
     }
 
     function getInitialView() as Array<WatchUi.Views or WatchUi.InputDelegates>? {
@@ -41,7 +34,7 @@ class ListsApp extends Application.AppBase {
     }
 
     function onSettingsChanged() as Void {
-        Helper.Properties.Load();
+        self.Debug.onSettingsChanged();
         Themes.ThemesLoader.loadTheme();
 
         Debug.Log("Settings changed");
@@ -55,6 +48,36 @@ class ListsApp extends Application.AppBase {
 
         WatchUi.requestUpdate();
     }
+
+    function getInfo() as Array<String> {
+        var settings = System.getDeviceSettings();
+        var stats = System.getSystemStats();
+
+        var screenShape = settings.screenShape;
+        switch (screenShape) {
+            case System.SCREEN_SHAPE_ROUND:
+                screenShape = "Round";
+                break;
+            case System.SCREEN_SHAPE_RECTANGLE:
+                screenShape = "Square";
+                break;
+            case System.SCREEN_SHAPE_SEMI_OCTAGON:
+                screenShape = "Semi-Octagon";
+                break;
+            case System.SCREEN_SHAPE_SEMI_ROUND:
+                screenShape = "Semi-Round";
+                break;
+        }
+
+        var ret = [] as Array<String>;
+        ret.add("Version: " + Application.Properties.getValue("appVersion"));
+        ret.add("Display: " + screenShape);
+        ret.add("Firmware: " + settings.firmwareVersion);
+        ret.add("Monkey Version: " + settings.monkeyVersion);
+        ret.add("Memory: " + stats.usedMemory + " / " + stats.totalMemory);
+        ret.add("Lists in Storage: " + self.ListsManager.GetLists().size());
+        return ret;
+    }
 }
 
 var isRoundDisplay = System.getDeviceSettings().screenShape == System.SCREEN_SHAPE_ROUND;
@@ -67,3 +90,8 @@ function getApp() as ListsApp {
 function getAppStore() as String {
     return "https://play.google.com/store/apps/details?id=de.romandrechsel.lists";
 }
+
+(:debug)
+var isDebug = true;
+(:release)
+var isDebug = false;

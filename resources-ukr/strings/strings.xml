@@ -1,0 +1,54 @@
+<strings>
+    <string id="AppName">Списки</string>
+
+    <string id="SettingsTh">Тема</string>
+    <string id="ThGrey">Сірий</string>
+    <string id="ThRed">Червоний</string>
+    <string id="ThBaW">Чорно-білий</string>
+    <string id="ThWaB">Біло-чорний</string>
+    <string id="ThBsoD">Синій екран смерті</string>
+
+    <string id="ListRec">Список отримано.</string>
+    <string id="EStorageFull">Пам’ять переповнена!</string>
+    <string id="EStorageError">Не вдалося зберегти список!</string>
+    <string id="ListDel">Список видалено.</string>
+
+    <string id="NoLists">Списки не знайдено!</string>
+    <string id="NoListsLink">Подвійний дотик, щоб відкрити Android PlayStore на телефоні</string>
+
+    <string id="ListNotFound">Список не знайдено!</string>
+    <string id="ListEmpty">Список порожній.</string>
+
+    <string id="LMSub">%s бали</string>
+
+    <string id="StTitle">Налаштування</string>
+    <string id="StMoveBottom">перенести виконані пункти вниз</string>
+    <string id="StDelList">Видалити список</string>
+    <string id="DeleteConfirm">Видалити список?</string>
+    <string id="StDoubleTapForDone">Подвійний дотик для відмітки пункту як виконаного</string>
+    <string id="StDShowNotes">Показати нотатки пунктів</string>
+
+    <string id="StDelAll">Видалити всі списки</string>
+    <string id="StDelAllConfirm">Видалити всі списки?</string>
+    <string id="StDelAllDone">Всі списки видалено.</string>
+    <string id="StTheme">Обрати тему</string>
+    <string id="StAppStore">в Android PlayStore</string>
+    <string id="StAppVersion">Версія додатка</string>
+
+    <string id="SelTheme">Тема</string>
+
+    <string id="ListDateFormatShort">%D. %d. %M.</string>
+    <string id="ListDateFormat">%D. %d. %M %y</string>
+    <string id="ListTimeFormat">%h:%i %ampm</string>
+    <string id="oclock"></string>
+
+    <string id="StLogs">Зберегти журнали</string>
+    <string id="StPersistentLogs">Зберігати журнали між сеансами. Це значно збільшує використання пам’яті додатка.</string>
+    <string id="StPersistentLogs1">Зберігати журнали між сеансами</string>
+    <string id="StPersistentLogs2">Це значно збільшує використання пам’яті додатка.</string>
+
+    <string id="StReset">Автоматичне скидання списку</string>
+    <string id="StResetDaily">Щоденно</string>
+    <string id="StResetWeekly">Щотижня</string>
+    <string id="StResetMonthly">Щомісяця</string>
+</strings>

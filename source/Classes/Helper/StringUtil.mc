@@ -2,7 +2,7 @@ import Toybox.Lang;
 
 module Helper {
     class StringUtil {
-        static const Whitespaces = [(10).toChar(), (11).toChar(), (12).toChar(), (13).toChar(), (32).toChar(), (133).toChar(), (8232).toChar(), (8233).toChar()] as Array<Char>;
+        static const Whitespaces = [(10).toChar(), (11).toChar(), (12).toChar(), (13).toChar(), (32).toChar(), (133).toChar(), (173).toChar(), (8232).toChar(), (8233).toChar()] as Array<Char>;
 
         static function stringReplace(str as String, oldString as String, newString as String) as String {
             var result = str;

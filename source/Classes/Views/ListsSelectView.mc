@@ -14,8 +14,6 @@ module Views {
         private var _noListsLabel as MultilineLabel? = null;
         private var _noListsLabel2 as MultilineLabel? = null;
 
-        protected var TAG = "ListsSelectView";
-
         function initialize() {
             self.ScrollMode = SCROLL_SNAP;
             CustomView.initialize();
@@ -24,8 +22,8 @@ module Views {
         function onShow() as Void {
             CustomView.onShow();
             $.getApp().ListsManager.OnListsChanged.add(self);
-            self.publishLists($.getApp().ListsManager.GetLists(), true);
-            Application.Storage.deleteValue("LastList");
+            self.publishLists($.getApp().ListsManager.GetLists(), false);
+            Helper.Properties.Store(Helper.Properties.LASTLIST, "");
         }
 
         function onHide() as Void {
@@ -52,22 +50,22 @@ module Views {
 
         function onDoubleTap(x as Number, y as Number) as Void {
             if (self.Items.size() == 0) {
-                var init = Application.Properties.getValue("Init") as Number;
-                if (init == null || init < 1) {
+                var init = Helper.Properties.Get(Helper.Properties.INIT, 0);
+                if (init < 1) {
                     Communications.openWebPage(getAppStore(), null, null);
                 }
             }
         }
 
-        function onListsChanged(index as ListIndexType) as Void {
-            self.publishLists(index, false);
+        function onListsChanged(index as ListIndex) as Void {
+            self.publishLists(index, true);
         }
 
         function onSettingsChanged() as Void {
-            self.publishLists($.getApp().ListsManager.GetLists(), false);
+            self.publishLists($.getApp().ListsManager.GetLists(), true);
         }
 
-        private function publishLists(index as ListIndexType?, request_update as Boolean) as Void {
+        private function publishLists(index as ListIndex?, initialize as Boolean) as Void {
             if (index == null) {
                 return;
             }
@@ -80,12 +78,12 @@ module Views {
                 }
             }
 
-            var lists = index.values() as Array<ListIndexItemType>;
+            var lists = index.values() as Array<ListIndexItem>;
             lists = Helper.MergeSort.Sort(lists, "order");
 
             self.Items = [] as Array<Item>;
             for (var i = 0; i < lists.size(); i++) {
-                var list = lists[i] as ListIndexItemType;
+                var list = lists[i] as ListIndexItem;
                 var substring = "";
                 var items = list.get("items") as Number;
                 if (items != null) {
@@ -102,11 +100,16 @@ module Views {
                 self.addItem(list.get("name") as String, substring, list.get("key") as String, self._listIconCode, i);
             }
 
+            //no line below the last item
+            if (self.Items.size() > 0) {
+                self.Items[self.Items.size() - 1].DrawLine = false;
+            }
+
             if (self.Items.size() > 0) {
                 self.moveIterator(null);
             }
 
-            if (!request_update) {
+            if (initialize) {
                 WatchUi.requestUpdate();
             }
         }
@@ -122,8 +125,8 @@ module Views {
             if (self._noListsLabel == null) {
                 self._noListsLabel = new MultilineLabel(Application.loadResource(Rez.Strings.NoLists), width - 2 * hor_padding, Fonts.Normal());
 
-                var init = Application.Properties.getValue("Init") as Number?;
-                if (init == null || init < 1) {
+                var init = Helper.Properties.Get(Helper.Properties.INIT, 0);
+                if (init < 1) {
                     self._noListsLabel2 = new MultilineLabel(Application.loadResource(Rez.Strings.NoListsLink), width - 2 * hor_padding, Fonts.Small());
                 } else {
                     self._noListsLabel2 = null;

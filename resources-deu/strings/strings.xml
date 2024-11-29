@@ -32,7 +32,7 @@
     <string id="StDelAllConfirm">Listen löschen?</string>
     <string id="StDelAllDone">Alle Listen gelöscht.</string>
     <string id="StTheme">Thema auswählen</string>
-    <string id="StAppStore">zum Android AppStore</string>
+    <string id="StAppStore">zum Android PlayStore</string>
     <string id="StAppVersion">App Version</string>
 
     <string id="SelTheme">Thema</string>
@@ -41,5 +41,15 @@
     <string id="ListDateFormat">%D. %d. %M %y</string>
     <string id="ListTimeFormat">%h:%i %ampm</string>
     <string id="oclock">Uhr</string>
+
+    <string id="StLogs">Logs speichern</string>
+    <string id="StPersistentLogs">Logs über die Sitzungen hinweg speichern. Dies erhöht den Speicherverbrauch der App erheblich.</string>
+    <string id="StPersistentLogs1">Logs über die Sitzung hinweg speichern</string>
+    <string id="StPersistentLogs2">Dies erhöht den Speicherverbrauch der App erheblich.</string>
+
+    <string id="StReset">Liste automatisch zurücksetzen</string>
+    <string id="StResetDaily">Täglich</string>
+    <string id="StResetWeekly">Wöchentlich</string>
+    <string id="StResetMonthly">Monatlich</string>
 
 </strings>

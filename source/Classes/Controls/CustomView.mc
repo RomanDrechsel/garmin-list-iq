@@ -60,7 +60,7 @@ module Controls {
 
         function initialize() {
             View.initialize();
-            self.Items = [];
+            self.Items = new Array<Item>[0];
         }
 
         function onLayout(dc as Dc) {
@@ -104,6 +104,16 @@ module Controls {
         function onHide() as Void {
             WatchUi.View.onHide();
             $.onSettingsChanged.remove(self);
+        }
+
+        function onUpdate(dc as Dc) as Void {
+            WatchUi.View.onUpdate(dc);
+
+            dc.setColor(getTheme().BackgroundColor, getTheme().BackgroundColor);
+            dc.clear();
+            if (self.Items.size() > 0) {
+                self.drawList(dc);
+            }
         }
 
         function drawList(dc as Dc) as Void {

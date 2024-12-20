@@ -31,14 +31,6 @@ module Views {
             self.loadVisuals();
         }
 
-        function onUpdate(dc as Dc) as Void {
-            CustomView.onUpdate(dc);
-
-            dc.setColor(getTheme().BackgroundColor, getTheme().BackgroundColor);
-            dc.clear();
-            self.drawList(dc);
-        }
-
         function onShow() as Void {
             self.loadVisuals();
         }
@@ -147,19 +139,19 @@ module Views {
             var shownotes = new Listitems.Item(self._mainLayer, Application.loadResource(Rez.Strings.StDShowNotes), null, SETTINGS_SHOWNOTES, icon, self._verticalItemMargin, 0, null);
             self.Items.add(shownotes);
 
+            // Change Theme
+            self.Items.add(new Listitems.Button(self._mainLayer, Application.loadResource(Rez.Strings.StTheme), SETTINGS_THEME, self._verticalItemMargin, true));
+
             //store logs
-            prop = Helper.Properties.Get(Helper.Properties.LOGS, false);
+            prop = Helper.Properties.Get(Helper.Properties.LOGS, true);
             self.addItem(Application.loadResource(Rez.Strings.StLogs), null, SETTINGS_LOGS, prop ? self._itemIconDone : self._itemIcon, 2);
 
             //store logs persistent
-            prop = Helper.Properties.Get(Helper.Properties.PERSISTENTLOGS, false);
+            prop = Helper.Properties.Get(Helper.Properties.PERSISTENTLOGS, true);
             var persistent = new Listitems.Item(self._mainLayer, Application.loadResource(Rez.Strings.StPersistentLogs1), Application.loadResource(Rez.Strings.StPersistentLogs2), SETTINGS_PERSISTANTLOGS, prop ? self._itemIconDone : self._itemIcon, self._verticalItemMargin, 3, null);
             persistent.DrawLine = true;
             persistent.SubtitleJustification = Graphics.TEXT_JUSTIFY_CENTER;
             self.Items.add(persistent);
-
-            // Change Theme
-            self.Items.add(new Listitems.Button(self._mainLayer, Application.loadResource(Rez.Strings.StTheme), SETTINGS_THEME, self._verticalItemMargin, true));
 
             // open appstore
             self.Items.add(new Listitems.Button(self._mainLayer, Application.loadResource(Rez.Strings.StAppStore), SETTINGS_APPSTORE, self._verticalItemMargin, true));

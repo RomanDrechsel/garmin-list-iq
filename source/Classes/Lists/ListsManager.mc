@@ -42,10 +42,12 @@ module Lists {
                         missing.add("items");
                     }
                     Debug.Log("Could not add list: missing properties - " + missing);
+                    self.reportError(2, { "data" => data, "missing" => missing});
                     return false;
                 }
             } else {
                 Debug.Log("Could not add list: invalid data, " + data);
+                self.reportError(1, data);
                 return false;
             }
 
@@ -129,7 +131,8 @@ module Lists {
                 date = Time.now().value();
             }
 
-            if (self.saveList(listuuid, list)) {
+            var save = self.saveList(listuuid, list);
+            if (save[0] == true) {
                 //Store Index...
                 var listindex = self.GetLists();
                 var indexitem =
@@ -143,8 +146,10 @@ module Lists {
 
                 listindex.put(listuuid, indexitem);
 
-                if (self.StoreIndex(listindex) == false) {
+                var saveIndex = self.StoreIndex(listindex);
+                if (saveIndex[0] == false) {
                     Application.Storage.deleteValue(listuuid);
+                    self.reportError(4, { "data" => data, "list" => list, "exception" => saveIndex[1].getErrorMessage()});
                     return false;
                 }
 
@@ -155,6 +160,7 @@ module Lists {
 
                 return true;
             } else {
+                self.reportError(3,  { "data" => data, "list" => list, "exception" => save[1].getErrorMessage() });
                 return false;
             }
         }
@@ -203,7 +209,7 @@ module Lists {
             }
         }
 
-        function saveList(uuid as String, list as List) as Boolean {
+        function saveList(uuid as String, list as List) as Array<Boolean or Lang.Exception or Null> {
             var listname = list.get("name");
             if (listname == null) {
                 listname = "?";
@@ -211,27 +217,32 @@ module Lists {
             try {
                 Application.Storage.setValue(uuid, list);
                 Debug.Log("Saved list " + uuid + "(" + listname + ")");
-                return true;
+                return [true, null];
             } catch (e instanceof Lang.StorageFullException) {
                 Debug.Log("Could not update list " + uuid + " (" + listname + "): storage is full: " + e);
                 Helper.ToastUtil.Toast(Rez.Strings.EStorageFull, Helper.ToastUtil.ERROR);
-                return false;
+                return [false, e];
             } catch (e) {
                 Debug.Log("Could not update list " + uuid + " (" + listname + "): " + e);
                 Helper.ToastUtil.Toast(Rez.Strings.EStorageError, Helper.ToastUtil.ERROR);
-                return false;
+                return [false, e];
             }
         }
 
         function deleteList(uuid as String, with_toast as Boolean) as Void {
-            Application.Storage.deleteValue(uuid);
             var index = self.GetLists();
+            var index_log = index;
             index.remove(uuid);
-            if (self.StoreIndex(index)) {
+            var store = self.StoreIndex(index);
+            if (store[0] == true) {
+                Application.Storage.deleteValue(uuid);
                 if (with_toast == true) {
                     Helper.ToastUtil.Toast(Rez.Strings.ListDel, Helper.ToastUtil.SUCCESS);
                 }
                 Debug.Log("Deleted list " + uuid);
+            }
+            else {
+                self.reportError(5, { "index" => index_log, "delete" => uuid, "exception" => store[1].getErrorMessage() });
             }
         }
 
@@ -302,18 +313,18 @@ module Lists {
             return ({}) as ListIndex;
         }
 
-        private function StoreIndex(index as ListIndex) as Boolean {
+        private function StoreIndex(index as ListIndex) as Array<Boolean or Lang.Exception or Null> {
             try {
                 Application.Storage.setValue("listindex", index);
                 Debug.Log("Stored list index with " + index.size() + " items in it");
             } catch (e instanceof Lang.StorageFullException) {
                 Helper.ToastUtil.Toast(Rez.Strings.EStorageFull, Helper.ToastUtil.ERROR);
                 Debug.Log("Could not store list index, storage is full: " + e.getErrorMessage());
-                return false;
+                return [false, e];
             } catch (e instanceof Lang.Exception) {
                 Debug.Log("Could not store list index: " + e.getErrorMessage());
                 Helper.ToastUtil.Toast(Rez.Strings.EStorageError, Helper.ToastUtil.ERROR);
-                return false;
+                return [false, e];
             }
             if (self.OnListsChanged.size() > 0) {
                 for (var i = 0; i < self.OnListsChanged.size(); i++) {
@@ -323,7 +334,24 @@ module Lists {
                 }
             }
 
-            return true;
+            return [true, null];
+        }
+
+        private function reportError(code as Number, payload as Application.PersistableType) as Void {
+            var msg = null as Lang.ResourceId?;
+            switch (code) {
+                case 1:
+                case 2:
+                case 3:
+                case 4:
+                    msg = Rez.Strings.ErrListRec;
+                    break;
+                case 5:
+                    msg = Rez.Strings.ErrListDel;
+                    break;
+            }
+            var errorView = new Views.ErrorView(msg, code, payload);
+            WatchUi.pushView(errorView, new Views.ErrorViewDelegate(errorView), WatchUi.SLIDE_BLINK);
         }
     }
 }

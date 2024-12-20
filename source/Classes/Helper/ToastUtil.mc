@@ -8,6 +8,7 @@ module Helper {
         enum ToastType {
             SUCCESS,
             ERROR,
+            ATTENTION
         }
 
         public static function Toast(msg_id as Lang.ResourceId, type as ToastType) {
@@ -18,6 +19,9 @@ module Helper {
                     WatchUi.showToast(str, { :icon => Rez.Drawables.Success });
                 } else if (type == ERROR) {
                     WatchUi.showToast(str, { :icon => Rez.Drawables.Error });
+                }
+                else if (type == ATTENTION) {
+                    WatchUi.showToast(str, { :icon => Rez.Drawables.Attention });
                 }
             }
 

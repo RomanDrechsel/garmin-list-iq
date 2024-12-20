@@ -8,7 +8,7 @@ import Lists;
 import Debug;
 
 class ListsApp extends Application.AppBase {
-    private var PhoneReceiver as PhoneReceiver;
+    var Phone as PhoneCommunication;
     var ListsManager as ListsManager;
     var Debug as DebugStorage;
     var startupList = null as String?;
@@ -20,7 +20,7 @@ class ListsApp extends Application.AppBase {
         self.Debug = new Debug.DebugStorage();
         self.ListsManager = new ListsManager();
         Debug.Log(self.getInfo());
-        self.PhoneReceiver = new PhoneReceiver();
+        self.Phone = new Comm.PhoneCommunication();
     }
 
     function onStart(state as Lang.Dictionary?) as Void {

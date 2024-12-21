@@ -46,9 +46,17 @@
     <string id="StPersistentLogs">Sauvegarder les journaux entre les sessions. Cela augmente considérablement l'utilisation de stockage de l'application.</string>
     <string id="StPersistentLogs1">Sauvegarder les journaux entre les sessions</string>
     <string id="StPersistentLogs2">Cela augmente considérablement l'utilisation de stockage de l'application.</string>
+    <string id="StSendLogs">Envoyer les logs au smartphone</string>
+    <string id="StSendLogsOff">Les logs sont désactivés!</string>
+    <string id="StSendLogsOk">Logs envoyés</string>
 
     <string id="StReset">Réinitialiser automatiquement la liste</string>
     <string id="StResetDaily">Quotidien</string>
     <string id="StResetWeekly">Hebdomadaire</string>
     <string id="StResetMonthly">Mensuel</string>
+
+    <string id="ErrHint">Veuillez me signaler l'erreur sur votre smartphone afin que je puisse vous aider.\n\n(Appuyez ici pour ouvrir la possibilité de contact dans l'application sur votre smartphone)</string>
+    <string id="ErrReport">Veuillez ouvrir le smartphone</string>
+    <string id="ErrListRec">Une erreur est survenue lors du transfert de la liste.</string>
+    <string id="ErrListDel">Une erreur est survenue lors de la suppression de la liste.</string>
 </strings>

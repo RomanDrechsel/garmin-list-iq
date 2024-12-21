@@ -11,10 +11,10 @@ module Views {
         private var _labelMessage as MultilineLabel? = null;
         private var _labelError as MultilineLabel? = null;
         private var _errorMsg as Lang.ResourceId? = null;
-        private var _errorCode as Lang.Number or Lang.String or Null = null;
+        private var _errorCode as Lang.Number? = null;
         private var _errorPayload as Application.PersistableType = null;
 
-        function initialize(msg as Lang.ResourceId?, code as Lang.Number or Lang.String, payload as Application.PersistableType) {
+        function initialize(msg as Lang.ResourceId?, code as Lang.Number?, payload as Application.PersistableType) {
             CustomView.initialize();
             self._errorMsg = msg;
             self._errorCode = code;
@@ -28,14 +28,15 @@ module Views {
 
         function onTap(x as Number, y as Number) as Boolean {
             var resp = ({}) as Dictionary<String, String or Number or Array<String> >;
-            resp.put("request", "reportError");
+            resp.put("type", "reportError");
             resp.put("errorMsg", Application.loadResource(self._errorMsg));
             resp.put("errorCode", self._errorCode);
             resp.put("logs", $.getApp().Debug.GetLogs());
-            if (self._errorPayload != null && self._errorPayload.size() > 0) {
+            if (self._errorPayload != null) {
                 resp.put("errorPayload", self._errorPayload);
             }
             $.getApp().Phone.SendToPhone(resp);
+            Debug.Log("Send error report code 0x" + self._errorCode.format("%04x") + " to smartphone");
             Helper.ToastUtil.Toast(Rez.Strings.ErrReport, Helper.ToastUtil.ATTENTION);
             WatchUi.popView(WatchUi.SLIDE_RIGHT);
         }

@@ -46,10 +46,18 @@
     <string id="StPersistentLogs">在会话之间保­存日志­。­这会显著增加应­用­的存­储使用量­。­</string>
     <string id="StPersistentLogs1">在会话之间保­存日志­­</string>
     <string id="StPersistentLogs2">这­会­显­著­增­加­应­用­的­存­储­使­用­量­。­</string>
+    <string id="StSendLogs">将日志发送到智能手机</string>
+    <string id="StSendLogsOff">停用日志！</string>
+    <string id="StSendLogsOk">发送日志</string>
 
     <string id="StReset">自动重置列­表­­</string>
     <string id="StResetDaily">每天­­</string>
     <string id="StResetWeekly">每周­­</string>
     <string id="StResetMonthly">每月­­</string>
+
+    <string id="ErrHint">请在手机上报告错误，以便我能帮助你。\n\n(点击这里以在手机应用程序中打开联系方式)</string>
+    <string id="ErrReport">请打开手机</string>
+    <string id="ErrListRec">传输列表时出现了错误。</string>
+    <string id="ErrListDel">删除列表时出现了错误。</string>
 
 </strings>

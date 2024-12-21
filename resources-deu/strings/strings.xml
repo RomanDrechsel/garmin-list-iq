@@ -1,5 +1,5 @@
 <strings>
-    <string id="AppName">Listen</string>
+    <string id="AppName">Listen DEBUG</string>
 
     <string id="SettingsTh">Theme</string>
     <string id="ThGrey">Grau</string>
@@ -46,6 +46,9 @@
     <string id="StPersistentLogs">Logs über die Sitzungen hinweg speichern. Dies erhöht den Speicherverbrauch der App erheblich.</string>
     <string id="StPersistentLogs1">Logs über die Sitzung hinweg speichern</string>
     <string id="StPersistentLogs2">Dies erhöht den Speicherverbrauch der App erheblich.</string>
+    <string id="StSendLogs">Logs an Smartphone senden</string>
+    <string id="StSendLogsOff">Logs sind deaktiviert!</string>
+    <string id="StSendLogsOk">Logs gesendet</string>
 
     <string id="StReset">Liste automatisch zurücksetzen</string>
     <string id="StResetDaily">Täglich</string>

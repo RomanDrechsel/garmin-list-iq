@@ -46,9 +46,17 @@
     <string id="StPersistentLogs">Зберігати журнали між сеансами. Це значно збільшує використання пам’яті додатка.</string>
     <string id="StPersistentLogs1">Зберігати журнали між сеансами</string>
     <string id="StPersistentLogs2">Це значно збільшує використання пам’яті додатка.</string>
+    <string id="StSendLogs">Надсилання журналів на смартфон</string>
+    <string id="StSendLogsOff">Журнали деактивовано!</string>
+    <string id="StSendLogsOk">Логи надіслано</string>
 
     <string id="StReset">Автоматичне скидання списку</string>
     <string id="StResetDaily">Щоденно</string>
     <string id="StResetWeekly">Щотижня</string>
     <string id="StResetMonthly">Щомісяця</string>
+
+    <string id="ErrHint">Будь ласка, повідомте мені про помилку на вашому смартфоні, щоб я міг вам допомогти.\n\n(Доторкніться тут, щоб відкрити спосіб зв'язку в додатку на вашому смартфоні)</string>
+    <string id="ErrReport">Будь ласка, відкрийте смартфон</string>
+    <string id="ErrListRec">При передачі списку сталася помилка.</string>
+    <string id="ErrListDel">При видаленні списку сталася помилка.</string>
 </strings>

@@ -46,6 +46,9 @@
     <string id="StPersistentLogs">Store logs across sessions. This significantly increases the app's memory consumption.</string>
     <string id="StPersistentLogs1">Store logs across sessions.</string>
     <string id="StPersistentLogs2">This significantly increases the app's memory consumption.</string>
+    <string id="StSendLogs">Send logs to smartphone</string>
+    <string id="StSendLogsOff">Logs are disabled!</string>
+    <string id="StSendLogsOk">Logs sent</string>
 
     <string id="StReset">Reset list automatically</string>
     <string id="StResetDaily">Daily</string>

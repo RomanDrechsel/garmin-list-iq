@@ -46,10 +46,18 @@
     <string id="StPersistentLogs">セ­ッ­ション­を­通じて­ログ­を­保­存­す­る。これ­はア­プ­リのス­ト­レ­ー­ジ使­用量­を大幅に増加させ­ま­す。</string>
     <string id="StPersistentLogs1">セ­ッ­ション­を­超え­てロ­グを­保­存­す­る</string>
     <string id="StPersistentLogs2">これ­はア­プ­リのス­ト­レ­ー­ジ使­用量­を大幅に増加させ­ま­す。</string>
+    <string id="StSendLogs">スマートフォンにログを送信</string>
+    <string id="StSendLogsOff">ログは無効化される！</string>
+    <string id="StSendLogsOk">送信ログ</string>
 
     <string id="StReset">リ­ス­ト­を自動的に­リ­セッ­ト</string>
     <string id="StResetDaily">毎日</string>
     <string id="StResetWeekly">毎週</string>
     <string id="StResetMonthly">毎月</string>
+
+    <string id="ErrHint">アプリ内の連絡先を開くために、スマートフォンでエラーを報告してください。\n\n(ここをタップして、スマートフォン上のアプリ内の連絡先を開きます)</string>
+    <string id="ErrReport">スマートフォンを開く</string>
+    <string id="ErrListRec">リストの送信中にエラーが発生しました。</string>
+    <string id="ErrListDel">リストの削除中にエラーが発生しました。</string>
 
 </strings>

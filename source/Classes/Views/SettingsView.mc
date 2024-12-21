@@ -14,6 +14,7 @@ module Views {
             SETTINGS_THEME,
             SETTINGS_LOGS,
             SETTINGS_PERSISTANTLOGS,
+            SETTINGS_SENDLOGS,
             SETTINGS_APPSTORE,
             SETTINGS_MOVEDOWN,
             SETTINGS_DOUBLETAP,
@@ -81,6 +82,15 @@ module Views {
                     item.setIcon(self._itemIcon);
                 }
                 WatchUi.requestUpdate();
+            } else if (item.BoundObject == SETTINGS_SENDLOGS) {
+                var prop = Helper.Properties.Get(Helper.Properties.LOGS, true);
+                if (prop == true) {
+                    $.getApp().Debug.SendLogs();
+                    Helper.ToastUtil.Toast(Rez.Strings.StSendLogsOk, Helper.ToastUtil.SUCCESS);
+                }
+                else {
+                    Helper.ToastUtil.Toast(Rez.Strings.StSendLogsOff, Helper.ToastUtil.ERROR);
+                }
             } else if (item.BoundObject == SETTINGS_THEME) {
                 var view = new SettingsThemeView();
                 var delegate = new SettingsThemeViewDelegate(view);
@@ -88,6 +98,10 @@ module Views {
             } else if (item.BoundObject == SETTINGS_APPSTORE) {
                 Communications.openWebPage(getAppStore(), null, null);
                 WatchUi.popView(WatchUi.SLIDE_RIGHT);
+            }
+            else if ("test".equals(item.BoundObject)) {
+                var view = new ErrorView(Rez.Strings.ErrListRec, 99, {"prop1" => "test", "prop2" => 2});
+                WatchUi.pushView(view, new ErrorViewDelegate(view), WatchUi.SLIDE_BLINK);
             }
         }
 
@@ -153,12 +167,15 @@ module Views {
             persistent.SubtitleJustification = Graphics.TEXT_JUSTIFY_CENTER;
             self.Items.add(persistent);
 
+            //send logs to phone
+            self.Items.add(new Listitems.Button(self._mainLayer, Application.loadResource(Rez.Strings.StSendLogs), SETTINGS_SENDLOGS, self._verticalItemMargin, true));
+
             // open appstore
             self.Items.add(new Listitems.Button(self._mainLayer, Application.loadResource(Rez.Strings.StAppStore), SETTINGS_APPSTORE, self._verticalItemMargin, true));
 
             var str = Application.loadResource(Rez.Strings.StAppVersion);
             var version = Application.Properties.getValue("appVersion");
-            var item = new Listitems.Item(self._mainLayer, str, version, null, null, self._verticalItemMargin, -1, null);
+            var item = new Listitems.Item(self._mainLayer, str, version, "test", null, self._verticalItemMargin, -1, null);
             item.TitleJustification = Graphics.TEXT_JUSTIFY_CENTER;
             item.SubtitleJustification = Graphics.TEXT_JUSTIFY_CENTER;
             item.DrawLine = false;

@@ -61,6 +61,11 @@ module Debug {
             }
         }
 
+        public function SendLogs() {
+            $.getApp().Phone.SendToPhone({ "type" => "logs", "logs" => self.GetLogs() });
+            self.Log("Send logs to smartphone");
+        }
+
         public function onSettingsChanged() {
             self._storeLogs = Helper.Properties.Get(Helper.Properties.LOGS, true) as Boolean;
             self._persistentLogs = Helper.Properties.Get(Helper.Properties.PERSISTENTLOGS, true) as Boolean;

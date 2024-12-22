@@ -57,6 +57,6 @@
 
     <string id="ErrHint">Veuillez me signaler l'erreur sur votre smartphone afin que je puisse vous aider.\n\n(Appuyez ici pour ouvrir la possibilité de contact dans l'application sur votre smartphone)</string>
     <string id="ErrReport">Veuillez ouvrir le smartphone</string>
-    <string id="ErrListRec">Une erreur est survenue lors du transfert de la liste.</string>
-    <string id="ErrListDel">Une erreur est survenue lors de la suppression de la liste.</string>
+    <string id="ErrListRec">Une erreur est survenue lors du transfert de la liste:</string>
+    <string id="ErrListDel">Une erreur est survenue lors de la suppression de la liste:</string>
 </strings>

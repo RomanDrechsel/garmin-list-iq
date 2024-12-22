@@ -57,6 +57,6 @@
 
     <string id="ErrHint">Per favore segnalami l'errore sul tuo smartphone così posso aiutarti.\n\n(Tocca qui per aprire le opzioni di contatto nell'app sul tuo smartphone)</string>
     <string id="ErrReport">Per favore apri il telefono</string>
-    <string id="ErrListRec">Si è verificato un errore durante il trasferimento dell'elenco.</string>
-    <string id="ErrListDel">Si è verificato un errore durante la cancellazione dell'elenco.</string>
+    <string id="ErrListRec">Si è verificato un errore durante il trasferimento dell'elenco:</string>
+    <string id="ErrListDel">Si è verificato un errore durante la cancellazione dell'elenco:</string>
 </strings>

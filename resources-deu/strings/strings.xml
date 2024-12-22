@@ -57,7 +57,7 @@
 
     <string id="ErrHint">Bitte melde mir den Fehler auf deinem Smartphone, damit ich dir weiterhelfen kann.\n\n(Tippe hier, um die Kontaktmöglichkeit in der App auf deinem Smartphone zu öffnen)</string>
     <string id="ErrReport">Bitte Smartphone öffnen</string>
-    <string id="ErrListRec">Beim Übertragen der Liste ist ein Fehler aufgetreten.</string>
-    <string id="ErrListDel">Beim Löschen der Liste ist ein Fehler aufgetreten.</string>
+    <string id="ErrListRec">Beim Übertragen der Liste ist ein Fehler aufgetreten:</string>
+    <string id="ErrListDel">Beim Löschen der Liste ist ein Fehler aufgetreten:</string>
 
 </strings>

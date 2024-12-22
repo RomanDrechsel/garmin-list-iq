@@ -57,6 +57,6 @@
 
     <string id="ErrHint">Por favor, informa del error en tu teléfono móvil para que pueda ayudarte.\n\n(Toca aquí para abrir la opción de contacto en la aplicación en tu teléfono móvil)</string>
     <string id="ErrReport">Por favor, abre el teléfono móvil</string>
-    <string id="ErrListRec">Se ha producido un error al transferir la lista.</string>
-    <string id="ErrListDel">Se ha producido un error al eliminar la lista.</string>
+    <string id="ErrListRec">Se ha producido un error al transferir la lista:</string>
+    <string id="ErrListDel">Se ha producido un error al eliminar la lista:</string>
 </strings>

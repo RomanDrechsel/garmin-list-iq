@@ -63,7 +63,7 @@ module Debug {
 
         public function SendLogs() {
             $.getApp().Phone.SendToPhone({ "type" => "logs", "logs" => self.GetLogs() });
-            self.Log("Send logs to smartphone");
+            self.Log("Sent logs to smartphone");
         }
 
         public function onSettingsChanged() {

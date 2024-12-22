@@ -46,18 +46,18 @@
     <string id="StPersistentLogs">­在会话之间保­存日志­。這會顯著增加應用的存儲使用量。­</string>
     <string id="StPersistentLogs1">­在会话之间保­存日志­­</string>
     <string id="StPersistentLogs2">這會顯著增加應­用的存儲使用量。</string>
-    <string id="StSendLogs">將記錄傳送至智慧型手機</string>
-    <string id="StSendLogsOff">日誌已停用！</string>
-    <string id="StSendLogsOk">發送的日誌</string>
+    <string id="StSendLogs">將­­記­­錄­­傳­­送­­至­­智­­慧­­型­­手­­機</string>
+    <string id="StSendLogsOff">日­­誌­­已­­停­­用！</string>
+    <string id="StSendLogsOk">發­­送­­的­­日­­誌</string>
 
     <string id="StReset">­自动重置列­表­­</string>
     <string id="StResetDaily">­每天­­</string>
     <string id="StResetWeekly">­每周­­</string>
     <string id="StResetMonthly">­每月­­</string>
 
-    <string id="ErrHint">請告訴我您手機上的錯誤，這樣我可以幫助您。\n\n(點擊此處以在應用程式中打開您的手機上的聯絡方式)</string>
-    <string id="ErrReport">請打開手機</string>
-    <string id="ErrListRec">傳輸清單時出現錯誤。</string>
-    <string id="ErrListDel">刪除清單時出現錯誤。</string>
+    <string id="ErrHint">請­­在­­智能手機­­上­­向­­我­­報告­­此­­錯誤，以便­­我­­能­­幫助­­你。\n\n(點擊­­此­­處，在­­智能手機­­的­­應用程序­­中­­打開­­聯繫方式)</string>
+    <string id="ErrReport">請­­打開­­智能手機</string>
+    <string id="ErrListRec">傳輸­­列表­­時­­發生­­錯誤：</string>
+    <string id="ErrListDel">刪除­­列表­­時­­發生­­錯誤：</string>
 
 </strings>

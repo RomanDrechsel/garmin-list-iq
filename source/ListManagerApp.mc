@@ -16,10 +16,9 @@ class ListsApp extends Application.AppBase {
 
     function initialize() {
         AppBase.initialize();
-        Application.Properties.setValue("appVersion", "2024.12.2201");
+        Application.Properties.setValue("appVersion", "2024.12.2600");
         self.Debug = new Debug.DebugStorage();
         self.ListsManager = new ListsManager();
-        Debug.Log(self.getInfo());
         self.Phone = new Comm.PhoneCommunication();
     }
 
@@ -75,6 +74,7 @@ class ListsApp extends Application.AppBase {
         ret.add("Firmware: " + settings.firmwareVersion);
         ret.add("Monkey Version: " + settings.monkeyVersion);
         ret.add("Memory: " + stats.usedMemory + " / " + stats.totalMemory);
+        ret.add("Language: " + settings.systemLanguage);
         ret.add("Lists in Storage: " + self.ListsManager.GetLists().size());
         return ret;
     }

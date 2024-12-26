@@ -99,10 +99,6 @@ module Views {
                 Communications.openWebPage(getAppStore(), null, null);
                 WatchUi.popView(WatchUi.SLIDE_RIGHT);
             }
-            else if ("test".equals(item.BoundObject)) {
-                var view = new ErrorView(Rez.Strings.ErrListRec, 99, {"prop1" => "test", "prop2" => 2});
-                WatchUi.pushView(view, new ErrorViewDelegate(view), WatchUi.SLIDE_BLINK);
-            }
         }
 
         function deleteAllLists() as Void {
@@ -175,7 +171,7 @@ module Views {
 
             var str = Application.loadResource(Rez.Strings.StAppVersion);
             var version = Application.Properties.getValue("appVersion");
-            var item = new Listitems.Item(self._mainLayer, str, version, "test", null, self._verticalItemMargin, -1, null);
+            var item = new Listitems.Item(self._mainLayer, str, version, null, null, self._verticalItemMargin, -1, null);
             item.TitleJustification = Graphics.TEXT_JUSTIFY_CENTER;
             item.SubtitleJustification = Graphics.TEXT_JUSTIFY_CENTER;
             item.DrawLine = false;

@@ -22,17 +22,17 @@
     <string id="LMSub">%s puntos</string>
 
     <string id="StTitle">Configuración</string>
-    <string id="StMoveBottom">mover elementos completados hacia abajo</string>
+    <string id="StMoveBottom">Mover elementos completados hacia abajo</string>
     <string id="StDelList">Eliminar lista</string>
     <string id="DeleteConfirm">¿Eliminar lista?</string>
     <string id="StDoubleTapForDone">Toca dos veces, en lugar de una vez, en un elemento para marcarlo como completado</string>
     <string id="StDShowNotes">Mostrar notas de elementos</string>
 
     <string id="StDelAll">Eliminar todas las listas</string>
-    <string id="StDelAllConfirm">¿Eliminar listas?</string>
+    <string id="StDelAllConfirm">¿Eliminar todas las listas?</string>
     <string id="StDelAllDone">Todas las listas eliminadas.</string>
     <string id="StTheme">Seleccionar tema</string>
-    <string id="StAppStore">a la PlayStore de Android</string>
+    <string id="StAppStore">a la Play Store de Android</string>
     <string id="StAppVersion">Versión de la aplicación</string>
 
     <string id="SelTheme">Tema</string>
@@ -46,9 +46,17 @@
     <string id="StPersistentLogs">Guardar registros entre sesiones. Esto aumenta significativamente el uso de almacenamiento de la aplicación.</string>
     <string id="StPersistentLogs1">Guardar registros entre sesiones</string>
     <string id="StPersistentLogs2">Esto aumenta significativamente el uso de almacenamiento de la aplicación.</string>
+    <string id="StSendLogs">Enviar registros al smartphone</string>
+    <string id="StSendLogsOff">¡Los registros están desactivados!</string>
+    <string id="StSendLogsOk">Registros enviados</string>
 
     <string id="StReset">Restablecer lista automáticamente</string>
     <string id="StResetDaily">Diariamente</string>
     <string id="StResetWeekly">Semanalmente</string>
     <string id="StResetMonthly">Mensualmente</string>
+
+    <string id="ErrHint">Por favor, informa del error en tu teléfono móvil para que pueda ayudarte.\n\n(Toca aquí para abrir la opción de contacto en la aplicación en tu teléfono móvil)</string>
+    <string id="ErrReport">Por favor, abre el teléfono móvil</string>
+    <string id="ErrListRec">Se ha producido un error al transferir la lista:</string>
+    <string id="ErrListDel">Se ha producido un error al eliminar la lista:</string>
 </strings>

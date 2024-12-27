@@ -61,9 +61,14 @@ module Debug {
             }
         }
 
+        public function SendLogs() {
+            $.getApp().Phone.SendToPhone({ "type" => "logs", "logs" => self.GetLogs() });
+            self.Log("Sent logs to smartphone");
+        }
+
         public function onSettingsChanged() {
-            self._storeLogs = Helper.Properties.Get(Helper.Properties.LOGS, false) as Boolean;
-            self._persistentLogs = Helper.Properties.Get(Helper.Properties.PERSISTENTLOGS, false) as Boolean;
+            self._storeLogs = Helper.Properties.Get(Helper.Properties.LOGS, true) as Boolean;
+            self._persistentLogs = Helper.Properties.Get(Helper.Properties.PERSISTENTLOGS, true) as Boolean;
             if (self._storeLogs == false || self._persistentLogs == false) {
                 Application.Storage.deleteValue("logs");
                 self._logs = [] as Array<String>;

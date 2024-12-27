@@ -8,7 +8,7 @@ import Lists;
 import Debug;
 
 class ListsApp extends Application.AppBase {
-    private var PhoneReceiver as PhoneReceiver;
+    var Phone as PhoneCommunication;
     var ListsManager as ListsManager;
     var Debug as DebugStorage;
     var startupList = null as String?;
@@ -16,11 +16,10 @@ class ListsApp extends Application.AppBase {
 
     function initialize() {
         AppBase.initialize();
-        Application.Properties.setValue("appVersion", "2024.11.2800");
+        Application.Properties.setValue("appVersion", "2024.12.2700");
         self.Debug = new Debug.DebugStorage();
         self.ListsManager = new ListsManager();
-        Debug.Log(self.getInfo());
-        self.PhoneReceiver = new PhoneReceiver();
+        self.Phone = new Comm.PhoneCommunication();
     }
 
     function onStart(state as Lang.Dictionary?) as Void {
@@ -75,6 +74,7 @@ class ListsApp extends Application.AppBase {
         ret.add("Firmware: " + settings.firmwareVersion);
         ret.add("Monkey Version: " + settings.monkeyVersion);
         ret.add("Memory: " + stats.usedMemory + " / " + stats.totalMemory);
+        ret.add("Language: " + settings.systemLanguage);
         ret.add("Lists in Storage: " + self.ListsManager.GetLists().size());
         return ret;
     }

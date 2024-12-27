@@ -6,7 +6,7 @@ import Toybox.Application;
 using Toybox.Communications;
 
 module Comm {
-    class PhoneReceiver extends Toybox.Communications.ConnectionListener {
+    class PhoneCommunication extends Toybox.Communications.ConnectionListener {
         function initialize() {
             Communications.registerForPhoneAppMessages(method(:phoneMessageCallback));
         }

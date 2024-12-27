@@ -1,11 +1,11 @@
 <strings>
-    <string id="AppName">Ascolta</string>
+    <string id="AppName">Liste</string>
 
     <string id="SettingsTh">Tema</string>
     <string id="ThGrey">Grigio</string>
     <string id="ThRed">Rosso</string>
-    <string id="ThBaW">Nero-Bianco</string>
-    <string id="ThWaB">Bianco-Nero</string>
+    <string id="ThBaW">Nero e Bianco</string>
+    <string id="ThWaB">Bianco e Nero</string>
     <string id="ThBsoD">Schermata Blu della Morte</string>
 
     <string id="ListRec">Lista ricevuta.</string>
@@ -46,9 +46,17 @@
     <string id="StPersistentLogs">Salva i log tra le sessioni. Questo aumenta significativamente l'uso della memoria dell'app.</string>
     <string id="StPersistentLogs1">Salva i log tra le sessioni</string>
     <string id="StPersistentLogs2">Questo aumenta significativamente l'uso della memoria dell'app.</string>
+    <string id="StSendLogs">Inviare i log allo smartphone</string>
+    <string id="StSendLogsOff">I registri sono disattivati!</string>
+    <string id="StSendLogsOk">Registri inviati</string>
 
     <string id="StReset">Reimposta automaticamente la lista</string>
     <string id="StResetDaily">Quotidianamente</string>
     <string id="StResetWeekly">Settimanalmente</string>
     <string id="StResetMonthly">Mensilmente</string>
+
+    <string id="ErrHint">Per favore segnalami l'errore sul tuo smartphone così posso aiutarti.\n\n(Tocca qui per aprire le opzioni di contatto nell'app sul tuo smartphone)</string>
+    <string id="ErrReport">Per favore apri il telefono</string>
+    <string id="ErrListRec">Si è verificato un errore durante il trasferimento dell'elenco:</string>
+    <string id="ErrListDel">Si è verificato un errore durante la cancellazione dell'elenco:</string>
 </strings>

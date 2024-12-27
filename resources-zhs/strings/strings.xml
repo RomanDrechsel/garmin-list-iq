@@ -1,64 +1,62 @@
 <strings>
-    <string id="AppName">列表</string>
+    <string id="AppName">列­表</string>
 
-    <string id="SettingsTh">主题­</string>
-    <string id="ThGrey">灰色­</string>
-    <string id="ThRed">红色­</string>
-    <string id="ThBaW">黑白­</string>
-    <string id="ThWaB">白黑­</string>
-    <string id="ThBsoD">蓝屏死机­</string>
+    <string id="SettingsTh">主­题</string>
+    <string id="ThGrey">灰­色</string>
+    <string id="ThRed">红­色</string>
+    <string id="ThBaW">黑­白</string>
+    <string id="ThWaB">白­黑</string>
+    <string id="ThBsoD">蓝­屏­死­机</string>
 
-    <string id="ListRec">列­表已接收­。­</string>
-    <string id="EStorageFull">存储已满­！­</string>
-    <string id="EStorageError">无法保­存列表­！­</string>
-    <string id="ListDel">列­表已删除­。­</string>
+    <string id="ListRec">列­表­已­接­收。</string>
+    <string id="EStorageFull">存­储­已­满！</string>
+    <string id="EStorageError">无­法­保­存­列­表！</string>
+    <string id="ListDel">列­表­已­删­除。</string>
 
-    <string id="NoLists">未找­到列表­！­</string>
-    <string id="NoListsLink">双击以在手­机上开­放Android Play商店­</string>
+    <string id="NoLists">未­找­到­列­表！</string>
+    <string id="NoListsLink">双­击­以­在­手­机­上­打­开­An­droid Play商­店</string>
 
-    <string id="ListNotFound">未找­到列表­！­</string>
-    <string id="ListEmpty">列­表为空­。­</string>
+    <string id="ListNotFound">未­找­到­列­表！</string>
+    <string id="ListEmpty">列­表­为­空。</string>
 
-    <string id="LMSub">%s 点­­</string>
+    <string id="LMSub">%s 点</string>
 
-    <string id="StTitle">设­置­</string>
-    <string id="StMoveBottom">将完­成的项­目移­动到底部­­</string>
-    <string id="StDelList">删­除列表­­</string>
-    <string id="DeleteConfirm">删­除列­表？­­</string>
-    <string id="StDoubleTapForDone">双击而不­是单­击项­目以将其­标记­为已完­成­的­项­目­­</string>
-    <string id="StDShowNotes">显­示项­目的注­释­­</string>
+    <string id="StTitle">设­置</string>
+    <string id="StMoveBottom">将­完­成­的­项­目­移­动­到­底­部</string>
+    <string id="StDelList">删­除­列­表</string>
+    <string id="DeleteConfirm">删­除­列­表？</string>
+    <string id="StDoubleTapForDone">双­击­而­不­是­单­击­项­目­以­将­其­标­记­为­已­完­成­的­项­目</string>
+    <string id="StDShowNotes">显­示­项­目­的­注­释</string>
 
-    <string id="StDelAll">删­除所有列­表­­</string>
-    <string id="StDelAllConfirm">删­除所有列表？­­</string>
-    <string id="StDelAllDone">所有列表已删除­。­­</string>
-    <string id="StTheme">选­择主题­­</string>
-    <string id="StAppStore">到 Android PlayStore</string>
-    <string id="StAppVersion">应用版­本­­</string>
+    <string id="StDelAll">删­除­所­有­列­表</string>
+    <string id="StDelAllConfirm">删­除­所­有­列­表？</string>
+    <string id="StDelAllDone">所­有­列­表­已­删­除。</string>
+    <string id="StTheme">选­择­主­题</string>
+    <string id="StAppStore">到 An­droid Play Store</string>
+    <string id="StAppVersion">应­用­版­本</string>
 
-    <string id="SelTheme">主题­­</string>
+    <string id="SelTheme">主­题</string>
 
-    <string id="ListDateFormatShort">%D, %m月%d日­。</string>
-    <string id="ListDateFormat">%D, %y年%m月%d日­。</string>
+    <string id="ListDateFormatShort">%D, %m月%d日。</string>
+    <string id="ListDateFormat">%D, %y年%m月%d日。</string>
     <string id="ListTimeFormat">%h:%i</string>
     <string id="oclock"></string>
 
-    <string id="StLogs">保­存日志­­</string>
-    <string id="StPersistentLogs">在会话之间保­存日志­。­这会显著增加应­用­的存­储使用量­。­</string>
-    <string id="StPersistentLogs1">在会话之间保­存日志­­</string>
-    <string id="StPersistentLogs2">这­会­显­著­增­加­应­用­的­存­储­使­用­量­。­</string>
-    <string id="StSendLogs">将­­日­­志­­发­­送­­到­­智­­能­­手­­机</string>
-    <string id="StSendLogsOff">停­­用­­日­­志！</string>
-    <string id="StSendLogsOk">发­­送­­日­­志</string>
+    <string id="StLogs">保­存­日­志</string>
+    <string id="StPersistentLogs">在­会­话­之­间­保­存­日­志。­这­会­显­著­增­加­应­用­的­存­储­使­用­量。</string>
+    <string id="StPersistentLogs1">在­会­话­之­间­保­存­日­志</string>
+    <string id="StPersistentLogs2">这­会­显­著­增­加­应­用­的­存­储­使­用­量。</string>
+    <string id="StSendLogs">将­日­志­发­送­到­智­能­手­机</string>
+    <string id="StSendLogsOff">停­用­日­志！</string>
+    <string id="StSendLogsOk">发­送­日­志</string>
 
-    <string id="StReset">自动重置列­表­­</string>
-    <string id="StResetDaily">每天­­</string>
-    <string id="StResetWeekly">每周­­</string>
-    <string id="StResetMonthly">每月­­</string>
+    <string id="StReset">自­动­重­置­列­表</string>
+    <string id="StResetDaily">每­天</string>
+    <string id="StResetWeekly">每­周</string>
+    <string id="StResetMonthly">每­月</string>
 
-    <string id="ErrHint">请­­在­­智能手机­­上­­向­­我­­报告­­此­­错误，以便­­我­­能­­帮助­­你。­\n\n(点击­­此­­处，在­­智能手机­­的­­应用程序­­中­­打开­­联系方式­­)</string>
-    <string id="ErrReport">请­­打开­­智能手机</string>
-    <string id="ErrListRec">传输­­列表­­时­­发生­­错误：</string>
-    <string id="ErrListDel">删除­­列表­­时­­发生­­错误：</string>
-
-
+    <string id="ErrHint">请­在­智­能­手­机­上­向­我­报­告­此­错­误，以­便­我­能­帮­助­你。\n\n(点­击­此­处，在­智­能­手­机­的­应­用­程­序­中­打­开­联­系­方­式)</string>
+    <string id="ErrReport">请­打­开­智­能­手­机</string>
+    <string id="ErrListRec">传­输­列­表­时­发­生­错­误：</string>
+    <string id="ErrListDel">删­除­列­表­时­发­生­错­误：</string>
 </strings>

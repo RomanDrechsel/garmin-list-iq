@@ -4,8 +4,8 @@
     <string id="SettingsTh">Tema</string>
     <string id="ThGrey">Grigio</string>
     <string id="ThRed">Rosso</string>
-    <string id="ThBaW">Nero-Bianco</string>
-    <string id="ThWaB">Bianco-Nero</string>
+    <string id="ThBaW">Nero e Bianco</string>
+    <string id="ThWaB">Bianco e Nero</string>
     <string id="ThBsoD">Schermata Blu della Morte</string>
 
     <string id="ListRec">Lista ricevuta.</string>

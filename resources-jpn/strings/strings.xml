@@ -1,39 +1,39 @@
 <strings>
-    <string id="AppName">リス­ト</string>
+    <string id="AppName">リ­ス­ト</string>
 
     <string id="SettingsTh">テ­ー­マ</string>
     <string id="ThGrey">グ­レ­ー</string>
     <string id="ThRed">レ­ッ­ド</string>
-    <string id="ThBaW">白黒</string>
-    <string id="ThWaB">黒白</string>
-    <string id="ThBsoD">死の青画面</string>
+    <string id="ThBaW">白­黒</string>
+    <string id="ThWaB">黒­白</string>
+    <string id="ThBsoD">死­の­青­画­面</string>
 
-    <string id="ListRec">リ­ス­ト­を受­信­し­ま­し­た。</string>
-    <string id="EStorageFull">スト­レ­ージが­満杯です！</string>
-    <string id="EStorageError">リス­ト­を­保­存で­き­ま­せ­んで­し­た！</string>
-    <string id="ListDel">リ­ス­ト­が削­除­さ­れ­ま­し­た。</string>
+    <string id="ListRec">リ­ス­ト­を­受­信­し­ま­し­た。</string>
+    <string id="EStorageFull">ス­ト­レ­ー­ジ­が­満­杯­で­す！</string>
+    <string id="EStorageError">リ­ス­ト­を­保­存­で­き­ま­せ­ん­で­し­た！</string>
+    <string id="ListDel">リ­ス­ト­が­削­除­さ­れ­ま­し­た。</string>
 
-    <string id="NoLists">リ­ス­ト­が­見つか­り­ま­せ­ん！</string>
-    <string id="NoListsLink">電­話­で­An­droid Play­Sto­re­を開­くに­はダブ­ルタッ­プ</string>
+    <string id="NoLists">リ­ス­ト­が­見­つ­か­り­ま­せ­ん！</string>
+    <string id="NoListsLink">電­話­で­An­droid Play­Sto­re­を­開­く­に­は­ダブ­ル­タッ­プ</string>
 
-    <string id="ListNotFound">リ­ス­ト­が­見つか­り­ま­せ­ん！</string>
-    <string id="ListEmpty">リ­ス­トが­空です。</string>
+    <string id="ListNotFound">リ­ス­ト­が­見­つ­か­り­ま­せ­ん！</string>
+    <string id="ListEmpty">リ­ス­ト­が­空­で­す。</string>
 
     <string id="LMSub">%s 点</string>
 
     <string id="StTitle">設­定</string>
-    <string id="StMoveBottom">完­了­項­目­を­下­へ­移動</string>
-    <string id="StDelList">リ­ス­ト­を削­除</string>
+    <string id="StMoveBottom">完­了­項­目­を­下­へ­移­動</string>
+    <string id="StDelList">リ­ス­ト­を­削­除</string>
     <string id="DeleteConfirm">リ­ス­ト­を­削­除­し­ま­す­か？</string>
-    <string id="StDoubleTapForDone">項­目を­完了­に­す­るに­はシン­グル­タッ­プの代­わ­りにダブ­ルタッ­プ</string>
-    <string id="StDShowNotes">項­目­のノ­ート­を­表示</string>
+    <string id="StDoubleTapForDone">項­目­を­完­了­に­す­る­に­は­シン­グル­タッ­プ­の­代­わ­り­に­ダブ­ル­タッ­プ</string>
+    <string id="StDShowNotes">項­目­の­ノ­ート­を­表­示</string>
 
-    <string id="StDelAll">す­べ­てのリ­ス­ト­を削­除</string>
-    <string id="StDelAllConfirm">リ­ス­ト­を­削­除­し­ま­す­か？</string>
-    <string id="StDelAllDone">す­べ­てのリ­ス­ト­が­削­除­さ­れ­ま­し­た。</string>
-    <string id="StTheme">テ­ー­マを­選択</string>
-    <string id="StAppStore">アンドロイド­PlayStoreへ</string>
-    <string id="StAppVersion">ア­プ­リバ­ー­ジョン</string>
+    <string id="StDelAll">す­べ­て­の­リ­ス­ト­を­削­除</string>
+    <string id="StDelAllConfirm">す­べ­て­の­リ­ス­ト­を­削­除­し­ま­す­か？</string>
+    <string id="StDelAllDone">す­べ­て­の­リ­ス­ト­が­削­除­さ­れ­ま­し­た。</string>
+    <string id="StTheme">テ­ー­マ­を­選­択</string>
+    <string id="StAppStore">アン­ド­ロ­イ­ド­Play­Sto­re­へ</string>
+    <string id="StAppVersion">ア­プ­リ­バ­ー­ジョン</string>
 
     <string id="SelTheme">テ­ー­マ</string>
 
@@ -42,22 +42,21 @@
     <string id="ListTimeFormat">%h:%i %ampm</string>
     <string id="oclock"></string>
 
-    <string id="StLogs">ログ­を保­存</string>
-    <string id="StPersistentLogs">セ­ッ­ション­を­通じて­ログ­を­保­存­す­る。これ­はア­プ­リのス­ト­レ­ー­ジ使­用量­を大幅に増加させ­ま­す。</string>
-    <string id="StPersistentLogs1">セ­ッ­ション­を­超え­てロ­グを­保­存­す­る</string>
-    <string id="StPersistentLogs2">これ­はア­プ­リのス­ト­レ­ー­ジ使­用量­を大幅に増加させ­ま­す。</string>
+    <string id="StLogs">ロ­グ­を­保­存</string>
+    <string id="StPersistentLogs">セ­ッ­ション­を­通­じ­て­ロ­グ­を­保­存­す­る。これ­は­ア­プ­リ­の­ス­ト­レ­ー­ジ­使­用­量­を­大­幅­に­増­加­さ­せ­ま­す。</string>
+    <string id="StPersistentLogs1">セ­ッ­ション­を­超­え­て­ロ­グ­を­保­存­す­る</string>
+    <string id="StPersistentLogs2">これ­は­ア­プ­リ­の­ス­ト­レ­ー­ジ­使­用­量­を­大­幅­に­増­加­さ­せ­ま­す。</string>
     <string id="StSendLogs">ス­マー­ト­フォ­ン­に­ロ­グ­を­送­信</string>
-    <string id="StSendLogsOff">ロ­グ­は­無­効­化­され­る！</string>
+    <string id="StSendLogsOff">ロ­グ­は­無­効­化­さ­れ­ま­す！</string>
     <string id="StSendLogsOk">送­信­ロ­グ</string>
 
-    <string id="StReset">ス­マー­ト­フォ­ン­に­ロ­グ­を­送­信</string>
-    <string id="StResetDaily">毎日</string>
-    <string id="StResetWeekly">毎週</string>
-    <string id="StResetMonthly">毎月</string>
+    <string id="StReset">リ­ス­ト­を­自­動­的­に­リ­セ­ッ­ト</string>
+    <string id="StResetDaily">毎­日</string>
+    <string id="StResetWeekly">毎­週</string>
+    <string id="StResetMonthly">毎­月</string>
 
-    <string id="ErrHint">ア­プリ­内­の­連­絡­先­を­開­く­た­め­に­、ス­マー­ト­フォ­ン­で­エ­ラー­を­報­告­して­ください。\n\n(ここ­を­タ­ップ­して­、ス­マー­ト­フォ­ン­上­の­ア­プリ­内­の­連­絡­先­を­開­き­ます)</string>
+    <string id="ErrHint">ス­マー­ト­フォ­ン­で­エ­ラー­を­報­告­し­て­ください。\n\n(ここ­を­タッ­プ­して­、ス­マー­ト­フォ­ン­上­の­ア­プ­リ­内­の­連­絡­先­を­開­き­ます)</string>
     <string id="ErrReport">ス­マー­ト­フォ­ン­を­開­く</string>
-    <string id="ErrListRec">リ­スト­転­送­中­に­エ­ラー­が­発­生­し­ました：</string>
-    <string id="ErrListDel">リ­スト­の­削­除­中­に­エ­ラー­が­発­生­し­ました：</string>
-
+    <string id="ErrListRec">リ­ス­ト­転­送­中­に­エ­ラー­が­発­生­し­ま­し­た：</string>
+    <string id="ErrListDel">リ­ス­ト­の­削­除­中­に­エ­ラー­が­発­生­し­ま­し­た：</string>
 </strings>

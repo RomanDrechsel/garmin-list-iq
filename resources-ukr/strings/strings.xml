@@ -14,7 +14,7 @@
     <string id="ListDel">Список видалено.</string>
 
     <string id="NoLists">Списки не знайдено!</string>
-    <string id="NoListsLink">Подвійний дотик, щоб відкрити Android PlayStore на телефоні</string>
+    <string id="NoListsLink">Подвійний дотик, щоб відкрити Android Play Store на телефоні</string>
 
     <string id="ListNotFound">Список не знайдено!</string>
     <string id="ListEmpty">Список порожній.</string>
@@ -22,7 +22,7 @@
     <string id="LMSub">%s бали</string>
 
     <string id="StTitle">Налаштування</string>
-    <string id="StMoveBottom">перенести виконані пункти вниз</string>
+    <string id="StMoveBottom">Перенести виконані пункти вниз</string>
     <string id="StDelList">Видалити список</string>
     <string id="DeleteConfirm">Видалити список?</string>
     <string id="StDoubleTapForDone">Подвійний дотик для відмітки пункту як виконаного</string>
@@ -32,7 +32,7 @@
     <string id="StDelAllConfirm">Видалити всі списки?</string>
     <string id="StDelAllDone">Всі списки видалено.</string>
     <string id="StTheme">Обрати тему</string>
-    <string id="StAppStore">в Android PlayStore</string>
+    <string id="StAppStore">в Android Play Store</string>
     <string id="StAppVersion">Версія додатка</string>
 
     <string id="SelTheme">Тема</string>
@@ -48,7 +48,7 @@
     <string id="StPersistentLogs2">Це значно збільшує використання пам’яті додатка.</string>
     <string id="StSendLogs">Надсилання журналів на смартфон</string>
     <string id="StSendLogsOff">Журнали деактивовано!</string>
-    <string id="StSendLogsOk">Логи надіслано</string>
+    <string id="StSendLogsOk">Журнали надіслано</string>
 
     <string id="StReset">Автоматичне скидання списку</string>
     <string id="StResetDaily">Щоденно</string>

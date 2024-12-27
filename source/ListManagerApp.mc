@@ -16,7 +16,7 @@ class ListsApp extends Application.AppBase {
 
     function initialize() {
         AppBase.initialize();
-        Application.Properties.setValue("appVersion", "2024.12.2600");
+        Application.Properties.setValue("appVersion", "2024.12.2700");
         self.Debug = new Debug.DebugStorage();
         self.ListsManager = new ListsManager();
         self.Phone = new Comm.PhoneCommunication();

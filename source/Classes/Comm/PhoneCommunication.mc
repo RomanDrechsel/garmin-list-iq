@@ -11,7 +11,7 @@ module Comm {
             Communications.registerForPhoneAppMessages(method(:phoneMessageCallback));
         }
 
-        function phoneMessageCallback(msg as Communications.Message) as Void {
+        function phoneMessageCallback(msg as Communications.PhoneAppMessage) as Void {
             var message = msg.data as Application.PropertyValueType;
             if (message instanceof Dictionary) {
                 var type = message.get("type") as String?;
@@ -57,8 +57,8 @@ module Comm {
         }
 
         function SendToPhone(value as Application.PersistableType) as Void {
-            Debug.Log("Send to phone...");
             Communications.transmit(value, {}, self);
+            Debug.Log("Send to phone...");
         }
 
         function onComplete() as Void {

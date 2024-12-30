@@ -15,11 +15,13 @@ class ListsApp extends Application.AppBase {
     var GlobalStates as Dictionary<String, Object> = {};
 
     function initialize() {
+        var appVersion = "2024.12.2900";
         AppBase.initialize();
-        Application.Properties.setValue("appVersion", "2024.12.2900");
+        Application.Properties.setValue("appVersion", appVersion);
         self.Debug = new Debug.DebugStorage();
         self.ListsManager = new ListsManager();
         self.Phone = new Comm.PhoneCommunication();
+        Debug.Log("App started (" + appVersion + ")");
     }
 
     function onStart(state as Lang.Dictionary?) as Void {

@@ -316,7 +316,7 @@ module Lists {
         private function StoreIndex(index as ListIndex) as Array<Boolean or Lang.Exception or Null> {
             try {
                 Application.Storage.setValue("listindex", index);
-                Debug.Log("Stored list index with " + index.size() + " items in it");
+                Debug.Log("Stored list index with " + index.size() + " items");
             } catch (e instanceof Lang.StorageFullException) {
                 Helper.ToastUtil.Toast(Rez.Strings.EStorageFull, Helper.ToastUtil.ERROR);
                 Debug.Log("Could not store list index, storage is full: " + e.getErrorMessage());

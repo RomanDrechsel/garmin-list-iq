@@ -71,8 +71,9 @@ module Debug {
             self._persistentLogs = Helper.Properties.Get(Helper.Properties.PERSISTENTLOGS, true) as Boolean;
             if (self._storeLogs == false || self._persistentLogs == false) {
                 Application.Storage.deleteValue("logs");
-                self._logs = [] as Array<String>;
-            } else if (self._storeLogs == false) {
+            }
+
+            if (self._storeLogs == false) {
                 self._logs = [] as Array<String>;
             }
         }

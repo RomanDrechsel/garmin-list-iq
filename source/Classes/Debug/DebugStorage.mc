@@ -97,7 +97,7 @@ module Debug {
         }
     }
 
-    (:debug)
+    (:debug,:glance)
     function Box(dc as Dc, x as Number, y as Number, w as Number, h as Number, c as ColorValue?) {
         if (c == null) {
             c = Graphics.COLOR_RED;
@@ -106,6 +106,6 @@ module Debug {
         dc.setPenWidth(1);
         dc.drawRectangle(x, y, w, h);
     }
-    (:release)
+    (:release,:glance)
     function Box(dc as Dc, x as Number, y as Number, w as Number, h as Number, c as Number) {}
 }

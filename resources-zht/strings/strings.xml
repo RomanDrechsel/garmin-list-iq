@@ -1,5 +1,5 @@
 <strings>
-    <string id="AppName">­聽­</string>
+    <string id="AppName" scope="glance">­聽­</string>
 
     <string id="SettingsTh">­主­題­</string>
     <string id="ThGrey">­灰­色­</string>
@@ -59,4 +59,9 @@
     <string id="ErrReport">請­­打­­開­­智­­能­­手­­機</string>
     <string id="ErrListRec">傳­輸­­列­­表­­時­­發­­生­­錯­­誤：</string>
     <string id="ErrListDel">刪­除­­列­­表­­時­­發­­生­­錯­­誤：</string>
+
+    <string id="GlNumLists" scope="glance">%d 個清單</string>
+    <string id="GlOneList" scope="glance">1 列表</string>
+    <string id="GlNoLists" scope="glance">無清單</string>
+
 </strings>

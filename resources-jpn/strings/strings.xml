@@ -1,5 +1,5 @@
 <strings>
-    <string id="AppName">リ­ス­ト</string>
+    <string id="AppName" scope="glance">リ­ス­ト</string>
 
     <string id="SettingsTh">テ­ー­マ</string>
     <string id="ThGrey">グ­レ­ー</string>
@@ -59,4 +59,9 @@
     <string id="ErrReport">ス­マー­ト­フォ­ン­を­開­く</string>
     <string id="ErrListRec">リ­ス­ト­転­送­中­に­エ­ラー­が­発­生­し­ま­し­た：</string>
     <string id="ErrListDel">リ­ス­ト­の­削­除­中­に­エ­ラー­が­発­生­し­ま­し­た：</string>
+
+    <string id="GlNumLists" scope="glance">%d リスト</string>
+    <string id="GlOneList" scope="glance">1 リスト</string>
+    <string id="GlNoLists" scope="glance">リストなし</string>
+
 </strings>

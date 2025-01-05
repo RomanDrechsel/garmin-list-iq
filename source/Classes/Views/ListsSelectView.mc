@@ -123,11 +123,11 @@ module Views {
             }
 
             if (self._noListsLabel == null) {
-                self._noListsLabel = new MultilineLabel(Application.loadResource(Rez.Strings.NoLists), width - 2 * hor_padding, Fonts.Normal());
+                self._noListsLabel = new MultilineLabel(Application.loadResource(Rez.Strings.NoLists), width - 2 * hor_padding, Helper.Fonts.Normal());
 
                 var init = Helper.Properties.Get(Helper.Properties.INIT, 0);
                 if (init < 1) {
-                    self._noListsLabel2 = new MultilineLabel(Application.loadResource(Rez.Strings.NoListsLink), width - 2 * hor_padding, Fonts.Small());
+                    self._noListsLabel2 = new MultilineLabel(Application.loadResource(Rez.Strings.NoListsLink), width - 2 * hor_padding, Helper.Fonts.Small());
                 } else {
                     self._noListsLabel2 = null;
                 }

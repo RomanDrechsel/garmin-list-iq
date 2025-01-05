@@ -10,7 +10,9 @@ import Views;
 module Lists {
     typedef ListItemsItem as Dictionary<String, String or Array<String> or Boolean or Number>; /* a list item (with key "i" for item-text, "n" for note-text, "d" for done?) */
     typedef List as Dictionary<String, String or Array<ListItemsItem> or Boolean or Number>; /* a list */
+    (:glance)
     typedef ListIndexItem as Dictionary<String, String or Number>; /* data of a list, stored in list index */
+    (:glance)
     typedef ListIndex as Dictionary<String, ListIndexItem>; /* the list-index, with list uuid as key, and some list data as value */
 
     class ListsManager {
@@ -42,7 +44,7 @@ module Lists {
                         missing.add("items");
                     }
                     Debug.Log("Could not add list: missing properties - " + missing);
-                    self.reportError(2, { "data" => data, "missing" => missing});
+                    self.reportError(2, { "data" => data, "missing" => missing });
                     return false;
                 }
             } else {
@@ -149,7 +151,7 @@ module Lists {
                 var saveIndex = self.StoreIndex(listindex);
                 if (saveIndex[0] == false) {
                     Application.Storage.deleteValue(listuuid);
-                    self.reportError(4, { "data" => data, "list" => list, "exception" => saveIndex[1].getErrorMessage()});
+                    self.reportError(4, { "data" => data, "list" => list, "exception" => saveIndex[1].getErrorMessage() });
                     return false;
                 }
 
@@ -160,7 +162,7 @@ module Lists {
 
                 return true;
             } else {
-                self.reportError(3,  { "data" => data, "list" => list, "exception" => save[1].getErrorMessage() });
+                self.reportError(3, { "data" => data, "list" => list, "exception" => save[1].getErrorMessage() });
                 return false;
             }
         }
@@ -240,8 +242,7 @@ module Lists {
                     Helper.ToastUtil.Toast(Rez.Strings.ListDel, Helper.ToastUtil.SUCCESS);
                 }
                 Debug.Log("Deleted list " + uuid);
-            }
-            else {
+            } else {
                 self.reportError(5, { "index" => index_log, "delete" => uuid, "exception" => store[1].getErrorMessage() });
             }
         }

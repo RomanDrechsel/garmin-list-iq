@@ -21,7 +21,7 @@ module Views {
         private var _itemIcon as Listitems.ViewItemIcon;
         private var _itemIconDone as Listitems.ViewItemIcon;
 
-        protected var _fontoverride = Fonts.Large();
+        protected var _fontoverride = Helper.Fonts.Large();
 
         function initialize(uuid as String) {
             CustomView.initialize();
@@ -360,7 +360,7 @@ module Views {
                 } else {
                     text = Application.loadResource(Rez.Strings.ListEmpty);
                 }
-                self._noListLabel = new MultilineLabel(text, (dc.getWidth() * 0.8).toNumber(), Fonts.Normal());
+                self._noListLabel = new MultilineLabel(text, (dc.getWidth() * 0.8).toNumber(), Helper.Fonts.Normal());
             }
 
             var y = (dc.getHeight() - self._noListLabel.getHeight(dc)) / 2;

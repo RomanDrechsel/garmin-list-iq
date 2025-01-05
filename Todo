@@ -5,3 +5,7 @@ For Smartphone
 adb -d forward tcp:7381 tcp:7381
 
 soft-hyphen: \u00AD
+
+WIP: Glance View
+WIP: Add scope to Strings-Resources
+TODO: close app after x minutes of inactivity

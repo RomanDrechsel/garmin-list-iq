@@ -7,7 +7,6 @@ import Toybox.Application;
 
 module Views {
     class ErrorView extends Controls.CustomView {
-
         private var _labelMessage as MultilineLabel? = null;
         private var _labelError as MultilineLabel? = null;
         private var _errorMsg as Lang.ResourceId? = null;
@@ -57,7 +56,7 @@ module Views {
                 self.Items.add(errMsg);
             }
             if (self._errorCode != null) {
-                var errCode = new Listitems.Item(self._mainLayer, "0x" + self._errorCode.format("%04x"), null, null, null, self._verticalItemMargin, 1, Fonts.Big());
+                var errCode = new Listitems.Item(self._mainLayer, "0x" + self._errorCode.format("%04x"), null, null, null, self._verticalItemMargin, 1, Helper.Fonts.Big());
                 errCode.DrawLine = false;
                 errCode.TitleJustification = Graphics.TEXT_JUSTIFY_CENTER;
                 self.Items.add(errCode);

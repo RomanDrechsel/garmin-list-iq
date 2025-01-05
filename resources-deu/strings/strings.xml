@@ -1,5 +1,5 @@
 <strings>
-    <string id="AppName">Listen</string>
+    <string id="AppName" scope="glance">Listen</string>
 
     <string id="SettingsTh">Theme</string>
     <string id="ThGrey">Grau</string>
@@ -59,5 +59,9 @@
     <string id="ErrReport">Bitte Smartphone öffnen</string>
     <string id="ErrListRec">Beim Übertragen der Liste ist ein Fehler aufgetreten:</string>
     <string id="ErrListDel">Beim Löschen der Liste ist ein Fehler aufgetreten:</string>
+
+    <string id="GlNumLists" scope="glance">%d Listen</string>
+    <string id="GlOneList" scope="glance">1 Liste</string>
+    <string id="GlNoLists" scope="glance">Keine Listen</string>
 
 </strings>

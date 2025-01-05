@@ -7,31 +7,34 @@ import Comm;
 import Lists;
 import Debug;
 
+(:glance)
 class ListsApp extends Application.AppBase {
-    var Phone as PhoneCommunication;
-    var ListsManager as ListsManager;
-    var Debug as DebugStorage;
+    var Phone = null as PhoneCommunication?;
+    var ListsManager = null as ListsManager?;
+    var Debug = null as DebugStorage?;
     var startupList = null as String?;
     var GlobalStates as Dictionary<String, Object> = {};
 
-    function initialize() {
+    function getInitialView() as Array<WatchUi.Views or WatchUi.InputDelegates>? {
         var appVersion = "2024.12.2900";
-        AppBase.initialize();
         Application.Properties.setValue("appVersion", appVersion);
+
         self.Debug = new Debug.DebugStorage();
+        Debug.Log("App started (" + appVersion + ")");
+
         self.ListsManager = new ListsManager();
         self.Phone = new Comm.PhoneCommunication();
-        Debug.Log("App started (" + appVersion + ")");
-    }
 
-    function onStart(state as Lang.Dictionary?) as Void {
         self.startupList = Helper.Properties.Get(Helper.Properties.LASTLIST, "");
         Helper.Properties.Store(Helper.Properties.LASTLIST, "");
-    }
-
-    function getInitialView() as Array<WatchUi.Views or WatchUi.InputDelegates>? {
         var listview = new Views.ListsSelectView();
         return [listview, new Views.ListsSelectViewDelegate(listview)] as Array<WatchUi.Views or InputDelegates>;
+    }
+
+    (:glance)
+    function getGlanceView() as Array<WatchUi.GlanceView or WatchUi.GlanceViewDelegate>? {
+        var glance = new Views.Glance.GlanceView();
+        return [glance];
     }
 
     function onSettingsChanged() as Void {

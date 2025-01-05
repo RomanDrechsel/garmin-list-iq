@@ -2,6 +2,7 @@ import Toybox.Lang;
 import Toybox.Application;
 using Toybox.Application.Properties as Props;
 
+(:glance)
 module Helper {
     class Properties {
         typedef PropType as Number or Boolean or String;

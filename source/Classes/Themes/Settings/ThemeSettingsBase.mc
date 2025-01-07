@@ -1,6 +1,7 @@
 import Toybox.Lang;
 import Toybox.Application;
 
+(:glance)
 module Themes {
     class ThemeSettingsBase {
         var MainColor = 0xd7d7d7;

@@ -218,6 +218,11 @@ module Lists {
             }
             try {
                 Application.Storage.setValue(uuid, list);
+
+                if (Helper.Properties.Get(Helper.Properties.LASTLIST, "").equals(uuid)) {
+                    Helper.Properties.Store(Helper.Properties.LASTLISTSCROLL, -1);
+                }
+
                 Debug.Log("Saved list " + uuid + "(" + listname + ")");
                 return [true, null];
             } catch (e instanceof Lang.StorageFullException) {
@@ -240,6 +245,10 @@ module Lists {
                 Application.Storage.deleteValue(uuid);
                 if (with_toast == true) {
                     Helper.ToastUtil.Toast(Rez.Strings.ListDel, Helper.ToastUtil.SUCCESS);
+                }
+                if (Helper.Properties.Get(Helper.Properties.LASTLIST, "").equals(uuid)) {
+                    Helper.Properties.Store(Helper.Properties.LASTLISTSCROLL, -1);
+                    Helper.Properties.Store(Helper.Properties.LASTLIST, "");
                 }
                 Debug.Log("Deleted list " + uuid);
             } else {

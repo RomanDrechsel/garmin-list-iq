@@ -26,7 +26,16 @@
     <string id="StDelList">­刪­除­列­表­­</string>
     <string id="DeleteConfirm">­刪­除­列­表­？­­</string>
     <string id="StDoubleTapForDone">­雙­擊­而­不­是­單­擊­項­目­以­將­其­標­記­為­已­完­成­的­項­目­­</string>
-    <string id="StDShowNotes">­顯­示­項­目­的­注­釋­­</string>
+    <string id="StShowNotes">­顯­示­項­目­的­注­釋­­</string>
+    <string id="StAutoExit">應­用­程­式­在­不­活­躍­時­結­束</string>
+    <string id="StAutoExit1">每­分­鐘­後­一­分­鐘</string>
+    <string id="StAutoExit3">每­三­分­鐘­後­三­分­鐘</string>
+    <string id="StAutoExit5">每­五­分­鐘­後­五­分­鐘</string>
+    <string id="StAutoExit10">每­十­分­鐘­後­十­分­鐘</string>
+    <string id="StAutoExit15">每­十­五­分­鐘­後­十­五­分­鐘</string>
+    <string id="StAutoExit30">每­三­十­分­鐘­後­三­十­分­鐘</string>
+    <string id="StAutoExit60">每­六­十­分­鐘­後­六­十­分­鐘</string>
+    <string id="StAutoExitOff">已­關­閉</string>
 
     <string id="StDelAll">­刪­除­所­有­列­表­­</string>
     <string id="StDelAllConfirm">­刪­除­所­有­列­表­？­­</string>

@@ -14,14 +14,20 @@ module Helper {
             DOUBLETAPFORDONE = "DoubleTapForDone",
             SHOWNOTES = "ShowNotes",
             LASTLIST = "LastList",
+            LASTLISTSCROLL = "LastListScroll",
             LOGS = "Logs",
             PERSISTENTLOGS = "PersistentLogs",
+            AUTOEXIT = "AutoExit",
         }
 
         public static function Store(prop as EProps, value as PropType) as Void {
+            var no_log = [LASTLISTSCROLL];
+
             try {
                 Props.setValue(prop as String, value);
-                Debug.Log("Stored property " + prop + " as " + value);
+                if (no_log.indexOf(prop) < 0) {
+                    Debug.Log("Stored property " + prop + " as " + value);
+                }
             } catch (ex instanceof Lang.Exception) {
                 Debug.Log("Could not store property " + prop + " as " + value + ": " + ex.getErrorMessage());
             }

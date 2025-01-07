@@ -2,6 +2,7 @@ import Toybox.Graphics;
 import Toybox.Lang;
 import Toybox.WatchUi;
 import Toybox.Application;
+import Toybox.Time;
 import Controls.Scrollbar;
 import Helper;
 import Controls.Listitems;
@@ -23,7 +24,7 @@ module Controls {
         /** bottom-padding of the list in SCROLL_SNAP - mode */
         private var _paddingBottom as Number? = null;
         /** scroll offset */
-        private var _scrollOffset as Number = 0;
+        protected var _scrollOffset as Number = 0;
 
         /** index of the centered item on SCROLL_SNAP - mode */
         protected var _snapPosition as Number? = 0;
@@ -61,6 +62,7 @@ module Controls {
         function initialize() {
             View.initialize();
             self.Items = new Array<Item>[0];
+            self.Interaction();
         }
 
         function onLayout(dc as Dc) {
@@ -92,18 +94,20 @@ module Controls {
         }
 
         function onShow() as Void {
+            self.Interaction();
             if ($.getApp().GlobalStates.hasKey("movetop")) {
                 self._scrollOffset = 0;
                 self._snapPosition = 0;
                 $.getApp().GlobalStates.remove("movetop");
             }
             WatchUi.View.onShow();
-            $.onSettingsChanged.add(self);
+            $.getApp().onSettingsChangedListeners.add(self);
         }
 
         function onHide() as Void {
+            self.Interaction();
             WatchUi.View.onHide();
-            $.onSettingsChanged.remove(self);
+            $.getApp().onSettingsChangedListeners.remove(self);
         }
 
         function onUpdate(dc as Dc) as Void {
@@ -221,7 +225,17 @@ module Controls {
             return false;
         }
 
-        function onSettingsChanged() as Void;
+        function onSettingsChanged() as Void {}
+
+        /**
+         * user ineraction happend
+         */
+        function Interaction() as Void {
+            var inactivity = $.getApp().Inactivity;
+            if (inactivity != null) {
+                inactivity.Interaction();
+            }
+        }
 
         protected function moveIterator(delta as Number?) as Void {
             if (delta == null) {
@@ -325,7 +339,7 @@ module Controls {
          * calculate the total height of the list and if a scrollbar is needed
          * and set the relative y-coordinates for all items
          */
-        protected function validate(dc as Dc) {
+        protected function validate(dc as Dc) as Void {
             if (self._needValidation == true) {
                 var y = self.getPaddingTop(dc);
                 for (var i = 0; i < self.Items.size(); i++) {

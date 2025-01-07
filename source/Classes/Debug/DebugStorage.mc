@@ -62,8 +62,10 @@ module Debug {
         }
 
         public function SendLogs() {
-            $.getApp().Phone.SendToPhone({ "type" => "logs", "logs" => self.GetLogs() });
-            self.Log("Sent logs to smartphone");
+            if ($.getApp().Phone != null) {
+                $.getApp().Phone.SendToPhone({ "type" => "logs", "logs" => self.GetLogs() });
+                self.Log("Sent logs to smartphone");
+            }
         }
 
         public function onSettingsChanged() {
@@ -79,6 +81,7 @@ module Debug {
         }
     }
 
+    (:glance)
     function Log(obj as Lang.Object) {
         var info = Time.Gregorian.info(Time.now(), Time.FORMAT_SHORT);
         var date = Helper.DateUtil.toLogString(info, null);
@@ -90,10 +93,16 @@ module Debug {
                 }
                 Toybox.System.println(obj[i]);
             }
-            $.getApp().Debug.AddLog(obj);
+            var debug = $.getApp().Debug;
+            if (debug != null) {
+                debug.AddLog(obj);
+            }
         } else {
             Toybox.System.println(date + ": " + obj);
-            $.getApp().Debug.AddLog(date + ": " + obj);
+            var debug = $.getApp().Debug;
+            if (debug != null) {
+                debug.AddLog(date + ": " + obj);
+            }
         }
     }
 

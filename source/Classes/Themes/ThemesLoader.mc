@@ -28,7 +28,12 @@ module Themes {
     }
 }
 
+(:glance)
 function getTheme() as Themes.ThemeSettingsBase {
+    if ($.isGlanceView) {
+        return new Themes.ThemeSettingsBase();
+    }
+
     if (Themes.CurrentTheme == null) {
         Themes.ThemesLoader.loadTheme();
     }

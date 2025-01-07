@@ -26,7 +26,16 @@
     <string id="StDelList">Видалити список</string>
     <string id="DeleteConfirm">Видалити список?</string>
     <string id="StDoubleTapForDone">Подвійний дотик для відмітки пункту як виконаного</string>
-    <string id="StDShowNotes">Показати нотатки пунктів</string>
+    <string id="StShowNotes">Показати нотатки пунктів</string>
+    <string id="StAutoExit">Програму завершити при неактивності</string>
+    <string id="StAutoExit1">після 1 хвилини</string>
+    <string id="StAutoExit3">після 3 хвилин</string>
+    <string id="StAutoExit5">після 5 хвилин</string>
+    <string id="StAutoExit10">після 10 хвилин</string>
+    <string id="StAutoExit15">після 15 хвилин</string>
+    <string id="StAutoExit30">після 30 хвилин</string>
+    <string id="StAutoExit60">після 60 хвилин</string>
+    <string id="StAutoExitOff">вимкнено</string>
 
     <string id="StDelAll">Видалити всі списки</string>
     <string id="StDelAllConfirm">Видалити всі списки?</string>

@@ -109,10 +109,11 @@ module Controls {
             var _lines = Helper.StringUtil.splitLines(fulltext);
             for (var j = 0; j < _lines.size(); j++) {
                 if (dc.getTextWidthInPixels(_lines[j], self._font) <= self._maxWidth) {
-                    ret.add(_lines[j]);
+                    ret.add(Helper.StringUtil.cleanString(_lines[j]));
                     continue;
                 }
                 var parts = Helper.StringUtil.split(_lines[j], self.linewrappers);
+                Toybox.System.println(parts);
                 var curr_line = "" as String;
                 var curr_line_width = 0;
                 for (var i = 0; i < parts.size(); i++) {
@@ -152,6 +153,7 @@ module Controls {
                     ret.add(curr_line);
                 }
             }
+            Toybox.System.println(ret);
 
             return ret;
         }

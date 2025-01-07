@@ -6,6 +6,7 @@ adb -d forward tcp:7381 tcp:7381
 
 soft-hyphen: \u00AD
 
-WIP: Glance View
-WIP: Add scope to Strings-Resources
-TODO: close app after x minutes of inactivity
+TEST: Glance View
+WIP: close app after x minutes of inactivity
+WIP: Properties Page: add inactivity timer
+WIP: translate inactivity locales

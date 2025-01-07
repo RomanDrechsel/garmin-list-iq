@@ -16,11 +16,7 @@ module Lists {
                 if (list != null) {
                     var title = list.get("name");
                     if (title != null) {
-                        if (title.length() > 50) {
-                            return title.substring(0, 47) + "...";
-                        } else {
-                            return title;
-                        }
+                        return title;
                     }
                 }
             }

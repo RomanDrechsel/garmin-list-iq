@@ -26,7 +26,16 @@
     <string id="StDelList">Delete list</string>
     <string id="DeleteConfirm">Delete the list?</string>
     <string id="StDoubleTapForDone">Double tap instead of single tap on an item to set it to done</string>
-    <string id="StDShowNotes">Display item notes</string>
+    <string id="StShowNotes">Display item notes</string>
+    <string id="StAutoExit">Close app when inactive</string>
+    <string id="StAutoExit1">after 1 minute</string>
+    <string id="StAutoExit3">after 3 minutes</string>
+    <string id="StAutoExit5">after 5 minutes</string>
+    <string id="StAutoExit10">after 10 minutes</string>
+    <string id="StAutoExit15">after 15 minutes</string>
+    <string id="StAutoExit30">after 30 minutes</string>
+    <string id="StAutoExit60">after 60 minutes</string>
+    <string id="StAutoExitOff">disabled</string>
 
     <string id="StDelAll">Delete all lists</string>
     <string id="StDelAllConfirm">Delete all lists?</string>

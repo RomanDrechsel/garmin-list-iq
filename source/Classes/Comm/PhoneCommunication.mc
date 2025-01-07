@@ -12,6 +12,9 @@ module Comm {
         }
 
         function phoneMessageCallback(msg as Communications.PhoneAppMessage) as Void {
+            if ($.getApp().ListsManager == null) {
+                return;
+            }
             var message = msg.data as Application.PropertyValueType;
             if (message instanceof Dictionary) {
                 var type = message.get("type") as String?;
@@ -42,7 +45,9 @@ module Comm {
                             var tid = message.get("tid") as String?;
                             var resp = ({}) as Dictionary<String, String or Array<String> >;
                             resp.put("tid", tid);
-                            resp.put("logs", $.getApp().Debug.GetLogs());
+                            if ($.getApp().Debug != null) {
+                                resp.put("logs", $.getApp().Debug.GetLogs());
+                            }
                             self.SendToPhone(resp as Application.PersistableType);
                         }
                     } else {

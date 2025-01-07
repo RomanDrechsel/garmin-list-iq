@@ -12,11 +12,13 @@ class ListsApp extends Application.AppBase {
     var Phone = null as PhoneCommunication?;
     var ListsManager = null as ListsManager?;
     var Debug = null as DebugStorage?;
-    var startupList = null as String?;
+    var Inactivity = null as Helper.Inactivity?;
     var GlobalStates as Dictionary<String, Object> = {};
+    var onSettingsChangedListeners as Array<Object> = [];
 
     function getInitialView() as Array<WatchUi.Views or WatchUi.InputDelegates>? {
-        var appVersion = "2024.12.2900";
+        $.isGlanceView = false;
+        var appVersion = "2025.01.0701";
         Application.Properties.setValue("appVersion", appVersion);
 
         self.Debug = new Debug.DebugStorage();
@@ -24,28 +26,33 @@ class ListsApp extends Application.AppBase {
 
         self.ListsManager = new ListsManager();
         self.Phone = new Comm.PhoneCommunication();
+        self.Inactivity = new Helper.Inactivity();
 
-        self.startupList = Helper.Properties.Get(Helper.Properties.LASTLIST, "");
-        Helper.Properties.Store(Helper.Properties.LASTLIST, "");
-        var listview = new Views.ListsSelectView();
+        var listview = new Views.ListsSelectView(true);
         return [listview, new Views.ListsSelectViewDelegate(listview)] as Array<WatchUi.Views or InputDelegates>;
     }
 
-    (:glance)
     function getGlanceView() as Array<WatchUi.GlanceView or WatchUi.GlanceViewDelegate>? {
-        var glance = new Views.Glance.GlanceView();
+        $.isGlanceView = true;
+        var glance = new Views.GlanceView();
         return [glance];
     }
 
     function onSettingsChanged() as Void {
-        self.Debug.onSettingsChanged();
+        self.triggerOnSettingsChanged();
+    }
+
+    function triggerOnSettingsChanged() as Void {
+        if (self.Debug != null) {
+            self.Debug.onSettingsChanged();
+        }
         Themes.ThemesLoader.loadTheme();
 
         Debug.Log("Settings changed");
-        if ($.onSettingsChanged instanceof Array) {
-            for (var i = 0; i < $.onSettingsChanged.size(); i++) {
-                if ($.onSettingsChanged[i] has :onSettingsChanged) {
-                    $.onSettingsChanged[i].onSettingsChanged();
+        if (self.onSettingsChangedListeners instanceof Array) {
+            for (var i = 0; i < self.onSettingsChangedListeners.size(); i++) {
+                if (self.onSettingsChangedListeners[i] has :onSettingsChanged) {
+                    self.onSettingsChangedListeners[i].onSettingsChanged();
                 }
             }
         }
@@ -86,7 +93,6 @@ class ListsApp extends Application.AppBase {
 }
 
 var isRoundDisplay = System.getDeviceSettings().screenShape == System.SCREEN_SHAPE_ROUND;
-var onSettingsChanged as Array<Object> = [];
 
 function getApp() as ListsApp {
     return Application.getApp() as ListsApp;
@@ -95,6 +101,8 @@ function getApp() as ListsApp {
 function getAppStore() as String {
     return "https://play.google.com/store/apps/details?id=de.romandrechsel.lists";
 }
+
+var isGlanceView = false;
 
 (:debug)
 var isDebug = true;

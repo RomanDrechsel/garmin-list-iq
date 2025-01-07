@@ -1,5 +1,5 @@
 <strings>
-    <string id="AppName">Listas</string>
+    <string id="AppName" scope="glance">Listas</string>
 
     <string id="SettingsTh">Tema</string>
     <string id="ThGrey">Gris</string>
@@ -26,7 +26,16 @@
     <string id="StDelList">Eliminar lista</string>
     <string id="DeleteConfirm">¿Eliminar lista?</string>
     <string id="StDoubleTapForDone">Toca dos veces, en lugar de una vez, en un elemento para marcarlo como completado</string>
-    <string id="StDShowNotes">Mostrar notas de elementos</string>
+    <string id="StShowNotes">Mostrar notas de elementos</string>
+    <string id="StAutoExit">Finalizar la aplicación al inactivarla</string>
+    <string id="StAutoExit1">después de 1 minuto</string>
+    <string id="StAutoExit3">después de 3 minutos</string>
+    <string id="StAutoExit5">después de 5 minutos</string>
+    <string id="StAutoExit10">después de 10 minutos</string>
+    <string id="StAutoExit15">después de 15 minutos</string>
+    <string id="StAutoExit30">después de 30 minutos</string>
+    <string id="StAutoExit60">después de 60 minutos</string>
+    <string id="StAutoExitOff">desactivado</string>
 
     <string id="StDelAll">Eliminar todas las listas</string>
     <string id="StDelAllConfirm">¿Eliminar todas las listas?</string>
@@ -59,4 +68,9 @@
     <string id="ErrReport">Por favor, abre el teléfono móvil</string>
     <string id="ErrListRec">Se ha producido un error al transferir la lista:</string>
     <string id="ErrListDel">Se ha producido un error al eliminar la lista:</string>
+
+    <string id="GlNumLists" scope="glance">%d Listas</string>
+    <string id="GlOneList" scope="glance">1 Lista</string>
+    <string id="GlNoLists" scope="glance">No listas</string>
+
 </strings>

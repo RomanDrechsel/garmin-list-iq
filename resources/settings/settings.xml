@@ -26,8 +26,21 @@
     </setting>
 
     <!-- show item notes -->
-    <setting propertyKey="@Properties.ShowNotes" title="@Strings.StDShowNotes">
+    <setting propertyKey="@Properties.ShowNotes" title="@Strings.StShowNotes">
         <settingConfig type="boolean" />
+    </setting>
+
+    <setting propertyKey="@Properties.AutoExit" title="@Strings.StAutoExit">
+        <settingConfig type="list">
+            <listEntry value="0">@Strings.StAutoExitOff</listEntry>
+            <listEntry value="1">@Strings.StAutoExit1</listEntry>
+            <listEntry value="3">@Strings.StAutoExit3</listEntry>
+            <listEntry value="5">@Strings.StAutoExit5</listEntry>
+            <listEntry value="10">@Strings.StAutoExit10</listEntry>
+            <listEntry value="15">@Strings.StAutoExit15</listEntry>
+            <listEntry value="30">@Strings.StAutoExit30</listEntry>
+            <listEntry value="60">@Strings.StAutoExit60</listEntry>
+        </settingConfig>
     </setting>
 
     <!-- store logs -->

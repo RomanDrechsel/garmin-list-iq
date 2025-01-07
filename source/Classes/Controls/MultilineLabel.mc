@@ -1,12 +1,15 @@
 import Toybox.Lang;
 import Toybox.Graphics;
+import Toybox.WatchUi;
 
 module Controls {
+    (:glance)
     class MultilineLabel {
         private var _lines as Array<String> or String or Null = null;
         private var _maxWidth as Number;
         private var _font as FontType;
         private var _height as Number = -1;
+        private var _maxHeight as Number? = null;
         private var _needValidation = true;
         private static const linewrappers = ['-'] as Array<Char>;
 
@@ -28,8 +31,21 @@ module Controls {
                 } else if (justification == Graphics.TEXT_JUSTIFY_RIGHT) {
                     xdraw += self._maxWidth;
                 }
-                dc.drawText(xdraw, y, self._font, self._lines[i], justification);
+
+                var line = self._lines[i];
+                var ellipsis = " " + (8230).toChar().toString();
+                if (self._maxHeight != null && self._maxHeight > 0 && y + Graphics.getFontAscent(self._font) > self._maxHeight) {
+                    line = self.abbreviate(dc, line, self._font, ellipsis, self._maxWidth);
+                    if (i < self._lines.size() - 1 && line.equals(self._lines[i])) {
+                        line += ellipsis;
+                    }
+                }
+                dc.drawText(xdraw, y, self._font, line, justification);
                 y += Graphics.getFontAscent(self._font);
+
+                if (self._maxHeight != null && self._maxHeight > 0 && y >= self._maxHeight) {
+                    break;
+                }
             }
 
             y += Graphics.getFontDescent(self._font);
@@ -53,6 +69,12 @@ module Controls {
                     return 0;
                 }
                 self._height = Graphics.getFontAscent(self._font) * self._lines.size();
+                if (self._maxHeight != null) {
+                    while (self._height > self._maxHeight) {
+                        self._height -= Graphics.getFontAscent(self._font);
+                    }
+                }
+
                 self._height += Graphics.getFontDescent(self._font);
             }
             return self._height;
@@ -78,15 +100,20 @@ module Controls {
             return self._lines;
         }
 
+        function SetMaxHeight(height as Number) as Void {
+            self._maxHeight = height;
+        }
+
         function wrapText(dc as Dc, fulltext as String) as Array<String> {
             var ret = [] as Array<String>;
             var _lines = Helper.StringUtil.splitLines(fulltext);
             for (var j = 0; j < _lines.size(); j++) {
                 if (dc.getTextWidthInPixels(_lines[j], self._font) <= self._maxWidth) {
-                    ret.add(_lines[j]);
+                    ret.add(Helper.StringUtil.cleanString(_lines[j]));
                     continue;
                 }
                 var parts = Helper.StringUtil.split(_lines[j], self.linewrappers);
+                Toybox.System.println(parts);
                 var curr_line = "" as String;
                 var curr_line_width = 0;
                 for (var i = 0; i < parts.size(); i++) {
@@ -126,6 +153,7 @@ module Controls {
                     ret.add(curr_line);
                 }
             }
+            Toybox.System.println(ret);
 
             return ret;
         }
@@ -150,6 +178,26 @@ module Controls {
 
                 self._needValidation = false;
             }
+        }
+
+        private function abbreviate(dc as Dc, text as String, font as FontResource, add as String?, max_width as Number) as String {
+            if (dc.getTextWidthInPixels(text, font) < max_width) {
+                return text;
+            }
+            while (dc.getTextWidthInPixels(text, font) + add > max_width) {
+                var count = 0;
+                for (var i = text.length() - 1; i >= 0; i--) {
+                    count--;
+                    var index = text.length() - i - 1;
+                    if (Helper.StringUtil.isWhitespace(text.substring(index, index + 1)) == true) {
+                        break;
+                    }
+                }
+
+                text = text.substring(0, text.length() - count);
+            }
+
+            return text + add;
         }
     }
 }

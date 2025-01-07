@@ -3,6 +3,7 @@ import Toybox.Lang;
 import Toybox.Graphics;
 
 module Helper {
+    (:glance)
     class FontsService {
         private var _fontBig as FontType;
         private var _fontLarge as FontType;
@@ -40,6 +41,6 @@ module Helper {
             return self._fontIcons;
         }
     }
-}
 
-var Fonts = new Helper.FontsService();
+    var Fonts = new FontsService();
+}

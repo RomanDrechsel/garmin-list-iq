@@ -41,15 +41,23 @@ module Views {
 
         function onShow() as Void {
             CustomView.onShow();
-            $.getApp().ListsManager.OnListsChanged.add(self);
+            if ($.getApp().ListsManager != null) {
+                $.getApp().ListsManager.OnListsChanged.add(self);
+            }
         }
 
         function onHide() as Void {
             CustomView.onHide();
-            $.getApp().ListsManager.OnListsChanged.remove(self);
+            if ($.getApp().ListsManager != null) {
+                $.getApp().ListsManager.OnListsChanged.remove(self);
+            }
         }
 
         function onListTap(position as Number, item as Item, doubletab as Boolean) as Void {
+            if ($.getApp().ListsManager == null) {
+                return;
+            }
+
             if (item.BoundObject.equals("del")) {
                 var dialog = new WatchUi.Confirmation(Application.loadResource(Rez.Strings.DeleteConfirm));
                 var delegate = new ConfirmDelegate(self.method(:deleteList));
@@ -79,13 +87,16 @@ module Views {
         }
 
         function deleteList() as Void {
-            getApp().ListsManager.deleteList(self.ListUuid, true);
-            $.getApp().GlobalStates.put("movetop", true);
+            if ($.getApp().ListsManager != null) {
+                getApp().ListsManager.deleteList(self.ListUuid, true);
+                $.getApp().GlobalStates.put("movetop", true);
+            }
             WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
             WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
         }
 
         function onSettingsChanged() as Void {
+            CustomView.onSettingsChanged();
             self.loadItems();
         }
 
@@ -133,6 +144,10 @@ module Views {
         }
 
         private function readList() as Void {
+            if ($.getApp().ListsManager == null) {
+                return;
+            }
+
             var list = $.getApp().ListsManager.getList(self.ListUuid) as Lists.List?;
             if (list != null) {
                 var active = list.get("r_a");

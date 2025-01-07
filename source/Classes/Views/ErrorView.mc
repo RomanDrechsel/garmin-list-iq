@@ -7,7 +7,6 @@ import Toybox.Application;
 
 module Views {
     class ErrorView extends Controls.CustomView {
-
         private var _labelMessage as MultilineLabel? = null;
         private var _labelError as MultilineLabel? = null;
         private var _errorMsg as Lang.ResourceId? = null;
@@ -27,22 +26,25 @@ module Views {
         }
 
         function onTap(x as Number, y as Number) as Boolean {
-            var resp = ({}) as Dictionary<String, String or Number or Array<String> >;
-            resp.put("type", "reportError");
-            if (self._errorMsg != null) {
-                resp.put("errorMsg", Application.loadResource(self._errorMsg));
+            var app = $.getApp();
+            if (app.Phone != null && app.Debug != null) {
+                var resp = ({}) as Dictionary<String, String or Number or Array<String> >;
+                resp.put("type", "reportError");
+                if (self._errorMsg != null) {
+                    resp.put("errorMsg", Application.loadResource(self._errorMsg));
+                }
+                if (self._errorCode) {
+                    resp.put("errorCode", "0x" + self._errorCode.format("%04x"));
+                }
+                if (self._errorPayload != null) {
+                    resp.put("errorPayload", self._errorPayload);
+                }
+                resp.put("logs", app.Debug.GetLogs());
+                app.Phone.SendToPhone(resp);
+                Debug.Log("Send error report code 0x" + self._errorCode.format("%04x") + " to smartphone");
+                Helper.ToastUtil.Toast(Rez.Strings.ErrReport, Helper.ToastUtil.ATTENTION);
+                WatchUi.popView(WatchUi.SLIDE_BLINK);
             }
-            if (self._errorCode) {
-                resp.put("errorCode", "0x" + self._errorCode.format("%04x"));
-            }
-            if (self._errorPayload != null) {
-                resp.put("errorPayload", self._errorPayload);
-            }
-            resp.put("logs", $.getApp().Debug.GetLogs());
-            $.getApp().Phone.SendToPhone(resp);
-            Debug.Log("Send error report code 0x" + self._errorCode.format("%04x") + " to smartphone");
-            Helper.ToastUtil.Toast(Rez.Strings.ErrReport, Helper.ToastUtil.ATTENTION);
-            WatchUi.popView(WatchUi.SLIDE_BLINK);
         }
 
         private function loadVisuals() as Void {
@@ -57,7 +59,7 @@ module Views {
                 self.Items.add(errMsg);
             }
             if (self._errorCode != null) {
-                var errCode = new Listitems.Item(self._mainLayer, "0x" + self._errorCode.format("%04x"), null, null, null, self._verticalItemMargin, 1, Fonts.Big());
+                var errCode = new Listitems.Item(self._mainLayer, "0x" + self._errorCode.format("%04x"), null, null, null, self._verticalItemMargin, 1, Helper.Fonts.Big());
                 errCode.DrawLine = false;
                 errCode.TitleJustification = Graphics.TEXT_JUSTIFY_CENTER;
                 self.Items.add(errCode);

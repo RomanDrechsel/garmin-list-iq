@@ -10,7 +10,9 @@ import Views;
 module Lists {
     typedef ListItemsItem as Dictionary<String, String or Array<String> or Boolean or Number>; /* a list item (with key "i" for item-text, "n" for note-text, "d" for done?) */
     typedef List as Dictionary<String, String or Array<ListItemsItem> or Boolean or Number>; /* a list */
+    (:glance)
     typedef ListIndexItem as Dictionary<String, String or Number>; /* data of a list, stored in list index */
+    (:glance)
     typedef ListIndex as Dictionary<String, ListIndexItem>; /* the list-index, with list uuid as key, and some list data as value */
 
     class ListsManager {
@@ -42,7 +44,7 @@ module Lists {
                         missing.add("items");
                     }
                     Debug.Log("Could not add list: missing properties - " + missing);
-                    self.reportError(2, { "data" => data, "missing" => missing});
+                    self.reportError(2, { "data" => data, "missing" => missing });
                     return false;
                 }
             } else {
@@ -149,7 +151,7 @@ module Lists {
                 var saveIndex = self.StoreIndex(listindex);
                 if (saveIndex[0] == false) {
                     Application.Storage.deleteValue(listuuid);
-                    self.reportError(4, { "data" => data, "list" => list, "exception" => saveIndex[1].getErrorMessage()});
+                    self.reportError(4, { "data" => data, "list" => list, "exception" => saveIndex[1].getErrorMessage() });
                     return false;
                 }
 
@@ -160,7 +162,7 @@ module Lists {
 
                 return true;
             } else {
-                self.reportError(3,  { "data" => data, "list" => list, "exception" => save[1].getErrorMessage() });
+                self.reportError(3, { "data" => data, "list" => list, "exception" => save[1].getErrorMessage() });
                 return false;
             }
         }
@@ -216,6 +218,11 @@ module Lists {
             }
             try {
                 Application.Storage.setValue(uuid, list);
+
+                if (Helper.Properties.Get(Helper.Properties.LASTLIST, "").equals(uuid)) {
+                    Helper.Properties.Store(Helper.Properties.LASTLISTSCROLL, -1);
+                }
+
                 Debug.Log("Saved list " + uuid + "(" + listname + ")");
                 return [true, null];
             } catch (e instanceof Lang.StorageFullException) {
@@ -239,9 +246,12 @@ module Lists {
                 if (with_toast == true) {
                     Helper.ToastUtil.Toast(Rez.Strings.ListDel, Helper.ToastUtil.SUCCESS);
                 }
+                if (Helper.Properties.Get(Helper.Properties.LASTLIST, "").equals(uuid)) {
+                    Helper.Properties.Store(Helper.Properties.LASTLISTSCROLL, -1);
+                    Helper.Properties.Store(Helper.Properties.LASTLIST, "");
+                }
                 Debug.Log("Deleted list " + uuid);
-            }
-            else {
+            } else {
                 self.reportError(5, { "index" => index_log, "delete" => uuid, "exception" => store[1].getErrorMessage() });
             }
         }
@@ -316,7 +326,7 @@ module Lists {
         private function StoreIndex(index as ListIndex) as Array<Boolean or Lang.Exception or Null> {
             try {
                 Application.Storage.setValue("listindex", index);
-                Debug.Log("Stored list index with " + index.size() + " items in it");
+                Debug.Log("Stored list index with " + index.size() + " items");
             } catch (e instanceof Lang.StorageFullException) {
                 Helper.ToastUtil.Toast(Rez.Strings.EStorageFull, Helper.ToastUtil.ERROR);
                 Debug.Log("Could not store list index, storage is full: " + e.getErrorMessage());

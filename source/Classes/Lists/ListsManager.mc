@@ -202,10 +202,10 @@ module Lists {
                         Debug.Log("Updated list " + uuid);
                     } catch (e instanceof Lang.StorageFullException) {
                         Helper.ToastUtil.Toast(Rez.Strings.EStorageFull, Helper.ToastUtil.ERROR);
-                        Debug.Log("Could not update list " + uuid + " (" + name + "): storage is full: " + e.getErrorMessage());
+                        Debug.Log("Could not update list '" + name + "' (" + uuid + "): storage is full: " + e.getErrorMessage());
                     } catch (e instanceof Lang.Exception) {
                         Helper.ToastUtil.Toast(Rez.Strings.EStorageError, Helper.ToastUtil.ERROR);
-                        Debug.Log("Could not update list " + uuid + "(" + name + "): " + e.getErrorMessage());
+                        Debug.Log("Could not update list '" + name + "' (" + uuid + "): " + e.getErrorMessage());
                     }
                 }
             }
@@ -226,11 +226,11 @@ module Lists {
                 Debug.Log("Saved list " + uuid + "(" + listname + ")");
                 return [true, null];
             } catch (e instanceof Lang.StorageFullException) {
-                Debug.Log("Could not update list " + uuid + " (" + listname + "): storage is full: " + e);
+                Debug.Log("Could not update list '" + listname + "' (" + uuid + "): storage is full: " + e);
                 Helper.ToastUtil.Toast(Rez.Strings.EStorageFull, Helper.ToastUtil.ERROR);
                 return [false, e];
             } catch (e) {
-                Debug.Log("Could not update list " + uuid + " (" + listname + "): " + e);
+                Debug.Log("Could not update list '" + listname + "' (" + uuid + "): " + e);
                 Helper.ToastUtil.Toast(Rez.Strings.EStorageError, Helper.ToastUtil.ERROR);
                 return [false, e];
             }
@@ -280,7 +280,12 @@ module Lists {
                         }
                     }
                 }
+                var listname = list.get("name");
+                if (listname == null) {
+                    listname = "?";
+                }
                 list.put("opt", true);
+                Debug.Log("Optimized list '" + listname + "' (" + uuid + ")");
                 Application.Storage.setValue(uuid, list);
             }
         }

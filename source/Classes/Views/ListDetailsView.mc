@@ -206,7 +206,7 @@ module Views {
                     }
                 }
                 if (initialize) {
-                    Debug.Log("Displaying list " + self.ListUuid + " (" + list.get("name") + ")");
+                    Debug.Log("Displaying list '" + list.get("name") + "' (" + self.ListUuid + ")");
                 }
             }
 

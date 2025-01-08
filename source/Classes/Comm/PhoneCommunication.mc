@@ -35,7 +35,7 @@ module Comm {
                                 Debug.Log("Could not delete list " + uuid);
                             }
                         } else {
-                            Debug.Log("Received delete list but no uuid privided - ignoring");
+                            Debug.Log("Received delete list but no uuid provided - ignoring");
                         }
                     } else if (type.equals("request")) {
                         var request = message.get("request") as String?;

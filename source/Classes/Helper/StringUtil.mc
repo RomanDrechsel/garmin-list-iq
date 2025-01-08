@@ -36,7 +36,6 @@ module Helper {
             var curr = "" as String;
             var chars = str.toCharArray();
             for (var i = 0; i < chars.size(); i++) {
-                Toybox.System.println(chars[i] + ": " + chars[i].toNumber());
                 if (self.nBsp.indexOf(chars[i]) >= 0) {
                     curr += " ";
                 } else if (separators.indexOf(chars[i]) >= 0) {

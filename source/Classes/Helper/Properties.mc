@@ -21,7 +21,7 @@ module Helper {
         }
 
         public static function Store(prop as EProps, value as PropType) as Void {
-            var no_log = [LASTLISTSCROLL];
+            var no_log = [LASTLISTSCROLL, INIT, LASTLIST];
 
             try {
                 Props.setValue(prop as String, value);

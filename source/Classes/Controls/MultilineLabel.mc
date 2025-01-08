@@ -113,7 +113,6 @@ module Controls {
                     continue;
                 }
                 var parts = Helper.StringUtil.split(_lines[j], self.linewrappers);
-                Toybox.System.println(parts);
                 var curr_line = "" as String;
                 var curr_line_width = 0;
                 for (var i = 0; i < parts.size(); i++) {
@@ -153,7 +152,6 @@ module Controls {
                     ret.add(curr_line);
                 }
             }
-            Toybox.System.println(ret);
 
             return ret;
         }

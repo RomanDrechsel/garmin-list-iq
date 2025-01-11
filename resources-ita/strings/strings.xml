@@ -1,11 +1,11 @@
 <strings>
-    <string id="AppName">Ascolta</string>
+    <string id="AppName" scope="glance">Liste</string>
 
     <string id="SettingsTh">Tema</string>
     <string id="ThGrey">Grigio</string>
     <string id="ThRed">Rosso</string>
-    <string id="ThBaW">Nero-Bianco</string>
-    <string id="ThWaB">Bianco-Nero</string>
+    <string id="ThBaW">Nero e Bianco</string>
+    <string id="ThWaB">Bianco e Nero</string>
     <string id="ThBsoD">Schermata Blu della Morte</string>
 
     <string id="ListRec">Lista ricevuta.</string>
@@ -26,7 +26,16 @@
     <string id="StDelList">Elimina lista</string>
     <string id="DeleteConfirm">Eliminare la lista?</string>
     <string id="StDoubleTapForDone">Tocca due volte anziché una volta per segnare un punto come completato</string>
-    <string id="StDShowNotes">Mostra le note dei punti</string>
+    <string id="StShowNotes">Mostra le note dei punti</string>
+    <string id="StAutoExit">Chiudi app in caso di inattività</string>
+    <string id="StAutoExit1">dopo 1 minuto</string>
+    <string id="StAutoExit3">dopo 3 minuti</string>
+    <string id="StAutoExit5">dopo 5 minuti</string>
+    <string id="StAutoExit10">dopo 10 minuti</string>
+    <string id="StAutoExit15">dopo 15 minuti</string>
+    <string id="StAutoExit30">dopo 30 minuti</string>
+    <string id="StAutoExit60">dopo 60 minuti</string>
+    <string id="StAutoExitOff">disattivato</string>
 
     <string id="StDelAll">Elimina tutte le liste</string>
     <string id="StDelAllConfirm">Eliminare tutte le liste?</string>
@@ -46,9 +55,22 @@
     <string id="StPersistentLogs">Salva i log tra le sessioni. Questo aumenta significativamente l'uso della memoria dell'app.</string>
     <string id="StPersistentLogs1">Salva i log tra le sessioni</string>
     <string id="StPersistentLogs2">Questo aumenta significativamente l'uso della memoria dell'app.</string>
+    <string id="StSendLogs">Inviare i log allo smartphone</string>
+    <string id="StSendLogsOff">I registri sono disattivati!</string>
+    <string id="StSendLogsOk">Registri inviati</string>
 
     <string id="StReset">Reimposta automaticamente la lista</string>
     <string id="StResetDaily">Quotidianamente</string>
     <string id="StResetWeekly">Settimanalmente</string>
     <string id="StResetMonthly">Mensilmente</string>
+
+    <string id="ErrHint">Per favore segnalami l'errore sul tuo smartphone così posso aiutarti.\n\n(Tocca qui per aprire le opzioni di contatto nell'app sul tuo smartphone)</string>
+    <string id="ErrReport">Per favore apri il telefono</string>
+    <string id="ErrListRec">Si è verificato un errore durante il trasferimento dell'elenco:</string>
+    <string id="ErrListDel">Si è verificato un errore durante la cancellazione dell'elenco:</string>
+
+    <string id="GlNumLists" scope="glance">%d Liste</string>
+    <string id="GlOneList" scope="glance">1 Lista</string>
+    <string id="GlNoLists" scope="glance">Nessuna lista</string>
+
 </strings>

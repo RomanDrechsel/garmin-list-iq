@@ -1,8 +1,10 @@
 import Toybox.Lang;
 
 module Helper {
+    (:glance)
     class StringUtil {
         static const Whitespaces = [(10).toChar(), (11).toChar(), (12).toChar(), (13).toChar(), (32).toChar(), (133).toChar(), (173).toChar(), (8232).toChar(), (8233).toChar()] as Array<Char>;
+        private static const nBsp = [(8239).toChar(), (160).toChar()];
 
         static function stringReplace(str as String, oldString as String, newString as String) as String {
             var result = str;
@@ -34,7 +36,9 @@ module Helper {
             var curr = "" as String;
             var chars = str.toCharArray();
             for (var i = 0; i < chars.size(); i++) {
-                if (separators.indexOf(chars[i]) >= 0) {
+                if (self.nBsp.indexOf(chars[i]) >= 0) {
+                    curr += " ";
+                } else if (separators.indexOf(chars[i]) >= 0) {
                     if (curr.length() > 0) {
                         ret.add(curr);
                     }
@@ -72,11 +76,11 @@ module Helper {
             if (str instanceof Lang.String) {
                 var chars = str.toCharArray();
                 for (var i = 0; i < chars.size(); i++) {
-                    if (self.isWhitespace(chars[i])) {
-                        return true;
+                    if (!self.isWhitespace(chars[i])) {
+                        return false;
                     }
                 }
-                return false;
+                return true;
             } else if (str instanceof Lang.Char) {
                 if (self.Whitespaces.indexOf(str) >= 0) {
                     return true;
@@ -110,6 +114,20 @@ module Helper {
             }
 
             return str;
+        }
+
+        static function cleanString(str as String) as String {
+            var curr_str = "" as String;
+            var chars = str.toCharArray();
+            for (var i = 0; i < chars.size(); i++) {
+                if (self.nBsp.indexOf(chars[i]) >= 0) {
+                    curr_str += " ";
+                } else {
+                    curr_str += chars[i].toString();
+                }
+            }
+
+            return curr_str;
         }
 
         static function formatBytes(bytes as Number) as String {

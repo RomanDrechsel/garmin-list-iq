@@ -14,6 +14,7 @@ module Views {
         var ScrollMode = SCROLL_DRAG;
 
         var ListUuid as String? = null;
+        private var _startScroll as Number?;
         private var _listFound = false;
         private var _listOptimized = false;
 
@@ -21,11 +22,12 @@ module Views {
         private var _itemIcon as Listitems.ViewItemIcon;
         private var _itemIconDone as Listitems.ViewItemIcon;
 
-        protected var _fontoverride = Fonts.Large();
+        protected var _fontoverride = Helper.Fonts.Large();
 
-        function initialize(uuid as String) {
+        function initialize(uuid as String, scrollTo as Number?) {
             CustomView.initialize();
             self.ListUuid = uuid;
+            self._startScroll = scrollTo;
             self._itemIcon = $.getTheme().DarkTheme ? Application.loadResource(Rez.Drawables.Item) : Application.loadResource(Rez.Drawables.bItem);
             self._itemIconDone = $.getTheme().DarkTheme ? Application.loadResource(Rez.Drawables.ItemDone) : Application.loadResource(Rez.Drawables.bItemDone);
         }
@@ -36,13 +38,17 @@ module Views {
 
         function onShow() as Void {
             CustomView.onShow();
-            $.getApp().ListsManager.OnListsChanged.add(self);
+            if ($.getApp().ListsManager != null) {
+                $.getApp().ListsManager.OnListsChanged.add(self);
+            }
             self.publishItems(true);
         }
 
         function onHide() as Void {
             CustomView.onHide();
-            $.getApp().ListsManager.OnListsChanged.remove(self);
+            if ($.getApp().ListsManager != null) {
+                $.getApp().ListsManager.OnListsChanged.remove(self);
+            }
         }
 
         function onUpdate(dc as Dc) as Void {
@@ -56,7 +62,7 @@ module Views {
                 self.drawList(dc);
 
                 //store the wraped text
-                if (self._listOptimized == false) {
+                if (self._listOptimized == false && $.getApp().ListsManager != null) {
                     var optimized1 = ({}) as Dictionary<Number, Array<String> >;
                     var optimized2 = ({}) as Dictionary<Number, Array<String> >;
                     for (var i = 0; i < self.Items.size(); i++) {
@@ -87,6 +93,10 @@ module Views {
         }
 
         function onListTap(position as Number, item as Item, doubletap as Boolean) as Void {
+            if ($.getApp().ListsManager == null) {
+                return;
+            }
+
             var prop = Helper.Properties.Get(Helper.Properties.DOUBLETAPFORDONE, false);
             if (doubletap || prop == 0 || prop == false) {
                 if (item.BoundObject == false) {
@@ -116,13 +126,23 @@ module Views {
         }
 
         function onSettingsChanged() as Void {
+            CustomView.onSettingsChanged();
             self._itemIcon = $.getTheme().DarkTheme ? Application.loadResource(Rez.Drawables.Item) : Application.loadResource(Rez.Drawables.bItem);
             self._itemIconDone = $.getTheme().DarkTheme ? Application.loadResource(Rez.Drawables.ItemDone) : Application.loadResource(Rez.Drawables.bItemDone);
             self.publishItems(false);
         }
 
+        function onScroll(delta as Number) as Void {
+            CustomView.onScroll(delta);
+            Helper.Properties.Store(Helper.Properties.LASTLISTSCROLL, self._scrollOffset);
+        }
+
         private function publishItems(initialize as Boolean) as Void {
             self.Items = [];
+
+            if ($.getApp().ListsManager == null) {
+                return;
+            }
 
             var list = getApp().ListsManager.getList(self.ListUuid) as List?;
 
@@ -186,7 +206,7 @@ module Views {
                     }
                 }
                 if (initialize) {
-                    Debug.Log("Displaying list " + self.ListUuid + " (" + list.get("name") + ")");
+                    Debug.Log("Displaying list '" + list.get("name") + "' (" + self.ListUuid + ")");
                 }
             }
 
@@ -195,13 +215,18 @@ module Views {
                 self.Items[self.Items.size() - 1].DrawLine = false;
             }
 
+            if (self._startScroll != null && self._startScroll > 0) {
+                self._scrollOffset = self._startScroll;
+                self._startScroll = null;
+            }
+
             if (initialize == false) {
                 WatchUi.requestUpdate();
             }
         }
 
         private function checkAutoreset(list as List?) as Void {
-            if (list == null) {
+            if (list == null || $.getApp().ListsManager == null) {
                 return;
             }
 
@@ -360,7 +385,7 @@ module Views {
                 } else {
                     text = Application.loadResource(Rez.Strings.ListEmpty);
                 }
-                self._noListLabel = new MultilineLabel(text, (dc.getWidth() * 0.8).toNumber(), Fonts.Normal());
+                self._noListLabel = new MultilineLabel(text, (dc.getWidth() * 0.8).toNumber(), Helper.Fonts.Normal());
             }
 
             var y = (dc.getHeight() - self._noListLabel.getHeight(dc)) / 2;

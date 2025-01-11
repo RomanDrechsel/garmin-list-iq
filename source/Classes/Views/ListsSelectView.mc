@@ -13,22 +13,27 @@ module Views {
 
         private var _noListsLabel as MultilineLabel? = null;
         private var _noListsLabel2 as MultilineLabel? = null;
+        private var _firstDisplay = true;
 
-        function initialize() {
+        function initialize(first_display as Boolean) {
             self.ScrollMode = SCROLL_SNAP;
+            self._firstDisplay = first_display;
             CustomView.initialize();
         }
 
         function onShow() as Void {
             CustomView.onShow();
-            $.getApp().ListsManager.OnListsChanged.add(self);
-            self.publishLists($.getApp().ListsManager.GetLists(), false);
-            Helper.Properties.Store(Helper.Properties.LASTLIST, "");
+            if ($.getApp().ListsManager != null) {
+                $.getApp().ListsManager.OnListsChanged.add(self);
+                self.publishLists($.getApp().ListsManager.GetLists(), false);
+            }
         }
 
         function onHide() as Void {
             CustomView.onHide();
-            $.getApp().ListsManager.OnListsChanged.remove(self);
+            if ($.getApp().ListsManager != null) {
+                $.getApp().ListsManager.OnListsChanged.remove(self);
+            }
         }
 
         function onUpdate(dc as Dc) as Void {
@@ -45,7 +50,7 @@ module Views {
         }
 
         function onListTap(position as Number, item as Item, doubletap as Boolean) as Void {
-            self.GotoList(item.BoundObject);
+            self.GotoList(item.BoundObject, -1);
         }
 
         function onDoubleTap(x as Number, y as Number) as Void {
@@ -62,7 +67,10 @@ module Views {
         }
 
         function onSettingsChanged() as Void {
-            self.publishLists($.getApp().ListsManager.GetLists(), true);
+            CustomView.onSettingsChanged();
+            if ($.getApp().ListsManager != null) {
+                self.publishLists($.getApp().ListsManager.GetLists(), true);
+            }
         }
 
         private function publishLists(index as ListIndex?, initialize as Boolean) as Void {
@@ -70,13 +78,21 @@ module Views {
                 return;
             }
 
-            var startlist = getApp().startupList;
-            getApp().startupList = null;
-            if (startlist != null && startlist.length() > 0) {
-                if (index.hasKey(startlist)) {
-                    self.GotoList(startlist);
+            if (self._firstDisplay) {
+                self._firstDisplay = false;
+                var startuplist = Helper.Properties.Get(Helper.Properties.LASTLIST, "");
+                if (startuplist.length() > 0) {
+                    var startscroll = Helper.Properties.Get(Helper.Properties.LASTLISTSCROLL, -1);
+                    Helper.Properties.Store(Helper.Properties.LASTLIST, "");
+                    if (index.hasKey(startuplist)) {
+                        self.GotoList(startuplist, startscroll);
+                        return;
+                    }
                 }
             }
+            self._firstDisplay = false;
+            Helper.Properties.Store(Helper.Properties.LASTLIST, "");
+            Helper.Properties.Store(Helper.Properties.LASTLISTSCROLL, -1);
 
             var lists = index.values() as Array<ListIndexItem>;
             lists = Helper.MergeSort.Sort(lists, "order");
@@ -123,11 +139,11 @@ module Views {
             }
 
             if (self._noListsLabel == null) {
-                self._noListsLabel = new MultilineLabel(Application.loadResource(Rez.Strings.NoLists), width - 2 * hor_padding, Fonts.Normal());
+                self._noListsLabel = new MultilineLabel(Application.loadResource(Rez.Strings.NoLists), width - 2 * hor_padding, Helper.Fonts.Normal());
 
                 var init = Helper.Properties.Get(Helper.Properties.INIT, 0);
                 if (init < 1) {
-                    self._noListsLabel2 = new MultilineLabel(Application.loadResource(Rez.Strings.NoListsLink), width - 2 * hor_padding, Fonts.Small());
+                    self._noListsLabel2 = new MultilineLabel(Application.loadResource(Rez.Strings.NoListsLink), width - 2 * hor_padding, Helper.Fonts.Small());
                 } else {
                     self._noListsLabel2 = null;
                 }
@@ -165,8 +181,8 @@ module Views {
             }
         }
 
-        private function GotoList(uuid as String) as Void {
-            var view = new ListDetailsView(uuid);
+        private function GotoList(uuid as String, scroll as Number) as Void {
+            var view = new ListDetailsView(uuid, scroll > 0 ? scroll : null);
             var delegate = new ListDetailsViewDelegate(view);
             WatchUi.pushView(view, delegate, WatchUi.SLIDE_LEFT);
         }

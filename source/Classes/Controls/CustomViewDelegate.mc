@@ -23,6 +23,7 @@ module Controls {
         }
 
         function onTap(clickEvent) as Boolean {
+            self._view.Interaction();
             var tap = self._view.onTap(clickEvent.getCoordinates()[0], clickEvent.getCoordinates()[1]);
             var now = System.getTimer();
             if (now - self._lastTap < 500) {
@@ -36,6 +37,7 @@ module Controls {
         }
 
         function onDrag(dragEvent as WatchUi.DragEvent) as Lang.Boolean {
+            self._view.Interaction();
             var dragY = dragEvent.getCoordinates()[1];
 
             if (dragEvent.getType() == DRAG_TYPE_START) {
@@ -58,6 +60,7 @@ module Controls {
         }
 
         function onSwipe(swipeEvent) as Boolean {
+            self._view.Interaction();
             if (self._useSwipe == true) {
                 if (swipeEvent.getDirection() == WatchUi.SWIPE_UP) {
                     self._view.onScroll(1);

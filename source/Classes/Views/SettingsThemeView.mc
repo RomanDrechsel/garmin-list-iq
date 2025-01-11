@@ -34,10 +34,16 @@ module Views {
         }
 
         function onSettingsChanged() as Void {
+            CustomView.onSettingsChanged();
             self.loadThemes();
+            WatchUi.requestUpdate();
         }
 
         function onListTap(position as Number, item as Item, doubletap as Boolean) as Void {
+            if ($.getApp().ListsManager == null) {
+                return;
+            }
+
             var theme = Helper.Properties.Get(Helper.Properties.THEME, 0);
             if (item.BoundObject != theme) {
                 var name = self._themes.get(item.BoundObject);

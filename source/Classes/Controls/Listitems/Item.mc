@@ -32,7 +32,7 @@ module Controls {
             protected var _textOffsetX as Number = 0;
 
             function initialize(layer as LayerDef?, title as String or Array<String> or Null, subtitle as String or Array<String> or Null, obj as Object?, icon as Number or BitmapResource or Null, vert_margin as Number, position as Number, fontoverride as FontType?) {
-                self._font = fontoverride != null ? fontoverride : Fonts.Normal();
+                self._font = fontoverride != null ? fontoverride : Helper.Fonts.Normal();
                 self._color = getTheme().MainColor;
                 self._colorSub = getTheme().SecondColor;
                 self.ItemPosition = position;
@@ -62,9 +62,9 @@ module Controls {
                 var x = self._layer.getX() + hor_padding;
 
                 if (self._icon instanceof String && self._icon.length() > 0) {
-                    var iconoffsety = (Graphics.getFontHeight(self._font) - dc.getFontHeight(Fonts.Icons())) / 2;
+                    var iconoffsety = (Graphics.getFontHeight(self._font) - dc.getFontHeight(Helper.Fonts.Icons())) / 2;
                     dc.setColor(getTheme().MainColor, Graphics.COLOR_TRANSPARENT);
-                    dc.drawText(x, viewport_y + iconoffsety, Fonts.Icons(), self._icon, Graphics.TEXT_JUSTIFY_LEFT);
+                    dc.drawText(x, viewport_y + iconoffsety, Helper.Fonts.Icons(), self._icon, Graphics.TEXT_JUSTIFY_LEFT);
                 } else if (self.isBitmap(self._icon)) {
                     var iconoffsety = (Graphics.getFontHeight(self._font) - self._icon.getHeight()) / 2;
                     dc.drawBitmap(x, viewport_y + iconoffsety, self._icon);
@@ -75,7 +75,7 @@ module Controls {
                 }
 
                 if (self.Subtitle instanceof MultilineLabel) {
-                    viewport_y += Graphics.getFontAscent(Fonts.Small()) / 8; //little space between title and subtitle
+                    viewport_y += Graphics.getFontAscent(Helper.Fonts.Small()) / 8; //little space between title and subtitle
                     viewport_y += self.Subtitle.drawText(dc, x, viewport_y, self._colorSub, self.SubtitleJustification);
                 }
 
@@ -110,7 +110,7 @@ module Controls {
                             self._height += self.Title.getHeight(dc);
                         }
                         if (self.Subtitle != null) {
-                            self._height += Graphics.getFontAscent(Fonts.Small()) / 8;
+                            self._height += Graphics.getFontAscent(Helper.Fonts.Small()) / 8;
                             self._height += self.Subtitle.getHeight(dc);
                         }
                         self._height += self.getLineHeight();
@@ -219,7 +219,7 @@ module Controls {
                         }
 
                         if (self.Subtitle != null && self.Subtitle instanceof MultilineLabel == false) {
-                            self.Subtitle = new MultilineLabel(self.Subtitle, width, Fonts.Small());
+                            self.Subtitle = new MultilineLabel(self.Subtitle, width, Helper.Fonts.Small());
                         } else if (self.Subtitle instanceof MultilineLabel == false) {
                             self.Subtitle = null;
                         }
@@ -239,7 +239,7 @@ module Controls {
             protected function getIconWidth(dc as Dc) as Number {
                 var iconwidth;
                 if (self._icon instanceof String && self._icon.length() > 0) {
-                    iconwidth = dc.getTextWidthInPixels(self._icon, Fonts.Icons());
+                    iconwidth = dc.getTextWidthInPixels(self._icon, Helper.Fonts.Icons());
                 } else if (self._icon != null) {
                     iconwidth = self._icon.getWidth();
                 } else {

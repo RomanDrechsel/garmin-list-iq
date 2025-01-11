@@ -6,12 +6,15 @@ import Toybox.Application;
 using Toybox.Communications;
 
 module Comm {
-    class PhoneReceiver extends Toybox.Communications.ConnectionListener {
+    class PhoneCommunication extends Toybox.Communications.ConnectionListener {
         function initialize() {
             Communications.registerForPhoneAppMessages(method(:phoneMessageCallback));
         }
 
-        function phoneMessageCallback(msg as Communications.Message) as Void {
+        function phoneMessageCallback(msg as Communications.PhoneAppMessage) as Void {
+            if ($.getApp().ListsManager == null) {
+                return;
+            }
             var message = msg.data as Application.PropertyValueType;
             if (message instanceof Dictionary) {
                 var type = message.get("type") as String?;
@@ -32,7 +35,7 @@ module Comm {
                                 Debug.Log("Could not delete list " + uuid);
                             }
                         } else {
-                            Debug.Log("Received delete list but no uuid privided - ignoring");
+                            Debug.Log("Received delete list but no uuid provided - ignoring");
                         }
                     } else if (type.equals("request")) {
                         var request = message.get("request") as String?;
@@ -42,7 +45,9 @@ module Comm {
                             var tid = message.get("tid") as String?;
                             var resp = ({}) as Dictionary<String, String or Array<String> >;
                             resp.put("tid", tid);
-                            resp.put("logs", $.getApp().Debug.GetLogs());
+                            if ($.getApp().Debug != null) {
+                                resp.put("logs", $.getApp().Debug.GetLogs());
+                            }
                             self.SendToPhone(resp as Application.PersistableType);
                         }
                     } else {
@@ -57,8 +62,8 @@ module Comm {
         }
 
         function SendToPhone(value as Application.PersistableType) as Void {
-            Debug.Log("Send to phone...");
             Communications.transmit(value, {}, self);
+            Debug.Log("Send to phone...");
         }
 
         function onComplete() as Void {

@@ -7,7 +7,7 @@ import Controls.Listitems;
 import Helper;
 
 module Views {
-    class ListSettingsView extends Controls.CustomView {
+    class ListSettingsView extends CustomView {
         var ListUuid = null;
         var ScrollMode = SCROLL_DRAG;
 
@@ -60,7 +60,7 @@ module Views {
 
             if (item.BoundObject.equals("del")) {
                 var dialog = new WatchUi.Confirmation(Application.loadResource(Rez.Strings.DeleteConfirm));
-                var delegate = new ConfirmDelegate(self.method(:deleteList));
+                var delegate = new Controls.ConfirmDelegate(self.method(:deleteList));
                 WatchUi.pushView(dialog, delegate, WatchUi.SLIDE_BLINK);
             } else if (item.BoundObject.equals("reset")) {
                 var list = $.getApp().ListsManager.getList(self.ListUuid) as Lists.List?;
@@ -105,11 +105,21 @@ module Views {
             self.loadItems();
         }
 
+        function onKeyEsc() as Boolean {
+            self.goBack();
+            return true;
+        }
+
+        function onKeyMenu() as Boolean {
+            self.goBack();
+            return true;
+        }
+
         private function loadItems() as Void {
             self.Items = [];
             self.setTitle(Application.loadResource(Rez.Strings.StTitle));
 
-            self.Items.add(new Listitems.Button(self._mainLayer, Application.loadResource(Rez.Strings.StDelList), "del", self._verticalItemMargin, false));
+            self.Items.add(new Listitems.Button(self._mainLayer, Application.loadResource(Rez.Strings.StDelList), "del", null, false));
 
             if (self._resetActive != null) {
                 var icon;
@@ -131,7 +141,7 @@ module Views {
                 }
 
                 self.Items[self.Items.size() - 1].DrawLine = true;
-                self.Items.add(new Listitems.Item(self._mainLayer, Application.loadResource(Rez.Strings.StReset), interval, "reset", icon, self._verticalItemMargin, 0, null));
+                self.Items.add(new Listitems.Item(self._mainLayer, Application.loadResource(Rez.Strings.StReset), interval, "reset", icon, null, 0, null));
                 self.Items[self.Items.size() - 1].SubtitleJustification = Graphics.TEXT_JUSTIFY_CENTER;
             }
 

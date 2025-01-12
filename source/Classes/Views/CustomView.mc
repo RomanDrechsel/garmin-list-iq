@@ -7,7 +7,7 @@ import Controls.Scrollbar;
 import Helper;
 import Controls.Listitems;
 
-module Controls {
+module Views {
     class CustomView extends WatchUi.View {
         enum EScrollmode {
             SCROLL_SNAP,
@@ -15,6 +15,7 @@ module Controls {
         }
 
         var Items as Array<Item> = new Array<Item>[0];
+        protected var _selectedItem as Listitems.Item? = null;
 
         var ScrollMode = SCROLL_DRAG;
         var UI_dragThreshold = 40;
@@ -28,8 +29,6 @@ module Controls {
 
         /** index of the centered item on SCROLL_SNAP - mode */
         protected var _snapPosition as Number? = 0;
-        /** margin of the items */
-        protected var _verticalItemMargin as Number = 0;
 
         /** percentage of the width of the scrollbar */
         protected var _BarWidthFactor as Float = 0.05;
@@ -41,9 +40,9 @@ module Controls {
         protected var _scrollbar as Scrollbar.Round or Scrollbar.Rectangle;
 
         /** main layer for the list */
-        protected var _mainLayer as LayerDef?;
+        protected var _mainLayer as Controls.LayerDef?;
         /** layer for the scrollbar */
-        protected var _scrollbarLayer as LayerDef?;
+        protected var _scrollbarLayer as Controls.LayerDef?;
 
         /**
          * total height of the list, with Padding of top and bottom
@@ -63,6 +62,9 @@ module Controls {
             View.initialize();
             self.Items = new Array<Item>[0];
             self.Interaction();
+            if ($.TouchControls == false) {
+                self.ScrollMode = SCROLL_SNAP;
+            }
         }
 
         function onLayout(dc as Dc) {
@@ -72,8 +74,6 @@ module Controls {
             }
 
             self.UI_dragThreshold = (dc.getHeight() / 6).toNumber();
-            self._verticalItemMargin = (dc.getHeight() * 0.05).toNumber();
-
             var mainLayerMargin = self.getMargin(dc);
             var scrollbarwidth = (dc.getWidth() * self._BarWidthFactor).toNumber();
             var layerwidth = dc.getWidth() - 2 * mainLayerMargin[0];
@@ -82,13 +82,13 @@ module Controls {
                 layerwidth -= scrollbarwidth;
             }
 
-            self._mainLayer = new LayerDef(dc, mainLayerMargin[0], mainLayerMargin[1], layerwidth, layerheight);
+            self._mainLayer = new Controls.LayerDef(dc, mainLayerMargin[0], mainLayerMargin[1], layerwidth, layerheight);
             if ($.isRoundDisplay) {
-                self._scrollbarLayer = new LayerDef(dc, dc.getWidth() / 2, 0, dc.getWidth() / 2, dc.getHeight());
+                self._scrollbarLayer = new Controls.LayerDef(dc, dc.getWidth() / 2, 0, dc.getWidth() / 2, dc.getHeight());
                 self._scrollbar = new Scrollbar.Round(self._scrollbarLayer, scrollbarwidth);
             } else {
                 var barX = self._mainLayer.getX() + self._mainLayer.getWidth();
-                self._scrollbarLayer = new LayerDef(dc, barX, 0, scrollbarwidth, dc.getHeight());
+                self._scrollbarLayer = new Controls.LayerDef(dc, barX, 0, scrollbarwidth, dc.getHeight());
                 self._scrollbar = new Scrollbar.Rectangle(self._scrollbarLayer);
             }
         }
@@ -108,31 +108,28 @@ module Controls {
             self.Interaction();
             WatchUi.View.onHide();
             $.getApp().onSettingsChangedListeners.remove(self);
+            self.Items = [];
         }
 
         function onUpdate(dc as Dc) as Void {
             WatchUi.View.onUpdate(dc);
-
-            dc.setColor(getTheme().BackgroundColor, getTheme().BackgroundColor);
-            dc.clear();
-            if (self.Items.size() > 0) {
-                self.drawList(dc);
-            }
+            self.drawList(dc);
         }
 
         function drawList(dc as Dc) as Void {
+            dc.setColor(getTheme().ListBackground, getTheme().ListBackground);
+            dc.clear();
+
             if (self._mainLayer == null) {
                 return;
             }
-
-            dc.setColor(getTheme().ListBackground, getTheme().ListBackground);
-            dc.clear();
 
             self.validate(dc);
 
             if (self.Items.size() > 0) {
                 for (var i = 0; i < self.Items.size(); i++) {
-                    self.Items[i].draw(dc, self._scrollOffset);
+                    var item = self.Items[i];
+                    item.draw(dc, self._scrollOffset, self._selectedItem == item);
                 }
 
                 if (self.needScrollbar()) {
@@ -147,10 +144,17 @@ module Controls {
         }
 
         function addItem(title as String or Array<String>, substring as String or Array<String> or Null, identifier as Object?, icon as Number or BitmapResource or Null, position as Number) as Void {
-            self.Items.add(new Listitems.Item(self._mainLayer, title, substring, identifier, icon, self._verticalItemMargin, position, self._fontoverride));
+            self.Items.add(new Listitems.Item(self._mainLayer, title, substring, identifier, icon, null, position, self._fontoverride));
             self._needValidation = true;
             self._paddingTop = null;
             self._paddingBottom = null;
+            self.setSelectedItem(null);
+            for (var i = 0; i < self.Items.size(); i++) {
+                if (self.Items[i] instanceof Listitems.Title == false) {
+                    self.setSelectedItem(self.Items[i]);
+                    break;
+                }
+            }
         }
 
         function setTitle(title as String?) as Void {
@@ -177,6 +181,7 @@ module Controls {
         }
 
         function onScroll(delta as Number) as Void {
+            self.Interaction();
             if (delta == 0 || self._mainLayer == null) {
                 return;
             }
@@ -193,6 +198,7 @@ module Controls {
                 } else if (self._scrollOffset > self._viewHeight - self._mainLayer.getHeight()) {
                     self._scrollOffset = self._viewHeight - self._mainLayer.getHeight();
                 }
+                self.setCenterItemSelected();
             }
 
             if (startoffset != self._scrollOffset) {
@@ -200,13 +206,17 @@ module Controls {
             }
         }
 
-        function onListTap(position as Number, item as Item, doubletap as Boolean) as Void;
+        function onListitemTap(item as Item, doubletap as Boolean) as Void {
+            self.Interaction();
+            self.interactItem(item, doubletap);
+        }
 
         function onDoubleTap(x as Number, y as Number) as Boolean {
+            self.Interaction();
             for (var i = 0; i < self.Items.size(); i++) {
                 var item = self.Items[i];
-                if (item.Clicked(y)) {
-                    self.onListTap(i, item, true);
+                if (item.Clicked(y, self._scrollOffset)) {
+                    self.onListitemTap(item, true);
                     return true;
                 }
             }
@@ -214,10 +224,11 @@ module Controls {
         }
 
         function onTap(x as Number, y as Number) as Boolean {
+            self.Interaction();
             for (var i = 0; i < self.Items.size(); i++) {
                 var item = self.Items[i];
-                if (item.Clicked(y)) {
-                    self.onListTap(i, item, false);
+                if (item.Clicked(y, self._scrollOffset)) {
+                    self.onListitemTap(item, false);
                     return true;
                 }
             }
@@ -227,9 +238,6 @@ module Controls {
 
         function onSettingsChanged() as Void {}
 
-        /**
-         * user ineraction happend
-         */
         function Interaction() as Void {
             var inactivity = $.getApp().Inactivity;
             if (inactivity != null) {
@@ -237,7 +245,32 @@ module Controls {
             }
         }
 
+        function onKeyEnter() as Boolean {
+            self.Interaction();
+            if ($.TouchControls) {
+                return self.onKeyMenu();
+            } else if (self._selectedItem != null) {
+                return self.interactItem(self._selectedItem, true);
+            }
+            return false;
+        }
+
+        function onKeyMenu() as Boolean {
+            self.Interaction();
+            return false;
+        }
+
+        function onKeyEsc() as Boolean {
+            self.Interaction();
+            return false;
+        }
+
+        function goBack() {
+            WatchUi.popView(WatchUi.SLIDE_RIGHT);
+        }
+
         protected function moveIterator(delta as Number?) as Void {
+            self.Interaction();
             if (delta == null) {
                 self._snapPosition = 0;
             } else {
@@ -252,6 +285,7 @@ module Controls {
             }
 
             self.centerItem(self._snapPosition);
+            self.setSelectedItem(self.Items[self._snapPosition]);
         }
 
         private function getHeight() {
@@ -303,7 +337,7 @@ module Controls {
                 if (self.ScrollMode == SCROLL_SNAP && self.Items.size() > 0) {
                     self._paddingBottom = self._mainLayer.getHeight() / 2 - (self.Items[self.Items.size() - 1].getHeight(dc) / 2).toNumber();
                 } else {
-                    self._paddingBottom = self._verticalItemMargin;
+                    self._paddingBottom = 0;
                 }
             }
             return self._paddingBottom;
@@ -353,7 +387,31 @@ module Controls {
                 self._viewHeight = y + self.getPaddingBottom(dc);
                 self._needScrollbar = self._mainLayer.getHeight() < self._viewHeight;
                 self._needValidation = false;
+                self.setCenterItemSelected();
             }
+        }
+
+        protected function addSettingsButton() as Void {
+            self.Items.add(new Listitems.Button(self._mainLayer, Application.loadResource(Rez.Strings.StTitle), "settings", ($.screenHeight * 0.1).toNumber(), false));
+        }
+
+        protected function interactItem(item as Listitems.Item, doubletap as Boolean) as Boolean {
+            return false;
+        }
+
+        private function setSelectedItem(item as Listitems.Item?) as Void {
+            self._selectedItem = item;
+        }
+
+        protected function setCenterItemSelected() as Void {
+            var centerY = $.screenHeight / 2;
+            for (var i = 0; i < self.Items.size(); i++) {
+                if (self.Items[i].Clicked(centerY, self._scrollOffset)) {
+                    self.setSelectedItem(self.Items[i]);
+                    return;
+                }
+            }
+            self.setSelectedItem(null);
         }
     }
 }

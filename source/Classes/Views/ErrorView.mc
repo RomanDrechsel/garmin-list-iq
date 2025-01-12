@@ -6,7 +6,7 @@ import Toybox.Lang;
 import Toybox.Application;
 
 module Views {
-    class ErrorView extends Controls.CustomView {
+    class ErrorView extends CustomView {
         private var _labelMessage as MultilineLabel? = null;
         private var _labelError as MultilineLabel? = null;
         private var _errorMsg as Lang.ResourceId? = null;
@@ -26,6 +26,23 @@ module Views {
         }
 
         function onTap(x as Number, y as Number) as Boolean {
+            CustomView.onTap(x, y);
+            self.sendReport();
+        }
+
+        function onKeyEnter() as Boolean {
+            CustomView.onKeyEnter();
+            self.sendReport();
+            return true;
+        }
+
+        function onKeyEsc() as Boolean {
+            CustomView.onKeyEsc();
+            self.goBack();
+            return true;
+        }
+
+        private function sendReport() as Void {
             var app = $.getApp();
             if (app.Phone != null && app.Debug != null) {
                 var resp = ({}) as Dictionary<String, String or Number or Array<String> >;
@@ -43,7 +60,7 @@ module Views {
                 app.Phone.SendToPhone(resp);
                 Debug.Log("Send error report code 0x" + self._errorCode.format("%04x") + " to smartphone");
                 Helper.ToastUtil.Toast(Rez.Strings.ErrReport, Helper.ToastUtil.ATTENTION);
-                WatchUi.popView(WatchUi.SLIDE_BLINK);
+                self.goBack();
             }
         }
 
@@ -53,22 +70,32 @@ module Views {
             }
 
             if (self._errorMsg != null) {
-                var errMsg = new Listitems.Item(self._mainLayer, Application.loadResource(self._errorMsg), null, null, null, self._verticalItemMargin, 0, null);
+                var errMsg = new Listitems.Item(self._mainLayer, Application.loadResource(self._errorMsg), null, null, null, null, 0, null);
                 errMsg.DrawLine = false;
+                errMsg.isSelectable = false;
                 errMsg.TitleJustification = Graphics.TEXT_JUSTIFY_CENTER;
                 self.Items.add(errMsg);
             }
             if (self._errorCode != null) {
-                var errCode = new Listitems.Item(self._mainLayer, "0x" + self._errorCode.format("%04x"), null, null, null, self._verticalItemMargin, 1, Helper.Fonts.Big());
+                var errCode = new Listitems.Item(self._mainLayer, "0x" + self._errorCode.format("%04x"), null, null, null, null, 1, Helper.Fonts.Big());
                 errCode.DrawLine = false;
+                errCode.isSelectable = false;
                 errCode.TitleJustification = Graphics.TEXT_JUSTIFY_CENTER;
                 self.Items.add(errCode);
             }
 
-            var hint = new Listitems.Item(self._mainLayer, null, Application.loadResource(Rez.Strings.ErrHint), null, null, self._verticalItemMargin, 2, null);
+            var hint = new Listitems.Item(self._mainLayer, null, Application.loadResource(Rez.Strings.ErrHint), null, null, null, 2, null);
             hint.DrawLine = false;
+            hint.isSelectable = false;
             hint.SubtitleJustification = Graphics.TEXT_JUSTIFY_CENTER;
             self.Items.add(hint);
+
+            var txt = $.TouchControls ? Application.loadResource(Rez.Strings.ErrHintTouch) : Application.loadResource(Rez.Strings.ErrHintBtn);
+            var hint2 = new Listitems.Item(self._mainLayer, null, txt, null, null, null, 3, null);
+            hint2.DrawLine = false;
+            hint2.isSelectable = false;
+            hint2.SubtitleJustification = Graphics.TEXT_JUSTIFY_CENTER;
+            self.Items.add(hint2);
         }
     }
 }

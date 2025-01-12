@@ -6,7 +6,7 @@ import Controls.Listitems;
 import Helper;
 
 module Views {
-    class SettingsThemeView extends Controls.CustomView {
+    class SettingsThemeView extends CustomView {
         private var _themes as Dictionary<Number, String> = {};
 
         function initialize() {
@@ -25,21 +25,13 @@ module Views {
             self.loadThemes();
         }
 
-        function onUpdate(dc as Dc) as Void {
-            CustomView.onUpdate(dc);
-
-            dc.setColor(getTheme().BackgroundColor, getTheme().BackgroundColor);
-            dc.clear();
-            self.drawList(dc);
-        }
-
         function onSettingsChanged() as Void {
             CustomView.onSettingsChanged();
             self.loadThemes();
             WatchUi.requestUpdate();
         }
 
-        function onListTap(position as Number, item as Item, doubletap as Boolean) as Void {
+        protected function interactItem(item as Listitems.Item, doubletap as Boolean) as Void {
             if ($.getApp().ListsManager == null) {
                 return;
             }
@@ -49,7 +41,7 @@ module Views {
                 var name = self._themes.get(item.BoundObject);
                 if (name != null) {
                     Helper.Properties.Store(Helper.Properties.THEME, item.BoundObject);
-                    $.getApp().onSettingsChanged();
+                    $.getApp().triggerOnSettingsChanged();
                 }
             }
         }

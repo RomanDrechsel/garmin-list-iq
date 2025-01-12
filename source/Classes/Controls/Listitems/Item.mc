@@ -15,6 +15,7 @@ module Controls {
             var BoundObject as Object? = null;
             var ItemPosition as Number = -1;
             var DrawLine as Boolean = true;
+            var isSelectable as Boolean = true;
 
             protected static var _horizonalPaddingFactor = 0.05;
             protected static var _iconPaddingFactor = 0.3;
@@ -24,20 +25,25 @@ module Controls {
             protected var _color as ColorType;
             protected var _colorSub as ColorType;
             protected var _verticalMargin as Number = 0;
+            protected var _verticalPadding as Number;
             protected var _icon as String or ViewItemIcon or Null = null;
             protected var _listY as Number? = null;
             protected var _height as Number? = null;
-            protected var _viewportY as Number? = null;
             protected var _layer as LayerDef? = null;
             protected var _textOffsetX as Number = 0;
 
-            function initialize(layer as LayerDef?, title as String or Array<String> or Null, subtitle as String or Array<String> or Null, obj as Object?, icon as Number or BitmapResource or Null, vert_margin as Number, position as Number, fontoverride as FontType?) {
+            function initialize(layer as LayerDef?, title as String or Array<String> or Null, subtitle as String or Array<String> or Null, obj as Object?, icon as Number or BitmapResource or Null, vert_margin as Number?, position as Number, fontoverride as FontType?) {
                 self._font = fontoverride != null ? fontoverride : Helper.Fonts.Normal();
                 self._color = getTheme().MainColor;
                 self._colorSub = getTheme().SecondColor;
                 self.ItemPosition = position;
                 self._layer = layer;
-                self._verticalMargin = vert_margin;
+                if (vert_margin != null) {
+                    self._verticalMargin = vert_margin;
+                } else {
+                    self._verticalMargin = ($.screenHeight * 0.02).toNumber();
+                }
+                self._verticalPadding = ($.screenHeight * 0.03).toNumber();
                 self.Title = title;
                 self.Subtitle = subtitle;
                 self.BoundObject = obj;
@@ -46,18 +52,30 @@ module Controls {
             }
 
             /** returns height of the item */
-            function draw(dc as Dc, yOffset as Number) as Number {
+            function draw(dc as Dc, scrollOffset as Number, isSelected as Boolean) as Number {
                 if (self._layer == null) {
                     return 0;
                 }
                 self.validate(dc);
-                var viewport_y = self._listY - yOffset + self._layer.getY();
-                self._viewportY = viewport_y;
-                if (self.isVisible() == false) {
+                var viewport_y = self._listY - scrollOffset + self._layer.getY();
+                if (self.isVisible(scrollOffset) == false) {
                     return self.getHeight(dc);
                 }
 
+                var viewport_yTop = viewport_y;
                 viewport_y += self._verticalMargin;
+
+                if (isSelected && self.isSelectable) {
+                    self.drawSelectedBackground(dc, viewport_y);
+                }
+
+                //Debug.Box(dc, 0, viewport_y - self._verticalMargin, dc.getWidth(), 1, Graphics.COLOR_RED);
+                //Debug.Box(dc, 0, viewport_y, dc.getWidth(), 1, Graphics.COLOR_BLUE);
+
+                viewport_y += self._verticalPadding;
+
+                //Debug.Box(dc, 0, viewport_y, dc.getWidth(), 1, Graphics.COLOR_BLUE);
+
                 var hor_padding = self._layer.getWidth() * self._horizonalPaddingFactor;
                 var x = self._layer.getX() + hor_padding;
 
@@ -79,11 +97,17 @@ module Controls {
                     viewport_y += self.Subtitle.drawText(dc, x, viewport_y, self._colorSub, self.SubtitleJustification);
                 }
 
+                //Debug.Box(dc, 0, viewport_y, dc.getWidth(), 1, Graphics.COLOR_BLUE);
+                viewport_y += self._verticalPadding;
+                //Debug.Box(dc, 0, viewport_y, dc.getWidth(), 1, Graphics.COLOR_BLUE);
+
                 if (self.DrawLine == true) {
                     viewport_y = self.drawLine(dc, viewport_y);
                 }
 
-                self._height = viewport_y - self._viewportY;
+                viewport_y += self._verticalMargin;
+                //Debug.Box(dc, 0, viewport_y, dc.getWidth(), 1, Graphics.COLOR_YELLOW);
+                self._height = viewport_y - viewport_yTop;
 
                 return self._height;
             }
@@ -105,7 +129,7 @@ module Controls {
                 if (dc != null) {
                     self.validate(dc);
                     if (self._height == null || self._height <= 0) {
-                        self._height = self._verticalMargin;
+                        self._height = self._verticalMargin + self._verticalPadding;
                         if (self.Title != null) {
                             self._height += self.Title.getHeight(dc);
                         }
@@ -113,6 +137,7 @@ module Controls {
                             self._height += Graphics.getFontAscent(Helper.Fonts.Small()) / 8;
                             self._height += self.Subtitle.getHeight(dc);
                         }
+                        self._height += self._verticalMargin + self._verticalPadding;
                         self._height += self.getLineHeight();
                     }
                     return self._height;
@@ -135,13 +160,14 @@ module Controls {
                 return self._icon;
             }
 
-            function Clicked(tapy as Number) as Boolean {
-                if (self._viewportY == null || self._height == null || self.isVisible() == false) {
+            function Clicked(tapy as Number, scrollOffset as Number) as Boolean {
+                if (self._height == null || self.isVisible(scrollOffset) == false) {
                     //not visible or not validated
                     return false;
                 }
 
-                if (tapy >= self._viewportY && tapy <= self._viewportY + self._height) {
+                var viewportY = self._listY - scrollOffset;
+                if (tapy >= viewportY && tapy <= viewportY + self._height) {
                     return true;
                 }
 
@@ -157,18 +183,22 @@ module Controls {
                 self._layer = layer;
             }
 
-            protected function isVisible() as Boolean {
-                if (self._viewportY == null || self._height == null) {
+            protected function isVisible(scrollOffset as Number) as Boolean {
+                if (self._height == null) {
                     return true;
                 }
                 if (self._layer == null) {
                     return false;
                 }
+                var viewportY = self.getViewportYTop(scrollOffset);
+                if (viewportY == null) {
+                    return true;
+                }
 
-                if (self._viewportY + self._height <= 0) {
+                if (viewportY + self._height <= 0) {
                     //above the top edge of the display
                     return false;
-                } else if (self._viewportY > self._layer.getDc().getHeight()) {
+                } else if (viewportY > self._layer.getDc().getHeight()) {
                     //below the bottom edge of the display
                     return false;
                 } else {
@@ -177,15 +207,15 @@ module Controls {
             }
 
             protected function drawLine(dc as Dc, y as Number) as Number {
-                var line = getTheme().LineBitmap;
+                var line = $.getTheme().LineBitmap;
                 if (line != null) {
                     y += self._verticalMargin;
                     var x = (dc.getWidth() - line.getWidth()) / 2;
                     dc.drawBitmap(x, y, line);
                     y += line.getHeight();
-                } else if (getTheme().LineSeparatorColor != null) {
+                } else if ($.getTheme().LineSeparatorColor != null) {
                     y += self._verticalMargin;
-                    dc.setColor(getTheme().LineSeparatorColor, Graphics.COLOR_TRANSPARENT);
+                    dc.setColor($.getTheme().LineSeparatorColor, Graphics.COLOR_TRANSPARENT);
                     dc.setPenWidth(2);
                     dc.drawLine(0, y, dc.getWidth(), y);
                     y += 2;
@@ -255,6 +285,21 @@ module Controls {
                 } else {
                     return false;
                 }
+            }
+
+            protected function drawSelectedBackground(dc as Dc, viewport_y as Number) as Void {
+                if (!$.TouchControls) {
+                    var height = self.getHeight(dc) - 2 * self._verticalMargin - self.getLineHeight();
+                    dc.setColor($.getTheme().SelectedItemBackground, Graphics.COLOR_TRANSPARENT);
+                    dc.fillRectangle(0, viewport_y, dc.getWidth(), height);
+                }
+            }
+
+            protected function getViewportYTop(scrollOffset as Number) as Number? {
+                if (self._listY == null) {
+                    return null;
+                }
+                return self._listY - scrollOffset;
             }
         }
     }

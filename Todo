@@ -6,7 +6,7 @@ adb -d forward tcp:7381 tcp:7381
 
 soft-hyphen: \u00AD
 
-TEST: Glance View
-WIP: close app after x minutes of inactivity
-WIP: Properties Page: add inactivity timer
-WIP: translate inactivity locales
+WIP: Button controlling
+TODO: low depth screens
+TODO: Translate ErrHintTouch/ErrHintBtn
+TODO: ist LayerDef.Dc wirklich nötig?!

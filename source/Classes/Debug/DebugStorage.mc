@@ -116,5 +116,5 @@ module Debug {
         dc.drawRectangle(x, y, w, h);
     }
     (:release,:glance)
-    function Box(dc as Dc, x as Number, y as Number, w as Number, h as Number, c as Number) {}
+    function Box(dc as Dc, x as Number, y as Number, w as Number, h as Number, c as ColorValue?) {}
 }

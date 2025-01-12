@@ -29,7 +29,7 @@ class ListsApp extends Application.AppBase {
         self.Inactivity = new Helper.Inactivity();
 
         var listview = new Views.ListsSelectView(true);
-        return [listview, new Views.ListsSelectViewDelegate(listview)] as Array<WatchUi.Views or InputDelegates>;
+        return [listview, new Views.CustomViewDelegate(listview)];
     }
 
     function getGlanceView() as Array<WatchUi.GlanceView or WatchUi.GlanceViewDelegate>? {
@@ -83,6 +83,8 @@ class ListsApp extends Application.AppBase {
         var ret = [] as Array<String>;
         ret.add("Version: " + Application.Properties.getValue("appVersion"));
         ret.add("Display: " + screenShape);
+        ret.add("Touchscreen: " + settings.isTouchScreen);
+        ret.add("TouchControls: " + $.TouchControls);
         ret.add("Firmware: " + settings.firmwareVersion);
         ret.add("Monkey Version: " + settings.monkeyVersion);
         ret.add("Memory: " + stats.usedMemory + " / " + stats.totalMemory);
@@ -90,16 +92,18 @@ class ListsApp extends Application.AppBase {
         ret.add("Lists in Storage: " + self.ListsManager.GetLists().size());
         return ret;
     }
+
+    function openGooglePlay() as Void {
+        Communications.openWebPage("https://play.google.com/store/apps/details?id=de.romandrechsel.lists", null, null);
+    }
 }
 
 var isRoundDisplay = System.getDeviceSettings().screenShape == System.SCREEN_SHAPE_ROUND;
+var TouchControls = System.getDeviceSettings().isTouchScreen;
+var screenHeight = System.getDeviceSettings().screenHeight;
 
 function getApp() as ListsApp {
     return Application.getApp() as ListsApp;
-}
-
-function getAppStore() as String {
-    return "https://play.google.com/store/apps/details?id=de.romandrechsel.lists";
 }
 
 var isGlanceView = false;

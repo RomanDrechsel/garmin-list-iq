@@ -8,6 +8,7 @@ module Themes {
             self.DisabledColor = 0x808080;
 
             self.ListBackground = 0x383838;
+            self.SelectedItemBackground = 0x4f4f4f;
             self.BackgroundColor = 0x282828;
             self.ButtonBorder = 0x12a1ff;
             self.LineSeparatorColor = 0x667cff;

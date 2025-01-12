@@ -14,6 +14,8 @@ module Themes {
 
         var ListBackground = 0x383838;
 
+        var SelectedItemBackground = 0x4f4f4f;
+
         var ScrollbarBackground = 0x525252;
         var ScrollbarThumbColor = 0x999999;
         var ScrollbarThumbBorder = 0xdcdcdc;

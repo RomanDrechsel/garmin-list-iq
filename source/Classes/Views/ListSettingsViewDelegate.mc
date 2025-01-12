@@ -3,17 +3,9 @@ import Toybox.WatchUi;
 import Controls;
 
 module Views {
-    class ListSettingsViewDelegate extends Controls.CustomViewDelegate {
-        function initialize(view as Controls.CustomView) {
+    class ListSettingsViewDelegate extends CustomViewDelegate {
+        function initialize(view as CustomView) {
             CustomViewDelegate.initialize(view);
-        }
-
-        function onKey(keyEvent) as Boolean {
-            if (keyEvent.getKey() == WatchUi.KEY_ENTER || keyEvent.getKey() == WatchUi.KEY_MENU) {
-                WatchUi.popView(WatchUi.SLIDE_RIGHT);
-                return true;
-            }
-            return false;
         }
 
         function onSwipe(swipeEvent as SwipeEvent) as Boolean {

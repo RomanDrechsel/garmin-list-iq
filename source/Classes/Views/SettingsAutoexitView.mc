@@ -6,7 +6,7 @@ import Controls.Listitems;
 import Helper;
 
 module Views {
-    class SettingsAutoexitView extends Controls.CustomView {
+    class SettingsAutoexitView extends CustomView {
         function onLayout(dc as Dc) as Void {
             CustomView.onLayout(dc);
             self.loadList();
@@ -17,22 +17,14 @@ module Views {
             self.loadList();
         }
 
-        function onUpdate(dc as Dc) as Void {
-            CustomView.onUpdate(dc);
-
-            dc.setColor(getTheme().BackgroundColor, getTheme().BackgroundColor);
-            dc.clear();
-            self.drawList(dc);
-        }
-
-        function onListTap(position as Number, item as Item, doubletap as Boolean) as Void {
+        protected function interactItem(item as Listitems.Item, doubletap as Boolean) as Void {
             var prop = Helper.Properties.Get(Helper.Properties.AUTOEXIT, 0);
             if (prop != item.BoundObject) {
                 Helper.Properties.Store(Helper.Properties.AUTOEXIT, item.BoundObject);
                 if ($.getApp().ListsManager != null) {
                     $.getApp().triggerOnSettingsChanged();
                 }
-                WatchUi.popView(WatchUi.SLIDE_RIGHT);
+                self.goBack();
             }
         }
 
@@ -75,7 +67,7 @@ module Views {
                         txt = Application.loadResource(Rez.Strings.StAutoExit60);
                         break;
                 }
-                var item = new Listitems.Item(self._mainLayer, txt, null, time, prop == time ? itemIconDone : itemIcon, self._verticalItemMargin, i, null);
+                var item = new Listitems.Item(self._mainLayer, txt, null, time, prop == time ? itemIconDone : itemIcon, null, i, null);
                 self.Items.add(item);
             }
 

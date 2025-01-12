@@ -8,9 +8,10 @@ module Controls {
                 Item.initialize(layer, title, null, null, null, 10, -1, null);
                 self.TitleJustification = Graphics.TEXT_JUSTIFY_CENTER;
                 self.DrawLine = false;
+                self.isSelectable = false;
             }
 
-            function Clicked(tapy as Number) as Boolean {
+            function Clicked(tapy as Number, scrollOffset as Number) as Boolean {
                 return false;
             }
         }

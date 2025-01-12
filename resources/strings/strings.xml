@@ -64,7 +64,9 @@
     <string id="StResetWeekly">Weekly</string>
     <string id="StResetMonthly">Monthly</string>
 
-    <string id="ErrHint">Please report the error to me on your smartphone so that I can help you further.\n\n(Tap here to open the contact option in the app on your smartphone)</string>
+    <string id="ErrHint">Please report the error to me on your smartphone so that I can help you further.</string>
+    <string id="ErrHintTouch">(Tap here to open the contact option in the app on your smartphone)</string>
+    <string id="ErrHintBtn">(Press Enter to open the contact option in the app on your smartphone)</string>
     <string id="ErrReport">Please open smartphone</string>
     <string id="ErrListRec">An error occurred while transferring the list:</string>
     <string id="ErrListDel">An error occurred while deleting the list:</string>

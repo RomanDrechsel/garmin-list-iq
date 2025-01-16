@@ -136,7 +136,7 @@ module Views {
         function openSettings() as Void {
             if (self._listUuid != null) {
                 var view = new ListSettingsView(self._listUuid);
-                WatchUi.pushView(view, new ListSettingsViewDelegate(view), WatchUi.SLIDE_LEFT);
+                WatchUi.pushView(view, new CustomViewDelegate(view), WatchUi.SLIDE_LEFT);
             }
         }
 
@@ -222,12 +222,13 @@ module Views {
 
                         if (count <= 0) {
                             self._listOptimized = true;
-                            var item = new Listitems.Item(self._mainLayer, Application.loadResource(Rez.Strings.ListEmpty), null, null, null, null, 0, null);
-                            item.TitleJustification = Graphics.TEXT_JUSTIFY_CENTER;
+                            var item = new Listitems.Item(self._mainLayer, null, Application.loadResource(Rez.Strings.ListEmpty), null, null, null, 0, null);
+                            item.SubtitleJustification = Graphics.TEXT_JUSTIFY_CENTER;
                             item.isSelectable = false;
                             item.DrawLine = false;
                             self.Items.add(item);
-                        } else if (!$.TouchControls) {
+                        }
+                        if (!$.TouchControls) {
                             self.addSettingsButton();
                         }
                     }
@@ -247,6 +248,7 @@ module Views {
                     }
                 }
             }
+            self._needValidation = true;
             if (initialize == false) {
                 WatchUi.requestUpdate();
             }

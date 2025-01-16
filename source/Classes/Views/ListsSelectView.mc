@@ -104,7 +104,7 @@ module Views {
                     if (substring.length() > 0) {
                         substring += "\n";
                     }
-                    substring += Helper.DateUtil.toString(date, null);
+                    substring += Helper.DateUtil.DatetoString(date, null);
                 }
                 self.addItem(list.get("name") as String, substring, list.get("key") as String, self._listIconCode, i);
             }
@@ -126,7 +126,7 @@ module Views {
 
         private function noLists() as Void {
             self.Items = [] as Array<Item>;
-            var item = new Listitems.Item(self._mainLayer, Application.loadResource(Rez.Strings.NoLists), null, "store", null, null, 0, null);
+            var item = new Listitems.Item(self._mainLayer, Application.loadResource(Rez.Strings.NoLists), null, "store", null, ($.screenHeight * 0.1).toNumber(), 0, null);
             item.DrawLine = false;
             item.TitleJustification = Graphics.TEXT_JUSTIFY_CENTER;
             item.isSelectable = false;
@@ -134,13 +134,21 @@ module Views {
 
             var init = Helper.Properties.Get(Helper.Properties.INIT, 0);
             if (init < 1) {
-                item = new Listitems.Item(self._mainLayer, null, Application.loadResource(Rez.Strings.NoListsLink), "store", null, ($.screenHeight * 0.03).toNumber(), 0, null);
+                var txtRez;
+                if (System.getDeviceSettings().isTouchScreen) {
+                    txtRez = Rez.Strings.NoListsLink;
+                } else {
+                    txtRez = Rez.Strings.NoListsLinkBtn;
+                }
+                item = new Listitems.Item(self._mainLayer, null, Application.loadResource(txtRez), "store", null, null, 0, null);
                 item.DrawLine = false;
                 item.isSelectable = false;
                 item.SubtitleJustification = Graphics.TEXT_JUSTIFY_CENTER;
                 self.Items.add(item);
             }
-            self.addSettingsButton();
+            if (!$.TouchControls) {
+                self.addSettingsButton();
+            }
             self.moveIterator(null);
             self._needValidation = true;
         }
@@ -149,7 +157,9 @@ module Views {
             if (item.BoundObject instanceof String) {
                 if (item.BoundObject.equals("settings")) {
                     self.openSettings();
-                } else if (!item.BoundObject.equals("store")) {
+                } else if (item.BoundObject.equals("store")) {
+                    $.getApp().openGooglePlay();
+                } else {
                     self.GotoList(item.BoundObject, -1);
                 }
             }

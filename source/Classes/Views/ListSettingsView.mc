@@ -28,15 +28,6 @@ module Views {
 
         function onLayout(dc as Dc) {
             CustomView.onLayout(dc);
-            self.loadItems();
-        }
-
-        function onUpdate(dc as Dc) {
-            CustomView.onUpdate(dc);
-
-            dc.setColor(getTheme().BackgroundColor, getTheme().BackgroundColor);
-            dc.clear();
-            self.drawList(dc);
         }
 
         function onShow() as Void {
@@ -44,6 +35,7 @@ module Views {
             if ($.getApp().ListsManager != null) {
                 $.getApp().ListsManager.OnListsChanged.add(self);
             }
+            self.loadItems(false);
         }
 
         function onHide() as Void {
@@ -53,7 +45,7 @@ module Views {
             }
         }
 
-        function onListTap(position as Number, item as Item, doubletab as Boolean) as Void {
+        protected function interactItem(item as Listitems.Item, doubletap as Boolean) as Void {
             if ($.getApp().ListsManager == null) {
                 return;
             }
@@ -88,34 +80,37 @@ module Views {
 
         function deleteList() as Void {
             if ($.getApp().ListsManager != null) {
-                getApp().ListsManager.deleteList(self.ListUuid, true);
+                $.getApp().ListsManager.deleteList(self.ListUuid, true);
                 $.getApp().GlobalStates.put("movetop", true);
             }
+            $.getApp().GlobalStates.put("startpage", true);
             WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
             WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
         }
 
         function onSettingsChanged() as Void {
             CustomView.onSettingsChanged();
-            self.loadItems();
+            self.loadItems(true);
         }
 
         function onListsChanged(index as ListIndex) as Void {
             self.readList();
-            self.loadItems();
+            self.loadItems(true);
         }
 
         function onKeyEsc() as Boolean {
+            CustomView.onKeyEsc();
             self.goBack();
             return true;
         }
 
         function onKeyMenu() as Boolean {
+            CustomView.onKeyMenu();
             self.goBack();
             return true;
         }
 
-        private function loadItems() as Void {
+        private function loadItems(request_update as Boolean) as Void {
             self.Items = [];
             self.setTitle(Application.loadResource(Rez.Strings.StTitle));
 
@@ -150,7 +145,10 @@ module Views {
                 self.Items[self.Items.size() - 1].DrawLine = false;
             }
 
-            WatchUi.requestUpdate();
+            self._needValidation = true;
+            if (request_update) {
+                WatchUi.requestUpdate();
+            }
         }
 
         private function readList() as Void {

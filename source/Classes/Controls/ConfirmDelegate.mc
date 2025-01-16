@@ -10,10 +10,11 @@ module Controls {
             self._onYes = onYes;
         }
 
-        function onResponse(response) as Void {
+        function onResponse(response as Lang.Number) as Lang.Boolean {
             if (response == WatchUi.CONFIRM_YES && self._onYes != null) {
                 self._onYes.invoke();
             }
+            return true;
         }
     }
 }

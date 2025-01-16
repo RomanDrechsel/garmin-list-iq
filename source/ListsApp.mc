@@ -24,6 +24,12 @@ class ListsApp extends Application.AppBase {
         self.Debug = new Debug.DebugStorage();
         Debug.Log("App started (" + appVersion + ")");
 
+        if (System.getDeviceSettings().isTouchScreen) {
+            $.TouchControls = !Helper.Properties.Get(Helper.Properties.BTNCTRL, System.getDeviceSettings().isTouchScreen);
+        } else {
+            $.TouchControls = false;
+        }
+
         self.ListsManager = new ListsManager();
         self.Phone = new Comm.PhoneCommunication();
         self.Inactivity = new Helper.Inactivity();
@@ -47,6 +53,12 @@ class ListsApp extends Application.AppBase {
             self.Debug.onSettingsChanged();
         }
         Themes.ThemesLoader.loadTheme();
+
+        if (System.getDeviceSettings().isTouchScreen) {
+            $.TouchControls = !Helper.Properties.Get(Helper.Properties.BTNCTRL, System.getDeviceSettings().isTouchScreen);
+        } else {
+            $.TouchControls = false;
+        }
 
         Debug.Log("Settings changed");
         if (self.onSettingsChangedListeners instanceof Array) {
@@ -99,7 +111,7 @@ class ListsApp extends Application.AppBase {
 }
 
 var isRoundDisplay = System.getDeviceSettings().screenShape == System.SCREEN_SHAPE_ROUND;
-var TouchControls = System.getDeviceSettings().isTouchScreen;
+var TouchControls = false;
 var screenHeight = System.getDeviceSettings().screenHeight;
 
 function getApp() as ListsApp {

@@ -15,6 +15,7 @@
 
     <string id="NoLists">No lists found!</string>
     <string id="NoListsLink">Double-Tap to open Android PlayStore on your Phone</string>
+    <string id="NoListsLinkBtn">Press enter to open Android PlayStore on your Phone</string>
 
     <string id="ListNotFound">List not found!</string>
     <string id="ListEmpty">The list is empty.</string>
@@ -36,6 +37,7 @@
     <string id="StAutoExit30">after 30 minutes</string>
     <string id="StAutoExit60">after 60 minutes</string>
     <string id="StAutoExitOff">disabled</string>
+    <string id="StBtnCtrl">Hardware button controls</string>
 
     <string id="StDelAll">Delete all lists</string>
     <string id="StDelAllConfirm">Delete all lists?</string>

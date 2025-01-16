@@ -5,7 +5,9 @@ import Toybox.Application;
 module Themes {
     class ThemeSettingsBase {
         var MainColor = 0xd7d7d7;
+        var MainColorSelected = 0xd7d7d7;
         var SecondColor = 0xbdbdbd;
+        var SecondColorSelected = 0xbdbdbd;
         var DisabledColor = 0x5e5e5e;
 
         var BackgroundColor = 0x383838;
@@ -14,7 +16,7 @@ module Themes {
 
         var ListBackground = 0x383838;
 
-        var SelectedItemBackground = 0x4f4f4f;
+        var SelectedItemBackground = 0x595959;
 
         var ScrollbarBackground = 0x525252;
         var ScrollbarThumbColor = 0x999999;

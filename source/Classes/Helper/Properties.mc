@@ -10,6 +10,7 @@ module Helper {
         public enum EProps {
             INIT = "Init",
             THEME = "Theme",
+            BTNCTRL = "ButtonControls",
             LISTMOVEDOWN = "ListMoveDown",
             DOUBLETAPFORDONE = "DoubleTapForDone",
             SHOWNOTES = "ShowNotes",

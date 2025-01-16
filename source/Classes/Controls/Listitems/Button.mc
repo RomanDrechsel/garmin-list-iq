@@ -35,7 +35,7 @@ module Controls {
                 var viewport_yTop = viewport_y;
                 viewport_y += self._verticalMargin;
 
-                if (isSelected && self.isSelectable) {
+                if (isSelected && self.isSelectable && !$.TouchControls) {
                     self.drawSelectedBackground(dc, viewport_y);
                 }
 
@@ -58,7 +58,7 @@ module Controls {
                 dc.drawRoundedRectangle(x, viewport_y, button_width, button_height, padding * 0.5);
 
                 //text
-                self.Title.drawText(dc, x + padding, viewport_y + padding, self._color, Graphics.TEXT_JUSTIFY_CENTER);
+                self.Title.drawText(dc, x + padding, viewport_y + padding, $.getTheme().MainColor, Graphics.TEXT_JUSTIFY_CENTER);
                 viewport_y += button_height;
 
                 //Debug.Box(dc, 0, viewport_y, dc.getWidth(), 1, Graphics.COLOR_BLUE);

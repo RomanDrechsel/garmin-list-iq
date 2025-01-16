@@ -16,14 +16,13 @@ module Controls {
             var ItemPosition as Number = -1;
             var DrawLine as Boolean = true;
             var isSelectable as Boolean = true;
+            var isDisabled as Boolean = false;
 
             protected static var _horizonalPaddingFactor = 0.05;
             protected static var _iconPaddingFactor = 0.3;
 
             protected var _needValidation as Boolean = true;
             protected var _font as FontType;
-            protected var _color as ColorType;
-            protected var _colorSub as ColorType;
             protected var _verticalMargin as Number = 0;
             protected var _verticalPadding as Number;
             protected var _icon as String or ViewItemIcon or Null = null;
@@ -34,8 +33,6 @@ module Controls {
 
             function initialize(layer as LayerDef?, title as String or Array<String> or Null, subtitle as String or Array<String> or Null, obj as Object?, icon as Number or BitmapResource or Null, vert_margin as Number?, position as Number, fontoverride as FontType?) {
                 self._font = fontoverride != null ? fontoverride : Helper.Fonts.Normal();
-                self._color = getTheme().MainColor;
-                self._colorSub = getTheme().SecondColor;
                 self.ItemPosition = position;
                 self._layer = layer;
                 if (vert_margin != null) {
@@ -53,7 +50,7 @@ module Controls {
 
             /** returns height of the item */
             function draw(dc as Dc, scrollOffset as Number, isSelected as Boolean) as Number {
-                if (self._layer == null) {
+                if (self._layer == null || self._listY == null) {
                     return 0;
                 }
                 self.validate(dc);
@@ -65,7 +62,14 @@ module Controls {
                 var viewport_yTop = viewport_y;
                 viewport_y += self._verticalMargin;
 
-                if (isSelected && self.isSelectable) {
+                var specialColor = isSelected && self.isSelectable && !$.TouchControls;
+                var color = specialColor ? $.getTheme().MainColorSelected : $.getTheme().MainColor;
+                if (self.isDisabled) {
+                    color = $.getTheme().DisabledColor;
+                }
+                var colorSub = specialColor ? $.getTheme().SecondColorSelected : $.getTheme().SecondColor;
+
+                if (specialColor) {
                     self.drawSelectedBackground(dc, viewport_y);
                 }
 
@@ -81,7 +85,7 @@ module Controls {
 
                 if (self._icon instanceof String && self._icon.length() > 0) {
                     var iconoffsety = (Graphics.getFontHeight(self._font) - dc.getFontHeight(Helper.Fonts.Icons())) / 2;
-                    dc.setColor(getTheme().MainColor, Graphics.COLOR_TRANSPARENT);
+                    dc.setColor(color, Graphics.COLOR_TRANSPARENT);
                     dc.drawText(x, viewport_y + iconoffsety, Helper.Fonts.Icons(), self._icon, Graphics.TEXT_JUSTIFY_LEFT);
                 } else if (self.isBitmap(self._icon)) {
                     var iconoffsety = (Graphics.getFontHeight(self._font) - self._icon.getHeight()) / 2;
@@ -89,12 +93,12 @@ module Controls {
                 }
 
                 if (self.Title instanceof MultilineLabel) {
-                    viewport_y += self.Title.drawText(dc, x + self.getIconWidth(dc), viewport_y, self._color, self.TitleJustification);
+                    viewport_y += self.Title.drawText(dc, x + self.getIconWidth(dc), viewport_y, color, self.TitleJustification);
                 }
 
                 if (self.Subtitle instanceof MultilineLabel) {
                     viewport_y += Graphics.getFontAscent(Helper.Fonts.Small()) / 8; //little space between title and subtitle
-                    viewport_y += self.Subtitle.drawText(dc, x, viewport_y, self._colorSub, self.SubtitleJustification);
+                    viewport_y += self.Subtitle.drawText(dc, x, viewport_y, colorSub, self.SubtitleJustification);
                 }
 
                 //Debug.Box(dc, 0, viewport_y, dc.getWidth(), 1, Graphics.COLOR_BLUE);
@@ -118,11 +122,6 @@ module Controls {
 
             function getListY() as Number {
                 return self._listY != null ? self._listY : 0;
-            }
-
-            function setColor(color as ColorType?) {
-                self._color = color != null ? color : getTheme().MainColor;
-                self._colorSub = color != null ? color : getTheme().SecondColor;
             }
 
             function getHeight(dc as Dc?) as Number {
@@ -166,7 +165,7 @@ module Controls {
                     return false;
                 }
 
-                var viewportY = self._listY - scrollOffset;
+                var viewportY = self._listY - scrollOffset + self._layer.getY();
                 if (tapy >= viewportY && tapy <= viewportY + self._height) {
                     return true;
                 }
@@ -288,11 +287,9 @@ module Controls {
             }
 
             protected function drawSelectedBackground(dc as Dc, viewport_y as Number) as Void {
-                if (!$.TouchControls) {
-                    var height = self.getHeight(dc) - 2 * self._verticalMargin - self.getLineHeight();
-                    dc.setColor($.getTheme().SelectedItemBackground, Graphics.COLOR_TRANSPARENT);
-                    dc.fillRectangle(0, viewport_y, dc.getWidth(), height);
-                }
+                var height = self.getHeight(dc) - 2 * self._verticalMargin - self.getLineHeight();
+                dc.setColor($.getTheme().SelectedItemBackground, Graphics.COLOR_TRANSPARENT);
+                dc.fillRectangle(0, viewport_y, dc.getWidth(), height);
             }
 
             protected function getViewportYTop(scrollOffset as Number) as Number? {

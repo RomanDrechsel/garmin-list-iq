@@ -1,0 +1,8 @@
+<settings>
+
+    <!-- button controls -->
+    <setting propertyKey="@Properties.ButtonControls" title="@Strings.StBtnCtrl">
+        <settingConfig type="boolean" />
+    </setting>
+
+</settings>

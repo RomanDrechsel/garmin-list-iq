@@ -3,22 +3,23 @@ module Themes {
         function initialize() {
             self.LineBitmap = Application.loadResource(Rez.Drawables.LineBlue);
 
-            self.MainColor = 0xd7d7d7;
-            self.SecondColor = 0xbdbdbd;
-            self.DisabledColor = 0x808080;
+            self.MainColor = 0xffffff;
+            self.MainColorSelected = 0xffffff;
+            self.SecondColor = 0xaaaaaa;
+            self.SecondColorSelected = 0x555555;
+            self.DisabledColor = 0xaaaaaa;
 
-            self.ListBackground = 0x383838;
-            self.SelectedItemBackground = 0x4f4f4f;
-            self.BackgroundColor = 0x282828;
-            self.ButtonBorder = 0x12a1ff;
-            self.LineSeparatorColor = 0x667cff;
+            self.ListBackground = 0x555555;
+            self.SelectedItemBackground = 0xaaaaaa;
+            self.BackgroundColor = 0x555555;
+            self.LineSeparatorColor = 0x0055ff;
 
-            self.ScrollbarBackground = 0x808080;
-            self.ScrollbarThumbColor = 0x999999;
-            self.ScrollbarThumbBorder = 0xdcdcdc;
+            self.ScrollbarBackground = 0xaaaaaa;
+            self.ScrollbarThumbColor = 0x555555;
+            self.ScrollbarThumbBorder = 0xffffff;
 
-            self.ButtonBorder = 0x1255ff;
-            self.ButtonBackground = 0x808080;
+            self.ButtonBorder = 0x0055ff;
+            self.ButtonBackground = 0x0000aa;
         }
     }
 }

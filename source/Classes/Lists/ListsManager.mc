@@ -29,6 +29,9 @@ module Lists {
                 listorder = data.get("order");
                 listuuid = data.get("uuid");
                 listitems = data.get("items");
+                if (listitems instanceof Array == false) {
+                    listitems = null;
+                }
                 if (listname == null || listorder == null || listuuid == null || listitems == null) {
                     var missing = [] as Array<String>;
                     if (listname == null) {
@@ -60,7 +63,7 @@ module Lists {
             //items
             var items = [];
             for (var i = 0; i < listitems.size(); i++) {
-                var listitem = listitems[i];
+                var listitem = listitems[i] as ListItemsItem;
                 if (listitem.hasKey("item")) {
                     if (!listitem.hasKey("note") || listitem["note"] == null) {
                         //only an item

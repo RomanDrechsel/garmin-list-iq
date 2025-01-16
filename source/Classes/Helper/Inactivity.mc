@@ -6,7 +6,7 @@ module Helper {
     class Inactivity {
         private var _timer = new Timer.Timer();
         private var _autoexit as Number = 0;
-        private var _lastInteraction as Time.Moment;
+        private var _lastInteraction as Time.Moment?;
 
         function initialize() {
             self.onSettingsChanged();

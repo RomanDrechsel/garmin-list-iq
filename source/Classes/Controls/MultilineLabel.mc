@@ -182,7 +182,7 @@ module Controls {
             if (dc.getTextWidthInPixels(text, font) < max_width) {
                 return text;
             }
-            while (dc.getTextWidthInPixels(text, font) + add > max_width) {
+            while (dc.getTextWidthInPixels(text + add, font) > max_width) {
                 var count = 0;
                 for (var i = text.length() - 1; i >= 0; i--) {
                     count--;

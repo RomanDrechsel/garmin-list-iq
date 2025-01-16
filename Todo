@@ -7,6 +7,12 @@ adb -d forward tcp:7381 tcp:7381
 soft-hyphen: \u00AD
 
 WIP: Button controlling
+WIP: don't select title on Button controls
+BUG: List mit Listitems und Settings-Button -> ListSettingsView -> und wieder zurück -> selectedBackground stimmt nicht bei Button
 TODO: low depth screens
-TODO: Translate ErrHintTouch/ErrHintBtn
+TODO: add SelectedItemBackground to themes (remind low depth screens)
+TODO: Translate ErrHintTouch/ErrHintBtn/StBtnCtrl
 TODO: ist LayerDef.Dc wirklich nötig?!
+TODO: if the watch has only 1 button - add back button to views
+TODO: Scrollbars: (:roundVersion)
+https://developer.garmin.com/connect-iq/core-topics/build-configuration/

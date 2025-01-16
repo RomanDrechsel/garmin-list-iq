@@ -37,7 +37,7 @@ module Views {
         protected var _fontoverride as FontResource? = null;
 
         /** scrollbar drawer */
-        protected var _scrollbar as Scrollbar.Round or Scrollbar.Rectangle;
+        protected var _scrollbar as Scrollbar.Round or Scrollbar.Rectangle or Null;
 
         /** main layer for the list */
         protected var _mainLayer as Controls.LayerDef?;
@@ -94,7 +94,16 @@ module Views {
         }
 
         function onShow() as Void {
-            self.Interaction();
+            if ($.getApp().GlobalStates.hasKey("startpage")) {
+                if (self instanceof ListsSelectView == false) {
+                    WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
+                    return;
+                } else {
+                    $.getApp().GlobalStates.remove("startpage");
+                }
+            } else {
+                self.Interaction();
+            }
             if ($.getApp().GlobalStates.hasKey("movetop")) {
                 self._scrollOffset = 0;
                 self._snapPosition = 0;
@@ -123,6 +132,9 @@ module Views {
             if (self._mainLayer == null) {
                 return;
             }
+
+            //to check, that title-items are not selected
+            self.moveIterator(0);
 
             self.validate(dc);
 
@@ -271,7 +283,7 @@ module Views {
 
         protected function moveIterator(delta as Number?) as Void {
             self.Interaction();
-            if (delta == null) {
+            if (delta == null || self.Items.size() == 0) {
                 self._snapPosition = 0;
             } else {
                 self._snapPosition += delta;
@@ -284,8 +296,17 @@ module Views {
                 }
             }
 
+            //don't select title-items
+            while (self.Items.size() > self._snapPosition && self.Items[self._snapPosition] instanceof Listitems.Title) {
+                self._snapPosition++;
+            }
+
             self.centerItem(self._snapPosition);
-            self.setSelectedItem(self.Items[self._snapPosition]);
+            if (self.Items.size() > self._snapPosition) {
+                self.setSelectedItem(self.Items[self._snapPosition]);
+            } else {
+                self.setSelectedItem(null);
+            }
         }
 
         private function getHeight() {
@@ -312,6 +333,8 @@ module Views {
             } else if (self._scrollOffset > self._viewHeight - self._mainLayer.getHeight()) {
                 self._scrollOffset = self._viewHeight - self._mainLayer.getHeight();
             }
+
+            self.setSelectedItem(item);
         }
 
         /**

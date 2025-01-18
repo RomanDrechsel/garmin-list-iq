@@ -15,6 +15,7 @@
 
     <string id="NoLists">¡No se encontraron listas!</string>
     <string id="NoListsLink">Toca dos veces para abrir la tienda Play de Android en el teléfono</string>
+    <string id="NoListsLinkBtn">Pulsa Intro para abrir la PlayStore de Android en el teléfono.</string>
 
     <string id="ListNotFound">¡Lista no encontrada!</string>
     <string id="ListEmpty">La lista está vacía.</string>
@@ -36,6 +37,7 @@
     <string id="StAutoExit30">después de 30 minutos</string>
     <string id="StAutoExit60">después de 60 minutos</string>
     <string id="StAutoExitOff">desactivado</string>
+    <string id="StBtnCtrl">Control por botones hardware</string>
 
     <string id="StDelAll">Eliminar todas las listas</string>
     <string id="StDelAllConfirm">¿Eliminar todas las listas?</string>
@@ -64,7 +66,9 @@
     <string id="StResetWeekly">Semanalmente</string>
     <string id="StResetMonthly">Mensualmente</string>
 
-    <string id="ErrHint">Por favor, informa del error en tu teléfono móvil para que pueda ayudarte.\n\n(Toca aquí para abrir la opción de contacto en la aplicación en tu teléfono móvil)</string>
+    <string id="ErrHint">Por favor, informa del error en tu teléfono móvil para que pueda ayudarte.</string>
+    <string id="ErrHintTouch">(Toca aquí para abrir la opción de contacto en la aplicación en tu teléfono móvil)</string>
+    <string id="ErrHintBtn">(Pulse el botón Intro para abrir la opción de contacto en la aplicación de su smartphone)</string>
     <string id="ErrReport">Por favor, abre el teléfono móvil</string>
     <string id="ErrListRec">Se ha producido un error al transferir la lista:</string>
     <string id="ErrListDel">Se ha producido un error al eliminar la lista:</string>

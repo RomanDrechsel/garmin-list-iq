@@ -35,7 +35,7 @@ class ListsApp extends Application.AppBase {
         self.Inactivity = new Helper.Inactivity();
 
         var listview = new Views.ListsSelectView(true);
-        return [listview, new Views.CustomViewDelegate(listview)];
+        return [listview, new Views.ItemViewDelegate(listview)];
     }
 
     function getGlanceView() as Array<WatchUi.GlanceView or WatchUi.GlanceViewDelegate>? {

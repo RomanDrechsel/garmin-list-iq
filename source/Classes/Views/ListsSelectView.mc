@@ -8,18 +8,18 @@ import Controls.Listitems;
 import Helper;
 
 module Views {
-    class ListsSelectView extends CustomView {
+    class ListsSelectView extends ItemView {
         private const _listIconCode = 48;
         private var _firstDisplay = true;
 
         function initialize(first_display as Boolean) {
             self.ScrollMode = $.TouchControls ? SCROLL_DRAG : SCROLL_SNAP;
             self._firstDisplay = first_display;
-            CustomView.initialize();
+            ItemView.initialize();
         }
 
         function onShow() as Void {
-            CustomView.onShow();
+            ItemView.onShow();
             if ($.getApp().ListsManager != null) {
                 $.getApp().ListsManager.OnListsChanged.add(self);
                 self.publishLists($.getApp().ListsManager.GetLists(), false);
@@ -27,14 +27,14 @@ module Views {
         }
 
         function onHide() as Void {
-            CustomView.onHide();
+            ItemView.onHide();
             if ($.getApp().ListsManager != null) {
                 $.getApp().ListsManager.OnListsChanged.remove(self);
             }
         }
 
         function onDoubleTap(x as Number, y as Number) as Void {
-            CustomView.onDoubleTap(x, y);
+            ItemView.onDoubleTap(x, y);
             if (self.Items.size() > 0) {
                 var item = self.Items[0];
                 if (item.BoundObject instanceof String && item.BoundObject.equals("store") && Helper.Properties.Get(Helper.Properties.INIT, 0) < 0) {
@@ -44,12 +44,12 @@ module Views {
         }
 
         function onKeyMenu() as Void {
-            CustomView.onKeyMenu();
+            ItemView.onKeyMenu();
             self.openSettings();
         }
 
         function onKeyEsc() as Void {
-            CustomView.onKeyEsc();
+            ItemView.onKeyEsc();
             System.exit();
         }
 
@@ -58,7 +58,7 @@ module Views {
         }
 
         function onSettingsChanged() as Void {
-            CustomView.onSettingsChanged();
+            ItemView.onSettingsChanged();
             if ($.getApp().ListsManager != null) {
                 self.publishLists($.getApp().ListsManager.GetLists(), true);
             }
@@ -112,7 +112,7 @@ module Views {
             //no line below the last item
             if (self.Items.size() > 0) {
                 self.Items[self.Items.size() - 1].DrawLine = false;
-                self.moveIterator(null);
+                self.setIterator(self._snapPosition);
             }
 
             if (!$.TouchControls) {
@@ -149,7 +149,7 @@ module Views {
             if (!$.TouchControls) {
                 self.addSettingsButton();
             }
-            self.moveIterator(null);
+            self.moveIterator(0);
             self._needValidation = true;
         }
 
@@ -167,12 +167,12 @@ module Views {
 
         private function GotoList(uuid as String, scroll as Number) as Void {
             var view = new ListDetailsView(uuid, scroll > 0 ? scroll : null);
-            WatchUi.pushView(view, new CustomViewDelegate(view), WatchUi.SLIDE_LEFT);
+            WatchUi.pushView(view, new ItemViewDelegate(view), WatchUi.SLIDE_LEFT);
         }
 
         private function openSettings() as Void {
             var settings = new SettingsView();
-            WatchUi.pushView(settings, new CustomViewDelegate(settings), WatchUi.SLIDE_LEFT);
+            WatchUi.pushView(settings, new ItemViewDelegate(settings), WatchUi.SLIDE_LEFT);
         }
     }
 }

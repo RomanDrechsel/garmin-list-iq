@@ -14,7 +14,8 @@
     <string id="ListDel">­列­表­已­刪­除­。­</string>
 
     <string id="NoLists">­未­找­到­列­表­！­</string>
-    <string id="NoListsLink">­雙­擊­以­在­手­機­上­打­開­An­droid Play商­店</string>
+    <string id="NoListsLink">雙­擊­以­在­手­機­上­打­開­An­droid Play­Store</string>
+    <string id="NoListsLinkBtn">按­下­Enter­鍵­，­以­在­手­機­上­打­開­An­droid Play­Store</string>
 
     <string id="ListNotFound">­未­找­到­列­表­！­</string>
     <string id="ListEmpty">­列­表­為­空­。­</string>
@@ -36,6 +37,7 @@
     <string id="StAutoExit30">每­三­十­分­鐘­後­三­十­分­鐘</string>
     <string id="StAutoExit60">每­六­十­分­鐘­後­六­十­分­鐘</string>
     <string id="StAutoExitOff">已­關­閉</string>
+    <string id="StBtnCtrl">硬­體­按­鈕­控­制</string>
 
     <string id="StDelAll">­刪­除­所­有­列­表­­</string>
     <string id="StDelAllConfirm">­刪­除­所­有­列­表­？­­</string>
@@ -64,7 +66,9 @@
     <string id="StResetWeekly">­每­周­­</string>
     <string id="StResetMonthly">­每­月­­</string>
 
-    <string id="ErrHint">請­­在­­智­­能­­手­­機­­上­­向­­我­­報­­告­­此­­錯­­誤，以­­便­­我­­能­­幫­­助­­你。\n\n(點­擊­­此­­處，在­­智­­能­­手­­機­­的­­應­­用­­程­­序­­中­­打­­開­­聯­­繫­­方­­式)</string>
+    <string id="ErrHint">請­告­訴­我­你­的­智­能­手­機­上­的­錯­誤­，­以­便­我­可­以­幫­助­你</string>
+    <string id="ErrHintTouch">（點­擊­這­裡­，­以­在­你­的­智­能­手­機­上­的­應­用­程­式­中­打­開­聯­繫­方­式）</string>
+    <string id="ErrHintBtn">（按­下­Enter­鍵­，­以­在­你­的­智­能­手­機­上­的­應­用­程­式­中­打­開­聯­繫­方­式）</string>
     <string id="ErrReport">請­­打­­開­­智­­能­­手­­機</string>
     <string id="ErrListRec">傳­輸­­列­­表­­時­­發­­生­­錯­­誤：</string>
     <string id="ErrListDel">刪­除­­列­­表­­時­­發­­生­­錯­­誤：</string>

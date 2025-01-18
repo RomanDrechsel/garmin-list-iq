@@ -7,7 +7,7 @@ import Controls.Listitems;
 import Helper;
 
 module Views {
-    class ListSettingsView extends CustomView {
+    class ListSettingsView extends ItemView {
         var ListUuid = null;
         var ScrollMode = SCROLL_DRAG;
 
@@ -18,7 +18,7 @@ module Views {
         private var _resetInterval as String? = null;
 
         function initialize(uuid as String) {
-            CustomView.initialize();
+            ItemView.initialize();
             self.ListUuid = uuid;
             self._itemIconUncheck = $.getTheme().DarkTheme ? Application.loadResource(Rez.Drawables.Item) : Application.loadResource(Rez.Drawables.bItem);
             self._itemIconCheck = $.getTheme().DarkTheme ? Application.loadResource(Rez.Drawables.ItemDone) : Application.loadResource(Rez.Drawables.bItemDone);
@@ -27,11 +27,11 @@ module Views {
         }
 
         function onLayout(dc as Dc) {
-            CustomView.onLayout(dc);
+            ItemView.onLayout(dc);
         }
 
         function onShow() as Void {
-            CustomView.onShow();
+            ItemView.onShow();
             if ($.getApp().ListsManager != null) {
                 $.getApp().ListsManager.OnListsChanged.add(self);
             }
@@ -39,7 +39,7 @@ module Views {
         }
 
         function onHide() as Void {
-            CustomView.onHide();
+            ItemView.onHide();
             if ($.getApp().ListsManager != null) {
                 $.getApp().ListsManager.OnListsChanged.remove(self);
             }
@@ -89,7 +89,7 @@ module Views {
         }
 
         function onSettingsChanged() as Void {
-            CustomView.onSettingsChanged();
+            ItemView.onSettingsChanged();
             self.loadItems(true);
         }
 
@@ -99,13 +99,13 @@ module Views {
         }
 
         function onKeyEsc() as Boolean {
-            CustomView.onKeyEsc();
+            ItemView.onKeyEsc();
             self.goBack();
             return true;
         }
 
         function onKeyMenu() as Boolean {
-            CustomView.onKeyMenu();
+            ItemView.onKeyMenu();
             self.goBack();
             return true;
         }

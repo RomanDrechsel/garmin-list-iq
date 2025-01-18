@@ -6,7 +6,7 @@ import Toybox.Lang;
 import Toybox.Application;
 
 module Views {
-    class ErrorView extends CustomView {
+    class ErrorView extends ItemView {
         private var _labelMessage as MultilineLabel? = null;
         private var _labelError as MultilineLabel? = null;
         private var _errorMsg as Lang.ResourceId? = null;
@@ -14,30 +14,30 @@ module Views {
         private var _errorPayload as Application.PersistableType = null;
 
         function initialize(msg as Lang.ResourceId?, code as Lang.Number?, payload as Application.PersistableType) {
-            CustomView.initialize();
+            ItemView.initialize();
             self._errorMsg = msg;
             self._errorCode = code;
             self._errorPayload = payload;
         }
 
         function onLayout(dc as Dc) as Void {
-            CustomView.onLayout(dc);
+            ItemView.onLayout(dc);
             self.loadVisuals();
         }
 
         function onTap(x as Number, y as Number) as Boolean {
-            CustomView.onTap(x, y);
+            ItemView.onTap(x, y);
             self.sendReport();
         }
 
         function onKeyEnter() as Boolean {
-            CustomView.onKeyEnter();
+            ItemView.onKeyEnter();
             self.sendReport();
             return true;
         }
 
         function onKeyEsc() as Boolean {
-            CustomView.onKeyEsc();
+            ItemView.onKeyEsc();
             self.goBack();
             return true;
         }

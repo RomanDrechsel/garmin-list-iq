@@ -8,7 +8,7 @@ import Helper;
 import Controls.Listitems;
 
 module Views {
-    class CustomView extends WatchUi.View {
+    class ItemView extends WatchUi.View {
         enum EScrollmode {
             SCROLL_SNAP,
             SCROLL_DRAG,
@@ -28,7 +28,7 @@ module Views {
         protected var _scrollOffset as Number = 0;
 
         /** index of the centered item on SCROLL_SNAP - mode */
-        protected var _snapPosition as Number? = 0;
+        protected var _snapPosition as Number = 0;
 
         /** percentage of the width of the scrollbar */
         protected var _BarWidthFactor as Float = 0.05;
@@ -133,10 +133,10 @@ module Views {
                 return;
             }
 
-            //to check, that title-items are not selected
-            self.moveIterator(0);
-
             self.validate(dc);
+            if (self.ScrollMode == SCROLL_SNAP) {
+                self.setIterator(self._snapPosition);
+            }
 
             if (self.Items.size() > 0) {
                 for (var i = 0; i < self.Items.size(); i++) {
@@ -155,18 +155,13 @@ module Views {
             }
         }
 
-        function addItem(title as String or Array<String>, substring as String or Array<String> or Null, identifier as Object?, icon as Number or BitmapResource or Null, position as Number) as Void {
-            self.Items.add(new Listitems.Item(self._mainLayer, title, substring, identifier, icon, null, position, self._fontoverride));
+        function addItem(title as String or Array<String>, substring as String or Array<String> or Null, identifier as Object?, icon as Number or BitmapResource or Null, position as Number) as Listitems.Item {
+            var item = new Listitems.Item(self._mainLayer, title, substring, identifier, icon, null, position, self._fontoverride);
+            self.Items.add(item);
             self._needValidation = true;
             self._paddingTop = null;
             self._paddingBottom = null;
-            self.setSelectedItem(null);
-            for (var i = 0; i < self.Items.size(); i++) {
-                if (self.Items[i] instanceof Listitems.Title == false) {
-                    self.setSelectedItem(self.Items[i]);
-                    break;
-                }
-            }
+            return item;
         }
 
         function setTitle(title as String?) as Void {
@@ -248,7 +243,9 @@ module Views {
             return false;
         }
 
-        function onSettingsChanged() as Void {}
+        function onSettingsChanged() as Void {
+            self.Items = [];
+        }
 
         function Interaction() as Void {
             var inactivity = $.getApp().Inactivity;
@@ -282,30 +279,32 @@ module Views {
         }
 
         protected function moveIterator(delta as Number?) as Void {
+            if (delta == null) {
+                self.setIterator(null);
+            } else {
+                self.setIterator(self._snapPosition + delta);
+            }
+        }
+
+        protected function setIterator(pos as Number?) as Void {
             self.Interaction();
-            if (delta == null || self.Items.size() == 0) {
-                self._snapPosition = 0;
-            } else {
-                self._snapPosition += delta;
-                if (self._snapPosition < 0) {
-                    self._snapPosition = 0;
+            if (self.ScrollMode == SCROLL_SNAP) {
+                if (pos == null) {
+                    pos = 0;
+                } else if (pos >= self.Items.size()) {
+                    pos = self.Items.size() - 1;
+                }
+                if (pos < 0) {
+                    pos = 0;
                 }
 
-                if (self._snapPosition > self.Items.size() - 1) {
-                    self._snapPosition = self.Items.size() - 1;
+                if (self.Items.size() > 0) {
+                    while (self.Items.size() > pos && self.Items[pos] instanceof Listitems.Title) {
+                        pos++;
+                    }
                 }
-            }
-
-            //don't select title-items
-            while (self.Items.size() > self._snapPosition && self.Items[self._snapPosition] instanceof Listitems.Title) {
-                self._snapPosition++;
-            }
-
-            self.centerItem(self._snapPosition);
-            if (self.Items.size() > self._snapPosition) {
-                self.setSelectedItem(self.Items[self._snapPosition]);
-            } else {
-                self.setSelectedItem(null);
+                self._snapPosition = pos;
+                self.centerItem(self._snapPosition);
             }
         }
 

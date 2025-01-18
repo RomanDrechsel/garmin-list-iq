@@ -50,15 +50,15 @@ module Controls {
                 var button_width = self.getButtonWidth();
                 var padding = self.getHorizontalPadding();
                 var button_height = self.Title.getHeight(dc) + 2 * padding + Graphics.getFontDescent(self._font);
-                dc.setColor(getTheme().ButtonBackground, Graphics.COLOR_TRANSPARENT);
+                dc.setColor($.getTheme().ButtonBackground, Graphics.COLOR_TRANSPARENT);
                 dc.fillRoundedRectangle(x, viewport_y, button_width, button_height, padding * 0.5);
 
-                dc.setColor(getTheme().ButtonBorder, Graphics.COLOR_TRANSPARENT);
+                dc.setColor($.getTheme().ButtonBorder, Graphics.COLOR_TRANSPARENT);
                 dc.setPenWidth(2);
                 dc.drawRoundedRectangle(x, viewport_y, button_width, button_height, padding * 0.5);
 
                 //text
-                self.Title.drawText(dc, x + padding, viewport_y + padding, $.getTheme().MainColor, Graphics.TEXT_JUSTIFY_CENTER);
+                self.Title.drawText(dc, x + padding, viewport_y + padding, $.getTheme().ButtonColor, Graphics.TEXT_JUSTIFY_CENTER);
                 viewport_y += button_height;
 
                 //Debug.Box(dc, 0, viewport_y, dc.getWidth(), 1, Graphics.COLOR_BLUE);
@@ -80,13 +80,13 @@ module Controls {
                 if (dc != null && self._layer != null) {
                     self.validate(dc);
                     if (self._height == null || self._height <= 0) {
-                        self._height = self._verticalMargin + 2 * self.getHorizontalPadding() + Graphics.getFontDescent(self._font);
+                        self._height = self._verticalMargin + self._verticalPadding;
                         if (self.Title instanceof String) {
                             self._height += dc.getFontHeight(self._font);
                         } else {
-                            self._height += self.Title.getHeight(dc);
+                            self._height += self.Title.getHeight(dc) + 2 * self.getHorizontalPadding() + Graphics.getFontDescent(self._font);
                         }
-                        self._height += 2 * self._verticalPadding;
+                        self._height += self._verticalPadding + self._verticalMargin;
                         self._height += self.getLineHeight();
                     }
                 } else if (self._height == null) {

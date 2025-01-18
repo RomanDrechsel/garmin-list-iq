@@ -14,7 +14,9 @@
     <string id="ListDel">Список видалено.</string>
 
     <string id="NoLists">Списки не знайдено!</string>
-    <string id="NoListsLink">Подвійний дотик, щоб відкрити Android Play Store на телефоні</string>
+    <string id="NoListsLink">Подвійне торкання, щоб відкрити Android Play Store на телефоні.</string>
+    <string id="NoListsLinkBtn">Натисніть клавішу Enter, щоб відкрити Android Play Store на телефоні.</string>
+
 
     <string id="ListNotFound">Список не знайдено!</string>
     <string id="ListEmpty">Список порожній.</string>
@@ -36,6 +38,7 @@
     <string id="StAutoExit30">після 30 хвилин</string>
     <string id="StAutoExit60">після 60 хвилин</string>
     <string id="StAutoExitOff">вимкнено</string>
+    <string id="StBtnCtrl">Керування апаратними кнопками</string>
 
     <string id="StDelAll">Видалити всі списки</string>
     <string id="StDelAllConfirm">Видалити всі списки?</string>
@@ -64,7 +67,9 @@
     <string id="StResetWeekly">Щотижня</string>
     <string id="StResetMonthly">Щомісяця</string>
 
-    <string id="ErrHint">Будь ласка, повідомте мені про помилку на вашому смартфоні, щоб я міг вам допомогти.\n\n(Доторкніться тут, щоб відкрити спосіб зв'язку в додатку на вашому смартфоні)</string>
+    <string id="ErrHint">Будь ласка, повідомте мені про помилку на вашому смартфоні, щоб я міг вам допомогти.\n\n</string>
+    <string id="ErrHintTouch">(Доторкніться тут, щоб відкрити спосіб зв'язку в додатку на вашому смартфоні)</string>
+    <string id="ErrHintBtn">(Натисніть клавішу Enter, щоб відкрити спосіб зв'язку в додатку на вашому смартфоні)</string>
     <string id="ErrReport">Будь ласка, відкрийте смартфон</string>
     <string id="ErrListRec">Під час передачі списку сталася помилка:</string>
     <string id="ErrListDel">Виникла помилка при видаленні списку:</string>

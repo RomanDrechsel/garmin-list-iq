@@ -26,6 +26,7 @@ module Controls {
             protected var _verticalMargin as Number = 0;
             protected var _verticalPadding as Number;
             protected var _icon as String or ViewItemIcon or Null = null;
+            protected var _iconInvert as ViewItemIcon? = null;
             protected var _listY as Number? = null;
             protected var _height as Number? = null;
             protected var _layer as LayerDef? = null;
@@ -64,10 +65,11 @@ module Controls {
 
                 var specialColor = isSelected && self.isSelectable && !$.TouchControls;
                 var color = specialColor ? $.getTheme().MainColorSelected : $.getTheme().MainColor;
+                var colorSub = specialColor ? $.getTheme().SecondColorSelected : $.getTheme().SecondColor;
                 if (self.isDisabled) {
                     color = $.getTheme().DisabledColor;
+                    colorSub = color;
                 }
-                var colorSub = specialColor ? $.getTheme().SecondColorSelected : $.getTheme().SecondColor;
 
                 if (specialColor) {
                     self.drawSelectedBackground(dc, viewport_y);
@@ -88,8 +90,9 @@ module Controls {
                     dc.setColor(color, Graphics.COLOR_TRANSPARENT);
                     dc.drawText(x, viewport_y + iconoffsety, Helper.Fonts.Icons(), self._icon, Graphics.TEXT_JUSTIFY_LEFT);
                 } else if (self.isBitmap(self._icon)) {
-                    var iconoffsety = (Graphics.getFontHeight(self._font) - self._icon.getHeight()) / 2;
-                    dc.drawBitmap(x, viewport_y + iconoffsety, self._icon);
+                    var icon = specialColor && self._iconInvert != null ? self._iconInvert : self._icon;
+                    var iconoffsety = (Graphics.getFontHeight(self._font) - icon.getHeight()) / 2;
+                    dc.drawBitmap(x, viewport_y + iconoffsety, icon);
                 }
 
                 if (self.Title instanceof MultilineLabel) {
@@ -147,7 +150,7 @@ module Controls {
                 }
             }
 
-            function setIcon(icon as Number or ViewItemIcon or Null) {
+            function setIcon(icon as Number or ViewItemIcon or Null) as Void {
                 if (icon instanceof Number && icon >= 0) {
                     self._icon = icon.toChar().toString();
                 } else if (self.isBitmap(icon)) {
@@ -157,6 +160,10 @@ module Controls {
 
             function getIcon() as Number or ViewItemIcon or Null {
                 return self._icon;
+            }
+
+            function setIconInvert(icon as ViewItemIcon?) as Void {
+                self._iconInvert = icon;
             }
 
             function Clicked(tapy as Number, scrollOffset as Number) as Boolean {
@@ -173,12 +180,12 @@ module Controls {
                 return false;
             }
 
-            function Invalidate() {
+            function Invalidate() as Void {
                 self._needValidation = true;
                 self._height = -1;
             }
 
-            function setLayer(layer as LayerDef) {
+            function setLayer(layer as LayerDef) as Void {
                 self._layer = layer;
             }
 

@@ -10,26 +10,27 @@ import Controls.Listitems;
 import Helper;
 
 module Views {
-    class ListDetailsView extends CustomView {
+    class ListDetailsView extends ItemView {
         private var _listUuid as String?;
         private var _startScroll as Number?;
         private var _listOptimized = true;
 
         private var _itemIcon as Listitems.ViewItemIcon;
         private var _itemIconDone as Listitems.ViewItemIcon;
+        private var _itemIconInvert as Listitems.ViewItemIcon? = null;
+        private var _itemIconDoneInvert as Listitems.ViewItemIcon? = null;
 
         protected var _fontoverride = Helper.Fonts.Large();
 
         function initialize(uuid as String, scrollTo as Number?) {
-            CustomView.initialize();
+            ItemView.initialize();
             self._listUuid = uuid;
             self._startScroll = scrollTo;
-            self._itemIcon = $.getTheme().DarkTheme ? Application.loadResource(Rez.Drawables.Item) : Application.loadResource(Rez.Drawables.bItem);
-            self._itemIconDone = $.getTheme().DarkTheme ? Application.loadResource(Rez.Drawables.ItemDone) : Application.loadResource(Rez.Drawables.bItemDone);
+            self.loadIcons();
         }
 
         function onShow() as Void {
-            CustomView.onShow();
+            ItemView.onShow();
             if ($.getApp().ListsManager != null) {
                 $.getApp().ListsManager.OnListsChanged.add(self);
             }
@@ -37,14 +38,14 @@ module Views {
         }
 
         function onHide() as Void {
-            CustomView.onHide();
+            ItemView.onHide();
             if ($.getApp().ListsManager != null) {
                 $.getApp().ListsManager.OnListsChanged.remove(self);
             }
         }
 
         function onUpdate(dc as Dc) as Void {
-            CustomView.onUpdate(dc);
+            ItemView.onUpdate(dc);
 
             //store the wraped text
             if (self._listOptimized == false && self._listUuid != null && $.getApp().ListsManager != null) {
@@ -83,16 +84,18 @@ module Views {
                 var prop = Helper.Properties.Get(Helper.Properties.DOUBLETAPFORDONE, false);
                 if (doubletap || prop == 0 || prop == false) {
                     if (item.BoundObject == false) {
-                        item.setColor($.getTheme().DisabledColor);
+                        item.isDisabled = true;
                         item.setIcon(self._itemIconDone);
+                        item.setIconInvert(self._itemIconDoneInvert);
                     } else {
-                        item.setColor(null);
+                        item.isDisabled = false;
                         item.setIcon(self._itemIcon);
+                        item.setIconInvert(self._itemIconInvert);
                     }
                     item.BoundObject = !item.BoundObject;
 
                     $.getApp().ListsManager.updateList(self._listUuid, item.ItemPosition, item.BoundObject);
-                    self.publishItems(false);
+                    //self.publishItems(false);
                     WatchUi.requestUpdate();
                 }
             } else if (item.BoundObject instanceof String) {
@@ -104,25 +107,22 @@ module Views {
             }
         }
 
-        function onKeyEnter() as Void {
-            CustomView.onKeyEnter();
+        function onKeyEnter() as Boolean {
             if (self._listUuid == null) {
                 self.goBack();
+                return true;
             }
-            if ($.TouchControls) {
-                self.onKeyMenu();
-            } else if (self._selectedItem != null) {
-                self.interactItem(self._selectedItem, true);
-            }
+
+            return ItemView.onKeyEnter();
         }
 
-        function onKeyMenu() as Void {
-            CustomView.onKeyMenu();
+        function onKeyMenu() as Boolean {
+            ItemView.onKeyMenu();
             self.openSettings();
         }
 
         function onTap(x as Number, y as Number) as Boolean {
-            if (CustomView.onTap(x, y) == false && self._listUuid == null) {
+            if (ItemView.onTap(x, y) == false && self._listUuid == null) {
                 self.goBack();
                 return true;
             }
@@ -136,19 +136,18 @@ module Views {
         function openSettings() as Void {
             if (self._listUuid != null) {
                 var view = new ListSettingsView(self._listUuid);
-                WatchUi.pushView(view, new CustomViewDelegate(view), WatchUi.SLIDE_LEFT);
+                WatchUi.pushView(view, new ItemViewDelegate(view), WatchUi.SLIDE_LEFT);
             }
         }
 
         function onSettingsChanged() as Void {
-            CustomView.onSettingsChanged();
-            self._itemIcon = $.getTheme().DarkTheme ? Application.loadResource(Rez.Drawables.Item) : Application.loadResource(Rez.Drawables.bItem);
-            self._itemIconDone = $.getTheme().DarkTheme ? Application.loadResource(Rez.Drawables.ItemDone) : Application.loadResource(Rez.Drawables.bItemDone);
+            ItemView.onSettingsChanged();
+            self.loadIcons();
             self.publishItems(false);
         }
 
         function onScroll(delta as Number) as Void {
-            CustomView.onScroll(delta);
+            ItemView.onScroll(delta);
             Helper.Properties.Store(Helper.Properties.LASTLISTSCROLL, self._scrollOffset);
         }
 
@@ -199,13 +198,15 @@ module Views {
 
                         for (var i = 0; i < ordered.size(); i++) {
                             var item = ordered[i];
-                            var icon, obj;
+                            var icon, iconInvert, obj;
 
                             if (item.hasKey("d") && item.get("d") == true) {
                                 icon = self._itemIconDone;
+                                iconInvert = self._itemIconDoneInvert;
                                 obj = true;
                             } else {
                                 icon = self._itemIcon;
+                                iconInvert = self._itemIconInvert;
                                 obj = false;
                             }
 
@@ -213,10 +214,9 @@ module Views {
                             var note = show_notes == true ? item.get("n") : null;
 
                             if (text != null) {
-                                self.addItem(text, note, obj, icon, item.get("pos"));
-                                if (obj == true) {
-                                    self.Items[self.Items.size() - 1].setColor(getTheme().DisabledColor);
-                                }
+                                var itemObj = self.addItem(text, note, obj, icon, item.get("pos"));
+                                itemObj.setIconInvert(iconInvert);
+                                itemObj.isDisabled = obj;
                             }
                         }
 
@@ -414,6 +414,23 @@ module Views {
             item.isSelectable = false;
             item.DrawLine = false;
             self.Items.add(item);
+        }
+
+        private function loadIcons() as Void {
+            self._itemIcon = $.getTheme().DarkTheme ? Application.loadResource(Rez.Drawables.Item) : Application.loadResource(Rez.Drawables.bItem);
+            self._itemIconDone = $.getTheme().DarkTheme ? Application.loadResource(Rez.Drawables.ItemDone) : Application.loadResource(Rez.Drawables.bItemDone);
+
+            if (!$.TouchControls) {
+                if (self._itemIconInvert == null) {
+                    self._itemIconInvert = $.getTheme().DarkTheme ? Application.loadResource(Rez.Drawables.bItem) : Application.loadResource(Rez.Drawables.Item);
+                }
+                if (self._itemIconDoneInvert == null) {
+                    self._itemIconDoneInvert = $.getTheme().DarkTheme ? Application.loadResource(Rez.Drawables.bItemDone) : Application.loadResource(Rez.Drawables.ItemDone);
+                }
+            } else {
+                self._itemIconInvert = null;
+                self._itemIconDoneInvert = null;
+            }
         }
     }
 }

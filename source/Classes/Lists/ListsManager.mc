@@ -369,7 +369,7 @@ module Lists {
                     break;
             }
             var errorView = new Views.ErrorView(msg, code, payload);
-            WatchUi.pushView(errorView, new Views.CustomViewDelegate(errorView), WatchUi.SLIDE_BLINK);
+            WatchUi.pushView(errorView, new Views.ItemViewDelegate(errorView), WatchUi.SLIDE_BLINK);
         }
     }
 }

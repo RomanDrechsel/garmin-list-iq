@@ -6,11 +6,11 @@ import Controls.Listitems;
 import Helper;
 
 module Views {
-    class SettingsThemeView extends CustomView {
+    class SettingsThemeView extends IconItemView {
         private var _themes as Dictionary<Number, String> = {};
 
         function initialize() {
-            CustomView.initialize();
+            ItemView.initialize();
 
             self._themes = {};
             self._themes.put(0, Application.loadResource(Rez.Strings.ThGrey));
@@ -21,12 +21,12 @@ module Views {
         }
 
         function onLayout(dc as Dc) as Void {
-            CustomView.onLayout(dc);
+            IconItemView.onLayout(dc);
             self.loadThemes();
         }
 
         function onSettingsChanged() as Void {
-            CustomView.onSettingsChanged();
+            IconItemView.onSettingsChanged();
             self.loadThemes();
             WatchUi.requestUpdate();
         }
@@ -51,10 +51,9 @@ module Views {
             self.setTitle(Application.loadResource(Rez.Strings.SelTheme));
 
             var theme = Helper.Properties.Get(Helper.Properties.THEME, 0);
-            var itemIcon = $.getTheme().DarkTheme ? Application.loadResource(Rez.Drawables.Item) : Application.loadResource(Rez.Drawables.bItem);
-            var itemIconDone = $.getTheme().DarkTheme ? Application.loadResource(Rez.Drawables.ItemDone) : Application.loadResource(Rez.Drawables.bItemDone);
 
             var keys = self._themes.keys();
+            var setItem = 1;
             for (var i = 0; i < keys.size(); i++) {
                 var key = keys[i];
                 var name = self._themes.get(key);
@@ -62,13 +61,18 @@ module Views {
                     continue;
                 }
 
-                self.addItem(name, null, key, key == theme ? itemIconDone : itemIcon, i);
+                self.addItem(name, null, key, key == theme ? self._itemIconDone : self._itemIcon, i);
+                if (key == theme) {
+                    setItem = i + 1;
+                }
             }
 
             //no lone below the last items
             if (self.Items.size() > 0) {
                 self.Items[self.Items.size() - 1].DrawLine = false;
             }
+
+            self.setIterator(setItem);
         }
     }
 }

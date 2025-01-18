@@ -4,10 +4,10 @@ module Themes {
             self.LineBitmap = Application.loadResource(Rez.Drawables.LineBlue);
 
             self.MainColor = 0xffffff;
-            self.MainColorSelected = 0xffffff;
+            self.MainColorSelected = self.MainColor;
             self.SecondColor = 0xaaaaaa;
             self.SecondColorSelected = 0x555555;
-            self.DisabledColor = 0xaaaaaa;
+            self.DisabledColor = self.SecondColor;
 
             self.ListBackground = 0x555555;
             self.SelectedItemBackground = 0xaaaaaa;
@@ -18,8 +18,10 @@ module Themes {
             self.ScrollbarThumbColor = 0x555555;
             self.ScrollbarThumbBorder = 0xffffff;
 
-            self.ButtonBorder = 0x0055ff;
-            self.ButtonBackground = 0x0000aa;
+            self.ButtonColor = self.MainColor;
+            self.ButtonBorder = 0x0000ff;
+            self.ButtonBackground = 0x0055aa;
+            self.InvertSelectedItemIcon = false;
         }
     }
 }

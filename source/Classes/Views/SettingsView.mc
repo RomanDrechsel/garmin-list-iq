@@ -5,10 +5,7 @@ import Controls;
 import Controls.Listitems;
 
 module Views {
-    class SettingsView extends CustomView {
-        private var _itemIcon as Listitems.ViewItemIcon;
-        private var _itemIconDone as Listitems.ViewItemIcon;
-
+    class SettingsView extends IconItemView {
         private enum {
             SETTINGS_DELETEALL,
             SETTINGS_THEME,
@@ -22,24 +19,18 @@ module Views {
             SETTINGS_AUTOEXIT,
         }
 
-        function initialize() {
-            CustomView.initialize();
-            self._itemIcon = $.getTheme().DarkTheme ? Application.loadResource(Rez.Drawables.Item) : Application.loadResource(Rez.Drawables.bItem);
-            self._itemIconDone = $.getTheme().DarkTheme ? Application.loadResource(Rez.Drawables.ItemDone) : Application.loadResource(Rez.Drawables.bItemDone);
-        }
-
         function onLayout(dc as Dc) as Void {
-            CustomView.onLayout(dc);
+            IconItemView.onLayout(dc);
             self.loadVisuals();
         }
 
         function onShow() as Void {
-            CustomView.onShow();
+            IconItemView.onShow();
             self.loadVisuals();
         }
 
         function onSettingsChanged() as Void {
-            CustomView.onSettingsChanged();
+            IconItemView.onSettingsChanged();
             self.loadVisuals();
         }
 
@@ -143,6 +134,7 @@ module Views {
             // open appstore
             self.Items.add(new Listitems.Button(self._mainLayer, Application.loadResource(Rez.Strings.StAppStore), SETTINGS_APPSTORE, null, true));
 
+            //app version
             var str = Application.loadResource(Rez.Strings.StAppVersion);
             var version = Application.Properties.getValue("appVersion");
             var item = new Listitems.Item(self._mainLayer, str, version, "settings", null, null, -1, null);
@@ -214,16 +206,16 @@ module Views {
                 }
             } else if (item.BoundObject == SETTINGS_AUTOEXIT) {
                 var view = new SettingsAutoexitView();
-                WatchUi.pushView(view, new CustomViewDelegate(view), WatchUi.SLIDE_LEFT);
+                WatchUi.pushView(view, new ItemViewDelegate(view), WatchUi.SLIDE_LEFT);
             } else if (item.BoundObject == SETTINGS_THEME) {
                 var view = new SettingsThemeView();
-                WatchUi.pushView(view, new CustomViewDelegate(view), WatchUi.SLIDE_LEFT);
+                WatchUi.pushView(view, new ItemViewDelegate(view), WatchUi.SLIDE_LEFT);
             } else if (item.BoundObject == SETTINGS_APPSTORE) {
                 $.getApp().openGooglePlay();
                 self.goBack();
             } else if (item.BoundObject != null) {
                 var view = new ErrorView(Rez.Strings.ErrListRec, 666, {});
-                WatchUi.pushView(view, new CustomViewDelegate(view), WatchUi.SLIDE_LEFT);
+                WatchUi.pushView(view, new ItemViewDelegate(view), WatchUi.SLIDE_LEFT);
             }
         }
     }

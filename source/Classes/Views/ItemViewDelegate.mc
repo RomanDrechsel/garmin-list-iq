@@ -5,20 +5,20 @@ import Toybox.System;
 import Lists;
 
 module Views {
-    class CustomViewDelegate extends WatchUi.BehaviorDelegate {
-        protected var _view as CustomView;
+    class ItemViewDelegate extends WatchUi.BehaviorDelegate {
+        protected var _view as ItemView;
 
         private var _dragLastScroll = 0;
         private var _dragStartPositionY = 0;
         private var _useSwipe = false;
         private var _lastTap = 0;
 
-        function initialize(view as CustomView) {
+        function initialize(view as ItemView) {
             BehaviorDelegate.initialize();
             self._view = view;
 
             if (!(WatchUi.InputDelegate has :onDrag)) {
-                self._view.ScrollMode = CustomView.SCROLL_SNAP;
+                self._view.ScrollMode = ItemView.SCROLL_SNAP;
                 self._useSwipe = true;
             }
         }
@@ -50,7 +50,7 @@ module Views {
                 self._dragStartPositionY = dragY;
 
                 if (delta != 0) {
-                    if (self._view.ScrollMode == CustomView.SCROLL_DRAG || delta_scroll.abs() >= self._view.UI_dragThreshold) {
+                    if (self._view.ScrollMode == ItemView.SCROLL_DRAG || delta_scroll.abs() >= self._view.UI_dragThreshold) {
                         self._dragLastScroll = dragY;
                         self._view.onScroll(delta_scroll);
                     }
@@ -96,7 +96,7 @@ module Views {
                 }
             } else if (key == WatchUi.KEY_UP) {
                 Debug.Log("Pressed UP");
-                if (self._view.ScrollMode == CustomView.SCROLL_DRAG) {
+                if (self._view.ScrollMode == ItemView.SCROLL_DRAG) {
                     var height = System.getDeviceSettings().screenHeight;
                     self._view.onScroll((height * -0.33).toNumber());
                 } else {
@@ -104,7 +104,7 @@ module Views {
                 }
             } else if (key == WatchUi.KEY_DOWN) {
                 Debug.Log("Pressed DOWN");
-                if (self._view.ScrollMode == CustomView.SCROLL_DRAG) {
+                if (self._view.ScrollMode == ItemView.SCROLL_DRAG) {
                     var height = System.getDeviceSettings().screenHeight;
                     self._view.onScroll((height * 0.33).toNumber());
                 } else {

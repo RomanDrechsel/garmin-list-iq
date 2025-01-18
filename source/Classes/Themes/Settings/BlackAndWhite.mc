@@ -4,20 +4,25 @@ module Themes {
             self.LineBitmap = Application.loadResource(Rez.Drawables.LineWhite);
 
             self.MainColor = 0xffffff;
-            self.SecondColor = 0xffffff;
-            self.DisabledColor = 0x5e5e5e;
+            self.MainColorSelected = 0x000000;
+            self.SecondColor = self.MainColor;
+            self.SecondColorSelected = self.MainColorSelected;
+            self.DisabledColor = 0x555555;
 
-            self.BackgroundColor = 0;
-            self.LineSeparatorColor = 0xffffff;
+            self.BackgroundColor = 0x000000;
+            self.LineSeparatorColor = self.MainColor;
+            self.SelectedItemBackground = 0xffffff;
+            self.ListBackground = self.BackgroundColor;
 
-            self.ListBackground = 0;
+            self.ScrollbarBackground = 0xaaaaaa;
+            self.ScrollbarThumbColor = 0x555555;
+            self.ScrollbarThumbBorder = 0xffffff;
 
-            self.ScrollbarBackground = 0x525252;
-            self.ScrollbarThumbColor = 0x999999;
-            self.ScrollbarThumbBorder = 0xdcdcdc;
-
+            self.ButtonColor = self.MainColor;
             self.ButtonBorder = 0xffffff;
             self.ButtonBackground = 0;
+
+            self.InvertSelectedItemIcon = true;
         }
     }
 }

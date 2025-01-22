@@ -1,0 +1,34 @@
+For Emulator:
+adb -e forward tcp:7381 tcp:7381
+
+For Smartphone
+adb -d forward tcp:7381 tcp:7381
+
+soft-hyphen: \u00AD
+
+TEST: Button controlling
+TEST: don't select title on Button controls
+WIP: - ist für Zeilenumbrunch, aber kein Whitespace, das mit " " ersetzt wird
+TODO: StringUtil.split- whitespaces as int
+TODO: translate "Back" / "Quit"
+TODO: if the watch has only 1 button - add back button to views
+TODO: Scrollbars: (:roundVersion)
+https://developer.garmin.com/connect-iq/core-topics/build-configuration/
+
+1 Button, 64 Color:
+- Vivoactive 3
+
+Touch, Square, 2 Buttons:
+- Venu Sq2
+
+no Touch, Round, 5 Buttons:
+- instinct3amoled50mm
+
+Touch, Round, 5 Buttons:
+- fenix847mm
+
+Touch, Round, 5 Buttons, 64 Colors:
+- Forerunner 955
+
+64 Colors
+- Vivoactive 3

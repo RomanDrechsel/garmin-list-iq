@@ -13,9 +13,9 @@ module Views {
         private var _firstDisplay = true;
 
         function initialize(first_display as Boolean) {
-            self.ScrollMode = $.TouchControls ? SCROLL_DRAG : SCROLL_SNAP;
-            self._firstDisplay = first_display;
             ItemView.initialize();
+            self.ScrollMode = SCROLL_DRAG;
+            self._firstDisplay = first_display;
         }
 
         function onShow() as Void {
@@ -115,8 +115,12 @@ module Views {
                 self.setIterator(self._snapPosition);
             }
 
-            if (!$.TouchControls) {
+            if (self.DisplayButtonSupport()) {
                 self.addSettingsButton();
+            }
+
+            if ($.getApp().NoBackButton) {
+                self.addBackButton(true);
             }
 
             if (initialize) {
@@ -146,21 +150,28 @@ module Views {
                 item.SubtitleJustification = Graphics.TEXT_JUSTIFY_CENTER;
                 self.Items.add(item);
             }
-            if (!$.TouchControls) {
+            if (self.DisplayButtonSupport()) {
                 self.addSettingsButton();
             }
+
+            if ($.getApp().NoBackButton) {
+                self.addBackButton(true);
+            }
+
             self.moveIterator(0);
             self._needValidation = true;
         }
 
         protected function interactItem(item as Listitems.Item, doubletap as Boolean) as Void {
-            if (item.BoundObject instanceof String) {
-                if (item.BoundObject.equals("settings")) {
-                    self.openSettings();
-                } else if (item.BoundObject.equals("store")) {
-                    $.getApp().openGooglePlay();
-                } else {
-                    self.GotoList(item.BoundObject, -1);
+            if (!ItemView.interactItem(item, doubletap)) {
+                if (item.BoundObject instanceof String) {
+                    if (item.BoundObject.equals("settings")) {
+                        self.openSettings();
+                    } else if (item.BoundObject.equals("store")) {
+                        $.getApp().openGooglePlay();
+                    } else {
+                        self.GotoList(item.BoundObject, -1);
+                    }
                 }
             }
         }

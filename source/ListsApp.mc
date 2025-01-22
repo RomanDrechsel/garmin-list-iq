@@ -15,33 +15,35 @@ class ListsApp extends Application.AppBase {
     var Inactivity = null as Helper.Inactivity?;
     var GlobalStates as Dictionary<String, Object> = {};
     var onSettingsChangedListeners as Array<Object> = [];
+    var isGlanceView = false;
+    var NoBackButton = false;
 
     function getInitialView() as Array<WatchUi.Views or WatchUi.InputDelegates>? {
-        $.isGlanceView = false;
+        self.isGlanceView = false;
         var appVersion = "2025.01.0801";
         Application.Properties.setValue("appVersion", appVersion);
 
         self.Debug = new Debug.DebugStorage();
         Debug.Log("App started (" + appVersion + ")");
 
-        if (System.getDeviceSettings().isTouchScreen) {
-            $.TouchControls = !Helper.Properties.Get(Helper.Properties.BTNCTRL, System.getDeviceSettings().isTouchScreen);
-        } else {
-            $.TouchControls = false;
+        var settings = System.getDeviceSettings();
+        if ((settings.inputButtons & System.BUTTON_INPUT_ESC) == 0) {
+            self.NoBackButton = true;
         }
 
         self.ListsManager = new ListsManager();
         self.Phone = new Comm.PhoneCommunication();
         self.Inactivity = new Helper.Inactivity();
 
+        Debug.Log(self.getInfo());
+
         var listview = new Views.ListsSelectView(true);
         return [listview, new Views.ItemViewDelegate(listview)];
     }
 
     function getGlanceView() as Array<WatchUi.GlanceView or WatchUi.GlanceViewDelegate>? {
-        $.isGlanceView = true;
-        var glance = new Views.GlanceView();
-        return [glance];
+        self.isGlanceView = true;
+        return [new Views.GlanceView()];
     }
 
     function onSettingsChanged() as Void {
@@ -53,13 +55,6 @@ class ListsApp extends Application.AppBase {
             self.Debug.onSettingsChanged();
         }
         Themes.ThemesLoader.loadTheme();
-
-        if (System.getDeviceSettings().isTouchScreen) {
-            $.TouchControls = !Helper.Properties.Get(Helper.Properties.BTNCTRL, System.getDeviceSettings().isTouchScreen);
-        } else {
-            $.TouchControls = false;
-        }
-
         Debug.Log("Settings changed");
         if (self.onSettingsChangedListeners instanceof Array) {
             for (var i = 0; i < self.onSettingsChangedListeners.size(); i++) {
@@ -68,8 +63,6 @@ class ListsApp extends Application.AppBase {
                 }
             }
         }
-
-        WatchUi.requestUpdate();
     }
 
     function getInfo() as Array<String> {
@@ -96,7 +89,8 @@ class ListsApp extends Application.AppBase {
         ret.add("Version: " + Application.Properties.getValue("appVersion"));
         ret.add("Display: " + screenShape);
         ret.add("Touchscreen: " + settings.isTouchScreen);
-        ret.add("TouchControls: " + $.TouchControls);
+        ret.add("Controls: " + Views.ItemView.SupportedControls());
+        ret.add("LowColors Display: " + Themes.ThemesLoader.LowColors());
         ret.add("Firmware: " + settings.firmwareVersion);
         ret.add("Monkey Version: " + settings.monkeyVersion);
         ret.add("Memory: " + stats.usedMemory + " / " + stats.totalMemory);
@@ -111,14 +105,11 @@ class ListsApp extends Application.AppBase {
 }
 
 var isRoundDisplay = System.getDeviceSettings().screenShape == System.SCREEN_SHAPE_ROUND;
-var TouchControls = false;
 var screenHeight = System.getDeviceSettings().screenHeight;
 
 function getApp() as ListsApp {
     return Application.getApp() as ListsApp;
 }
-
-var isGlanceView = false;
 
 (:debug)
 var isDebug = true;

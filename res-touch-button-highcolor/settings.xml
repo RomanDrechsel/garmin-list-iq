@@ -1,7 +1,7 @@
 <settings>
 
     <!-- button controls -->
-    <setting propertyKey="@Properties.ButtonControls" title="@Strings.StBtnCtrl">
+    <setting propertyKey="@Properties.HWBCtrl" title="@Strings.StBtnCtrl">
         <settingConfig type="boolean" />
     </setting>
 

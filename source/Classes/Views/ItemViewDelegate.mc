@@ -18,7 +18,7 @@ module Views {
             self._view = view;
 
             if (!(WatchUi.InputDelegate has :onDrag)) {
-                self._view.ScrollMode = ItemView.SCROLL_SNAP;
+                //self._view.ScrollMode = ItemView.SCROLL_SNAP;
                 self._useSwipe = true;
             }
         }

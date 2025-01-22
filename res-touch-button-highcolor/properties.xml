@@ -1,0 +1,4 @@
+<properties>
+    <property type="boolean" id="LowColors">false</property>
+    <property type="boolean" id="HWBCtrl">false</property>
+</properties>

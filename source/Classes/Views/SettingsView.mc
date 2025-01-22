@@ -17,6 +17,12 @@ module Views {
             SETTINGS_DOUBLETAP,
             SETTINGS_SHOWNOTES,
             SETTINGS_AUTOEXIT,
+            SETTINGS_HWBCTRL,
+        }
+
+        function initialize() {
+            IconItemView.initialize();
+            self.ScrollMode = SCROLL_DRAG;
         }
 
         function onLayout(dc as Dc) as Void {
@@ -117,13 +123,18 @@ module Views {
             // Change Theme
             self.Items.add(new Listitems.Button(self._mainLayer, Application.loadResource(Rez.Strings.StTheme), SETTINGS_THEME, null, true));
 
+            // Hardware button controls
+            if (ItemView.SupportedControls() == ItemView.CONTROLS_BOTH) {
+                self.addItem(Application.loadResource(Rez.Strings.StBtnCtrl), null, SETTINGS_HWBCTRL, ItemView.DisplayButtonSupport() ? self._itemIconDone : self._itemIcon, 0);
+            }
+
             //store logs
             prop = Helper.Properties.Get(Helper.Properties.LOGS, true);
-            self.addItem(Application.loadResource(Rez.Strings.StLogs), null, SETTINGS_LOGS, prop ? self._itemIconDone : self._itemIcon, 2);
+            self.addItem(Application.loadResource(Rez.Strings.StLogs), null, SETTINGS_LOGS, prop ? self._itemIconDone : self._itemIcon, 0);
 
             //store logs persistent
             prop = Helper.Properties.Get(Helper.Properties.PERSISTENTLOGS, true);
-            var persistent = new Listitems.Item(self._mainLayer, Application.loadResource(Rez.Strings.StPersistentLogs1), Application.loadResource(Rez.Strings.StPersistentLogs2), SETTINGS_PERSISTANTLOGS, prop ? self._itemIconDone : self._itemIcon, null, 3, null);
+            var persistent = new Listitems.Item(self._mainLayer, Application.loadResource(Rez.Strings.StPersistentLogs1), Application.loadResource(Rez.Strings.StPersistentLogs2), SETTINGS_PERSISTANTLOGS, prop ? self._itemIconDone : self._itemIcon, null, 0, null);
             persistent.DrawLine = true;
             persistent.SubtitleJustification = Graphics.TEXT_JUSTIFY_CENTER;
             self.Items.add(persistent);
@@ -137,86 +148,92 @@ module Views {
             //app version
             var str = Application.loadResource(Rez.Strings.StAppVersion);
             var version = Application.Properties.getValue("appVersion");
-            var item = new Listitems.Item(self._mainLayer, str, version, "settings", null, null, -1, null);
+            var item = new Listitems.Item(self._mainLayer, str, version, "test", null, null, -1, null);
             item.TitleJustification = Graphics.TEXT_JUSTIFY_CENTER;
             item.SubtitleJustification = Graphics.TEXT_JUSTIFY_CENTER;
             item.DrawLine = false;
             self.Items.add(item);
 
+            if ($.getApp().NoBackButton) {
+                self.addBackButton(false);
+            }
+
             self._needValidation = true;
         }
 
-        protected function interactItem(item as Listitems.Item, doubletap as Boolean) as Void {
-            if (item.BoundObject == SETTINGS_DELETEALL) {
-                var dialog = new WatchUi.Confirmation(Application.loadResource(Rez.Strings.StDelAllConfirm));
-                var delegate = new Controls.ConfirmDelegate(self.method(:deleteAllLists));
-                WatchUi.pushView(dialog, delegate, WatchUi.SLIDE_BLINK);
-            } else if (item.BoundObject == SETTINGS_LOGS) {
-                if (item.getIcon() == self._itemIcon) {
-                    Helper.Properties.Store(Helper.Properties.LOGS, true);
-                    item.setIcon(self._itemIconDone);
-                } else {
-                    Helper.Properties.Store(Helper.Properties.LOGS, false);
-                    item.setIcon(self._itemIcon);
-                }
-                WatchUi.requestUpdate();
-            } else if ([SETTINGS_MOVEDOWN, SETTINGS_DOUBLETAP, SETTINGS_SHOWNOTES].indexOf(item.BoundObject) >= 0) {
-                var val = item.getIcon() == self._itemIcon;
-                var prop;
-                switch (item.BoundObject) {
-                    case SETTINGS_MOVEDOWN:
-                        prop = Helper.Properties.LISTMOVEDOWN;
-                        break;
-                    case SETTINGS_DOUBLETAP:
-                        prop = Helper.Properties.DOUBLETAPFORDONE;
-                        break;
-                    case SETTINGS_SHOWNOTES:
-                        prop = Helper.Properties.SHOWNOTES;
-                        break;
-                    default:
-                        prop = null;
-                        break;
-                }
-                if (prop != null) {
-                    Helper.Properties.Store(prop, val);
-                    item.setIcon(val ? self._itemIconDone : self._itemIcon);
+        protected function interactItem(item as Listitems.Item, doubletap as Boolean) as Boolean {
+            if (!IconItemView.interactItem(item, doubletap)) {
+                if (item.BoundObject == SETTINGS_DELETEALL) {
+                    var dialog = new WatchUi.Confirmation(Application.loadResource(Rez.Strings.StDelAllConfirm));
+                    var delegate = new Controls.ConfirmDelegate(self.method(:deleteAllLists));
+                    WatchUi.pushView(dialog, delegate, WatchUi.SLIDE_BLINK);
+                } else if ([SETTINGS_MOVEDOWN, SETTINGS_DOUBLETAP, SETTINGS_SHOWNOTES].indexOf(item.BoundObject) >= 0) {
+                    var val = item.getIcon() == self._itemIcon;
+                    var prop;
+                    switch (item.BoundObject) {
+                        case SETTINGS_MOVEDOWN:
+                            prop = Helper.Properties.LISTMOVEDOWN;
+                            break;
+                        case SETTINGS_DOUBLETAP:
+                            prop = Helper.Properties.DOUBLETAPFORDONE;
+                            break;
+                        case SETTINGS_SHOWNOTES:
+                            prop = Helper.Properties.SHOWNOTES;
+                            break;
+                        default:
+                            prop = null;
+                            break;
+                    }
+                    if (prop != null) {
+                        Helper.Properties.Store(prop, val);
+                        item.setIcon(val ? self._itemIconDone : self._itemIcon);
+                        WatchUi.requestUpdate();
+                        if ($.getApp().ListsManager != null) {
+                            $.getApp().GlobalStates.put("movetop", true);
+                        }
+                    }
+                } else if (item.BoundObject == SETTINGS_HWBCTRL) {
+                    var check = item.getIcon() == self._itemIcon;
+                    Helper.Properties.Store(Helper.Properties.HWBCTRL, check);
+                    item.setIcon(check ? self._itemIconDone : self._itemIcon);
+                    $.getApp().triggerOnSettingsChanged();
                     WatchUi.requestUpdate();
-                    if ($.getApp().ListsManager != null) {
-                        $.getApp().GlobalStates.put("movetop", true);
+                } else if (item.BoundObject == SETTINGS_LOGS) {
+                    var check = item.getIcon() == self._itemIcon;
+                    Helper.Properties.Store(Helper.Properties.LOGS, check);
+                    item.setIcon(check ? self._itemIconDone : self._itemIcon);
+                    WatchUi.requestUpdate();
+                } else if (item.BoundObject == SETTINGS_PERSISTANTLOGS) {
+                    var check = item.getIcon() == self._itemIcon;
+                    Helper.Properties.Store(Helper.Properties.PERSISTENTLOGS, check);
+                    item.setIcon(check ? self._itemIconDone : self._itemIcon);
+                    WatchUi.requestUpdate();
+                } else if (item.BoundObject == SETTINGS_SENDLOGS) {
+                    var prop = Helper.Properties.Get(Helper.Properties.LOGS, true);
+                    if (prop == true) {
+                        if ($.getApp().Debug != null) {
+                            $.getApp().Debug.SendLogs();
+                        }
+                        Helper.ToastUtil.Toast(Rez.Strings.StSendLogsOk, Helper.ToastUtil.SUCCESS);
+                    } else {
+                        Helper.ToastUtil.Toast(Rez.Strings.StSendLogsOff, Helper.ToastUtil.ERROR);
                     }
+                } else if (item.BoundObject == SETTINGS_AUTOEXIT) {
+                    var view = new SettingsAutoexitView();
+                    WatchUi.pushView(view, new ItemViewDelegate(view), WatchUi.SLIDE_LEFT);
+                } else if (item.BoundObject == SETTINGS_THEME) {
+                    var view = new SettingsThemeView();
+                    WatchUi.pushView(view, new ItemViewDelegate(view), WatchUi.SLIDE_LEFT);
+                } else if (item.BoundObject == SETTINGS_APPSTORE) {
+                    $.getApp().openGooglePlay();
+                } else if (item.BoundObject != null) {
+                    var view = new ErrorView(Rez.Strings.ErrListRec, 666, {});
+                    WatchUi.pushView(view, new ItemViewDelegate(view), WatchUi.SLIDE_LEFT);
                 }
-            } else if (item.BoundObject == SETTINGS_PERSISTANTLOGS) {
-                if (item.getIcon() == self._itemIcon) {
-                    Helper.Properties.Store(Helper.Properties.PERSISTENTLOGS, true);
-                    item.setIcon(self._itemIconDone);
-                } else {
-                    Helper.Properties.Store(Helper.Properties.PERSISTENTLOGS, false);
-                    item.setIcon(self._itemIcon);
-                }
-                WatchUi.requestUpdate();
-            } else if (item.BoundObject == SETTINGS_SENDLOGS) {
-                var prop = Helper.Properties.Get(Helper.Properties.LOGS, true);
-                if (prop == true) {
-                    if ($.getApp().Debug != null) {
-                        $.getApp().Debug.SendLogs();
-                    }
-                    Helper.ToastUtil.Toast(Rez.Strings.StSendLogsOk, Helper.ToastUtil.SUCCESS);
-                } else {
-                    Helper.ToastUtil.Toast(Rez.Strings.StSendLogsOff, Helper.ToastUtil.ERROR);
-                }
-            } else if (item.BoundObject == SETTINGS_AUTOEXIT) {
-                var view = new SettingsAutoexitView();
-                WatchUi.pushView(view, new ItemViewDelegate(view), WatchUi.SLIDE_LEFT);
-            } else if (item.BoundObject == SETTINGS_THEME) {
-                var view = new SettingsThemeView();
-                WatchUi.pushView(view, new ItemViewDelegate(view), WatchUi.SLIDE_LEFT);
-            } else if (item.BoundObject == SETTINGS_APPSTORE) {
-                $.getApp().openGooglePlay();
-                self.goBack();
-            } else if (item.BoundObject != null) {
-                var view = new ErrorView(Rez.Strings.ErrListRec, 666, {});
-                WatchUi.pushView(view, new ItemViewDelegate(view), WatchUi.SLIDE_LEFT);
+                return true;
             }
+
+            return false;
         }
     }
 }

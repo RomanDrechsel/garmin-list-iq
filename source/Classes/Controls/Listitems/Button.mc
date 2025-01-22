@@ -35,7 +35,7 @@ module Controls {
                 var viewport_yTop = viewport_y;
                 viewport_y += self._verticalMargin;
 
-                if (isSelected && self.isSelectable && !$.TouchControls) {
+                if (isSelected && self.isSelectable && Views.ItemView.DisplayButtonSupport()) {
                     self.drawSelectedBackground(dc, viewport_y);
                 }
 

@@ -1,6 +1,9 @@
 <strings>
     <string id="AppName" scope="glance">Lists</string>
 
+    <string id="Back">Back</string>
+    <string id="Quit">Quit</string>
+
     <string id="SettingsTh">Theme</string>
     <string id="ThGrey">Grey</string>
     <string id="ThRed">Red</string>
@@ -37,7 +40,7 @@
     <string id="StAutoExit30">after 30 minutes</string>
     <string id="StAutoExit60">after 60 minutes</string>
     <string id="StAutoExitOff">disabled</string>
-    <string id="StBtnCtrl">Hardware button controls</string>
+    <string id="StBtnCtrl">Hardware button control support</string>
 
     <string id="StDelAll">Delete all lists</string>
     <string id="StDelAllConfirm">Delete all lists?</string>

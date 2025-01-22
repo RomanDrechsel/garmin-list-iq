@@ -9,7 +9,6 @@ import Helper;
 module Views {
     class ListSettingsView extends ItemView {
         var ListUuid = null;
-        var ScrollMode = SCROLL_DRAG;
 
         private var _itemIconUncheck as Listitems.ViewItemIcon;
         private var _itemIconCheck as Listitems.ViewItemIcon;
@@ -19,6 +18,7 @@ module Views {
 
         function initialize(uuid as String) {
             ItemView.initialize();
+            self.ScrollMode = SCROLL_DRAG;
             self.ListUuid = uuid;
             self._itemIconUncheck = $.getTheme().DarkTheme ? Application.loadResource(Rez.Drawables.Item) : Application.loadResource(Rez.Drawables.bItem);
             self._itemIconCheck = $.getTheme().DarkTheme ? Application.loadResource(Rez.Drawables.ItemDone) : Application.loadResource(Rez.Drawables.bItemDone);

@@ -1,6 +1,9 @@
 <strings>
     <string id="AppName" scope="glance">Listen</string>
 
+    <string id="Back">Zurück</string>
+    <string id="Quit">Beenden</string>
+
     <string id="SettingsTh">Theme</string>
     <string id="ThGrey">Grau</string>
     <string id="ThRed">Rot</string>
@@ -37,7 +40,7 @@
     <string id="StAutoExit30">nach 30 Minuten</string>
     <string id="StAutoExit60">nach 60 Minuten</string>
     <string id="StAutoExitOff">deaktiviert</string>
-    <string id="StBtnCtrl">Hardware Button Steuerung</string>
+    <string id="StBtnCtrl">Hardware Button Steuerungs-Unterstützung</string>
 
     <string id="StDelAll">Alle Listen löschen</string>
     <string id="StDelAllConfirm">Listen löschen?</string>
@@ -47,7 +50,6 @@
     <string id="StAppVersion">App Version</string>
 
     <string id="SelTheme">Thema</string>
-
     <string id="ListDateFormatShort">%D. %d. %M.</string>
     <string id="ListDateFormat">%D. %d. %M %y</string>
     <string id="ListTimeFormat">%h:%i %ampm</string>

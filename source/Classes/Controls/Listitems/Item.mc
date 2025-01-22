@@ -63,7 +63,7 @@ module Controls {
                 var viewport_yTop = viewport_y;
                 viewport_y += self._verticalMargin;
 
-                var specialColor = isSelected && self.isSelectable && !$.TouchControls;
+                var specialColor = isSelected && self.isSelectable && Views.ItemView.DisplayButtonSupport();
                 var color = specialColor ? $.getTheme().MainColorSelected : $.getTheme().MainColor;
                 var colorSub = specialColor ? $.getTheme().SecondColorSelected : $.getTheme().SecondColor;
                 if (self.isDisabled) {
@@ -204,7 +204,7 @@ module Controls {
                 if (viewportY + self._height <= 0) {
                     //above the top edge of the display
                     return false;
-                } else if (viewportY > self._layer.getDc().getHeight()) {
+                } else if (viewportY > $.screenHeight) {
                     //below the bottom edge of the display
                     return false;
                 } else {
@@ -303,7 +303,7 @@ module Controls {
                 if (self._listY == null) {
                     return null;
                 }
-                return self._listY - scrollOffset;
+                return self._listY - scrollOffset + self._layer.getY();
             }
         }
     }

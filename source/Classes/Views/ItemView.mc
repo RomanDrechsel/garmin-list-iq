@@ -3,6 +3,7 @@ import Toybox.Lang;
 import Toybox.WatchUi;
 import Toybox.Application;
 import Toybox.Time;
+import Toybox.System;
 import Controls.Scrollbar;
 import Helper;
 import Controls.Listitems;
@@ -12,6 +13,12 @@ module Views {
         enum EScrollmode {
             SCROLL_SNAP,
             SCROLL_DRAG,
+        }
+
+        enum EControls {
+            CONTROLS_BUTTONS,
+            CONTROLS_TOUCHSCREEN,
+            CONTROLS_BOTH,
         }
 
         var Items as Array<Item> = new Array<Item>[0];
@@ -58,13 +65,13 @@ module Views {
         /** is a new validation needed? */
         protected var _needValidation as Boolean = true;
 
+        protected static var _controls as EControls? = null;
+        protected static var _buttonDisplay as Boolean? = null;
+
         function initialize() {
             View.initialize();
             self.Items = new Array<Item>[0];
             self.Interaction();
-            if ($.TouchControls == false) {
-                self.ScrollMode = SCROLL_SNAP;
-            }
         }
 
         function onLayout(dc as Dc) {
@@ -82,13 +89,13 @@ module Views {
                 layerwidth -= scrollbarwidth;
             }
 
-            self._mainLayer = new Controls.LayerDef(dc, mainLayerMargin[0], mainLayerMargin[1], layerwidth, layerheight);
+            self._mainLayer = new Controls.LayerDef(mainLayerMargin[0], mainLayerMargin[1], layerwidth, layerheight);
             if ($.isRoundDisplay) {
-                self._scrollbarLayer = new Controls.LayerDef(dc, dc.getWidth() / 2, 0, dc.getWidth() / 2, dc.getHeight());
+                self._scrollbarLayer = new Controls.LayerDef(dc.getWidth() / 2, 0, dc.getWidth() / 2, dc.getHeight());
                 self._scrollbar = new Scrollbar.Round(self._scrollbarLayer, scrollbarwidth);
             } else {
                 var barX = self._mainLayer.getX() + self._mainLayer.getWidth();
-                self._scrollbarLayer = new Controls.LayerDef(dc, barX, 0, scrollbarwidth, dc.getHeight());
+                self._scrollbarLayer = new Controls.LayerDef(barX, 0, scrollbarwidth, dc.getHeight());
                 self._scrollbar = new Scrollbar.Rectangle(self._scrollbarLayer);
             }
         }
@@ -244,7 +251,7 @@ module Views {
         }
 
         function onSettingsChanged() as Void {
-            self.Items = [];
+            self._buttonDisplay = null;
         }
 
         function Interaction() as Void {
@@ -256,7 +263,7 @@ module Views {
 
         function onKeyEnter() as Boolean {
             self.Interaction();
-            if ($.TouchControls) {
+            if (!self.DisplayButtonSupport() && !$.getApp().NoBackButton) {
                 return self.onKeyMenu();
             } else if (self._selectedItem != null) {
                 return self.interactItem(self._selectedItem, true);
@@ -337,35 +344,6 @@ module Views {
         }
 
         /**
-         * on SCROLL_SNAP - mode returns the padding of the top of the first item
-         */
-        private function getPaddingTop(dc as Dc) as Number {
-            if (self._paddingTop == null) {
-                if (self.ScrollMode == SCROLL_SNAP && self.Items.size() > 0) {
-                    self._paddingTop = self._mainLayer.getHeight() / 2 - (self.Items[0].getHeight(dc) / 2).toNumber();
-                } else {
-                    self._paddingTop = 0;
-                }
-            }
-
-            return self._paddingTop;
-        }
-
-        /**
-         * on SCROLL_SNAP - mode returns the padding of the bottom of the last item
-         */
-        private function getPaddingBottom(dc as Dc) as Number {
-            if (self._paddingBottom == null) {
-                if (self.ScrollMode == SCROLL_SNAP && self.Items.size() > 0) {
-                    self._paddingBottom = self._mainLayer.getHeight() / 2 - (self.Items[self.Items.size() - 1].getHeight(dc) / 2).toNumber();
-                } else {
-                    self._paddingBottom = 0;
-                }
-            }
-            return self._paddingBottom;
-        }
-
-        /**
          * returns the height of all listitems
          */
         private function getListHeight(dc as Dc) as Number {
@@ -397,7 +375,21 @@ module Views {
          */
         protected function validate(dc as Dc) as Void {
             if (self._needValidation == true) {
-                var y = self.getPaddingTop(dc);
+                if (self.DisplayButtonSupport() || $.isRoundDisplay) {
+                    if (self.Items.size() > 0) {
+                        if (self.Items[0] instanceof Listitems.Title) {
+                            self._paddingTop = self._mainLayer.getHeight() / 2 - (self.Items[1].getHeight(dc) / 2).toNumber() - self.Items[0].getHeight(dc);
+                        } else {
+                            self._paddingTop = self._mainLayer.getHeight() / 2 - (self.Items[0].getHeight(dc) / 2).toNumber();
+                        }
+                    } else {
+                        self._paddingTop = 0;
+                    }
+                } else {
+                    self._paddingTop = 0;
+                }
+
+                var y = self._paddingTop;
                 for (var i = 0; i < self.Items.size(); i++) {
                     var item = self.Items[i];
                     item.setLayer(self._mainLayer);
@@ -406,7 +398,19 @@ module Views {
                     y += item.getHeight(dc);
                 }
 
-                self._viewHeight = y + self.getPaddingBottom(dc);
+                if (self.DisplayButtonSupport() || $.isRoundDisplay) {
+                    if (self.Items.size() > 0) {
+                        self._paddingBottom = self._mainLayer.getHeight() / 2 - (self.Items[self.Items.size() - 1].getHeight(dc) / 2).toNumber();
+                        if (self._paddingBottom < 0) {
+                            self._paddingBottom = 0;
+                        }
+                    } else {
+                        self._paddingBottom = 0;
+                    }
+                } else {
+                    self._paddingBottom = 0;
+                }
+                self._viewHeight = y + self._paddingBottom;
                 self._needScrollbar = self._mainLayer.getHeight() < self._viewHeight;
                 self._needValidation = false;
                 self.setCenterItemSelected();
@@ -417,7 +421,21 @@ module Views {
             self.Items.add(new Listitems.Button(self._mainLayer, Application.loadResource(Rez.Strings.StTitle), "settings", ($.screenHeight * 0.1).toNumber(), false));
         }
 
+        protected function addBackButton(quit as Boolean) as Void {
+            var rez = quit ? Rez.Strings.Quit : Rez.Strings.Back;
+            self.Items.add(new Listitems.Button(self._mainLayer, Application.loadResource(rez), quit ? "quit" : "back", ($.screenHeight * 0.1).toNumber(), false));
+        }
+
         protected function interactItem(item as Listitems.Item, doubletap as Boolean) as Boolean {
+            if (item.BoundObject instanceof String) {
+                if (item.BoundObject.equals("back")) {
+                    self.goBack();
+                    return true;
+                } else if (item.BoundObject.equals("quit")) {
+                    System.exit();
+                    return true;
+                }
+            }
             return false;
         }
 
@@ -434,6 +452,36 @@ module Views {
                 }
             }
             self.setSelectedItem(null);
+        }
+
+        static function SupportedControls() as EControls {
+            if (self._controls == null) {
+                var settings = System.getDeviceSettings();
+                if (settings.isTouchScreen) {
+                    if ((settings.inputButtons & System.BUTTON_INPUT_UP) != 0 && (settings.inputButtons & System.BUTTON_INPUT_DOWN) != 0) {
+                        self._controls = CONTROLS_BOTH;
+                    } else {
+                        self._controls = CONTROLS_TOUCHSCREEN;
+                    }
+                } else {
+                    self._controls = CONTROLS_BUTTONS;
+                }
+            }
+            return self._controls;
+        }
+
+        static function DisplayButtonSupport() as Boolean {
+            if (self._buttonDisplay == null) {
+                var controls = self.SupportedControls();
+                if (controls == CONTROLS_TOUCHSCREEN) {
+                    self._buttonDisplay = false;
+                } else if (controls == CONTROLS_BUTTONS) {
+                    self._buttonDisplay = true;
+                } else {
+                    self._buttonDisplay = Helper.Properties.Get(Helper.Properties.HWBCTRL, false);
+                }
+            }
+            return self._buttonDisplay;
         }
     }
 }

@@ -90,7 +90,7 @@ module Views {
             hint.SubtitleJustification = Graphics.TEXT_JUSTIFY_CENTER;
             self.Items.add(hint);
 
-            var txt = $.TouchControls ? Application.loadResource(Rez.Strings.ErrHintTouch) : Application.loadResource(Rez.Strings.ErrHintBtn);
+            var txt = self.DisplayButtonSupport() ? Application.loadResource(Rez.Strings.ErrHintTouch) : Application.loadResource(Rez.Strings.ErrHintBtn);
             var hint2 = new Listitems.Item(self._mainLayer, null, txt, null, null, null, 3, null);
             hint2.DrawLine = false;
             hint2.isSelectable = false;

@@ -10,16 +10,10 @@ import Controls.Listitems;
 import Helper;
 
 module Views {
-    class ListDetailsView extends ItemView {
+    class ListDetailsView extends IconItemView {
         private var _listUuid as String?;
         private var _startScroll as Number?;
         private var _listOptimized = true;
-
-        private var _itemIcon as Listitems.ViewItemIcon;
-        private var _itemIconDone as Listitems.ViewItemIcon;
-        private var _itemIconInvert as Listitems.ViewItemIcon? = null;
-        private var _itemIconDoneInvert as Listitems.ViewItemIcon? = null;
-
         protected var _fontoverride = Helper.Fonts.Large();
 
         function initialize(uuid as String, scrollTo as Number?) {
@@ -228,7 +222,7 @@ module Views {
                             item.DrawLine = false;
                             self.Items.add(item);
                         }
-                        if (!$.TouchControls) {
+                        if (self.DisplayButtonSupport()) {
                             self.addSettingsButton();
                         }
                     }
@@ -414,23 +408,6 @@ module Views {
             item.isSelectable = false;
             item.DrawLine = false;
             self.Items.add(item);
-        }
-
-        private function loadIcons() as Void {
-            self._itemIcon = $.getTheme().DarkTheme ? Application.loadResource(Rez.Drawables.Item) : Application.loadResource(Rez.Drawables.bItem);
-            self._itemIconDone = $.getTheme().DarkTheme ? Application.loadResource(Rez.Drawables.ItemDone) : Application.loadResource(Rez.Drawables.bItemDone);
-
-            if (!$.TouchControls) {
-                if (self._itemIconInvert == null) {
-                    self._itemIconInvert = $.getTheme().DarkTheme ? Application.loadResource(Rez.Drawables.bItem) : Application.loadResource(Rez.Drawables.Item);
-                }
-                if (self._itemIconDoneInvert == null) {
-                    self._itemIconDoneInvert = $.getTheme().DarkTheme ? Application.loadResource(Rez.Drawables.bItemDone) : Application.loadResource(Rez.Drawables.ItemDone);
-                }
-            } else {
-                self._itemIconInvert = null;
-                self._itemIconDoneInvert = null;
-            }
         }
     }
 }

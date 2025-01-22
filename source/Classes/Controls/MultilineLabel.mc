@@ -11,7 +11,6 @@ module Controls {
         private var _height as Number = -1;
         private var _maxHeight as Number? = null;
         private var _needValidation = true;
-        private static const linewrappers = ['-'] as Array<Char>;
 
         function initialize(text as String or Array<String>, maxWidth as Number, font as FontType) {
             self._maxWidth = maxWidth;
@@ -112,7 +111,7 @@ module Controls {
                     ret.add(Helper.StringUtil.cleanString(_lines[j]));
                     continue;
                 }
-                var parts = Helper.StringUtil.split(_lines[j], self.linewrappers);
+                var parts = Helper.StringUtil.split(_lines[j]);
                 var curr_line = "" as String;
                 var curr_line_width = 0;
                 for (var i = 0; i < parts.size(); i++) {

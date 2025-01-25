@@ -7,9 +7,8 @@ adb -d forward tcp:7381 tcp:7381
 soft-hyphen: \u00AD
 
 TEST: Button controlling
-TEST: don't select title on Button controls
-WIP: - ist für Zeilenumbrunch, aber kein Whitespace, das mit " " ersetzt wird
-TODO: StringUtil.split- whitespaces as int
+TEST: don't select title on Button Controls
+TEST: new line break
 TODO: translate "Back" / "Quit"
 TODO: if the watch has only 1 button - add back button to views
 TODO: Scrollbars: (:roundVersion)

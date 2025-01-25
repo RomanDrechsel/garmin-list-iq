@@ -85,6 +85,7 @@ module Views {
             }
 
             var hint = new Listitems.Item(self._mainLayer, null, Application.loadResource(Rez.Strings.ErrHint), null, null, null, 2, null);
+            hint.setSubFont(Helper.Fonts.Normal());
             hint.DrawLine = false;
             hint.isSelectable = false;
             hint.SubtitleJustification = Graphics.TEXT_JUSTIFY_CENTER;
@@ -92,6 +93,7 @@ module Views {
 
             var txt = self.DisplayButtonSupport() ? Application.loadResource(Rez.Strings.ErrHintTouch) : Application.loadResource(Rez.Strings.ErrHintBtn);
             var hint2 = new Listitems.Item(self._mainLayer, null, txt, null, null, null, 3, null);
+            hint2.setSubFont(Helper.Fonts.Normal());
             hint2.DrawLine = false;
             hint2.isSelectable = false;
             hint2.SubtitleJustification = Graphics.TEXT_JUSTIFY_CENTER;

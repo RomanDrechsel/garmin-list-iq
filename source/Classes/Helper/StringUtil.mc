@@ -1,11 +1,12 @@
 import Toybox.Lang;
+import Toybox.Graphics;
 
 module Helper {
     (:glance)
     class StringUtil {
-        private static const whitespaces = [(10).toChar() /*New Live*/, (11).toChar() /*Tabulation*/, (13).toChar() /*CR*/, (32).toChar() /*Space*/, (133).toChar() /*Next Line*/, (173).toChar() /*Soft-Hyphen*/] as Array<Char>;
-        private static const nBsp = [(8239).toChar(), (160).toChar()];
-        private static const lineBreaks = [
+        private static const lineBreaks = [0x0a /*New Line*/, 0x0b /*Line tabulation*/, 0x0d /*CR*/, 0x85 /*Next Line*/, 0xad /*Soft-Hyphen*/] as Array<Number>;
+        private static const nBsp = [0xa0 /*nbsp*/, 0x202f /*nnbsp*/];
+        private static const wordBreaks = [
             [0x21, 0x2f],
             [0x3a, 0x40],
             [0x5c, 0x60],
@@ -37,15 +38,112 @@ module Helper {
             return "";
         }
 
+        static function splitToFixedWidth(dc as Dc, str as String, maxwidth as Number, font as FontType) as Array<String> {
+            //TODO: try Graphics.fitTextToArea()
+
+            var ret = [];
+            var lines = self.splitLines(str);
+
+            for (var i = 0; i < lines.size(); i++) {
+                var line = lines[i];
+            }
+
+            for (var i = 0; i < lines.size(); i++) {
+                var line = self.trim(lines[i]);
+                if (dc.getTextWidthInPixels(line, font) < maxwidth) {
+                    //the line fits on the display
+                    ret.add(line);
+                    continue;
+                }
+
+                //the line does not fit on the display
+                var chars = line.toUtf8Array();
+                var br = -1;
+                var break_line = "";
+                var line_length = 0;
+                for (var j = 0; j < chars.size(); j++) {
+                    var char = chars[j];
+                    var wordbreak = false;
+                    if (char == 0x20) {
+                        wordbreak = true;
+                    } else if (self.nBsp.indexOf(char) < 0) {
+                        //it is no no-break space...
+                        for (var k = 0; k < self.wordBreaks.size(); k++) {
+                            var range = self.wordBreaks[k];
+                            if (char >= range[0] && char <= range[1]) {
+                                wordbreak = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (wordbreak == true) {
+                        if (br < 0) {
+                            br = 0;
+                        }
+                        var word;
+                        if (br == j) {
+                            //only one char
+                            word = char.toChar().toString();
+                        } else {
+                            word = line.substring(br, j);
+                        }
+                        br = j;
+                        if (char == 0x20) {
+                            br++;
+                            word += " ";
+                        }
+
+                        var word_length = dc.getTextWidthInPixels(word, font);
+                        if (line_length + word_length < maxwidth) {
+                            //the word fits on the display
+                            break_line += word;
+                            line_length += word_length;
+                        } else {
+                            ret.add(self.trim(break_line));
+                            break_line = word;
+                            line_length = word_length;
+                        }
+                    }
+                }
+
+                if (br < line.length()) {
+                    var word = line.substring(br, line.length());
+                    var word_length = dc.getTextWidthInPixels(word, font);
+                    if (line_length + word_length < maxwidth) {
+                        //the word fits on the display
+                        break_line += word;
+                    } else {
+                        ret.add(self.trim(break_line));
+                        break_line = word;
+                    }
+                }
+
+                if (break_line.length() > 0) {
+                    ret.add(self.trim(break_line));
+                }
+            }
+
+            for (var i = 0; i < ret.size(); i++) {
+                Debug.Log("LINE: '" + ret[i] + "'");
+            }
+
+            return ret;
+        }
+
         static function split(str as String) as Array<String> {
             var ret = new Array<String>[0];
 
             var curr = "" as String;
             var chars = str.toCharArray();
             for (var i = 0; i < chars.size(); i++) {
-                if (self.nBsp.indexOf(chars[i]) >= 0) {
+                if (chars[i] == (32).toChar()) {
+                    ret.add(curr);
+                    ret.add(" ");
+                    curr = "";
+                } else if (self.nBsp.indexOf(chars[i]) >= 0) {
                     curr += " ";
-                } else if (self.whitespaces.indexOf(chars[i]) >= 0) {
+                } else if (self.lineBreaks.indexOf(chars[i]) >= 0) {
                     if (curr.length() > 0) {
                         ret.add(curr);
                     }
@@ -79,24 +177,49 @@ module Helper {
 
         static function splitLines(str as String) as Array<String> {
             var ret = [];
-            var pos = str.find("\n");
-            while (pos != null) {
-                var line = str.substring(0, pos);
-                ret.add(line);
-                str = str.substring(pos + 1, str.length());
-                pos = str.find("\n");
+
+            var chars = str.toUtf8Array();
+            var br = -1;
+            for (var i = 0; i < chars.size(); i++) {
+                var char = chars[i];
+                if (self.lineBreaks.indexOf(char) >= 0) {
+                    if (br < 0) {
+                        br = 0;
+                    }
+                    if (br == i) {
+                        //empty line
+                        ret.add("");
+                    } else {
+                        var line = str.substring(br, i);
+                        ret.add(line);
+                    }
+                    br = i + 1;
+                }
             }
 
-            if (str.length() > 0) {
-                ret.add(str);
+            if (br < 0) {
+                br = 0;
+            }
+
+            if (br < str.length()) {
+                var line = str.substring(br, str.length());
+                line = self.trim(line);
+                //TODO: rtrim()
+                ret.add(line);
             }
 
             return ret;
         }
 
         static function isWhitespace(str as String or Char or Number) as Boolean {
-            if (str instanceof Lang.String) {
-                var chars = str.toCharArray();
+            //TODO: is String needed?
+            if (str instanceof Lang.Number) {
+                if (str == 0x20) {
+                    return true;
+                }
+                return false;
+            } else if (str instanceof Lang.String) {
+                var chars = str.toUtf8Array();
                 for (var i = 0; i < chars.size(); i++) {
                     if (!self.isWhitespace(chars[i])) {
                         return false;
@@ -104,12 +227,7 @@ module Helper {
                 }
                 return true;
             } else if (str instanceof Lang.Char) {
-                if (self.whitespaces.indexOf(str) >= 0) {
-                    return true;
-                }
-                return false;
-            } else if (str instanceof Lang.Number) {
-                return self.isWhitespace(str.toChar());
+                return self.isWhitespace(str.toNumber());
             }
 
             return false;
@@ -117,22 +235,24 @@ module Helper {
 
         static function trim(str as String) as String {
             if (str.length() > 0) {
-                var chars = str.toCharArray();
+                var chars = str.toUtf8Array();
                 var start = 0;
                 var end = str.length() - 1;
                 for (var i = 0; i < chars.size(); i++) {
-                    if (!self.isWhitespace(chars[i])) {
+                    if (chars[i] != 0x20 && !self.isWhitespace(chars[i])) {
                         start = i;
                         break;
                     }
                 }
                 for (var i = chars.size() - 1; i >= 0; i--) {
-                    if (!self.isWhitespace(chars[i])) {
+                    if (chars[i] != 0x20 && !self.isWhitespace(chars[i])) {
                         end = i;
                         break;
                     }
                 }
-                str = str.substring(start, end + 1);
+                if (start > 0 || end < str.length() - 1) {
+                    str = str.substring(start, end + 1);
+                }
             }
 
             return str;
@@ -140,16 +260,27 @@ module Helper {
 
         static function cleanString(str as String) as String {
             var curr_str = "" as String;
-            var chars = str.toCharArray();
+            var chars = str.toUtf8Array();
             for (var i = 0; i < chars.size(); i++) {
                 if (self.nBsp.indexOf(chars[i]) >= 0) {
                     curr_str += " ";
                 } else {
-                    curr_str += chars[i].toString();
+                    curr_str += chars[i].toChar().toString();
                 }
             }
 
             return curr_str;
+        }
+
+        static function join(strs as Array<String>, sep as String?) as String {
+            var ret = "";
+            for (var i = 0; i < strs.size(); i++) {
+                ret += strs[i];
+                if (sep != null && i < strs.size() - 1) {
+                    ret += sep;
+                }
+            }
+            return ret;
         }
 
         static function formatBytes(bytes as Number) as String {

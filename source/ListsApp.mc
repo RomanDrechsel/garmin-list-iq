@@ -37,8 +37,9 @@ class ListsApp extends Application.AppBase {
 
         Debug.Log(self.getInfo());
 
-        var listview = new Views.ListsSelectView(true);
-        return [listview, new Views.ItemViewDelegate(listview)];
+        var startview = new Views.ListsSelectView(true);
+        //var startview = new Debug.TestView();
+        return [startview, new Views.ItemViewDelegate(startview)];
     }
 
     function getGlanceView() as Array<WatchUi.GlanceView or WatchUi.GlanceViewDelegate>? {
@@ -63,6 +64,7 @@ class ListsApp extends Application.AppBase {
                 }
             }
         }
+        WatchUi.requestUpdate();
     }
 
     function getInfo() as Array<String> {

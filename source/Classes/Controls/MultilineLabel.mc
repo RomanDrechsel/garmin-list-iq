@@ -55,7 +55,7 @@ module Controls {
 
         function getHeight(dc as Dc?) as Number {
             if (self._lines instanceof Lang.String) {
-                self._lines = self.wrapText(dc, self._lines);
+                self._lines = Helper.StringUtil.splitToFixedWidth(dc, self._lines, self._maxWidth, self._font);
             } else if (self._lines == null) {
                 return 0;
             }
@@ -79,80 +79,12 @@ module Controls {
             return self._height;
         }
 
-        function getFullText() as String {
-            if (self._lines instanceof String) {
-                return self._lines;
-            }
-
-            var text = "";
-            for (var i = 0; i < self._lines.size(); i++) {
-                text += self._lines[i];
-                if (i < self._lines.size() - 1) {
-                    text += "\n";
-                }
-            }
-
-            return text;
-        }
-
         function getText() as String or Array<String> or Null {
             return self._lines;
         }
 
         function SetMaxHeight(height as Number) as Void {
             self._maxHeight = height;
-        }
-
-        function wrapText(dc as Dc, fulltext as String) as Array<String> {
-            var ret = [] as Array<String>;
-            var _lines = Helper.StringUtil.splitLines(fulltext);
-            for (var j = 0; j < _lines.size(); j++) {
-                if (dc.getTextWidthInPixels(_lines[j], self._font) <= self._maxWidth) {
-                    ret.add(Helper.StringUtil.cleanString(_lines[j]));
-                    continue;
-                }
-                var parts = Helper.StringUtil.split(_lines[j]);
-                var curr_line = "" as String;
-                var curr_line_width = 0;
-                for (var i = 0; i < parts.size(); i++) {
-                    var str = parts[i] as String;
-                    var part_width = dc.getTextWidthInPixels(str, self._font) as Number;
-
-                    if (curr_line.length() == 0) {
-                        //no white-spaces at line start ...
-                        if (Helper.StringUtil.isWhitespace(str)) {
-                            continue;
-                        }
-
-                        curr_line = str;
-                        curr_line_width = part_width;
-                    } else {
-                        if (curr_line_width + part_width < self._maxWidth) {
-                            //line-break not reached,
-                            curr_line += str;
-                            curr_line_width += part_width;
-                        } else {
-                            //line-break
-                            curr_line = Helper.StringUtil.trim(curr_line);
-                            if (curr_line.length() > 0) {
-                                ret.add(curr_line);
-                            }
-                            if (Helper.StringUtil.isWhitespace(str)) {
-                                curr_line = "";
-                                curr_line_width = 0;
-                            } else {
-                                curr_line = str;
-                                curr_line_width = part_width;
-                            }
-                        }
-                    }
-                }
-                if (curr_line.length() > 0) {
-                    ret.add(curr_line);
-                }
-            }
-
-            return ret;
         }
 
         function Invalidate(maxwidth as Number) {
@@ -166,9 +98,8 @@ module Controls {
             if (self._needValidation == true) {
                 if (self._lines instanceof Array == false) {
                     if (self._lines instanceof Lang.String) {
-                        self._lines = self.wrapText(dc, self._lines);
+                        self._lines = Helper.StringUtil.splitToFixedWidth(dc, self._lines, self._maxWidth, self._font);
                     } else {
-                        self._lines = self.wrapText(dc, self.getFullText());
                         self._height = -1;
                     }
                 }

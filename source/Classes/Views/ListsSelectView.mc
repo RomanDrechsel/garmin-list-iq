@@ -145,6 +145,7 @@ module Views {
                     txtRez = Rez.Strings.NoListsLinkBtn;
                 }
                 item = new Listitems.Item(self._mainLayer, null, Application.loadResource(txtRez), "store", null, null, 0, null);
+                item.setSubFont(Helper.Fonts.Normal());
                 item.DrawLine = false;
                 item.isSelectable = false;
                 item.SubtitleJustification = Graphics.TEXT_JUSTIFY_CENTER;

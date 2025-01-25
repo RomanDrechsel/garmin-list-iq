@@ -83,18 +83,15 @@ module Views {
             self.UI_dragThreshold = (dc.getHeight() / 6).toNumber();
             var mainLayerMargin = self.getMargin(dc);
             var scrollbarwidth = (dc.getWidth() * self._BarWidthFactor).toNumber();
-            var layerwidth = dc.getWidth() - 2 * mainLayerMargin[0];
+            var layerwidth = dc.getWidth() - 2 * mainLayerMargin[0] - scrollbarwidth;
             var layerheight = dc.getHeight() - 2 * mainLayerMargin[1];
-            if ($.isRoundDisplay == false) {
-                layerwidth -= scrollbarwidth;
-            }
 
             self._mainLayer = new Controls.LayerDef(mainLayerMargin[0], mainLayerMargin[1], layerwidth, layerheight);
             if ($.isRoundDisplay) {
                 self._scrollbarLayer = new Controls.LayerDef(dc.getWidth() / 2, 0, dc.getWidth() / 2, dc.getHeight());
                 self._scrollbar = new Scrollbar.Round(self._scrollbarLayer, scrollbarwidth);
             } else {
-                var barX = self._mainLayer.getX() + self._mainLayer.getWidth();
+                var barX = 2 * self._mainLayer.getX() + self._mainLayer.getWidth();
                 self._scrollbarLayer = new Controls.LayerDef(barX, 0, scrollbarwidth, dc.getHeight());
                 self._scrollbar = new Scrollbar.Rectangle(self._scrollbarLayer);
             }
@@ -252,6 +249,8 @@ module Views {
 
         function onSettingsChanged() as Void {
             self._buttonDisplay = null;
+            self._snapPosition = 0;
+            self._scrollOffset = 0;
         }
 
         function Interaction() as Void {
@@ -344,18 +343,6 @@ module Views {
         }
 
         /**
-         * returns the height of all listitems
-         */
-        private function getListHeight(dc as Dc) as Number {
-            var height = 0;
-            for (var i = 0; i < self.Items.size(); i++) {
-                height += (self.Items[i] as Item).getHeight(dc);
-            }
-
-            return height;
-        }
-
-        /**
          * return the horizontal and vertical margin of the main-layer on round displays
          */
         private function getMargin(dc as Dc) as Array<Number> {
@@ -365,7 +352,7 @@ module Views {
                 var marginY = (radius - radius * Math.cos(Math.toRadians(55))).toNumber();
                 return [marginX, marginY];
             } else {
-                return [0, 0];
+                return [(dc.getWidth() / 20).toNumber(), 0];
             }
         }
 
@@ -392,7 +379,7 @@ module Views {
                 var y = self._paddingTop;
                 for (var i = 0; i < self.Items.size(); i++) {
                     var item = self.Items[i];
-                    item.setLayer(self._mainLayer);
+                    //item.setLayer(self._mainLayer);
                     item.setListY(y);
                     item.Invalidate();
                     y += item.getHeight(dc);

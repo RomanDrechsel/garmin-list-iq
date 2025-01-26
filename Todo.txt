@@ -9,11 +9,7 @@ soft-hyphen: \u00AD
 TEST: Button controlling
 TEST: don't select title on Button Controls
 TEST: new line break
-TODO: ListsApp.onSettingsChangedListeners to weak reference
-TODO: ListDetailsView._fontoverride must be Large?
-TODO: remote list optimazion
-TODO: translate "Back" / "Quit"
-TODO: if the watch has only 1 button - add back button to views
+TODO: Dont load items on onShow, but on onLayout
 TODO: Scrollbars: (:roundVersion)
 https://developer.garmin.com/connect-iq/core-topics/build-configuration/
 

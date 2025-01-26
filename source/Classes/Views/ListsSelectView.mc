@@ -21,15 +21,8 @@ module Views {
         function onShow() as Void {
             ItemView.onShow();
             if ($.getApp().ListsManager != null) {
-                $.getApp().ListsManager.OnListsChanged.add(self);
+                $.getApp().ListsManager.addListChangedListener(self);
                 self.publishLists($.getApp().ListsManager.GetLists(), false);
-            }
-        }
-
-        function onHide() as Void {
-            ItemView.onHide();
-            if ($.getApp().ListsManager != null) {
-                $.getApp().ListsManager.OnListsChanged.remove(self);
             }
         }
 
@@ -38,7 +31,7 @@ module Views {
             if (self.Items.size() > 0) {
                 var item = self.Items[0];
                 if (item.BoundObject instanceof String && item.BoundObject.equals("store") && Helper.Properties.Get(Helper.Properties.INIT, 0) < 0) {
-                    $.getApp().openGooglePlay();
+                    ListsApp.openGooglePlay();
                 }
             }
         }
@@ -169,7 +162,9 @@ module Views {
                     if (item.BoundObject.equals("settings")) {
                         self.openSettings();
                     } else if (item.BoundObject.equals("store")) {
-                        $.getApp().openGooglePlay();
+                        if (doubletap && Helper.Properties.Get(Helper.Properties.INIT, 0) <= 0) {
+                            ListsApp.openGooglePlay();
+                        }
                     } else {
                         self.GotoList(item.BoundObject, -1);
                     }

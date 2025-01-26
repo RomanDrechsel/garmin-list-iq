@@ -1,6 +1,9 @@
 <strings>
     <string id="AppName" scope="glance">リ­ス­ト</string>
 
+    <string id="Back">戻る</string>
+    <string id="Quit">終了</string>
+
     <string id="SettingsTh">テ­ー­マ</string>
     <string id="ThGrey">グ­レ­ー</string>
     <string id="ThRed">レ­ッ­ド</string>

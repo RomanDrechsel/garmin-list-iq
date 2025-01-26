@@ -1,6 +1,9 @@
 <strings>
     <string id="AppName" scope="glance">Listes</string>
 
+    <string id="Back">Retour</string>
+    <string id="Quit">Quitter</string>
+
     <string id="SettingsTh">Thème</string>
     <string id="ThGrey">Gris</string>
     <string id="ThRed">Rouge</string>

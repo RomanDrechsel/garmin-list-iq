@@ -2,6 +2,8 @@ import Toybox.Application;
 import Toybox.Lang;
 import Toybox.WatchUi;
 import Toybox.System;
+import Toybox.Timer;
+import Toybox.Communications;
 import Views;
 import Comm;
 import Lists;
@@ -14,9 +16,9 @@ class ListsApp extends Application.AppBase {
     var Debug = null as DebugStorage?;
     var Inactivity = null as Helper.Inactivity?;
     var GlobalStates as Dictionary<String, Object> = {};
-    var onSettingsChangedListeners as Array<Object> = [];
     var isGlanceView = false;
     var NoBackButton = false;
+    private var onSettingsChangedListeners as Array<WeakReference> = [];
 
     function getInitialView() as Array<WatchUi.Views or WatchUi.InputDelegates>? {
         self.isGlanceView = false;
@@ -57,13 +59,16 @@ class ListsApp extends Application.AppBase {
         }
         Themes.ThemesLoader.loadTheme();
         Debug.Log("Settings changed");
-        if (self.onSettingsChangedListeners instanceof Array) {
-            for (var i = 0; i < self.onSettingsChangedListeners.size(); i++) {
-                if (self.onSettingsChangedListeners[i] has :onSettingsChanged) {
-                    self.onSettingsChangedListeners[i].onSettingsChanged();
+        for (var i = 0; i < self.onSettingsChangedListeners.size(); i++) {
+            var weak = self.onSettingsChangedListeners[i];
+            if (weak.stillAlive()) {
+                var obj = weak.get();
+                if (obj != null && obj has :onSettingsChanged) {
+                    obj.onSettingsChanged();
                 }
             }
         }
+
         WatchUi.requestUpdate();
     }
 
@@ -101,8 +106,36 @@ class ListsApp extends Application.AppBase {
         return ret;
     }
 
-    function openGooglePlay() as Void {
+    static function openGooglePlay() as Void {
         Communications.openWebPage("https://play.google.com/store/apps/details?id=de.romandrechsel.lists", null, null);
+    }
+
+    function addSettingsChangedListener(obj as Object) as Void {
+        var del = [];
+        for (var i = 0; i < self.onSettingsChangedListeners.size(); i++) {
+            var weak = self.onSettingsChangedListeners[i];
+            if (weak.stillAlive()) {
+                var o = weak.get();
+                if (o == null || !(o has :onSettingsChanged)) {
+                    del.add(weak);
+                }
+            } else {
+                del.add(weak);
+            }
+        }
+        if (del.size() > 0) {
+            for (var i = 0; i < del.size(); i++) {
+                self.onSettingsChangedListeners.remove(del[i]);
+            }
+        }
+
+        if (obj has :onSettingsChanged) {
+            var ref = obj.weak();
+
+            if (self.onSettingsChangedListeners.indexOf(ref) < 0) {
+                self.onSettingsChangedListeners.add(ref);
+            }
+        }
     }
 }
 

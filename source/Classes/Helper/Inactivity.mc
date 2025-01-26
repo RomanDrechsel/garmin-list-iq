@@ -10,7 +10,7 @@ module Helper {
 
         function initialize() {
             self.onSettingsChanged();
-            $.getApp().onSettingsChangedListeners.add(self);
+            $.getApp().addSettingsChangedListener(self);
         }
 
         function Interaction() as Void {

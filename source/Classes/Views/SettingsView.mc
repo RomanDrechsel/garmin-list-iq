@@ -225,7 +225,7 @@ module Views {
                     var view = new SettingsThemeView();
                     WatchUi.pushView(view, new ItemViewDelegate(view), WatchUi.SLIDE_LEFT);
                 } else if (item.BoundObject == SETTINGS_APPSTORE) {
-                    $.getApp().openGooglePlay();
+                    ListsApp.openGooglePlay();
                 } else if (item.BoundObject != null) {
                     var view = new ErrorView(Rez.Strings.ErrListRec, 666, {});
                     WatchUi.pushView(view, new ItemViewDelegate(view), WatchUi.SLIDE_LEFT);

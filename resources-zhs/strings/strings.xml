@@ -1,6 +1,9 @@
 <strings>
     <string id="AppName" scope="glance">列­表</string>
 
+    <string id="Back">返回</string>
+    <string id="Quit">结束</string>
+
     <string id="SettingsTh">主­题</string>
     <string id="ThGrey">灰­色</string>
     <string id="ThRed">红­色</string>

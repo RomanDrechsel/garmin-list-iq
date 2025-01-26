@@ -114,14 +114,12 @@ module Views {
                 $.getApp().GlobalStates.remove("movetop");
             }
             WatchUi.View.onShow();
-            $.getApp().onSettingsChangedListeners.add(self);
+            $.getApp().addSettingsChangedListener(self);
         }
 
         function onHide() as Void {
-            self.Interaction();
             WatchUi.View.onHide();
-            $.getApp().onSettingsChangedListeners.remove(self);
-            self.Items = [];
+            self.Interaction();
         }
 
         function onUpdate(dc as Dc) as Void {
@@ -459,6 +457,10 @@ module Views {
 
         static function DisplayButtonSupport() as Boolean {
             if (self._buttonDisplay == null) {
+                if ((System.getDeviceSettings().inputButtons & System.BUTTON_INPUT_MENU) == 0) {
+                    //only 1 button
+                    return true;
+                }
                 var controls = self.SupportedControls();
                 if (controls == CONTROLS_TOUCHSCREEN) {
                     self._buttonDisplay = false;

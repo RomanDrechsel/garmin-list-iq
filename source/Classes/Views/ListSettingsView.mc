@@ -33,16 +33,9 @@ module Views {
         function onShow() as Void {
             ItemView.onShow();
             if ($.getApp().ListsManager != null) {
-                $.getApp().ListsManager.OnListsChanged.add(self);
+                $.getApp().ListsManager.addListChangedListener(self);
             }
             self.loadItems(false);
-        }
-
-        function onHide() as Void {
-            ItemView.onHide();
-            if ($.getApp().ListsManager != null) {
-                $.getApp().ListsManager.OnListsChanged.remove(self);
-            }
         }
 
         protected function interactItem(item as Listitems.Item, doubletap as Boolean) as Void {

@@ -1,6 +1,9 @@
 <strings>
     <string id="AppName" scope="glance">Списки</string>
 
+    <string id="Back">Назад</string>
+    <string id="Quit">Завершити</string>
+
     <string id="SettingsTh">Тема</string>
     <string id="ThGrey">Сірий</string>
     <string id="ThRed">Червоний</string>

@@ -16,7 +16,7 @@ module Lists {
     typedef ListIndex as Dictionary<String, ListIndexItem>; /* the list-index, with list uuid as key, and some list data as value */
 
     class ListsManager {
-        var OnListsChanged as Array<Object> = [];
+        private var onListsChangedListeners as Array<WeakReference> = [];
 
         function addList(data as Application.PropertyValueType) as Boolean {
             /* check, if all nessesary data is available... */
@@ -265,31 +265,30 @@ module Lists {
             Helper.ToastUtil.Toast(Rez.Strings.StDelAllDone, Helper.ToastUtil.SUCCESS);
         }
 
-        function Optimize(uuid as String, titles as Dictionary<Number, Array<String> >, notes as Dictionary<Number, Array<String> >) {
-            var list = self.getList(uuid);
-            if (list != null) {
-                var items = list.get("items");
-                if (items != null && items instanceof Array) {
-                    for (var i = 0; i < items.size(); i++) {
-                        var text = titles.hasKey(i) ? titles.get(i) : null;
-                        var note = notes.hasKey(i) ? notes.get(i) : null;
-                        if (text != null) {
-                            var item = list["items"][i];
-                            item.put("i", text);
-                            if (note != null) {
-                                item.put("n", note);
-                            }
-                            list["items"][i] = item;
-                        }
+        function addListChangedListener(obj as Object) as Void {
+            var del = [];
+            for (var i = 0; i < self.onListsChangedListeners.size(); i++) {
+                var weak = self.onListsChangedListeners[i];
+                if (weak.stillAlive()) {
+                    var o = weak.get();
+                    if (o == null || !(o has :onListsChanged)) {
+                        del.add(weak);
                     }
+                } else {
+                    del.add(weak);
                 }
-                var listname = list.get("name");
-                if (listname == null) {
-                    listname = "?";
+            }
+            if (del.size() > 0) {
+                for (var i = 0; i < del.size(); i++) {
+                    self.onListsChangedListeners.remove(del[i]);
                 }
-                list.put("opt", true);
-                Debug.Log("Optimized list '" + listname + "' (" + uuid + ")");
-                Application.Storage.setValue(uuid, list);
+            }
+
+            if (obj has :onListsChanged) {
+                var ref = obj.weak();
+                if (self.onListsChangedListeners.indexOf(ref) < 0) {
+                    self.onListsChangedListeners.add(ref);
+                }
             }
         }
 
@@ -344,10 +343,12 @@ module Lists {
                 Helper.ToastUtil.Toast(Rez.Strings.EStorageError, Helper.ToastUtil.ERROR);
                 return [false, e];
             }
-            if (self.OnListsChanged.size() > 0) {
-                for (var i = 0; i < self.OnListsChanged.size(); i++) {
-                    if (self.OnListsChanged[i] has :onListsChanged) {
-                        self.OnListsChanged[i].onListsChanged(index);
+            for (var i = 0; i < self.onListsChangedListeners.size(); i++) {
+                var listener = self.onListsChangedListeners[i];
+                if (listener.stillAlive()) {
+                    var obj = listener.get();
+                    if (obj != null && obj has :onListsChanged) {
+                        obj.onListsChanged(index);
                     }
                 }
             }

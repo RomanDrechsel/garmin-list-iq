@@ -10,7 +10,7 @@ module Views {
 
         private var _dragLastScroll = 0;
         private var _dragStartPositionY = 0;
-        private var _useSwipe = false;
+        private var _noDrag = false;
         private var _lastTap = 0;
 
         function initialize(view as ItemView) {
@@ -19,7 +19,7 @@ module Views {
 
             if (!(WatchUi.InputDelegate has :onDrag)) {
                 //self._view.ScrollMode = ItemView.SCROLL_SNAP;
-                self._useSwipe = true;
+                self._noDrag = true;
             }
         }
 
@@ -62,12 +62,13 @@ module Views {
 
         function onSwipe(swipeEvent as SwipeEvent) as Boolean {
             self._view.Interaction();
-            if (self._useSwipe == true) {
+            if (self._noDrag == true) {
+                var delta = self._view.ScrollMode == ItemView.SCROLL_SNAP ? 1 : ($.screenHeight * 0.5).toNumber();
                 if (swipeEvent.getDirection() == WatchUi.SWIPE_UP) {
-                    self._view.onScroll(1);
+                    self._view.onScroll(delta);
                     return true;
                 } else if (swipeEvent.getDirection() == WatchUi.SWIPE_DOWN) {
-                    self._view.onScroll(-1);
+                    self._view.onScroll(delta * -1);
                     return true;
                 } else if (swipeEvent.getDirection() == WatchUi.SWIPE_RIGHT) {
                     self._view.goBack();

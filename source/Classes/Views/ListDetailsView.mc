@@ -13,8 +13,6 @@ module Views {
     class ListDetailsView extends IconItemView {
         private var _listUuid as String?;
         private var _startScroll as Number?;
-        private var _listOptimized = true;
-        protected var _fontoverride = Helper.Fonts.Large();
 
         function initialize(uuid as String, scrollTo as Number?) {
             ItemView.initialize();
@@ -26,50 +24,9 @@ module Views {
         function onShow() as Void {
             ItemView.onShow();
             if ($.getApp().ListsManager != null) {
-                $.getApp().ListsManager.OnListsChanged.add(self);
+                $.getApp().ListsManager.addListChangedListener(self);
             }
             self.publishItems(true);
-        }
-
-        function onHide() as Void {
-            ItemView.onHide();
-            if ($.getApp().ListsManager != null) {
-                $.getApp().ListsManager.OnListsChanged.remove(self);
-            }
-        }
-
-        function onUpdate(dc as Dc) as Void {
-            ItemView.onUpdate(dc);
-
-            //Overhaul optimazation
-            //store the wraped text
-            /*if (self._listOptimized == false && self._listUuid != null && $.getApp().ListsManager != null) {
-                var optimized1 = ({}) as Dictionary<Number, Array<String> >;
-                var optimized2 = ({}) as Dictionary<Number, Array<String> >;
-                for (var i = 0; i < self.Items.size(); i++) {
-                    var item = self.Items[i];
-                    if (item instanceof Listitems.Item) {
-                        var text = item.Title instanceof Controls.MultilineLabel ? item.Title.getText() : null;
-                        var note = item.Subtitle instanceof Controls.MultilineLabel ? item.Subtitle.getText() : null;
-                        if (text instanceof Array) {
-                            if (text.size() == 1) {
-                                text = text[0];
-                            }
-                            optimized1.put(item.ItemPosition, text);
-                        }
-                        if (note instanceof Array) {
-                            if (note.size() == 1) {
-                                note = note[0];
-                            }
-                            optimized2.put(item.ItemPosition, note);
-                        }
-                    }
-                }
-                if (optimized1.size() > 0) {
-                    $.getApp().ListsManager.Optimize(self._listUuid, optimized1, optimized2);
-                }
-                self._listOptimized = true;
-            }*/
         }
 
         protected function interactItem(item as Listitems.Item, doubletap as Boolean) as Void {
@@ -168,8 +125,6 @@ module Views {
                         self.setTitle(list.get("name") as String);
                     }
 
-                    self._listOptimized = list.hasKey("opt") && list.get("opt") == true;
-
                     if (list.hasKey("items")) {
                         var ordered = [];
                         var done = [];
@@ -216,7 +171,6 @@ module Views {
                         }
 
                         if (count <= 0) {
-                            self._listOptimized = true;
                             var item = new Listitems.Item(self._mainLayer, null, Application.loadResource(Rez.Strings.ListEmpty), null, null, null, 0, null);
                             item.SubtitleJustification = Graphics.TEXT_JUSTIFY_CENTER;
                             item.isSelectable = false;
@@ -225,6 +179,10 @@ module Views {
                         }
                         if (self.DisplayButtonSupport()) {
                             self.addSettingsButton();
+                        }
+
+                        if ($.getApp().NoBackButton) {
+                            self.addBackButton(false);
                         }
                     }
 

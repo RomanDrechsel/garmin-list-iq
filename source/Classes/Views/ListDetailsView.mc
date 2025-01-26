@@ -41,8 +41,9 @@ module Views {
         function onUpdate(dc as Dc) as Void {
             ItemView.onUpdate(dc);
 
+            //Overhaul optimazation
             //store the wraped text
-            if (self._listOptimized == false && self._listUuid != null && $.getApp().ListsManager != null) {
+            /*if (self._listOptimized == false && self._listUuid != null && $.getApp().ListsManager != null) {
                 var optimized1 = ({}) as Dictionary<Number, Array<String> >;
                 var optimized2 = ({}) as Dictionary<Number, Array<String> >;
                 for (var i = 0; i < self.Items.size(); i++) {
@@ -68,7 +69,7 @@ module Views {
                     $.getApp().ListsManager.Optimize(self._listUuid, optimized1, optimized2);
                 }
                 self._listOptimized = true;
-            }
+            }*/
         }
 
         protected function interactItem(item as Listitems.Item, doubletap as Boolean) as Void {

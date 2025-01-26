@@ -7,8 +7,6 @@ import Toybox.Application;
 
 module Views {
     class ErrorView extends ItemView {
-        private var _labelMessage as MultilineLabel? = null;
-        private var _labelError as MultilineLabel? = null;
         private var _errorMsg as Lang.ResourceId? = null;
         private var _errorCode as Lang.Number? = null;
         private var _errorPayload as Application.PersistableType = null;

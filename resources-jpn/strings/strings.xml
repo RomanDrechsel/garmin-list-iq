@@ -1,37 +1,37 @@
 <strings>
-    <string id="AppName" scope="glance">リ­ス­ト</string>
+    <string id="AppName" scope="glance">リスト</string>
 
     <string id="Back">戻る</string>
     <string id="Quit">終了</string>
 
-    <string id="SettingsTh">テ­ー­マ</string>
-    <string id="ThGrey">グ­レ­ー</string>
-    <string id="ThRed">レ­ッ­ド</string>
-    <string id="ThBaW">白­黒</string>
-    <string id="ThWaB">黒­白</string>
-    <string id="ThBsoD">死­の­青­画­面</string>
+    <string id="SettingsTh">テーマ</string>
+    <string id="ThGrey">グレー</string>
+    <string id="ThRed">レッド</string>
+    <string id="ThBaW">白黒</string>
+    <string id="ThWaB">黒白</string>
+    <string id="ThBsoD">死の青画面</string>
 
-    <string id="ListRec">リ­ス­ト­を­受­信­し­ま­し­た。</string>
-    <string id="EStorageFull">ス­ト­レ­ー­ジ­が­満­杯­で­す！</string>
-    <string id="EStorageError">リ­ス­ト­を­保­存­で­き­ま­せ­ん­で­し­た！</string>
-    <string id="ListDel">リ­ス­ト­が­削­除­さ­れ­ま­し­た。</string>
+    <string id="ListRec">リストを受信しました。</string>
+    <string id="EStorageFull">ストレージが満杯です！</string>
+    <string id="EStorageError">リストを保存できませんでした！</string>
+    <string id="ListDel">リストが削除されました。</string>
 
-    <string id="NoLists">リ­ス­ト­が­見­つ­か­り­ま­せ­ん！</string>
-    <string id="NoListsLink">ダブル­タップ­して­スマート­フォン­の­Android­PlayStore­を­開きます。</string>
-    <string id="NoListsLinkBtn">エンター­キーを­押して­電話で­Android­PlayStoreを­開きます。</string>
+    <string id="NoLists">リストが見つかりません！</string>
+    <string id="NoListsLink">ダブルタップしてスマートフォンのAndroidPlayStoreを開きます。</string>
+    <string id="NoListsLinkBtn">エンターキーを押して電話でAndroidPlayStoreを開きます。</string>
 
-    <string id="ListNotFound">リ­ス­ト­が­見­つ­か­り­ま­せ­ん！</string>
-    <string id="ListEmpty">リ­ス­ト­が­空­で­す。</string>
+    <string id="ListNotFound">リストが見つかりません！</string>
+    <string id="ListEmpty">リストが空です。</string>
 
     <string id="LMSub">%s 点</string>
 
-    <string id="StTitle">設­定</string>
-    <string id="StMoveBottom">完­了­項­目­を­下­へ­移­動</string>
-    <string id="StDelList">リ­ス­ト­を­削­除</string>
-    <string id="DeleteConfirm">リ­ス­ト­を­削­除­し­ま­す­か？</string>
-    <string id="StDoubleTapForDone">項­目­を­完­了­に­す­る­に­は­シン­グル­タッ­プ­の­代­わ­り­に­ダブ­ル­タッ­プ</string>
-    <string id="StShowNotes">項­目­の­ノ­ート­を­表­示</string>
-    <string id="StAutoExit">アプリ­が­非アクティブ­に­なった­とき­に­終了</string>
+    <string id="StTitle">設定</string>
+    <string id="StMoveBottom">完了項目を下へ移動</string>
+    <string id="StDelList">リストを削除</string>
+    <string id="DeleteConfirm">リストを削除しますか？</string>
+    <string id="StDoubleTapForDone">項目を完了にするにはシングルタップの代わりにダブルタップ</string>
+    <string id="StShowNotes">項目のノートを表示</string>
+    <string id="StAutoExit">アプリが非アクティブになったときに終了</string>
     <string id="StAutoExit1">後１分</string>
     <string id="StAutoExit3">後３分</string>
     <string id="StAutoExit5">後５分</string>
@@ -40,41 +40,41 @@
     <string id="StAutoExit30">後３０分</string>
     <string id="StAutoExit60">後６０分</string>
     <string id="StAutoExitOff">無効</string>
-    <string id="StBtnCtrl">ハー­ド­ウェ­ア­ボ­タン­によ­る­制­御</string>
+    <string id="StBtnCtrl">ハードウェアボタンによる制御</string>
 
-    <string id="StDelAll">す­べ­て­の­リ­ス­ト­を­削­除</string>
-    <string id="StDelAllConfirm">す­べ­て­の­リ­ス­ト­を­削­除­し­ま­す­か？</string>
-    <string id="StDelAllDone">す­べ­て­の­リ­ス­ト­が­削­除­さ­れ­ま­し­た。</string>
-    <string id="StTheme">テ­ー­マ­を­選­択</string>
-    <string id="StAppStore">アン­ド­ロ­イ­ド­Play­Sto­re­へ</string>
-    <string id="StAppVersion">ア­プ­リ­バ­ー­ジョン</string>
+    <string id="StDelAll">すべてのリストを削除</string>
+    <string id="StDelAllConfirm">すべてのリストを削除しますか？</string>
+    <string id="StDelAllDone">すべてのリストが削除されました。</string>
+    <string id="StTheme">テーマを選択</string>
+    <string id="StAppStore">アンドロイドPlayStoreへ</string>
+    <string id="StAppVersion">アプリバージョン</string>
 
-    <string id="SelTheme">テ­ー­マ</string>
+    <string id="SelTheme">テーマ</string>
 
     <string id="ListDateFormatShort">%D. %d. %M.</string>
     <string id="ListDateFormat">%D. %d. %M %y</string>
     <string id="ListTimeFormat">%h:%i %ampm</string>
     <string id="oclock"></string>
 
-    <string id="StLogs">ロ­グ­を­保­存</string>
-    <string id="StPersistentLogs">セ­ッ­ション­を­通­じ­て­ロ­グ­を­保­存­す­る。これ­は­ア­プ­リ­の­ス­ト­レ­ー­ジ­使­用­量­を­大­幅­に­増­加­さ­せ­ま­す。</string>
-    <string id="StPersistentLogs1">セ­ッ­ション­を­超­え­て­ロ­グ­を­保­存­す­る</string>
-    <string id="StPersistentLogs2">これ­は­ア­プ­リ­の­ス­ト­レ­ー­ジ­使­用­量­を­大­幅­に­増­加­さ­せ­ま­す。</string>
-    <string id="StSendLogs">ス­マー­ト­フォ­ン­に­ロ­グ­を­送­信</string>
-    <string id="StSendLogsOff">ロ­グ­は­無­効­化­さ­れ­ま­す！</string>
-    <string id="StSendLogsOk">送­信­ロ­グ</string>
+    <string id="StLogs">ログを保存</string>
+    <string id="StPersistentLogs">セッションを通じてログを保存する。これはアプリのストレージ使用量を大幅に増加させます。</string>
+    <string id="StPersistentLogs1">セッションを超えてログを保存する</string>
+    <string id="StPersistentLogs2">これはアプリのストレージ使用量を大幅に増加させます。</string>
+    <string id="StSendLogs">スマートフォンにログを送信</string>
+    <string id="StSendLogsOff">ログは無効化されます！</string>
+    <string id="StSendLogsOk">送信ログ</string>
 
-    <string id="StReset">リ­ス­ト­を­自­動­的­に­リ­セ­ッ­ト</string>
-    <string id="StResetDaily">毎­日</string>
-    <string id="StResetWeekly">毎­週</string>
-    <string id="StResetMonthly">毎­月</string>
+    <string id="StReset">リストを自動的にリセット</string>
+    <string id="StResetDaily">毎日</string>
+    <string id="StResetWeekly">毎週</string>
+    <string id="StResetMonthly">毎月</string>
 
-    <string id="ErrHint">ス­マー­ト­フォ­ン­で­エ­ラー­を­報­告­し­て­ください。</string>
-    <string id="ErrHintTouch">(ここ­を­タッ­プ­して­、ス­マー­ト­フォ­ン­上­の­ア­プ­リ­内­の­連­絡­先­を­開­き­ます)</string>
-    <string id="ErrHintBtn">(エン­ター­キー­を­押­し­て、ス­マー­ト­フォ­ン­上­の­ア­プ­リ­内­の­連­絡­先­を­開­き­ます。)</string>
-    <string id="ErrReport">ス­マー­ト­フォ­ン­を­開­く</string>
-    <string id="ErrListRec">リ­ス­ト­転­送­中­に­エ­ラー­が­発­生­し­ま­し­た：</string>
-    <string id="ErrListDel">リ­ス­ト­の­削­除­中­に­エ­ラー­が­発­生­し­ま­し­た：</string>
+    <string id="ErrHint">スマートフォンでエラーを報告してください。</string>
+    <string id="ErrHintTouch">(ここをタップして、スマートフォン上のアプリ内の連絡先を開きます)</string>
+    <string id="ErrHintBtn">(エンターキーを押して、スマートフォン上のアプリ内の連絡先を開きます。)</string>
+    <string id="ErrReport">スマートフォンを開く</string>
+    <string id="ErrListRec">リスト転送中にエラーが発生しました：</string>
+    <string id="ErrListDel">リストの削除中にエラーが発生しました：</string>
 
     <string id="GlNumLists" scope="glance">%d リスト</string>
     <string id="GlOneList" scope="glance">1 リスト</string>

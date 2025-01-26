@@ -1,80 +1,80 @@
 <strings>
-    <string id="AppName" scope="glance">列­表</string>
+    <string id="AppName" scope="glance">列表</string>
 
     <string id="Back">返回</string>
     <string id="Quit">结束</string>
 
-    <string id="SettingsTh">主­题</string>
-    <string id="ThGrey">灰­色</string>
-    <string id="ThRed">红­色</string>
-    <string id="ThBaW">黑­白</string>
-    <string id="ThWaB">白­黑</string>
-    <string id="ThBsoD">蓝­屏­死­机</string>
+    <string id="SettingsTh">主题</string>
+    <string id="ThGrey">灰色</string>
+    <string id="ThRed">红色</string>
+    <string id="ThBaW">黑白</string>
+    <string id="ThWaB">白黑</string>
+    <string id="ThBsoD">蓝屏死机</string>
 
-    <string id="ListRec">列­表­已­接­收。</string>
-    <string id="EStorageFull">存­储­已­满！</string>
-    <string id="EStorageError">无­法­保­存­列­表！</string>
-    <string id="ListDel">列­表­已­删­除。</string>
+    <string id="ListRec">列表已接收。</string>
+    <string id="EStorageFull">存储已满！</string>
+    <string id="EStorageError">无法保存列表！</string>
+    <string id="ListDel">列表已删除。</string>
 
-    <string id="NoLists">未­找­到­列­表！</string>
-    <string id="NoListsLink">双­击以­打­开手­机上­的安­卓应­用商­店</string>
-    <string id="NoListsLinkBtn">按­下回­车键，打­开手­机上­的安­卓应­用商­店</string>
+    <string id="NoLists">未找到列表！</string>
+    <string id="NoListsLink">双击以打开手机上的安卓应用商店</string>
+    <string id="NoListsLinkBtn">按下回车键，打开手机上的安卓应用商店</string>
 
-    <string id="ListNotFound">未­找­到­列­表！</string>
-    <string id="ListEmpty">列­表­为­空。</string>
+    <string id="ListNotFound">未找到列表！</string>
+    <string id="ListEmpty">列表为空。</string>
 
     <string id="LMSub">%s 点</string>
 
-    <string id="StTitle">设­置</string>
-    <string id="StMoveBottom">将­完­成­的­项­目­移­动­到­底­部</string>
-    <string id="StDelList">删­除­列­表</string>
-    <string id="DeleteConfirm">删­除­列­表？</string>
-    <string id="StDoubleTapForDone">双­击­而­不­是­单­击­项­目­以­将­其­标­记­为­已­完­成­的­项­目</string>
-    <string id="StShowNotes">显­示­项­目­的­注­释</string>
-    <string id="StAutoExit">应­用­程­序­在­不­活­跃­时­结­束</string>
-    <string id="StAutoExit1">每­分­钟­后­一­分­钟</string>
-    <string id="StAutoExit3">每­三­分­钟­后­三­分­钟</string>
-    <string id="StAutoExit5">每­五­分­钟­后­五­分­钟</string>
-    <string id="StAutoExit10">每­十­分­钟­后­十­分­钟</string>
-    <string id="StAutoExit15">每­十­五­分­钟­后­十­五­分­钟</string>
-    <string id="StAutoExit30">每­三­十­分­钟­后­三­十­分­钟</string>
-    <string id="StAutoExit60">每­六­十­分­钟­后­六­十­分­钟</string>
+    <string id="StTitle">设置</string>
+    <string id="StMoveBottom">将完成的项目移动到底部</string>
+    <string id="StDelList">删除列表</string>
+    <string id="DeleteConfirm">删除列表？</string>
+    <string id="StDoubleTapForDone">双击而不是单击项目以将其标记为已完成的项目</string>
+    <string id="StShowNotes">显示项目的注释</string>
+    <string id="StAutoExit">应用程序在不活跃时结束</string>
+    <string id="StAutoExit1">每分钟后一分钟</string>
+    <string id="StAutoExit3">每三分钟后三分钟</string>
+    <string id="StAutoExit5">每五分钟后五分钟</string>
+    <string id="StAutoExit10">每十分钟后十分钟</string>
+    <string id="StAutoExit15">每十五分钟后十五分钟</string>
+    <string id="StAutoExit30">每三十分钟后三十分钟</string>
+    <string id="StAutoExit60">每六十分钟后六十分钟</string>
     <string id="StAutoExitOff">已关闭</string>
-    <string id="StBtnCtrl">硬­件按­钮控­制</string>
+    <string id="StBtnCtrl">硬件按钮控制</string>
 
-    <string id="StDelAll">删­除­所­有­列­表</string>
-    <string id="StDelAllConfirm">删­除­所­有­列­表？</string>
-    <string id="StDelAllDone">所­有­列­表­已­删­除。</string>
-    <string id="StTheme">选­择­主­题</string>
-    <string id="StAppStore">到 An­droid Play Store</string>
-    <string id="StAppVersion">应­用­版­本</string>
+    <string id="StDelAll">删除所有列表</string>
+    <string id="StDelAllConfirm">删除所有列表？</string>
+    <string id="StDelAllDone">所有列表已删除。</string>
+    <string id="StTheme">选择主题</string>
+    <string id="StAppStore">到 Android Play Store</string>
+    <string id="StAppVersion">应用版本</string>
 
-    <string id="SelTheme">主­题</string>
+    <string id="SelTheme">主题</string>
 
     <string id="ListDateFormatShort">%D, %m月%d日。</string>
     <string id="ListDateFormat">%D, %y年%m月%d日。</string>
     <string id="ListTimeFormat">%h:%i</string>
     <string id="oclock"></string>
 
-    <string id="StLogs">保­存­日­志</string>
-    <string id="StPersistentLogs">在­会­话­之­间­保­存­日­志。­这­会­显­著­增­加­应­用­的­存­储­使­用­量。</string>
-    <string id="StPersistentLogs1">在­会­话­之­间­保­存­日­志</string>
-    <string id="StPersistentLogs2">这­会­显­著­增­加­应­用­的­存­储­使­用­量。</string>
-    <string id="StSendLogs">将­日­志­发­送­到­智­能­手­机</string>
-    <string id="StSendLogsOff">停­用­日­志！</string>
-    <string id="StSendLogsOk">发­送­日­志</string>
+    <string id="StLogs">保存日志</string>
+    <string id="StPersistentLogs">在会话之间保存日志。这会显著增加应用的存储使用量。</string>
+    <string id="StPersistentLogs1">在会话之间保存日志</string>
+    <string id="StPersistentLogs2">这会显著增加应用的存储使用量。</string>
+    <string id="StSendLogs">将日志发送到智能手机</string>
+    <string id="StSendLogsOff">停用日志！</string>
+    <string id="StSendLogsOk">发送日志</string>
 
-    <string id="StReset">自­动­重­置­列­表</string>
-    <string id="StResetDaily">每­天</string>
-    <string id="StResetWeekly">每­周</string>
-    <string id="StResetMonthly">每­月</string>
+    <string id="StReset">自动重置列表</string>
+    <string id="StResetDaily">每天</string>
+    <string id="StResetWeekly">每周</string>
+    <string id="StResetMonthly">每月</string>
 
-    <string id="ErrHint">请­在你­的智­能手­机上­向­我报­告此­错­误，以­便­我能­帮­助­你。</string>
-    <string id="ErrHintTouch">(点­击此­处，打­开手­机应­用中­的联­系方­式)</string>
-    <string id="ErrHintBtn">(按­下回­车键，打­开手­机应­用中­的联­系方­式)</string>
-    <string id="ErrReport">请­打­开­智­能­手­机</string>
-    <string id="ErrListRec">传­输­列­表­时­发­生­错­误：</string>
-    <string id="ErrListDel">删­除­列­表­时­发­生­错­误：</string>
+    <string id="ErrHint">请在你的智能手机上向我报告此错误，以便我能帮助你。</string>
+    <string id="ErrHintTouch">(点击此处，打开手机应用中的联系方式)</string>
+    <string id="ErrHintBtn">(按下回车键，打开手机应用中的联系方式)</string>
+    <string id="ErrReport">请打开智能手机</string>
+    <string id="ErrListRec">传输列表时发生错误：</string>
+    <string id="ErrListDel">删除列表时发生错误：</string>
 
     <string id="GlNumLists" scope="glance">%d 份清单</string>
     <string id="GlOneList" scope="glance">1 列表</string>

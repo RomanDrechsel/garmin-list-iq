@@ -5,23 +5,6 @@ module Helper {
     (:glance)
     class StringUtil {
         private static const lineBreaks = [0x0a /*New Line*/, 0x0b /*Line tabulation*/, 0x0d /*CR*/, 0x85 /*Next Line*/, 0xad /*Soft-Hyphen*/] as Array<Number>;
-        private static const nBsp = [0xa0 /*nbsp*/, 0x202f /*nnbsp*/];
-        private static const wordBreaks = [
-            [0x21, 0x2f],
-            [0x3a, 0x40],
-            [0x5c, 0x60],
-            [0x7c, 0x7e],
-            [0x2010, 0x2027],
-            [0x2030, 0x205e],
-            [0x2070, 0x20c0],
-            [0x3040, 0x30ff] /* japanese */,
-            [0x3000, 0x3002] /* japanese punctuation */,
-            [0x4e00, 0x9fff] /*CJK Unified Ideographs*/,
-            [0x3400, 0x4dbf] /*CJK Unified Ideographs Extension A*/,
-            [0x20000, 0x2a6df] /*CJK Unified Ideographs Extension B*/,
-            [0x2a700, 0x2ebef] /*CJK Unified Ideographs Extension C, D, E, ...*/,
-            [0xf900, 0xfaff] /*CJK Compatibility Ideographs*/,
-        ];
 
         static function stringReplace(str as String, oldString as String, newString as String) as String {
             var result = str;
@@ -67,32 +50,20 @@ module Helper {
             if (br < str.length()) {
                 var line = str.substring(br, str.length());
                 line = self.trim(line);
-                //TODO: rtrim()
                 ret.add(line);
             }
 
             return ret;
         }
 
-        static function isWhitespace(str as String or Char or Number) as Boolean {
-            //TODO: is String needed?
-            if (str instanceof Lang.Number) {
-                if (str == 0x20) {
-                    return true;
-                }
-                return false;
-            } else if (str instanceof Lang.String) {
-                var chars = str.toUtf8Array();
-                for (var i = 0; i < chars.size(); i++) {
-                    if (!self.isWhitespace(chars[i])) {
-                        return false;
-                    }
-                }
-                return true;
-            } else if (str instanceof Lang.Char) {
-                return self.isWhitespace(str.toNumber());
+        static function isWhitespace(str as Char or Number) as Boolean {
+            if (str instanceof Lang.Char) {
+                str = str.toNumber();
             }
 
+            if (str == 0x20 || self.lineBreaks.indexOf(str) >= 0) {
+                return true;
+            }
             return false;
         }
 

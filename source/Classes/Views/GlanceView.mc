@@ -18,10 +18,7 @@ module Views {
 
         public function onUpdate(dc as Dc) as Void {
             var yStart = (dc.getHeight() - self._title.getHeight(dc) - self._sub.getHeight(dc)) / 2;
-            var height = 0;
-            if (self._title != null) {
-                height = self._title.draw(dc, 0, yStart, Graphics.COLOR_WHITE, Graphics.TEXT_JUSTIFY_LEFT);
-            }
+            var height = self._title.draw(dc, 0, yStart, Graphics.COLOR_WHITE, Graphics.TEXT_JUSTIFY_LEFT);
             self._sub.draw(dc, 0, yStart + height, Graphics.COLOR_LT_GRAY, Graphics.TEXT_JUSTIFY_LEFT);
         }
     }

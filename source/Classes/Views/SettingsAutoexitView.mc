@@ -15,7 +15,6 @@ module Views {
         function onSettingsChanged() as Void {
             IconItemView.onSettingsChanged();
             self.loadList();
-            WatchUi.requestUpdate();
         }
 
         protected function interactItem(item as Listitems.Item, doubletap as Boolean) as Void {

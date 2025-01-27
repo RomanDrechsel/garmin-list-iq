@@ -4,7 +4,7 @@ import Toybox.WatchUi;
 import Toybox.Application;
 import Toybox.Time;
 import Toybox.System;
-import Controls.Scrollbar;
+import Controls;
 import Helper;
 import Controls.Listitems;
 
@@ -40,11 +40,8 @@ module Views {
         /** percentage of the width of the scrollbar */
         protected var _BarWidthFactor as Float = 0.05;
 
-        /** special font for the Title-label of the items */
-        protected var _fontoverride as FontResource? = null;
-
         /** scrollbar drawer */
-        protected var _scrollbar as Scrollbar.Round or Scrollbar.Rectangle or Null;
+        protected var _scrollbar as Scrollbar?;
 
         /** main layer for the list */
         protected var _mainLayer as Controls.LayerDef?;
@@ -65,20 +62,20 @@ module Views {
         /** is a new validation needed? */
         protected var _needValidation as Boolean = true;
 
+        /** what kind of controls does the view use */
         protected static var _controls as EControls? = null;
-        protected static var _buttonDisplay as Boolean? = null;
 
-        function initialize() {
-            View.initialize();
-            self.Items = new Array<Item>[0];
-            self.Interaction();
-        }
+        /** display hardware button support? */
+        protected static var _buttonDisplay as Boolean? = null;
 
         function onLayout(dc as Dc) {
             View.onLayout(dc);
             if (dc has :setAntialias) {
                 dc.setAntiAlias(true);
             }
+
+            self.Interaction();
+            self.Items = new Array<Item>[0];
 
             self.UI_dragThreshold = (dc.getHeight() / 6).toNumber();
             var mainLayerMargin = self.getMargin(dc);
@@ -89,12 +86,10 @@ module Views {
             self._mainLayer = new Controls.LayerDef(mainLayerMargin[0], mainLayerMargin[1], layerwidth, layerheight);
             if ($.isRoundDisplay) {
                 self._scrollbarLayer = new Controls.LayerDef(dc.getWidth() / 2, 0, dc.getWidth() / 2, dc.getHeight());
-                self._scrollbar = new Scrollbar.Round(self._scrollbarLayer, scrollbarwidth);
             } else {
-                var barX = 2 * self._mainLayer.getX() + self._mainLayer.getWidth();
-                self._scrollbarLayer = new Controls.LayerDef(barX, 0, scrollbarwidth, dc.getHeight());
-                self._scrollbar = new Scrollbar.Rectangle(self._scrollbarLayer);
+                self._scrollbarLayer = new Controls.LayerDef(dc.getWidth() - scrollbarwidth, 0, scrollbarwidth, dc.getHeight());
             }
+            self._scrollbar = new Controls.Scrollbar(self._scrollbarLayer, scrollbarwidth);
         }
 
         function onShow() as Void {
@@ -128,7 +123,7 @@ module Views {
         }
 
         function drawList(dc as Dc) as Void {
-            dc.setColor(getTheme().ListBackground, getTheme().ListBackground);
+            dc.setColor(getTheme().BackgroundColor, getTheme().BackgroundColor);
             dc.clear();
 
             if (self._mainLayer == null) {
@@ -158,11 +153,9 @@ module Views {
         }
 
         function addItem(title as String or Array<String>, substring as String or Array<String> or Null, identifier as Object?, icon as Number or BitmapResource or Null, position as Number) as Listitems.Item {
-            var item = new Listitems.Item(self._mainLayer, title, substring, identifier, icon, null, position, self._fontoverride);
+            var item = new Listitems.Item(self._mainLayer, title, substring, identifier, icon, null, position, null);
             self.Items.add(item);
             self._needValidation = true;
-            self._paddingTop = null;
-            self._paddingBottom = null;
             return item;
         }
 
@@ -190,7 +183,6 @@ module Views {
         }
 
         function onScroll(delta as Number) as Void {
-            self.Interaction();
             if (delta == 0 || self._mainLayer == null) {
                 return;
             }
@@ -215,17 +207,11 @@ module Views {
             }
         }
 
-        function onListitemTap(item as Item, doubletap as Boolean) as Void {
-            self.Interaction();
-            self.interactItem(item, doubletap);
-        }
-
         function onDoubleTap(x as Number, y as Number) as Boolean {
-            self.Interaction();
             for (var i = 0; i < self.Items.size(); i++) {
                 var item = self.Items[i];
                 if (item.Clicked(y, self._scrollOffset)) {
-                    self.onListitemTap(item, true);
+                    self.interactItem(item, true);
                     return true;
                 }
             }
@@ -233,11 +219,10 @@ module Views {
         }
 
         function onTap(x as Number, y as Number) as Boolean {
-            self.Interaction();
             for (var i = 0; i < self.Items.size(); i++) {
                 var item = self.Items[i];
                 if (item.Clicked(y, self._scrollOffset)) {
-                    self.onListitemTap(item, false);
+                    self.interactItem(item, false);
                     return true;
                 }
             }
@@ -259,7 +244,6 @@ module Views {
         }
 
         function onKeyEnter() as Boolean {
-            self.Interaction();
             if (!self.DisplayButtonSupport() && !$.getApp().NoBackButton) {
                 return self.onKeyMenu();
             } else if (self._selectedItem != null) {
@@ -269,16 +253,14 @@ module Views {
         }
 
         function onKeyMenu() as Boolean {
-            self.Interaction();
             return false;
         }
 
         function onKeyEsc() as Boolean {
-            self.Interaction();
             return false;
         }
 
-        function goBack() {
+        static function goBack() {
             WatchUi.popView(WatchUi.SLIDE_RIGHT);
         }
 
@@ -291,7 +273,6 @@ module Views {
         }
 
         protected function setIterator(pos as Number?) as Void {
-            self.Interaction();
             if (self.ScrollMode == SCROLL_SNAP) {
                 if (pos == null) {
                     pos = 0;

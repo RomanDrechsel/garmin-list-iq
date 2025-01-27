@@ -71,7 +71,7 @@ module Views {
                     self._view.onScroll(delta * -1);
                     return true;
                 } else if (swipeEvent.getDirection() == WatchUi.SWIPE_RIGHT) {
-                    self._view.goBack();
+                    ItemView.goBack();
                     return true;
                 }
             }
@@ -83,36 +83,31 @@ module Views {
             self._view.Interaction();
             var key = keyEvent.getKey();
             if (key == WatchUi.KEY_ENTER) {
-                Debug.Log("Pressed ENTER");
                 if (self._view has :onKeyEnter) {
                     return self._view.onKeyEnter();
                 }
             } else if (key == WatchUi.KEY_ESC) {
-                Debug.Log("Pressed ESC");
                 return self._view.onKeyEsc();
             } else if (key == WatchUi.KEY_MENU) {
-                Debug.Log("Pressed MENU");
                 if (self._view has :onKeyMenu) {
                     return self._view.onKeyMenu();
                 }
             } else if (key == WatchUi.KEY_UP) {
-                Debug.Log("Pressed UP");
                 if (self._view.ScrollMode == ItemView.SCROLL_DRAG) {
                     var height = System.getDeviceSettings().screenHeight;
-                    self._view.onScroll((height * -0.33).toNumber());
+                    self._view.onScroll((height * -0.2).toNumber());
                 } else {
                     self._view.onScroll(-1);
                 }
+                return true;
             } else if (key == WatchUi.KEY_DOWN) {
-                Debug.Log("Pressed DOWN");
                 if (self._view.ScrollMode == ItemView.SCROLL_DRAG) {
                     var height = System.getDeviceSettings().screenHeight;
-                    self._view.onScroll((height * 0.33).toNumber());
+                    self._view.onScroll((height * 0.2).toNumber());
                 } else {
                     self._view.onScroll(1);
                 }
-            } else {
-                Debug.Log("Pressed " + key);
+                return true;
             }
 
             return false;

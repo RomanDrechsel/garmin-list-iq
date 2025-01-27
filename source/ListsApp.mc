@@ -22,7 +22,7 @@ class ListsApp extends Application.AppBase {
 
     function getInitialView() as Array<WatchUi.Views or WatchUi.InputDelegates>? {
         self.isGlanceView = false;
-        var appVersion = "2025.01.0801";
+        var appVersion = "2025.01.2601";
         Application.Properties.setValue("appVersion", appVersion);
 
         self.Debug = new Debug.DebugStorage();
@@ -40,11 +40,11 @@ class ListsApp extends Application.AppBase {
         Debug.Log(self.getInfo());
 
         var startview = new Views.ListsSelectView(true);
-        //var startview = new Debug.TestView();
         return [startview, new Views.ItemViewDelegate(startview)];
     }
 
     function getGlanceView() as Array<WatchUi.GlanceView or WatchUi.GlanceViewDelegate>? {
+        Debug.Log("Start glance mode");
         self.isGlanceView = true;
         return [new Views.GlanceView()];
     }
@@ -139,12 +139,15 @@ class ListsApp extends Application.AppBase {
     }
 }
 
-var isRoundDisplay = System.getDeviceSettings().screenShape == System.SCREEN_SHAPE_ROUND;
-var screenHeight = System.getDeviceSettings().screenHeight;
-
 function getApp() as ListsApp {
     return Application.getApp() as ListsApp;
 }
+
+(:roundVersion)
+var isRoundDisplay = true;
+(:regularVersion)
+var isRoundDisplay = false;
+var screenHeight = System.getDeviceSettings().screenHeight;
 
 (:debug)
 var isDebug = true;

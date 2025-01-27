@@ -30,9 +30,9 @@ module Helper {
         }
 
         function onTimer() as Void {
-            if (self._autoexit > 0) {
+            if (self._autoexit > 0.0) {
                 var minutes = (Time.now().value() - self._lastInteraction.value()).toFloat() / 60.0;
-                if (minutes > self._autoexit) {
+                if (minutes > self._autoexit.toFloat()) {
                     Debug.Log("Close app due to " + self._autoexit + " min. of inactivity (last interaction: " + Helper.DateUtil.toLogString(self._lastInteraction, null) + ")");
                     System.exit();
                 }

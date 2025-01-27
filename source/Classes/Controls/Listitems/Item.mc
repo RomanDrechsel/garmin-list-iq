@@ -58,18 +58,20 @@ module Controls {
                 }
                 self.validate(dc);
                 var viewport_y = self._listY - scrollOffset + self._layer.getY();
-                if (self.isVisible(scrollOffset) == false) {
+                if (self.isVisible(scrollOffset, dc) == false) {
                     return self.getHeight(dc);
                 }
 
                 var viewport_yTop = viewport_y;
                 viewport_y += self._verticalMargin;
 
+                var theme = $.getTheme();
+
                 var specialColor = isSelected && self.isSelectable && Views.ItemView.DisplayButtonSupport();
-                var color = specialColor ? $.getTheme().MainColorSelected : $.getTheme().MainColor;
-                var colorSub = specialColor ? $.getTheme().SecondColorSelected : $.getTheme().SecondColor;
+                var color = specialColor ? theme.MainColorSelected : theme.MainColor;
+                var colorSub = specialColor ? theme.SecondColorSelected : theme.SecondColor;
                 if (self.isDisabled) {
-                    color = $.getTheme().DisabledColor;
+                    color = specialColor ? theme.DisabledColorSelected : theme.DisabledColor;
                     colorSub = color;
                 }
 
@@ -179,7 +181,7 @@ module Controls {
             }
 
             function Clicked(tapy as Number, scrollOffset as Number) as Boolean {
-                if (self._height == null || self.isVisible(scrollOffset) == false) {
+                if (self._height == null || self.isVisible(scrollOffset, null) == false) {
                     //not visible or not validated
                     return false;
                 }
@@ -197,9 +199,14 @@ module Controls {
                 self._height = -1;
             }
 
-            protected function isVisible(scrollOffset as Number) as Boolean {
+            protected function isVisible(scrollOffset as Number, dc as Dc?) as Boolean {
                 if (self._height == null) {
-                    return true;
+                    if (dc != null) {
+                        self._needValidation = true;
+                        self.validate(dc);
+                    } else {
+                        return true;
+                    }
                 }
                 if (self._layer == null) {
                     return false;

@@ -30,11 +30,6 @@ module Views {
             self.loadVisuals();
         }
 
-        function onShow() as Void {
-            IconItemView.onShow();
-            self.loadVisuals();
-        }
-
         function onSettingsChanged() as Void {
             IconItemView.onSettingsChanged();
             self.loadVisuals();
@@ -197,7 +192,6 @@ module Views {
                     Helper.Properties.Store(Helper.Properties.HWBCTRL, check);
                     item.setIcon(check ? self._itemIconDone : self._itemIcon);
                     $.getApp().triggerOnSettingsChanged();
-                    WatchUi.requestUpdate();
                 } else if (item.BoundObject == SETTINGS_LOGS) {
                     var check = item.getIcon() == self._itemIcon;
                     Helper.Properties.Store(Helper.Properties.LOGS, check);
@@ -226,10 +220,10 @@ module Views {
                     WatchUi.pushView(view, new ItemViewDelegate(view), WatchUi.SLIDE_LEFT);
                 } else if (item.BoundObject == SETTINGS_APPSTORE) {
                     ListsApp.openGooglePlay();
-                } else if (item.BoundObject != null) {
+                } /* else if (item.BoundObject != null) {
                     var view = new ErrorView(Rez.Strings.ErrListRec, 666, {});
                     WatchUi.pushView(view, new ItemViewDelegate(view), WatchUi.SLIDE_LEFT);
-                }
+                }*/
                 return true;
             }
 

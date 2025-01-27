@@ -186,7 +186,7 @@ module Lists {
             }
         }
 
-        function updateList(uuid as String, position as Number, state as Boolean) as Void {
+        function updateListitem(uuid as String, position as Number, state as Boolean) as Void {
             if (position < 0) {
                 return;
             }
@@ -226,14 +226,14 @@ module Lists {
                     Helper.Properties.Store(Helper.Properties.LASTLISTSCROLL, -1);
                 }
 
-                Debug.Log("Saved list " + uuid + "(" + listname + ")");
+                Debug.Log("Stored list " + uuid + "(" + listname + ")");
                 return [true, null];
             } catch (e instanceof Lang.StorageFullException) {
-                Debug.Log("Could not update list '" + listname + "' (" + uuid + "): storage is full: " + e);
+                Debug.Log("Could not store list '" + listname + "' (" + uuid + "): storage is full: " + e);
                 Helper.ToastUtil.Toast(Rez.Strings.EStorageFull, Helper.ToastUtil.ERROR);
                 return [false, e];
             } catch (e) {
-                Debug.Log("Could not update list '" + listname + "' (" + uuid + "): " + e);
+                Debug.Log("Could not store list '" + listname + "' (" + uuid + "): " + e);
                 Helper.ToastUtil.Toast(Rez.Strings.EStorageError, Helper.ToastUtil.ERROR);
                 return [false, e];
             }
@@ -263,6 +263,7 @@ module Lists {
             Application.Storage.clearValues();
             Debug.Log("Deleted all lists!");
             Helper.ToastUtil.Toast(Rez.Strings.StDelAllDone, Helper.ToastUtil.SUCCESS);
+            self.triggerOnListsChanged(null);
         }
 
         function addListChangedListener(obj as Object) as Void {
@@ -343,15 +344,7 @@ module Lists {
                 Helper.ToastUtil.Toast(Rez.Strings.EStorageError, Helper.ToastUtil.ERROR);
                 return [false, e];
             }
-            for (var i = 0; i < self.onListsChangedListeners.size(); i++) {
-                var listener = self.onListsChangedListeners[i];
-                if (listener.stillAlive()) {
-                    var obj = listener.get();
-                    if (obj != null && obj has :onListsChanged) {
-                        obj.onListsChanged(index);
-                    }
-                }
-            }
+            self.triggerOnListsChanged(index);
 
             return [true, null];
         }
@@ -371,6 +364,18 @@ module Lists {
             }
             var errorView = new Views.ErrorView(msg, code, payload);
             WatchUi.pushView(errorView, new Views.ItemViewDelegate(errorView), WatchUi.SLIDE_BLINK);
+        }
+
+        private function triggerOnListsChanged(index as ListIndex?) as Void {
+            for (var i = 0; i < self.onListsChangedListeners.size(); i++) {
+                var listener = self.onListsChangedListeners[i];
+                if (listener.stillAlive()) {
+                    var obj = listener.get();
+                    if (obj != null && obj has :onListsChanged) {
+                        obj.onListsChanged(index);
+                    }
+                }
+            }
         }
     }
 }

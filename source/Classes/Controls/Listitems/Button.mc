@@ -5,7 +5,7 @@ import Helper;
 module Controls {
     module Listitems {
         class Button extends Item {
-            private var _paddingFactor = 0.03;
+            private var _paddingFactor = 0.05;
             private var _horMarginFactor = 0.03;
 
             function initialize(layer as LayerDef?, title as String, identifier as Object, margin as Number?, drawline as Boolean) {
@@ -24,7 +24,7 @@ module Controls {
 
                 var viewport_y = self._listY - scrollOffset + self._layer.getY();
 
-                if (self.isVisible(scrollOffset) == false) {
+                if (self.isVisible(scrollOffset, dc) == false) {
                     return self.getHeight(dc);
                 }
 

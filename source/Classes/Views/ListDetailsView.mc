@@ -15,14 +15,14 @@ module Views {
         private var _startScroll as Number?;
 
         function initialize(uuid as String, scrollTo as Number?) {
-            ItemView.initialize();
+            IconItemView.initialize();
             self._listUuid = uuid;
             self._startScroll = scrollTo;
             self.loadIcons();
         }
 
-        function onShow() as Void {
-            ItemView.onShow();
+        function onLayout(dc as Dc) as Void {
+            IconItemView.onLayout(dc);
             if ($.getApp().ListsManager != null) {
                 $.getApp().ListsManager.addListChangedListener(self);
             }
@@ -46,7 +46,7 @@ module Views {
                     }
                     item.BoundObject = !item.BoundObject;
 
-                    $.getApp().ListsManager.updateList(self._listUuid, item.ItemPosition, item.BoundObject);
+                    $.getApp().ListsManager.updateListitem(self._listUuid, item.ItemPosition, item.BoundObject);
                     //self.publishItems(false);
                     WatchUi.requestUpdate();
                 }

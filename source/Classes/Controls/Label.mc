@@ -9,7 +9,7 @@ module Controls {
         private var _needValidation = true;
         private var _text as String;
         private var _font as FontType;
-        private var _maxHeight = 999999999;
+        private var _maxHeight = 9999;
 
         function initialize(text as String or Array<String>, font as FontType, width as Number) {
             self._width = width;
@@ -23,7 +23,6 @@ module Controls {
         function draw(dc as Dc, x as Number, topY as Number, color as Number, justification as TextJustification) as Number {
             self.validate(dc);
 
-            //Debug.Box(dc, x, topY, self._width, self._height, Graphics.COLOR_RED);
             if (justification == Graphics.TEXT_JUSTIFY_CENTER) {
                 x += (self._width / 2).toNumber();
             } else if (justification == Graphics.TEXT_JUSTIFY_RIGHT) {
@@ -44,14 +43,12 @@ module Controls {
             return self._font;
         }
 
-        function getHeight(dc as Dc) {
-            if (self._needValidation) {
-                self.validate(dc);
-            }
+        function getHeight(dc as Dc) as Number {
+            self.validate(dc);
             return self._height;
         }
 
-        function validate(dc as Dc) {
+        function validate(dc as Dc) as Void {
             if (self._needValidation) {
                 if (self._text.length() > 0) {
                     self._text = Graphics.fitTextToArea(self._text, self._font, self._width, self._maxHeight, true);

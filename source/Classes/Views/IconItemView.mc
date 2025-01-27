@@ -27,7 +27,7 @@ module Views {
             self._itemIcon = theme.getItemIcon(false);
             self._itemIconDone = theme.getItemIcon(true);
 
-            if (!self.DisplayButtonSupport()) {
+            if (self.DisplayButtonSupport()) {
                 self._itemIconInvert = theme.getItemIconInvert(false);
                 self._itemIconDoneInvert = theme.getItemIconInvert(true);
             } else {

@@ -10,12 +10,11 @@ module Themes {
         var SecondColor = 0xbdbdbd;
         var SecondColorSelected = 0xbdbdbd;
         var DisabledColor = 0x5e5e5e;
-
-        var BackgroundColor = 0x383838;
+        var DisabledColorSelected = 0x5e5e5e;
         var LineSeparatorColor = 0x667cff;
         var LineBitmap = null;
 
-        var ListBackground = 0x383838;
+        var BackgroundColor = 0x383838;
 
         var SelectedItemBackground = 0x595959;
 

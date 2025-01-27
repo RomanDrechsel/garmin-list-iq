@@ -7,31 +7,21 @@ import Controls.Listitems;
 import Helper;
 
 module Views {
-    class ListSettingsView extends ItemView {
+    class ListSettingsView extends IconItemView {
         var ListUuid = null;
-
-        private var _itemIconUncheck as Listitems.ViewItemIcon;
-        private var _itemIconCheck as Listitems.ViewItemIcon;
 
         private var _resetActive as Boolean? = null;
         private var _resetInterval as String? = null;
 
         function initialize(uuid as String) {
-            ItemView.initialize();
+            IconItemView.initialize();
             self.ScrollMode = SCROLL_DRAG;
             self.ListUuid = uuid;
-            self._itemIconUncheck = $.getTheme().DarkTheme ? Application.loadResource(Rez.Drawables.Item) : Application.loadResource(Rez.Drawables.bItem);
-            self._itemIconCheck = $.getTheme().DarkTheme ? Application.loadResource(Rez.Drawables.ItemDone) : Application.loadResource(Rez.Drawables.bItemDone);
-
             self.readList();
         }
 
         function onLayout(dc as Dc) {
-            ItemView.onLayout(dc);
-        }
-
-        function onShow() as Void {
-            ItemView.onShow();
+            IconItemView.onLayout(dc);
             if ($.getApp().ListsManager != null) {
                 $.getApp().ListsManager.addListChangedListener(self);
             }
@@ -55,7 +45,7 @@ module Views {
                         list.put("r_a", !active);
                         list.put("r_last", Time.now().value());
                         $.getApp().ListsManager.saveList(self.ListUuid, list);
-                        item.setIcon(!active ? self._itemIconCheck : self._itemIconUncheck);
+                        item.setIcon(!active ? self._itemIcon : self._itemIconDone);
                         WatchUi.requestUpdate();
                         if (active) {
                             Debug.Log("Activeded auto reset for list " + self.ListUuid);
@@ -82,7 +72,7 @@ module Views {
         }
 
         function onSettingsChanged() as Void {
-            ItemView.onSettingsChanged();
+            IconItemView.onSettingsChanged();
             self.loadItems(true);
         }
 
@@ -92,13 +82,13 @@ module Views {
         }
 
         function onKeyEsc() as Boolean {
-            ItemView.onKeyEsc();
+            IconItemView.onKeyEsc();
             self.goBack();
             return true;
         }
 
         function onKeyMenu() as Boolean {
-            ItemView.onKeyMenu();
+            IconItemView.onKeyMenu();
             self.goBack();
             return true;
         }
@@ -112,9 +102,9 @@ module Views {
             if (self._resetActive != null) {
                 var icon;
                 if (self._resetActive == true) {
-                    icon = self._itemIconCheck;
+                    icon = self._itemIconDone;
                 } else {
-                    icon = self._itemIconUncheck;
+                    icon = self._itemIcon;
                 }
 
                 var interval = null;
@@ -134,9 +124,7 @@ module Views {
             }
 
             //no lone below the last items
-            if (self.Items.size() > 0) {
-                self.Items[self.Items.size() - 1].DrawLine = false;
-            }
+            self.Items[self.Items.size() - 1].DrawLine = false;
 
             self._needValidation = true;
             if (request_update) {

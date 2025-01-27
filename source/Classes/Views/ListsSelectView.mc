@@ -11,6 +11,7 @@ module Views {
     class ListsSelectView extends ItemView {
         private const _listIconCode = 48;
         private var _firstDisplay = true;
+        private var _numLists as Number? = null;
 
         function initialize(first_display as Boolean) {
             ItemView.initialize();
@@ -18,20 +19,28 @@ module Views {
             self._firstDisplay = first_display;
         }
 
-        function onShow() as Void {
-            ItemView.onShow();
+        function onLayout(dc as Dc) as Void {
+            ItemView.onLayout(dc);
             if ($.getApp().ListsManager != null) {
                 $.getApp().ListsManager.addListChangedListener(self);
-                self.publishLists($.getApp().ListsManager.GetLists(), false);
+                self.publishLists($.getApp().ListsManager.GetLists());
             }
         }
 
-        function onDoubleTap(x as Number, y as Number) as Void {
-            ItemView.onDoubleTap(x, y);
-            if (self.Items.size() > 0) {
-                var item = self.Items[0];
-                if (item.BoundObject instanceof String && item.BoundObject.equals("store") && Helper.Properties.Get(Helper.Properties.INIT, 0) < 0) {
-                    ListsApp.openGooglePlay();
+        function onShow() as Void {
+            ItemView.onShow();
+            if (self.Items.size() == 0) {
+                self.publishLists($.getApp().ListsManager.GetLists());
+            }
+        }
+
+        function onDoubleTap(x as Number, y as Number) as Boolean {
+            if (!ItemView.onDoubleTap(x, y)) {
+                if (self.Items.size() > 0) {
+                    var item = self.Items[0];
+                    if (item.BoundObject instanceof String && item.BoundObject.equals("store") && Helper.Properties.Get(Helper.Properties.INIT, 0) < 0) {
+                        ListsApp.openGooglePlay();
+                    }
                 }
             }
         }
@@ -47,24 +56,25 @@ module Views {
         }
 
         function onListsChanged(index as ListIndex) as Void {
-            self.publishLists(index, true);
+            self.publishLists(index);
         }
 
         function onSettingsChanged() as Void {
             ItemView.onSettingsChanged();
             if ($.getApp().ListsManager != null) {
-                self.publishLists($.getApp().ListsManager.GetLists(), true);
+                self._numLists = null;
+                self.publishLists($.getApp().ListsManager.GetLists());
             }
         }
 
-        private function publishLists(index as ListIndex?, initialize as Boolean) as Void {
+        private function publishLists(index as ListIndex?) as Void {
             if (self._firstDisplay) {
                 self._firstDisplay = false;
                 var startuplist = Helper.Properties.Get(Helper.Properties.LASTLIST, "");
                 if (startuplist.length() > 0) {
-                    var startscroll = Helper.Properties.Get(Helper.Properties.LASTLISTSCROLL, -1);
-                    Helper.Properties.Store(Helper.Properties.LASTLIST, "");
                     if (index.hasKey(startuplist)) {
+                        var startscroll = Helper.Properties.Get(Helper.Properties.LASTLISTSCROLL, -1);
+                        Helper.Properties.Store(Helper.Properties.LASTLIST, "");
                         self.GotoList(startuplist, startscroll);
                         return;
                     }
@@ -74,6 +84,9 @@ module Views {
             self._firstDisplay = false;
             Helper.Properties.Store(Helper.Properties.LASTLIST, "");
             Helper.Properties.Store(Helper.Properties.LASTLISTSCROLL, -1);
+
+            self._scrollOffset = 0;
+            self._snapPosition = 0;
 
             if (index == null || index.size() == 0) {
                 self.noLists();
@@ -116,7 +129,8 @@ module Views {
                 self.addBackButton(true);
             }
 
-            if (initialize) {
+            if (self._numLists == null || self._numLists != lists.size()) {
+                self._numLists = lists.size();
                 WatchUi.requestUpdate();
             }
         }
@@ -152,6 +166,7 @@ module Views {
                 self.addBackButton(true);
             }
 
+            self._scrollOffset = 0;
             self.moveIterator(0);
             self._needValidation = true;
         }

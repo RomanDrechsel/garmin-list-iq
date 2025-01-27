@@ -9,7 +9,6 @@ module Themes {
             self.SecondColorSelected = 0xff0055;
             self.DisabledColor = 0xff5555;
 
-            self.ListBackground = 0x000000;
             self.BackgroundColor = 0x000000;
             self.SelectedItemBackground = 0xaaaaaa;
             self.LineSeparatorColor = 0xff0000;

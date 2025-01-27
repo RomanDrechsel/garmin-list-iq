@@ -4,14 +4,12 @@ adb -e forward tcp:7381 tcp:7381
 For Smartphone
 adb -d forward tcp:7381 tcp:7381
 
-soft-hyphen: \u00AD
-
 TEST: Button controlling
 TEST: don't select title on Button Controls
-TEST: new line break
-TODO: Dont load items on onShow, but on onLayout
-TODO: Scrollbars: (:roundVersion)
-https://developer.garmin.com/connect-iq/core-topics/build-configuration/
+TEST: new line
+BUG: Enduro - SettingsView: Menu Button not working...
+TODO: check if small bitmaps on all devices?
+TODO: High Colors
 
 1 Button, 64 Color:
 - Vivoactive 3

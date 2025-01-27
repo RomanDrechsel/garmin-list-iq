@@ -5,14 +5,14 @@ module Themes {
 
             self.MainColor = 0x000000;
             self.MainColorSelected = 0xffffff;
-            self.SecondColor = 0x000000;
+            self.SecondColor = self.MainColor;
             self.SecondColorSelected = self.MainColorSelected;
-            self.DisabledColor = 0x5e5e5e;
+            self.DisabledColor = self.MainColor;
+            self.DisabledColorSelected = self.MainColorSelected;
 
-            self.BackgroundColor = 0xffffff;
             self.LineSeparatorColor = 0x000000;
             self.SelectedItemBackground = 0x00000;
-            self.ListBackground = self.BackgroundColor;
+            self.BackgroundColor = 0xffffff;
 
             self.ScrollbarBackground = 0x555555;
             self.ScrollbarThumbColor = 0x555555;

@@ -8,6 +8,7 @@ import Helper;
 module Views {
     class SettingsThemeView extends IconItemView {
         private var _themes as Dictionary<Number, String> = {};
+        private var _lastScroll as Number = 0;
 
         function initialize() {
             ItemView.initialize();
@@ -25,9 +26,20 @@ module Views {
             self.loadThemes();
         }
 
+        function onShow() as Void {
+            IconItemView.onShow();
+            self._scrollOffset = self._lastScroll;
+        }
+
         function onSettingsChanged() as Void {
             IconItemView.onSettingsChanged();
+            self._scrollOffset = self._lastScroll;
             self.loadThemes();
+        }
+
+        function onScroll(delta as Number) as Void {
+            IconItemView.onScroll(delta);
+            self._lastScroll = self._scrollOffset;
         }
 
         protected function interactItem(item as Listitems.Item, doubletap as Boolean) as Void {

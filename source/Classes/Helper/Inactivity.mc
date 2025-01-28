@@ -20,12 +20,13 @@ module Helper {
         function onSettingsChanged() as Void {
             self._lastInteraction = Time.now();
             self._autoexit = Helper.Properties.Get(Helper.Properties.AUTOEXIT, 0);
+            if (self._timer != null) {
+                self._timer.stop();
+                self._timer = null;
+            }
             if (self._autoexit > 0) {
                 self._timer = new Timer.Timer();
                 self._timer.start(method(:onTimer), 10000, true);
-            } else if (self._timer != null) {
-                self._timer.stop();
-                self._timer = null;
             }
         }
 

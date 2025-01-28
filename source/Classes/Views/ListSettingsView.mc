@@ -42,10 +42,11 @@ module Views {
                 if (list != null) {
                     var active = list.get("r_a") as Boolean?;
                     if (active != null) {
-                        list.put("r_a", !active);
+                        active = !active;
+                        list.put("r_a", active);
                         list.put("r_last", Time.now().value());
                         $.getApp().ListsManager.saveList(self.ListUuid, list);
-                        item.setIcon(!active ? self._itemIcon : self._itemIconDone);
+                        item.setIcon(active ? self._itemIconDone : self._itemIcon);
                         WatchUi.requestUpdate();
                         if (active) {
                             Debug.Log("Activeded auto reset for list " + self.ListUuid);

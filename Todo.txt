@@ -7,8 +7,6 @@ adb -d forward tcp:7381 tcp:7381
 TEST: Button controlling
 TEST: don't select title on Button Controls
 TEST: new line
-BUG: Enduro - SettingsView: Menu Button not working...
-TODO: check if small bitmaps on all devices?
 TODO: High Colors
 
 1 Button, 64 Color:

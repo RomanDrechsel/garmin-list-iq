@@ -16,7 +16,7 @@ descentmk2.resourcePath = $(base.resourcePath);resources-small
 descentmk2s.resourcePath = $(base.resourcePath);resources-small
 descentmk343mm.resourcePath = $(base.resourcePath);resources-touch-button;resources-highcolor
 descentmk351mm.resourcePath = $(base.resourcePath);resources-touch-button;resources-highcolor
-enduro.resourcePath = $(base.resourcePath)
+enduro.resourcePath = $(base.resourcePath);resources-small
 enduro3.resourcePath = $(base.resourcePath);resources-touch-button;resources-highcolor;resources-small
 epix2.resourcePath = $(base.resourcePath);resources-touch-button;resources-highcolor
 epix2pro42mm.resourcePath = $(base.resourcePath);resources-touch-button;resources-highcolor
@@ -99,7 +99,6 @@ vivoactive3mlte.resourcePath = $(base.resourcePath);resources-touch;resources-sm
 vivoactive4.resourcePath = $(base.resourcePath);resources-touch;resources-small
 vivoactive4s.resourcePath = $(base.resourcePath);resources-touch;resources-small
 vivoactive5.resourcePath = $(base.resourcePath);resources-touch;resources-highcolor
-
 
 base.excludeAnnotations = roundVersion
 round.excludeAnnotations = regularVersion

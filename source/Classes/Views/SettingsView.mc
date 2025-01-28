@@ -20,6 +20,8 @@ module Views {
             SETTINGS_HWBCTRL,
         }
 
+        private var _lastScroll = 0;
+
         function initialize() {
             IconItemView.initialize();
             self.ScrollMode = SCROLL_DRAG;
@@ -30,9 +32,20 @@ module Views {
             self.loadVisuals();
         }
 
+        function onShow() as Void {
+            IconItemView.onShow();
+            self._scrollOffset = self._lastScroll;
+        }
+
         function onSettingsChanged() as Void {
             IconItemView.onSettingsChanged();
+            self._scrollOffset = self._lastScroll;
             self.loadVisuals();
+        }
+
+        function onScroll(delta as Number) as Void {
+            IconItemView.onScroll(delta);
+            self._lastScroll = self._scrollOffset;
         }
 
         function deleteAllLists() as Void {

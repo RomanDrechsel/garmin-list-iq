@@ -1,8 +1,7 @@
 import Toybox.Application;
 import Toybox.Lang;
 import Toybox.WatchUi;
-import Toybox.System;
-import Toybox.Timer;
+import Toybox.System
 import Toybox.Communications;
 import Views;
 import Comm;

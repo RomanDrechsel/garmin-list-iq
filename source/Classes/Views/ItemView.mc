@@ -105,7 +105,7 @@ module Views {
             }
             if ($.getApp().GlobalStates.hasKey("movetop")) {
                 self._scrollOffset = 0;
-                self._snapPosition = 0;
+                self.setIterator(0);
                 $.getApp().GlobalStates.remove("movetop");
             }
             WatchUi.View.onShow();
@@ -232,7 +232,7 @@ module Views {
 
         function onSettingsChanged() as Void {
             self._buttonDisplay = null;
-            self._snapPosition = 0;
+            self.setIterator(0);
             self._scrollOffset = 0;
         }
 
@@ -318,7 +318,7 @@ module Views {
                 self._scrollOffset = self._viewHeight - self._mainLayer.getHeight();
             }
 
-            self.setSelectedItem(item);
+            self._selectedItem = item;
         }
 
         /**
@@ -405,19 +405,15 @@ module Views {
             return false;
         }
 
-        private function setSelectedItem(item as Listitems.Item?) as Void {
-            self._selectedItem = item;
-        }
-
         protected function setCenterItemSelected() as Void {
             var centerY = $.screenHeight / 2;
             for (var i = 0; i < self.Items.size(); i++) {
                 if (self.Items[i].Clicked(centerY, self._scrollOffset)) {
-                    self.setSelectedItem(self.Items[i]);
+                    self._selectedItem = self.Items[i];
                     return;
                 }
             }
-            self.setSelectedItem(null);
+            self._selectedItem = null;
         }
 
         static function SupportedControls() as EControls {

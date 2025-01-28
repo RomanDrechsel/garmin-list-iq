@@ -7,7 +7,9 @@ adb -d forward tcp:7381 tcp:7381
 TEST: Button controlling
 TEST: don't select title on Button Controls
 TEST: new line
-TODO: High Colors
+WIP: High Colors
+BUG: Move items down if done does not work
+TODO: Line Separator for title
 
 1 Button, 64 Color:
 - Vivoactive 3

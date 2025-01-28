@@ -181,7 +181,7 @@ module Controls {
             }
 
             function Clicked(tapy as Number, scrollOffset as Number) as Boolean {
-                if (self._height == null || self.isVisible(scrollOffset, null) == false) {
+                if (self._height == null || self._listY == null || self.isVisible(scrollOffset, null) == false) {
                     //not visible or not validated
                     return false;
                 }

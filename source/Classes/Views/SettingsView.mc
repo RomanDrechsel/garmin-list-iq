@@ -176,7 +176,6 @@ module Views {
                     var delegate = new Controls.ConfirmDelegate(self.method(:deleteAllLists));
                     WatchUi.pushView(dialog, delegate, WatchUi.SLIDE_BLINK);
                 } else if ([SETTINGS_MOVEDOWN, SETTINGS_DOUBLETAP, SETTINGS_SHOWNOTES].indexOf(item.BoundObject) >= 0) {
-                    var val = item.getIcon() == self._itemIcon;
                     var prop;
                     switch (item.BoundObject) {
                         case SETTINGS_MOVEDOWN:
@@ -193,8 +192,10 @@ module Views {
                             break;
                     }
                     if (prop != null) {
+                        var val = !Helper.Properties.Get(prop, false);
                         Helper.Properties.Store(prop, val);
                         item.setIcon(val ? self._itemIconDone : self._itemIcon);
+                        item.setIconInvert(val ? self._itemIconDoneInvert : self._itemIconInvert);
                         WatchUi.requestUpdate();
                         if ($.getApp().ListsManager != null) {
                             $.getApp().GlobalStates.put("movetop", true);

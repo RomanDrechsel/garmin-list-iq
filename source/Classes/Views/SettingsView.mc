@@ -160,6 +160,7 @@ module Views {
             item.TitleJustification = Graphics.TEXT_JUSTIFY_CENTER;
             item.SubtitleJustification = Graphics.TEXT_JUSTIFY_CENTER;
             item.DrawLine = false;
+            item.isSelectable = false;
             self.Items.add(item);
 
             if ($.getApp().NoBackButton) {

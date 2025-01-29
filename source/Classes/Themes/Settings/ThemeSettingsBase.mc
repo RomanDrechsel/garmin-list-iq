@@ -13,6 +13,7 @@ module Themes {
         var DisabledColorSelected = 0x5e5e5e;
         var LineSeparatorColor = 0x667cff;
         var LineBitmap = null;
+        var TitleSeparatorColor = 0xd7d7d7;
 
         var BackgroundColor = 0x383838;
 

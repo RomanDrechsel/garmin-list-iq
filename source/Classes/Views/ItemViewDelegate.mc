@@ -95,7 +95,7 @@ module Views {
             } else if (key == WatchUi.KEY_UP) {
                 if (self._view.ScrollMode == ItemView.SCROLL_DRAG) {
                     var height = System.getDeviceSettings().screenHeight;
-                    self._view.onScroll((height * -0.2).toNumber());
+                    self._view.onScroll((height * -0.21).toNumber());
                 } else {
                     self._view.onScroll(-1);
                 }
@@ -103,7 +103,7 @@ module Views {
             } else if (key == WatchUi.KEY_DOWN) {
                 if (self._view.ScrollMode == ItemView.SCROLL_DRAG) {
                     var height = System.getDeviceSettings().screenHeight;
-                    self._view.onScroll((height * 0.2).toNumber());
+                    self._view.onScroll((height * 0.21).toNumber());
                 } else {
                     self._view.onScroll(1);
                 }

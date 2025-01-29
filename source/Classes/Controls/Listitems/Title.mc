@@ -14,6 +14,12 @@ module Controls {
             function Clicked(tapy as Number, scrollOffset as Number) as Boolean {
                 return false;
             }
+
+            function draw(dc as Dc, scrollOffset as Number, isSelected as Boolean) as Number {
+                var height = Item.draw(dc, scrollOffset, false);
+                dc.setColor($.getTheme().TitleSeparatorColor, $.getTheme().TitleSeparatorColor);
+                dc.fillRectangle(0, self._listY - scrollOffset + self._layer.getY() + height - 2, dc.getWidth(), 2);
+            }
         }
     }
 }

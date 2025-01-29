@@ -28,7 +28,7 @@ module Views {
             self.loadItems(false);
         }
 
-        protected function interactItem(item as Listitems.Item, doubletap as Boolean) as Void {
+        protected function interactItem(item as Listitems.Item, doubletap as Boolean) as Boolean {
             if ($.getApp().ListsManager == null) {
                 return;
             }
@@ -37,6 +37,7 @@ module Views {
                 var dialog = new WatchUi.Confirmation(Application.loadResource(Rez.Strings.DeleteConfirm));
                 var delegate = new Controls.ConfirmDelegate(self.method(:deleteList));
                 WatchUi.pushView(dialog, delegate, WatchUi.SLIDE_BLINK);
+                return true;
             } else if (item.BoundObject.equals("reset")) {
                 var list = $.getApp().ListsManager.getList(self.ListUuid) as Lists.List?;
                 if (list != null) {
@@ -47,6 +48,7 @@ module Views {
                         list.put("r_last", Time.now().value());
                         $.getApp().ListsManager.saveList(self.ListUuid, list);
                         item.setIcon(active ? self._itemIconDone : self._itemIcon);
+                        item.setIconInvert(active ? self._itemIconDoneInvert : self._itemIconInvert);
                         WatchUi.requestUpdate();
                         if (active) {
                             Debug.Log("Activeded auto reset for list " + self.ListUuid);
@@ -59,6 +61,11 @@ module Views {
                 } else {
                     Debug.Log("List " + self.ListUuid + " not found for toggling reset setting");
                 }
+                return true;
+            } else if (item.BoundObject.equals("back")) {
+                $.getApp().GlobalStates.put("movetop", true);
+                self.goBack();
+                return true;
             }
         }
 
@@ -124,8 +131,12 @@ module Views {
                 self.Items[self.Items.size() - 1].SubtitleJustification = Graphics.TEXT_JUSTIFY_CENTER;
             }
 
-            //no lone below the last items
+            //no line below the last items
             self.Items[self.Items.size() - 1].DrawLine = false;
+
+            if (self.DisplayButtonSupport()) {
+                self.addBackButton(false);
+            }
 
             self._needValidation = true;
             if (request_update) {

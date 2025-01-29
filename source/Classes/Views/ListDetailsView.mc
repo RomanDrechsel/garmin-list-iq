@@ -26,7 +26,7 @@ module Views {
             if ($.getApp().ListsManager != null) {
                 $.getApp().ListsManager.addListChangedListener(self);
             }
-            self.publishItems(true);
+            self.publishItems(false);
         }
 
         protected function interactItem(item as Listitems.Item, doubletap as Boolean) as Void {
@@ -47,7 +47,7 @@ module Views {
                     item.BoundObject = !item.BoundObject;
 
                     $.getApp().ListsManager.updateListitem(self._listUuid, item.ItemPosition, item.BoundObject);
-                    //self.publishItems(false);
+                    self.publishItems(true);
                     WatchUi.requestUpdate();
                 }
             } else if (item.BoundObject instanceof String) {
@@ -82,7 +82,7 @@ module Views {
         }
 
         function onListsChanged(index as ListIndex) as Void {
-            self.publishItems(false);
+            self.publishItems(true);
         }
 
         function openSettings() as Void {
@@ -95,7 +95,7 @@ module Views {
         function onSettingsChanged() as Void {
             ItemView.onSettingsChanged();
             self.loadIcons();
-            self.publishItems(false);
+            self.publishItems(true);
         }
 
         function onScroll(delta as Number) as Void {
@@ -103,7 +103,7 @@ module Views {
             Helper.Properties.Store(Helper.Properties.LASTLISTSCROLL, self._scrollOffset);
         }
 
-        private function publishItems(initialize as Boolean) as Void {
+        private function publishItems(request_update as Boolean) as Void {
             self.Items = [];
 
             if (self._listUuid == null || $.getApp().ListsManager == null) {
@@ -114,7 +114,7 @@ module Views {
                     self.errorLoadingList();
                 } else {
                     //check if the time for an autoreset is come
-                    if (initialize) {
+                    if (request_update) {
                         self.checkAutoreset(list);
                     }
 
@@ -186,7 +186,7 @@ module Views {
                         }
                     }
 
-                    if (initialize) {
+                    if (request_update == false) {
                         Debug.Log("Displaying list '" + list.get("name") + "' (" + self._listUuid + ")");
                     }
 
@@ -202,7 +202,7 @@ module Views {
                 }
             }
             self._needValidation = true;
-            if (initialize == false) {
+            if (request_update) {
                 WatchUi.requestUpdate();
             }
         }

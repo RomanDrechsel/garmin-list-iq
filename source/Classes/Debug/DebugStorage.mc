@@ -3,6 +3,7 @@ import Toybox.Graphics;
 import Toybox.Time;
 import Toybox.Application;
 
+(:glance)
 module Debug {
     class DebugStorage {
         private var _logs as Array<String> = [];
@@ -81,7 +82,6 @@ module Debug {
         }
     }
 
-    (:glance)
     function Log(obj as Lang.Object) {
         var info = Time.Gregorian.info(Time.now(), Time.FORMAT_SHORT);
         var date = Helper.DateUtil.toLogString(info, null);

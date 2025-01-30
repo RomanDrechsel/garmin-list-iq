@@ -42,19 +42,25 @@ module Views {
             self._lastScroll = self._scrollOffset;
         }
 
-        protected function interactItem(item as Listitems.Item, doubletap as Boolean) as Void {
+        protected function interactItem(item as Listitems.Item, doubletap as Boolean) as Boolean {
             if ($.getApp().ListsManager == null) {
-                return;
+                return false;
             }
 
             var theme = Helper.Properties.Get(Helper.Properties.THEME, 0);
+            if (item.BoundObject instanceof String && item.BoundObject.equals("back")) {
+                self.goBack();
+                return true;
+            }
             if (item.BoundObject != theme) {
                 var name = self._themes.get(item.BoundObject);
                 if (name != null) {
                     Helper.Properties.Store(Helper.Properties.THEME, item.BoundObject);
                     $.getApp().triggerOnSettingsChanged();
+                    return true;
                 }
             }
+            return false;
         }
 
         private function loadThemes() as Void {
@@ -64,7 +70,6 @@ module Views {
             var theme = Helper.Properties.Get(Helper.Properties.THEME, 0);
 
             var keys = self._themes.keys();
-            var setItem = 1;
             for (var i = 0; i < keys.size(); i++) {
                 var key = keys[i];
                 var name = self._themes.get(key);
@@ -72,9 +77,9 @@ module Views {
                     continue;
                 }
 
-                self.addItem(name, null, key, key == theme ? self._itemIconDone : self._itemIcon, i);
+                var item = self.addItem(name, null, key, key == theme ? self._itemIconDone : self._itemIcon, i);
                 if (key == theme) {
-                    setItem = i + 1;
+                    self._centerItemOnDraw = item;
                 }
             }
 
@@ -83,7 +88,9 @@ module Views {
                 self.Items[self.Items.size() - 1].DrawLine = false;
             }
 
-            self.setIterator(setItem);
+            if (self.DisplayButtonSupport()) {
+                self.addBackButton(false);
+            }
         }
     }
 }

@@ -13,6 +13,7 @@ module Themes {
             self.LineSeparatorColor = self.MainColor;
             self.SelectedItemBackground = self.MainColor;
             self.BackgroundColor = 0x0827f5;
+            self.TitleSeparatorColor = self.MainColor;
 
             self.ScrollbarBackground = self.MainColor;
             self.ScrollbarThumbColor = self.MainColor;

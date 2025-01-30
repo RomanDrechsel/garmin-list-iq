@@ -65,6 +65,12 @@ module Views {
         /** what kind of controls does the view use */
         protected static var _controls as EControls? = null;
 
+        /**
+         * center on an item on the next draw
+         * useful if an item is set before self.validate(), e.g. in onLayout()
+         */
+        protected var _centerItemOnDraw as Number or Listitems.Item or Null = null;
+
         /** display hardware button support? */
         protected static var _buttonDisplay as Boolean? = null;
 
@@ -131,6 +137,11 @@ module Views {
             }
 
             self.validate(dc);
+            if (self._centerItemOnDraw != null) {
+                self.centerItem(self._centerItemOnDraw);
+                self._centerItemOnDraw = null;
+            }
+
             if (self.ScrollMode == SCROLL_SNAP) {
                 self.setIterator(self._snapPosition);
             }
@@ -261,6 +272,7 @@ module Views {
         }
 
         static function goBack() {
+            Debug.Log("Go Back");
             WatchUi.popView(WatchUi.SLIDE_RIGHT);
         }
 
@@ -301,12 +313,19 @@ module Views {
             }
         }
 
-        private function centerItem(index as Number) {
-            if (index < 0 || self.Items.size() < index + 1) {
+        private function centerItem(item as Number or Listitems.Item) {
+            if (item instanceof Number) {
+                if (item >= 0 && self.Items.size() > item) {
+                    item = self.Items[item];
+                } else {
+                    item = null;
+                }
+            }
+
+            if (item == null) {
                 return;
             }
 
-            var item = self.Items[index];
             var y = item.getListY(); //upper edge of the item
             var h = item.getHeight(null); // height of the item
             var c = y + h / 2; // center point of the item

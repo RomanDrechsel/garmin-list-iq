@@ -52,6 +52,46 @@ class ListsApp extends Application.AppBase {
         self.triggerOnSettingsChanged();
     }
 
+    function onActive(state as Lang.Dictionary?) as Void {
+        Debug.Log("onActive");
+        if (state != null) {
+            for (var i = 0; i < state.keys().size(); i++) {
+                Debug.Log(state.keys()[i] + ": " + state.values()[i]);
+            }
+        }
+        Debug.Log("END");
+    }
+
+    function onInactive(state as Lang.Dictionary?) as Void {
+        Debug.Log("onInactive");
+        if (state != null) {
+            for (var i = 0; i < state.keys().size(); i++) {
+                Debug.Log(state.keys()[i] + ": " + state.values()[i]);
+            }
+        }
+        Debug.Log("END");
+    }
+
+    function onStart(state as Lang.Dictionary?) as Void {
+        Debug.Log("onStart");
+        if (state != null) {
+            for (var i = 0; i < state.keys().size(); i++) {
+                Debug.Log(state.keys()[i] + ": " + state.values()[i]);
+            }
+        }
+        Debug.Log("END");
+    }
+
+    function onStop(state as Lang.Dictionary?) as Void {
+        Debug.Log("onStop");
+        if (state != null) {
+            for (var i = 0; i < state.keys().size(); i++) {
+                Debug.Log(state.keys()[i] + ": " + state.values()[i]);
+            }
+        }
+        Debug.Log("END");
+    }
+
     function triggerOnSettingsChanged() as Void {
         if (self.Debug != null) {
             self.Debug.onSettingsChanged();
@@ -138,6 +178,7 @@ class ListsApp extends Application.AppBase {
     }
 }
 
+(:glance)
 function getApp() as ListsApp {
     return Application.getApp() as ListsApp;
 }
@@ -146,6 +187,7 @@ function getApp() as ListsApp {
 var isRoundDisplay = true;
 (:regularVersion)
 var isRoundDisplay = false;
+
 var screenHeight = System.getDeviceSettings().screenHeight;
 
 (:debug)

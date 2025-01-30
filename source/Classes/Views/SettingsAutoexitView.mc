@@ -34,7 +34,6 @@ module Views {
             self.Items = [];
             self.setTitle(Application.loadResource(Rez.Strings.StAutoExit));
             var prop = Helper.Properties.Get(Helper.Properties.AUTOEXIT, 0);
-            var selItem = 1;
 
             for (var i = 0; i < intervals.size(); i++) {
                 var txt = "";
@@ -68,7 +67,7 @@ module Views {
                 var item = new Listitems.Item(self._mainLayer, txt, null, time, prop == time ? self._itemIconDone : self._itemIcon, null, i, null);
                 self.Items.add(item);
                 if (time == prop) {
-                    selItem = i + 1;
+                    self._centerItemOnDraw = item;
                 }
             }
 
@@ -77,7 +76,9 @@ module Views {
                 self.Items[self.Items.size() - 1].DrawLine = false;
             }
 
-            self.setIterator(selItem);
+            if (self.DisplayButtonSupport()) {
+                self.addBackButton(false);
+            }
         }
     }
 }

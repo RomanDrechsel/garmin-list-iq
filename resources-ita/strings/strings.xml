@@ -32,13 +32,13 @@
     <string id="StDoubleTapForDone">Tocca due volte anziché una volta per segnare un punto come completato</string>
     <string id="StShowNotes">Mostra le note dei punti</string>
     <string id="StAutoExit">Chiudi app in caso di inattività</string>
-    <string id="StAutoExit1">dopo 1 minuto</string>
-    <string id="StAutoExit3">dopo 3 minuti</string>
-    <string id="StAutoExit5">dopo 5 minuti</string>
-    <string id="StAutoExit10">dopo 10 minuti</string>
-    <string id="StAutoExit15">dopo 15 minuti</string>
-    <string id="StAutoExit30">dopo 30 minuti</string>
-    <string id="StAutoExit60">dopo 60 minuti</string>
+    <string id="StAutoExit1">dopo 1 minuto</string>
+    <string id="StAutoExit3">dopo 3 minuti</string>
+    <string id="StAutoExit5">dopo 5 minuti</string>
+    <string id="StAutoExit10">dopo 10 minuti</string>
+    <string id="StAutoExit15">dopo 15 minuti</string>
+    <string id="StAutoExit30">dopo 30 minuti</string>
+    <string id="StAutoExit60">dopo 60 minuti</string>
     <string id="StAutoExitOff">disattivato</string>
     <string id="StBtnCtrl">Controllo tramite pulsanti hardware</string>
 

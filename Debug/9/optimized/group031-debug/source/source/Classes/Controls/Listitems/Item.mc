@@ -1,3 +1,4 @@
+using Views;
 import Toybox.Lang;
 import Toybox.Graphics;
 import Toybox.WatchUi;
@@ -16,8 +17,8 @@ module Controls {
             var isSelectable as Boolean = true;
             var isDisabled as Boolean = false;
 
-            var TitleJustification as TextJustification = Graphics.TEXT_JUSTIFY_LEFT;
-            var SubtitleJustification as TextJustification = Graphics.TEXT_JUSTIFY_LEFT;
+            var TitleJustification as TextJustification = 2 as Toybox.Graphics.TextJustification;
+            var SubtitleJustification as TextJustification = 2 as Toybox.Graphics.TextJustification;
 
             protected static var _iconPaddingFactor = 0.3;
 
@@ -33,17 +34,29 @@ module Controls {
             protected var _layer as LayerDef? = null;
             protected var _textOffsetX as Number = 0;
 
-            function initialize(layer as LayerDef?, title as String or Array<String> or Null, subtitle as String or Array<String> or Null, obj as Object?, icon as Number or BitmapResource or Null, vert_margin as Number?, position as Number, fontoverride as FontType?) {
-                self._font = fontoverride != null ? fontoverride : Helper.Fonts.Normal();
-                self._subFont = Helper.Fonts.Small();
+            function initialize(
+                layer as LayerDef?,
+                title as String or Array<String> or Null,
+                subtitle as String or Array<String> or Null,
+                obj as Object?,
+                icon as Number or BitmapResource or Null,
+                vert_margin as Number?,
+                position as Number,
+                fontoverride as FontType?
+            ) {
+                var pre_Fonts;
+                pre_Fonts = Helper.Fonts;
+                self._font = fontoverride != null ? fontoverride : pre_Fonts.Normal();
+                fontoverride /*>pre_screenHeight<*/ = $.screenHeight;
+                self._subFont = pre_Fonts.Small();
                 self.ItemPosition = position;
                 self._layer = layer;
                 if (vert_margin != null) {
                     self._verticalMargin = vert_margin;
                 } else {
-                    self._verticalMargin = ($.screenHeight * 0.02).toNumber();
+                    self._verticalMargin = (fontoverride /*>pre_screenHeight<*/ * 0.02).toNumber();
                 }
-                self._verticalPadding = ($.screenHeight * 0.03).toNumber();
+                self._verticalPadding = (fontoverride /*>pre_screenHeight<*/ * 0.03).toNumber();
                 self.Title = title;
                 self.Subtitle = subtitle;
                 self.BoundObject = obj;
@@ -53,6 +66,7 @@ module Controls {
 
             /** returns height of the item */
             function draw(dc as Dc, scrollOffset as Number, isSelected as Boolean) as Number {
+                var pre_2;
                 if (self._layer == null || self._listY == null) {
                     return 0;
                 }
@@ -65,31 +79,32 @@ module Controls {
                 var viewport_yTop = viewport_y;
                 viewport_y += self._verticalMargin;
 
-                var theme = $.getTheme();
+                scrollOffset /*>theme<*/ = $.getTheme();
 
-                var specialColor = isSelected && self.isSelectable && Views.ItemView.DisplayButtonSupport();
-                var color = specialColor ? theme.MainColorSelected : theme.MainColor;
-                var colorSub = specialColor ? theme.SecondColorSelected : theme.SecondColor;
+                isSelected /*>specialColor<*/ = isSelected && self.isSelectable && Views.ItemView.DisplayButtonSupport();
+                var color = isSelected /*>specialColor<*/ ? scrollOffset /*>theme<*/.MainColorSelected : scrollOffset /*>theme<*/.MainColor;
+                var colorSub = isSelected /*>specialColor<*/ ? scrollOffset /*>theme<*/.SecondColorSelected : scrollOffset /*>theme<*/.SecondColor;
                 if (self.isDisabled) {
-                    color = specialColor ? theme.DisabledColorSelected : theme.DisabledColor;
+                    color = isSelected /*>specialColor<*/ ? scrollOffset /*>theme<*/.DisabledColorSelected : scrollOffset /*>theme<*/.DisabledColor;
                     colorSub = color;
                 }
 
-                if (specialColor) {
+                if (isSelected /*>specialColor<*/) {
                     self.drawSelectedBackground(dc, viewport_y);
                 }
 
+                pre_2 = 2;
+                scrollOffset /*>pre__icon<*/ = self._icon;
                 viewport_y += self._verticalPadding;
                 var x = self._layer.getX();
 
-                if (self._icon instanceof String && self._icon.length() > 0) {
-                    var iconoffsety = (Graphics.getFontHeight(self._font) - dc.getFontHeight(Helper.Fonts.Icons())) / 2;
-                    dc.setColor(color, Graphics.COLOR_TRANSPARENT);
-                    dc.drawText(x, viewport_y + iconoffsety, Helper.Fonts.Icons(), self._icon, Graphics.TEXT_JUSTIFY_LEFT);
+                if (scrollOffset /*>pre__icon<*/ instanceof String && scrollOffset /*>pre__icon<*/.length() > 0) {
+                    scrollOffset /*>iconoffsety<*/ = (Graphics.getFontHeight(self._font) - dc.getFontHeight(Helper.Fonts.Icons())) / pre_2;
+                    dc.setColor(color, -1 as Toybox.Graphics.ColorValue);
+                    dc.drawText(x, viewport_y + scrollOffset /*>iconoffsety<*/, Helper.Fonts.Icons(), self._icon, pre_2 as Toybox.Graphics.TextJustification);
                 } else if (self.isBitmap(self._icon)) {
-                    var icon = specialColor && self._iconInvert != null ? self._iconInvert : self._icon;
-                    var iconoffsety = (Graphics.getFontHeight(self._font) - icon.getHeight()) / 2;
-                    dc.drawBitmap(x, viewport_y + iconoffsety, icon);
+                    scrollOffset /*>icon<*/ = isSelected /*>specialColor<*/ && self._iconInvert != null ? self._iconInvert : self._icon;
+                    dc.drawBitmap(x, viewport_y + (Graphics.getFontHeight(self._font) - scrollOffset /*>icon<*/.getHeight()) / pre_2, scrollOffset /*>icon<*/);
                 }
 
                 if (self.Title != null) {
@@ -106,8 +121,7 @@ module Controls {
                     viewport_y = self.drawLine(dc, viewport_y);
                 }
 
-                viewport_y += self._verticalMargin;
-                self._height = viewport_y - viewport_yTop;
+                self._height = viewport_y + self._verticalMargin - viewport_yTop;
 
                 return self._height;
             }
@@ -117,30 +131,37 @@ module Controls {
             }
 
             function getListY() as Number {
-                return self._listY != null ? self._listY : 0;
+                var pre__listY;
+                pre__listY = self._listY;
+                return pre__listY != null ? pre__listY : 0;
             }
 
             function getHeight(dc as Dc?) as Number {
+                var pre_Subtitle, pre_0;
+                pre_0 = 0;
                 if (dc != null) {
                     self.validate(dc);
-                    if (self._height == null || self._height <= 0) {
+                    pre_Subtitle /*>pre__height<*/ = self._height;
+                    if (pre_Subtitle /*>pre__height<*/ == null || pre_Subtitle /*>pre__height<*/ <= pre_0) {
+                        pre_Subtitle /*>pre_Title<*/ = self.Title;
                         self._height = self._verticalMargin + self._verticalPadding;
-                        if (self.Title != null) {
+                        if (pre_Subtitle /*>pre_Title<*/ != null) {
                             //self._height += self.Title.getHeight(dc);
-                            self._height += self.Title.getHeight(dc);
+                            self._height += pre_Subtitle /*>pre_Title<*/.getHeight(dc);
                         }
-                        if (self.Subtitle != null) {
-                            self._height += (Graphics.getFontAscent(self.Subtitle.getFont()) / 8).toNumber();
+                        pre_Subtitle = self.Subtitle;
+                        if (pre_Subtitle != null) {
+                            self._height += (Graphics.getFontAscent(pre_Subtitle.getFont()) / 8).toNumber();
                             self._height += self.Subtitle.getHeight(dc);
                         }
                         self._height += self._verticalMargin + self._verticalPadding;
                         self._height += self.getLineHeight();
                     }
                     return self._height;
-                } else if (self._height != null && self._height >= 0) {
+                } else if (self._height != null && self._height >= pre_0) {
                     return self._height;
                 } else {
-                    return 0;
+                    return pre_0;
                 }
             }
 
@@ -186,8 +207,8 @@ module Controls {
                     return false;
                 }
 
-                var viewportY = self._listY - scrollOffset + self._layer.getY();
-                if (tapy >= viewportY && tapy <= viewportY + self._height) {
+                scrollOffset /*>viewportY<*/ = self._listY - scrollOffset + self._layer.getY();
+                if (tapy >= scrollOffset /*>viewportY<*/ && tapy <= scrollOffset /*>viewportY<*/ + self._height) {
                     return true;
                 }
 
@@ -211,15 +232,15 @@ module Controls {
                 if (self._layer == null) {
                     return false;
                 }
-                var viewportY = self.getViewportYTop(scrollOffset);
-                if (viewportY == null) {
+                scrollOffset /*>viewportY<*/ = self.getViewportYTop(scrollOffset);
+                if (scrollOffset /*>viewportY<*/ == null) {
                     return true;
                 }
 
-                if (viewportY + self._height <= 0) {
+                if (scrollOffset /*>viewportY<*/ + self._height <= 0) {
                     //above the top edge of the display
                     return false;
-                } else if (viewportY > $.screenHeight) {
+                } else if (scrollOffset /*>viewportY<*/ > $.screenHeight) {
                     //below the bottom edge of the display
                     return false;
                 } else {
@@ -228,18 +249,19 @@ module Controls {
             }
 
             protected function drawLine(dc as Dc, y as Number) as Number {
+                var pre_2;
+                pre_2 = 2;
                 var line = $.getTheme().LineBitmap;
                 if (line != null) {
                     y += self._verticalMargin;
-                    var x = (dc.getWidth() - line.getWidth()) / 2;
-                    dc.drawBitmap(x, y, line);
+                    dc.drawBitmap((dc.getWidth() - line.getWidth()) / pre_2, y, line);
                     y += line.getHeight();
                 } else if ($.getTheme().LineSeparatorColor != null) {
                     y += self._verticalMargin;
-                    dc.setColor($.getTheme().LineSeparatorColor, Graphics.COLOR_TRANSPARENT);
-                    dc.setPenWidth(2);
+                    dc.setColor($.getTheme().LineSeparatorColor, -1 as Toybox.Graphics.ColorValue);
+                    dc.setPenWidth(pre_2);
                     dc.drawLine(0, y, dc.getWidth(), y);
-                    y += 2;
+                    y += pre_2;
                 }
 
                 return y;
@@ -251,19 +273,21 @@ module Controls {
                     if (line != null) {
                         return line.getHeight() + self._verticalMargin;
                     } else if ($.getTheme().LineSeparatorColor != null) {
-                        return 2 + self._verticalMargin;
+                        return self._verticalMargin + 2;
                     }
                 }
                 return 0;
             }
 
             protected function validate(dc as Dc) {
+                var pre_Title;
                 if (self._layer != null && self._needValidation) {
+                    pre_Title = self.Title;
                     self._height = -1;
-                    if (self.Title instanceof Label) {
-                        self.Title.validate(dc);
-                    } else if (self.Title instanceof String) {
-                        self.Title = new Label(self.Title, self._font, self.getTextWidth(dc, true));
+                    if (pre_Title instanceof Label) {
+                        pre_Title.validate(dc);
+                    } else if (pre_Title instanceof String) {
+                        self.Title = new Label(pre_Title, self._font, self.getTextWidth(dc, true));
                     }
                     if (self.Subtitle instanceof Label) {
                         self.Subtitle.validate(dc);
@@ -284,7 +308,8 @@ module Controls {
 
             protected function getIconWidth(dc as Dc) as Number {
                 var iconwidth;
-                if (self._icon instanceof String && self._icon.length() > 0) {
+                iconwidth /*>pre__icon<*/ = self._icon;
+                if (iconwidth /*>pre__icon<*/ instanceof String && iconwidth /*>pre__icon<*/.length() > 0) {
                     iconwidth = dc.getTextWidthInPixels(self._icon, Helper.Fonts.Icons());
                 } else if (self._icon != null) {
                     iconwidth = self._icon.getWidth();
@@ -297,16 +322,18 @@ module Controls {
 
             protected function drawSelectedBackground(dc as Dc, viewport_y as Number) as Void {
                 var theme = $.getTheme();
-                var height = self.getHeight(dc) - 2 * self._verticalMargin - self.getLineHeight();
+                var height = self.getHeight(dc) - self._verticalMargin * 2 - self.getLineHeight();
                 dc.setColor(theme.SelectedItemBackground, theme.SelectedItemBackground);
                 dc.fillRectangle(0, viewport_y, dc.getWidth(), height);
             }
 
             protected function getViewportYTop(scrollOffset as Number) as Number? {
-                if (self._listY == null) {
+                var pre__listY;
+                pre__listY = self._listY;
+                if (pre__listY == null) {
                     return null;
                 }
-                return self._listY - scrollOffset + self._layer.getY();
+                return pre__listY - scrollOffset + self._layer.getY();
             }
 
             protected static function isBitmap(obj as Object) as Boolean {

@@ -32,13 +32,13 @@
     <string id="StDoubleTapForDone">Doppelt, anstatt einfach, auf einen Punkt tippen um ihn auf erledigt zu setzen</string>
     <string id="StShowNotes">Notizen von Punkten anzeigen</string>
     <string id="StAutoExit">App bei Inaktivität beenden</string>
-    <string id="StAutoExit1">nach 1 Minute</string>
-    <string id="StAutoExit3">nach 3 Minuten</string>
-    <string id="StAutoExit5">nach 5 Minuten</string>
-    <string id="StAutoExit10">nach 10 Minuten</string>
-    <string id="StAutoExit15">nach 15 Minuten</string>
-    <string id="StAutoExit30">nach 30 Minuten</string>
-    <string id="StAutoExit60">nach 60 Minuten</string>
+    <string id="StAutoExit1">nach 1 Minute</string>
+    <string id="StAutoExit3">nach 3 Minuten</string>
+    <string id="StAutoExit5">nach 5 Minuten</string>
+    <string id="StAutoExit10">nach 10 Minuten</string>
+    <string id="StAutoExit15">nach 15 Minuten</string>
+    <string id="StAutoExit30">nach 30 Minuten</string>
+    <string id="StAutoExit60">nach 60 Minuten</string>
     <string id="StAutoExitOff">deaktiviert</string>
     <string id="StBtnCtrl">Hardware Button Steuerungs-Unterstützung</string>
 

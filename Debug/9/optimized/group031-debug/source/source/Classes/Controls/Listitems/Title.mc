@@ -8,7 +8,7 @@ module Controls {
 
             function initialize(layer as LayerDef?, title as String) {
                 Item.initialize(layer, title, null, null, null, 10, -1, null);
-                self.TitleJustification = Graphics.TEXT_JUSTIFY_CENTER;
+                self.TitleJustification = 1 as Toybox.Graphics.TextJustification;
                 self.DrawLine = false;
                 self.isSelectable = false;
                 if ($.screenHeight < 300) {
@@ -21,11 +21,11 @@ module Controls {
             }
 
             function draw(dc as Dc, scrollOffset as Number, isSelected as Boolean) as Number {
-                var height = Item.draw(dc, scrollOffset, false);
+                isSelected /*>height<*/ = Item.draw(dc, scrollOffset, false);
                 var theme = $.getTheme();
                 dc.setColor(theme.TitleSeparatorColor, theme.TitleSeparatorColor);
-                dc.fillRectangle(0, self._listY - scrollOffset + self._layer.getY() + height - self._lineHeight, dc.getWidth(), self._lineHeight);
-                return height;
+                dc.fillRectangle(0, self._listY - scrollOffset + self._layer.getY() + isSelected /*>height<*/ - self._lineHeight, dc.getWidth(), self._lineHeight);
+                return isSelected /*>height<*/;
             }
         }
     }

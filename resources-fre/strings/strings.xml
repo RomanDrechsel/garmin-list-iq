@@ -32,13 +32,13 @@
     <string id="StDoubleTapForDone">Double-cliquez, au lieu de cliquer une fois, sur un élément pour le marquer comme terminé</string>
     <string id="StShowNotes">Afficher les notes des éléments</string>
     <string id="StAutoExit">Fermer l'app lors de l'inactivité</string>
-    <string id="StAutoExit1">après 1 minute</string>
-    <string id="StAutoExit3">après 3 minutes</string>
-    <string id="StAutoExit5">après 5 minutes</string>
-    <string id="StAutoExit10">après 10 minutes</string>
-    <string id="StAutoExit15">après 15 minutes</string>
-    <string id="StAutoExit30">après 30 minutes</string>
-    <string id="StAutoExit60">après 60 minutes</string>
+    <string id="StAutoExit1">après 1 minute</string>
+    <string id="StAutoExit3">après 3 minutes</string>
+    <string id="StAutoExit5">après 5 minutes</string>
+    <string id="StAutoExit10">après 10 minutes</string>
+    <string id="StAutoExit15">après 15 minutes</string>
+    <string id="StAutoExit30">après 30 minutes</string>
+    <string id="StAutoExit60">après 60 minutes</string>
     <string id="StAutoExitOff">désactivé</string>
     <string id="StBtnCtrl">Contrôle via les boutons matériels</string>
 

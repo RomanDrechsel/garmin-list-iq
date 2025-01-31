@@ -1,3 +1,4 @@
+using Views;
 import Toybox.Lang;
 import Toybox.Graphics;
 import Helper;
@@ -17,12 +18,14 @@ module Controls {
 
             /** returns height of the item */
             function draw(dc as Dc, scrollOffset as Number, isSelected as Boolean) as Number {
-                if (self._layer == null) {
+                var margin;
+                margin /*>pre__layer<*/ = self._layer;
+                if (margin /*>pre__layer<*/ == null) {
                     return 0;
                 }
                 self.validate(dc);
 
-                var viewport_y = self._listY - scrollOffset + self._layer.getY();
+                var viewport_y = self._listY - scrollOffset + margin /*>pre__layer<*/.getY();
 
                 if (self.isVisible(scrollOffset, dc) == false) {
                     return self.getHeight(dc);
@@ -36,42 +39,42 @@ module Controls {
                 }
 
                 viewport_y += self._verticalPadding;
-                var margin = (self._layer.getWidth() * self._horMarginFactor).toNumber();
-                var x = self._layer.getX() + margin;
+                margin = (self._layer.getWidth() * self._horMarginFactor).toNumber();
+                margin /*>x<*/ = self._layer.getX() + margin;
 
                 //background
-                var button_width = self.getButtonWidth();
-                var padding = (button_width * self._paddingFactor).toNumber();
-                var button_height = self.Title.getHeight(dc) + 2 * padding;
-                dc.setColor($.getTheme().ButtonBackground, Graphics.COLOR_TRANSPARENT);
-                dc.fillRoundedRectangle(x, viewport_y, button_width, button_height, padding * 0.7);
+                scrollOffset /*>button_width<*/ = self.getButtonWidth();
+                isSelected /*>padding<*/ = (scrollOffset /*>button_width<*/ * self._paddingFactor).toNumber();
+                var button_height = self.Title.getHeight(dc) + isSelected /*>padding<*/ * 2;
+                dc.setColor($.getTheme().ButtonBackground, -1 as Toybox.Graphics.ColorValue);
+                dc.fillRoundedRectangle(margin /*>x<*/, viewport_y, scrollOffset /*>button_width<*/, button_height, isSelected /*>padding<*/ * 0.7);
 
-                dc.setColor($.getTheme().ButtonBorder, Graphics.COLOR_TRANSPARENT);
+                dc.setColor($.getTheme().ButtonBorder, -1 as Toybox.Graphics.ColorValue);
                 dc.setPenWidth(2);
-                dc.drawRoundedRectangle(x, viewport_y, button_width, button_height, padding * 0.7);
+                dc.drawRoundedRectangle(margin /*>x<*/, viewport_y, scrollOffset /*>button_width<*/, button_height, isSelected /*>padding<*/ * 0.7);
 
                 //text
-                self.Title.draw(dc, x + padding, viewport_y + padding, $.getTheme().ButtonColor, Graphics.TEXT_JUSTIFY_CENTER);
+                self.Title.draw(dc, margin /*>x<*/ + isSelected /*>padding<*/, viewport_y + isSelected /*>padding<*/, $.getTheme().ButtonColor, 1 as Toybox.Graphics.TextJustification);
                 viewport_y += button_height + self._verticalPadding;
 
                 if (self.DrawLine == true) {
                     viewport_y = self.drawLine(dc, viewport_y);
                 }
 
-                viewport_y += self._verticalMargin;
-
-                self._height = viewport_y - viewport_yTop;
+                self._height = viewport_y + self._verticalMargin - viewport_yTop;
                 return self._height;
             }
 
             function getHeight(dc as Dc?) as Number {
+                var pre__height;
                 if (dc != null && self._layer != null) {
+                    pre__height = self._height;
                     self.validate(dc);
-                    if (self._height == null || self._height <= 0) {
+                    if (pre__height == null || pre__height <= 0) {
                         self._height = self._verticalMargin + self._verticalPadding;
 
-                        var padding = (self.getButtonWidth() * self._paddingFactor).toNumber();
-                        self._height += self.Title.getHeight(dc) + 2 * padding;
+                        pre__height /*>padding<*/ = (self.getButtonWidth() * self._paddingFactor).toNumber();
+                        self._height += self.Title.getHeight(dc) + pre__height /*>padding<*/ * 2;
                         self._height += self._verticalPadding + self._verticalMargin;
                         self._height += self.getLineHeight();
                     }
@@ -83,20 +86,21 @@ module Controls {
             }
 
             private function getButtonWidth() as Number {
-                if (self._layer == null) {
+                var margin;
+                margin /*>pre__layer<*/ = self._layer;
+                if (margin /*>pre__layer<*/ == null) {
                     return 0;
                 }
-                var margin = (self._layer.getWidth() * self._horMarginFactor).toNumber();
-                return self._layer.getWidth() - 2 * margin;
+                margin = (margin /*>pre__layer<*/.getWidth() * self._horMarginFactor).toNumber();
+                return self._layer.getWidth() - margin * 2;
             }
 
             protected function validate(dc as Dc) {
                 if (self._needValidation) {
                     if (self.Title instanceof String) {
-                        var buttonWidth = self.getButtonWidth();
-                        var padding = (buttonWidth * self._paddingFactor).toNumber();
-                        var maxwidth = (self.getButtonWidth() - 2 * padding).toNumber();
-                        self.Title = new Label(self.Title, self._font, maxwidth);
+                        dc /*>padding<*/ = (self.getButtonWidth() * self._paddingFactor).toNumber();
+                        dc /*>maxwidth<*/ = (self.getButtonWidth() - dc /*>padding<*/ * 2).toNumber();
+                        self.Title = new Label(self.Title, self._font, dc /*>maxwidth<*/);
                     }
                     self._needValidation = false;
                 }

@@ -13,6 +13,7 @@ module Comm {
 
         function phoneMessageCallback(msg as Communications.PhoneAppMessage) as Void {
             if ($.getApp().ListsManager == null) {
+                Debug.Log("No ListsManager found, cannot handle phone app messages");
                 return;
             }
             var message = msg.data as Application.PropertyValueType;

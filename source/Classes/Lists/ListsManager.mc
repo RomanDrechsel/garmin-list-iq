@@ -18,7 +18,187 @@ module Lists {
     class ListsManager {
         private var onListsChangedListeners as Array<WeakReference> = [];
 
-        function addList(data as Application.PropertyValueType) as Boolean {
+        function addList(data as Dictionary) as Boolean {
+            var keys = data.keys();
+            var listuuid = null;
+            var listname = null;
+            var listorder = null;
+            var listitems = {};
+            var listdate = null;
+            var reset = null;
+            var reset_interval = null;
+            var reset_hour = null;
+            var reset_minute = null;
+            var reset_weekday = null;
+            var reset_day = null;
+
+            for (var i = 0; i < keys.size(); i++) {
+                var key = keys[i];
+                var val = data.get(key);
+                if (key.equals("uuid")) {
+                    listuuid = val;
+                } else if (key.equals("name")) {
+                    listname = val;
+                } else if (key.equals("order")) {
+                    listorder = val.toNumber();
+                } else if (key.equals("date")) {
+                    listdate = val.toNumber();
+                    if (listdate != null) {
+                        if (listdate > 999999999) {
+                            // date is in milliseconds
+                            listdate /= 1000;
+                            listdate = listdate.toNumber();
+                        }
+                    }
+                } else if (key.substring(0, 4).equals("item")) {
+                    var index = key.substring(4, 5).toNumber();
+                    var split = Helper.StringUtil.split(key.substring(5, key.length()), "_", 2);
+                    var prop = split.size() > 1 ? split[1] : null;
+                    if (prop != null) {
+                        var item;
+                        if (listitems.hasKey(index)) {
+                            item = listitems.get(index);
+                        } else {
+                            item = { "d" => false };
+                        }
+                        if (prop.equals("item")) {
+                            item.put("i", val);
+                        } else if (prop.equals("note")) {
+                            item.put("n", val);
+                        }
+                        listitems.put(index, item);
+                    }
+                } else if (key.substring(0, 5).equals("reset")) {
+                    if (key.equals("reset_active")) {
+                        val = Helper.StringUtil.StringToBool(val);
+                        if (val != null) {
+                            reset = val;
+                        }
+                    } else if (key.equals("reset_interval")) {
+                        val = val.toNumber();
+                        if (val != null) {
+                            reset_interval = val;
+                        }
+                    } else if (key.equals("reset_hour")) {
+                        val = val.toNumber();
+                        if (val != null) {
+                            reset_hour = val;
+                        }
+                    } else if (key.equals("reset_minute")) {
+                        val = val.toNumber();
+                        if (val != null) {
+                            reset_minute = val;
+                        }
+                    } else if (key.equals("reset_weekday")) {
+                        val = val.toNumber();
+                        if (val != null) {
+                            reset_weekday = val;
+                        }
+                    } else if (key.equals("reset_day")) {
+                        val = val.toNumber();
+                        if (val != null) {
+                            reset_day = val;
+                        }
+                    }
+                }
+            }
+
+            //verify data
+            if (listname == null || listorder == null || listuuid == null) {
+                var missing = [] as Array<String>;
+                if (listname == null) {
+                    missing.add("name");
+                }
+                if (listorder == null) {
+                    missing.add("order");
+                }
+                if (listuuid == null) {
+                    missing.add("uuid");
+                }
+                Debug.Log("Could not add list: missing properties - " + missing);
+                self.reportError(2, { "data" => data, "missing" => missing });
+                return false;
+            }
+
+            if (listdate == null) {
+                listdate = Time.now().value();
+            }
+
+            var list = {};
+            list.put("name", listname);
+            list.put("items", listitems);
+
+            if (reset != null) {
+                var missing = [] as Array<String>;
+                if (reset_interval != null && reset_hour != null && reset_minute != null) {
+                    if (reset_interval == "w" && reset_weekday == null) {
+                        missing.add("weekday");
+                    } else if (reset_interval == "m" && reset_day == null) {
+                        missing.add("day");
+                    }
+                } else {
+                    if (reset_interval == null) {
+                        missing.add("interval");
+                    }
+                    if (reset_hour == null) {
+                        missing.add("hour");
+                    }
+                    if (reset_minute == null) {
+                        missing.add("minute");
+                    }
+                }
+
+                if (missing.size() > 0) {
+                    Debug.Log("Could not add list reset: missing properties - " + missing);
+                } else {
+                    list.put("r_a", reset);
+                    list.put("r_i", reset_interval);
+                    list.put("r_h", reset_hour);
+                    list.put("r_m", reset_minute);
+                    if (reset_interval.equals("w")) {
+                        list.put("r_wd", reset_weekday);
+                    } else if (reset_interval.equals("m")) {
+                        list.put("r_d", reset_day);
+                    }
+                    list.put("r_last", Time.now().value());
+                }
+
+                var save = self.saveList(listuuid, list);
+                if (save[0] == true) {
+                    //Store Index...
+                    var listindex = self.GetLists();
+                    var indexitem =
+                        ({
+                            "key" => listuuid,
+                            "name" => listname,
+                            "order" => listorder,
+                            "items" => listitems.size(),
+                            "date" => listdate,
+                        }) as ListIndexItem;
+
+                    listindex.put(listuuid, indexitem);
+
+                    var saveIndex = self.StoreIndex(listindex);
+                    if (saveIndex[0] == false) {
+                        Application.Storage.deleteValue(listuuid);
+                        self.reportError(4, { "data" => data, "list" => list, "exception" => saveIndex[1].getErrorMessage() });
+                        return false;
+                    }
+
+                    Helper.Properties.Store(Helper.Properties.INIT, 1);
+
+                    Debug.Log("Added list " + listuuid + "(" + listname + ")");
+                    Helper.ToastUtil.Toast(Rez.Strings.ListRec, Helper.ToastUtil.SUCCESS);
+
+                    return true;
+                } else {
+                    self.reportError(3, { "data" => data, "list" => list, "exception" => save[1].getErrorMessage() });
+                    return false;
+                }
+            }
+        }
+
+        function addListLegacy(data as Application.PropertyValueType) as Boolean {
             /* check, if all nessesary data is available... */
             var listuuid = null;
             var listname = null;

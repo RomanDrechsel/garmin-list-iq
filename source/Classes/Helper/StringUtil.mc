@@ -21,6 +21,32 @@ module Helper {
             return "";
         }
 
+        static function split(str as String, split as String, maxCount as Number) as Array<String> {
+            var chars = str.toCharArray();
+            var ret = [];
+            var br = -1;
+            if (maxCount < 2) {
+                return [str];
+            }
+
+            var last_index = 0;
+            var index = str.find(split);
+            while (index != null && ret.size() < maxCount - 1) {
+                if (index <= last_index) {
+                    ret.add("");
+                } else {
+                    ret.add(str.substring(last_index, index));
+                }
+                last_index = index + split.length();
+            }
+
+            if (last_index < str.length()) {
+                ret.add(str.substring(last_index, str.length()));
+            }
+
+            return ret;
+        }
+
         static function splitLines(str as String) as Array<String> {
             var ret = [];
 
@@ -110,6 +136,16 @@ module Helper {
                 return (bytes / 1024).format("%.1f") + "kB";
             } else {
                 return bytes + "B";
+            }
+        }
+
+        static function StringToBool(str as String) as Boolean? {
+            if (str.equals("true")) {
+                return true;
+            } else if (str.equals("false")) {
+                return false;
+            } else {
+                return null;
             }
         }
     }

@@ -36,13 +36,13 @@ module Lists {
                 var key = keys[i];
                 var val = data.get(key);
                 if (key.equals("uuid")) {
-                    listuuid = val;
+                    listuuid = val.toString();
                 } else if (key.equals("name")) {
-                    listname = val;
+                    listname = val.toString();
                 } else if (key.equals("order")) {
                     listorder = val.toNumber();
                 } else if (key.equals("date")) {
-                    listdate = val.toNumber();
+                    listdate = val.toLong();
                     if (listdate != null) {
                         if (listdate > 999999999) {
                             // date is in milliseconds
@@ -62,9 +62,9 @@ module Lists {
                             item = { "d" => false };
                         }
                         if (prop.equals("item")) {
-                            item.put("i", val);
+                            item.put("i", val.toString());
                         } else if (prop.equals("note")) {
-                            item.put("n", val);
+                            item.put("n", val.toString());
                         }
                         listitems.put(index, item);
                     }
@@ -75,10 +75,7 @@ module Lists {
                             reset = val;
                         }
                     } else if (key.equals("reset_interval")) {
-                        val = val.toNumber();
-                        if (val != null) {
-                            reset_interval = val;
-                        }
+                        reset_interval = val.toString(); //no reference
                     } else if (key.equals("reset_hour")) {
                         val = val.toNumber();
                         if (val != null) {
@@ -195,158 +192,6 @@ module Lists {
                     self.reportError(3, { "data" => data, "list" => list, "exception" => save[1].getErrorMessage() });
                     return false;
                 }
-            }
-        }
-
-        function addListLegacy(data as Application.PropertyValueType) as Boolean {
-            /* check, if all nessesary data is available... */
-            var listuuid = null;
-            var listname = null;
-            var listorder = null;
-            var listitems = null;
-            if (data instanceof Dictionary) {
-                listname = data.get("name");
-                listorder = data.get("order");
-                listuuid = data.get("uuid");
-                listitems = data.get("items");
-                if (listitems instanceof Array == false) {
-                    listitems = null;
-                }
-                if (listname == null || listorder == null || listuuid == null || listitems == null) {
-                    var missing = [] as Array<String>;
-                    if (listname == null) {
-                        missing.add("name");
-                    }
-                    if (listorder == null) {
-                        missing.add("order");
-                    }
-                    if (listuuid == null) {
-                        missing.add("uuid");
-                    }
-                    if (listitems == null) {
-                        missing.add("items");
-                    }
-                    Debug.Log("Could not add list: missing properties - " + missing);
-                    self.reportError(2, { "data" => data, "missing" => missing });
-                    return false;
-                }
-            } else {
-                Debug.Log("Could not add list: invalid data, " + data);
-                self.reportError(1, data);
-                return false;
-            }
-
-            //Store list
-            var list = {};
-            list.put("name", listname);
-
-            //items
-            var items = [];
-            for (var i = 0; i < listitems.size(); i++) {
-                var listitem = listitems[i] as ListItemsItem;
-                if (listitem.hasKey("item")) {
-                    if (!listitem.hasKey("note") || listitem["note"] == null) {
-                        //only an item
-                        items.add({ "i" => listitem["item"].toString(), "d" => false });
-                    } else {
-                        //item with note
-                        items.add({ "i" => listitem["item"].toString(), "n" => listitem["note"].toString(), "d" => false });
-                    }
-                }
-            }
-            list.put("items", items);
-
-            //reset list automatically
-            var reset = data.get("reset") as Dictionary<String, String or Number or Boolean>?;
-            if (reset instanceof Dictionary) {
-                var active = reset.get("active") as Boolean?;
-                var interval = reset.get("interval") as String?;
-                var hour = reset.get("hour") as Number?;
-                var minute = reset.get("minute") as Number?;
-                var weekday = reset.get("weekday") as Number?;
-                var day = reset.get("day") as Number?;
-                var missing = [] as Array<String>;
-                if (active != null && interval != null && hour != null && minute != null) {
-                    if (interval == "w" && weekday == null) {
-                        missing.add("weekday");
-                    } else if (interval == "m" && day == null) {
-                        missing.add("day");
-                    }
-                } else {
-                    if (active == null) {
-                        missing.add("active");
-                    }
-                    if (interval == null) {
-                        missing.add("interval");
-                    }
-                    if (hour == null) {
-                        missing.add("hour");
-                    }
-                    if (minute == null) {
-                        missing.add("minute");
-                    }
-                }
-
-                if (missing.size() > 0) {
-                    Debug.Log("Could not add list reset: missing properties - " + missing);
-                } else {
-                    list.put("r_a", active);
-                    list.put("r_i", interval);
-                    list.put("r_h", hour);
-                    list.put("r_m", minute);
-                    if (interval.equals("w")) {
-                        list.put("r_wd", weekday);
-                    } else if (interval.equals("m")) {
-                        list.put("r_d", day);
-                    }
-                    list.put("r_last", Time.now().value());
-                }
-            } else if (reset != null) {
-                Debug.Log("Could not add list reset: invalid type - " + reset);
-            }
-
-            var date = data.get("date") as Number?;
-            if (date != null) {
-                if (date > 999999999) {
-                    // date is in milliseconds
-                    date /= 1000;
-                    date = date.toNumber();
-                }
-            } else {
-                date = Time.now().value();
-            }
-
-            var save = self.saveList(listuuid, list);
-            if (save[0] == true) {
-                //Store Index...
-                var listindex = self.GetLists();
-                var indexitem =
-                    ({
-                        "key" => listuuid,
-                        "name" => listname,
-                        "order" => listorder,
-                        "items" => listitems.size(),
-                        "date" => date,
-                    }) as ListIndexItem;
-
-                listindex.put(listuuid, indexitem);
-
-                var saveIndex = self.StoreIndex(listindex);
-                if (saveIndex[0] == false) {
-                    Application.Storage.deleteValue(listuuid);
-                    self.reportError(4, { "data" => data, "list" => list, "exception" => saveIndex[1].getErrorMessage() });
-                    return false;
-                }
-
-                Helper.Properties.Store(Helper.Properties.INIT, 1);
-
-                Debug.Log("Added list " + listuuid + "(" + listname + ")");
-                Helper.ToastUtil.Toast(Rez.Strings.ListRec, Helper.ToastUtil.SUCCESS);
-
-                return true;
-            } else {
-                self.reportError(3, { "data" => data, "list" => list, "exception" => save[1].getErrorMessage() });
-                return false;
             }
         }
 

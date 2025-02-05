@@ -22,9 +22,7 @@ module Helper {
         }
 
         static function split(str as String, split as String, maxCount as Number) as Array<String> {
-            var chars = str.toCharArray();
             var ret = [];
-            var br = -1;
             if (maxCount < 2) {
                 return [str];
             }

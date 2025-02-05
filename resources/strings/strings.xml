@@ -15,6 +15,7 @@
     <string id="EStorageFull">Storage full!</string>
     <string id="EStorageError">List could not be stored!</string>
     <string id="ListDel">List deleted.</string>
+    <string id="LegacyPhoneApp">They seem to be using an old version of the smartphone app.\nPlease update it.</string>
 
     <string id="NoLists">No lists found!</string>
     <string id="NoListsLink">Double-Tap to open Android PlayStore on your Phone</string>

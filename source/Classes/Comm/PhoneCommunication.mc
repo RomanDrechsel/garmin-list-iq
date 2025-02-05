@@ -4,6 +4,7 @@ import Toybox.Lang;
 import Toybox.System;
 import Toybox.Application;
 using Toybox.Communications;
+import Views;
 
 module Comm {
     class PhoneCommunication extends Toybox.Communications.ConnectionListener {
@@ -24,7 +25,7 @@ module Comm {
             }
             var message = msg.data as Application.PropertyValueType;
             if (message instanceof Array) {
-                self.processData(message);
+                self.processDataLegacy({});
             } else if (message instanceof Dictionary) {
                 self.processDataLegacy(message);
             } else if (message != null) {
@@ -57,9 +58,9 @@ module Comm {
                 return;
             }
 
-            data = data.slice(1, data.size() - 1);
-
             Debug.Log("Received message " + message_type + " (" + size + ")");
+
+            data = data.slice(1, null);
 
             var types = [LIST, DELETE_LIST, REQUEST_LOGS];
             if (types.indexOf(message_type) >= 0) {
@@ -69,8 +70,8 @@ module Comm {
                         Debug.Log("Could not store list");
                     }
                 } else if (message_type.equals(DELETE_LIST)) {
-                    if (data.size() > 0) {
-                        var uuid = data[0];
+                    if (data.size() > 1) {
+                        var uuid = data[1];
                         if ($.getApp().ListsManager.deleteList(uuid, false) == false) {
                             Debug.Log("Could not delete list " + uuid);
                         }
@@ -95,43 +96,8 @@ module Comm {
         private function processDataLegacy(message as Dictionary) as Void {
             var size = Helper.StringUtil.formatBytes(message.toString().length());
             Debug.Log("Received legacy message (" + size + ")");
-            var type = message.get("type") as String?;
-            if (type != null) {
-                if (type.equals("list")) {
-                    //add or edit a list
-                    message.remove("type");
-                    Debug.Log("Received list");
-                    if ($.getApp().ListsManager.addListLegacy(message) == false) {
-                        Debug.Log("Could not store list");
-                    }
-                } else if (type.equals("dellist")) {
-                    //request for deleting a lists
-                    var uuid = message.get("uuid") as String?;
-                    if (uuid != null) {
-                        Debug.Log("Received delete list request for list " + uuid);
-                        if ($.getApp().ListsManager.deleteList(uuid, false) == false) {
-                            Debug.Log("Could not delete list " + uuid);
-                        }
-                    } else {
-                        Debug.Log("Received delete list but no uuid provided - ignoring");
-                    }
-                } else if (type.equals("request")) {
-                    var request = message.get("request") as String?;
-                    if (request != null && request.equals("logs")) {
-                        //request for logs
-                        Debug.Log("Received request for logs: " + message.toString().length() + " bytes");
-                        var tid = message.get("tid") as String?;
-                        var resp = ({}) as Dictionary<String, String or Array<String> >;
-                        resp.put("tid", tid);
-                        if ($.getApp().Debug != null) {
-                            resp.put("logs", $.getApp().Debug.GetLogs());
-                        }
-                        self.SendToPhone(resp as Application.PersistableType);
-                    }
-                } else {
-                    Debug.Log("Received unknown message " + message.toString() + " from phone");
-                }
-            }
+            var error = new Views.ErrorViewLegacyApp();
+            WatchUi.pushView(error, new Views.ItemViewDelegate(error), WatchUi.SLIDE_IMMEDIATE);
         }
 
         protected function ArrayToDict(arr as Array) as Dictionary {

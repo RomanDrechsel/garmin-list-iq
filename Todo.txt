@@ -7,7 +7,7 @@ adb -d forward tcp:7381 tcp:7381
 TEST: Button controlling
 TEST: don't select title on Button Controls
 TEST: new line
-TODO: Receive list delete message
+WIP: Receive list delete message
 TODO: receive Log request message
 
 1 Button, 64 Color:

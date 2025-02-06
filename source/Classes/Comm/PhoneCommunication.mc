@@ -25,7 +25,7 @@ module Comm {
             }
             var message = msg.data as Application.PropertyValueType;
             if (message instanceof Array) {
-                self.processDataLegacy({});
+                self.processData(message);
             } else if (message instanceof Dictionary) {
                 self.processDataLegacy(message);
             } else if (message != null) {

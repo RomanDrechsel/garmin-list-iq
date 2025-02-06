@@ -15,6 +15,7 @@
     <string id="EStorageFull">存儲已滿！</string>
     <string id="EStorageError">無法保存列表！</string>
     <string id="ListDel">列表已刪除。</string>
+    <string id="LegacyPhoneApp">您使用的似乎是舊版本的智慧型手機應用程式。\n請更新。</string>
 
     <string id="NoLists">未找到列表！</string>
     <string id="NoListsLink">雙擊以在手機上打開Android PlayStore</string>

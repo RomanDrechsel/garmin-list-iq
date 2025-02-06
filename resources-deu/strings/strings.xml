@@ -15,11 +15,11 @@
     <string id="EStorageFull">Der Speicher ist voll!</string>
     <string id="EStorageError">Liste konnte nicht gespeichert werden!</string>
     <string id="ListDel">Liste gelöscht.</string>
-    <string id="LegacyPhoneApp">Die scheints eine alte Version der Smartphone-App zu verwenden.\nBitte aktualisiere sie.</string>
+    <string id="LegacyPhoneApp">Du scheints eine alte Version der Smartphone-App zu verwenden.\nBitte aktualisiere sie.</string>
 
     <string id="NoLists">Keine Listen gefunden!</string>
-    <string id="NoListsLink">Tippe doppelt, um den Android PlayStore auf dem Telefon zu öffnen</string>
-    <string id="NoListsLinkBtn">Drücke Enter, um den Android PlayStore auf dem Telefon zu öffnen</string>
+    <string id="NoListsLink">Tippe doppelt, um den Android PlayStore auf dem Smartphone zu öffnen.</string>
+    <string id="NoListsLinkBtn">Drücke Enter, um den Android PlayStore auf dem Smartphone zu öffnen.</string>
 
     <string id="ListNotFound">Liste nicht gefunden!</string>
     <string id="ListEmpty">Die Liste ist leer.</string>

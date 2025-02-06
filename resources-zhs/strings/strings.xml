@@ -15,6 +15,7 @@
     <string id="EStorageFull">存储已满！</string>
     <string id="EStorageError">无法保存列表！</string>
     <string id="ListDel">列表已删除。</string>
+    <string id="LegacyPhoneApp">您使用的似乎是旧版本的智能手机应用程序。\n请更新。</string>
 
     <string id="NoLists">未找到列表！</string>
     <string id="NoListsLink">双击以打开手机上的安卓应用商店</string>

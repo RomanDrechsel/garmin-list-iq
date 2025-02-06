@@ -24,14 +24,18 @@ module Views {
         }
 
         function onTap(x as Number, y as Number) as Boolean {
-            ItemView.onTap(x, y);
-            self.sendReport();
+            if (!ItemView.onTap(x, y)) {
+                self.sendReport();
+            }
+            return false;
         }
 
         function onKeyEnter() as Boolean {
-            ItemView.onKeyEnter();
-            self.sendReport();
-            return true;
+            if (!ItemView.onKeyEnter()) {
+                self.sendReport();
+                return true;
+            }
+            return false;
         }
 
         function onKeyEsc() as Boolean {
@@ -96,6 +100,10 @@ module Views {
             hint2.isSelectable = false;
             hint2.SubtitleJustification = Graphics.TEXT_JUSTIFY_CENTER;
             self.Items.add(hint2);
+
+            if ($.getApp().NoBackButton) {
+                self.addBackButton(false);
+            }
         }
     }
 }

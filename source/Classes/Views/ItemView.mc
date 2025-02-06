@@ -222,8 +222,7 @@ module Views {
             for (var i = 0; i < self.Items.size(); i++) {
                 var item = self.Items[i];
                 if (item.Clicked(y, self._scrollOffset)) {
-                    self.interactItem(item, true);
-                    return true;
+                    return self.interactItem(item, true);
                 }
             }
             return false;
@@ -233,8 +232,7 @@ module Views {
             for (var i = 0; i < self.Items.size(); i++) {
                 var item = self.Items[i];
                 if (item.Clicked(y, self._scrollOffset)) {
-                    self.interactItem(item, false);
-                    return true;
+                    return self.interactItem(item, false);
                 }
             }
 
@@ -366,6 +364,9 @@ module Views {
                             self._paddingTop = self._mainLayer.getHeight() / 2 - (self.Items[1].getHeight(dc) / 2).toNumber() - self.Items[0].getHeight(dc);
                         } else {
                             self._paddingTop = self._mainLayer.getHeight() / 2 - (self.Items[0].getHeight(dc) / 2).toNumber();
+                        }
+                        if (self._paddingTop < 0) {
+                            self._paddingTop = 0;
                         }
                     } else {
                         self._paddingTop = 0;

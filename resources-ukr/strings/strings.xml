@@ -15,6 +15,7 @@
     <string id="EStorageFull">Пам’ять переповнена!</string>
     <string id="EStorageError">Не вдалося зберегти список!</string>
     <string id="ListDel">Список видалено.</string>
+    <string id="LegacyPhoneApp">Здається, ви використовуєте стару версію програми для смартфона.\nБудь ласка, оновіть її.</string>
 
     <string id="NoLists">Списки не знайдено!</string>
     <string id="NoListsLink">Подвійне торкання, щоб відкрити Android Play Store на телефоні.</string>

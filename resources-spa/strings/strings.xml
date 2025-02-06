@@ -15,6 +15,7 @@
     <string id="EStorageFull">¡El almacenamiento está lleno!</string>
     <string id="EStorageError">¡No se pudo guardar la lista!</string>
     <string id="ListDel">Lista eliminada.</string>
+    <string id="LegacyPhoneApp">Parece que estás utilizando una versión antigua de la aplicación para smartphone.\nPor favor, actualízala.</string>
 
     <string id="NoLists">¡No se encontraron listas!</string>
     <string id="NoListsLink">Toca dos veces para abrir la tienda Play de Android en el teléfono</string>

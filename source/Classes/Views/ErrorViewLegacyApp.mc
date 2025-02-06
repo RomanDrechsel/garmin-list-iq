@@ -4,6 +4,10 @@ import Controls.Listitems;
 
 module Views {
     class ErrorViewLegacyApp extends ItemView {
+        function initialize() {
+            ItemView.initialize();
+        }
+
         function onLayout(dc as Dc) as Void {
             ItemView.onLayout(dc);
 
@@ -13,24 +17,33 @@ module Views {
             errMsg.TitleJustification = Graphics.TEXT_JUSTIFY_CENTER;
             self.Items.add(errMsg);
 
-            var txt = self.DisplayButtonSupport() ? Application.loadResource(Rez.Strings.NoListsLink) : Application.loadResource(Rez.Strings.NoListsLinkBtn);
+            var txt = self.DisplayButtonSupport() ? Application.loadResource(Rez.Strings.NoListsLinkBtn) : Application.loadResource(Rez.Strings.NoListsLink);
             var hint = new Listitems.Item(self._mainLayer, null, txt, null, null, null, 1, null);
             hint.setSubFont(Helper.Fonts.Normal());
             hint.DrawLine = false;
             hint.isSelectable = false;
             hint.SubtitleJustification = Graphics.TEXT_JUSTIFY_CENTER;
             self.Items.add(hint);
+
+            if ($.getApp().NoBackButton) {
+                self.addBackButton(false);
+            }
         }
 
-        function onTap(x as Number, y as Number) as Boolean {
-            ItemView.onTap(x, y);
-            self.openPlaystore();
+        function onDoubleTap(x as Number, y as Number) as Boolean {
+            if (!ItemView.onDoubleTap(x, y)) {
+                self.openPlaystore();
+                return true;
+            }
+            return false;
         }
 
         function onKeyEnter() as Boolean {
-            ItemView.onKeyEnter();
-            self.openPlaystore();
-            return true;
+            if (!ItemView.onKeyEnter()) {
+                self.openPlaystore();
+                return true;
+            }
+            return false;
         }
 
         function onKeyEsc() as Boolean {

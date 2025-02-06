@@ -159,39 +159,39 @@ module Lists {
                     }
                     list.put("r_last", Time.now().value());
                 }
+            }
 
-                var save = self.saveList(listuuid, list);
-                if (save[0] == true) {
-                    //Store Index...
-                    var listindex = self.GetLists();
-                    var indexitem =
-                        ({
-                            "key" => listuuid,
-                            "name" => listname,
-                            "order" => listorder,
-                            "items" => listitems.size(),
-                            "date" => listdate,
-                        }) as ListIndexItem;
+            var save = self.saveList(listuuid, list);
+            if (save[0] == true) {
+                //Store Index...
+                var listindex = self.GetLists();
+                var indexitem =
+                    ({
+                        "key" => listuuid,
+                        "name" => listname,
+                        "order" => listorder,
+                        "items" => listitems.size(),
+                        "date" => listdate,
+                    }) as ListIndexItem;
 
-                    listindex.put(listuuid, indexitem);
+                listindex.put(listuuid, indexitem);
 
-                    var saveIndex = self.StoreIndex(listindex);
-                    if (saveIndex[0] == false) {
-                        Application.Storage.deleteValue(listuuid);
-                        self.reportError(4, { "data" => data, "list" => list, "exception" => saveIndex[1].getErrorMessage() });
-                        return false;
-                    }
-
-                    Helper.Properties.Store(Helper.Properties.INIT, 1);
-
-                    Debug.Log("Added list " + listuuid + "(" + listname + ")");
-                    Helper.ToastUtil.Toast(Rez.Strings.ListRec, Helper.ToastUtil.SUCCESS);
-
-                    return true;
-                } else {
-                    self.reportError(3, { "data" => data, "list" => list, "exception" => save[1].getErrorMessage() });
+                var saveIndex = self.StoreIndex(listindex);
+                if (saveIndex[0] == false) {
+                    Application.Storage.deleteValue(listuuid);
+                    self.reportError(4, { "data" => data, "list" => list, "exception" => saveIndex[1].getErrorMessage() });
                     return false;
                 }
+
+                Helper.Properties.Store(Helper.Properties.INIT, 1);
+
+                Debug.Log("Added list " + listuuid + "(" + listname + ")");
+                Helper.ToastUtil.Toast(Rez.Strings.ListRec, Helper.ToastUtil.SUCCESS);
+
+                return true;
+            } else {
+                self.reportError(3, { "data" => data, "list" => list, "exception" => save[1].getErrorMessage() });
+                return false;
             }
         }
 

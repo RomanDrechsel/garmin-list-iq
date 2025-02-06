@@ -35,7 +35,11 @@ module Comm {
             }
         }
 
-        function SendToPhone(value as Application.PersistableType) as Void {
+        function SendToPhone(value as Array) as Void {
+            if (value.size() == 0) {
+                Debug.Log("Could not send empty message to phone!");
+                return;
+            }
             Communications.transmit(value, {}, self);
             Debug.Log("Send to phone...");
         }
@@ -70,8 +74,8 @@ module Comm {
                         Debug.Log("Could not store list");
                     }
                 } else if (message_type.equals(DELETE_LIST)) {
-                    if (data.size() > 1) {
-                        var uuid = data[1];
+                    if (data.size() > 0) {
+                        var uuid = data[0];
                         if ($.getApp().ListsManager.deleteList(uuid, false) == false) {
                             Debug.Log("Could not delete list " + uuid);
                         }
@@ -81,12 +85,17 @@ module Comm {
                 } else if (message_type.equals(REQUEST_LOGS)) {
                     var message = self.ArrayToDict(data);
                     var tid = message.get("tid") as String?;
-                    var resp = ({}) as Dictionary<String, String or Array<String> >;
-                    resp.put("tid", tid);
-                    if ($.getApp().Debug != null) {
-                        resp.put("logs", $.getApp().Debug.GetLogs());
+                    var resp = [];
+                    if (tid != null && tid.length() > 0) {
+                        resp.add("tid=" + tid);
                     }
-                    self.SendToPhone(resp as Application.PersistableType);
+                    if ($.getApp().Debug != null) {
+                        var logs = $.getApp().Debug.GetLogs();
+                        for (var i = 0; i < logs.size(); i++) {
+                            resp.add(i + "=" + logs[i]);
+                        }
+                    }
+                    self.SendToPhone(resp);
                 }
             } else {
                 Debug.Log("Received unknown message " + message_type.toString() + " from phone");

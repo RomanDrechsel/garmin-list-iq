@@ -270,7 +270,6 @@ module Views {
         }
 
         static function goBack() {
-            Debug.Log("Go Back");
             WatchUi.popView(WatchUi.SLIDE_RIGHT);
         }
 

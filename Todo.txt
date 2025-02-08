@@ -6,8 +6,9 @@ adb -d forward tcp:7381 tcp:7381
 
 TEST: Button controlling
 TEST: don't select title on Button Controls
-TEST: new line
-WIP: send logs to phone
+TEST: new line break
+TEST: send logs to phone
+TODO: remove errorVie from settings page
 
 1 Button, 64 Color:
 - Vivoactive 3

@@ -21,11 +21,10 @@ class ListsApp extends Application.AppBase {
 
     function getInitialView() as Array<WatchUi.Views or WatchUi.InputDelegates>? {
         self.isGlanceView = false;
-        var appVersion = "2025.01.3101";
+        var appVersion = "2025.02.0800";
         Application.Properties.setValue("appVersion", appVersion);
 
         self.Debug = new Debug.DebugStorage();
-        Debug.Log("App started (" + appVersion + ")");
 
         var settings = System.getDeviceSettings();
         if ((settings.inputButtons & System.BUTTON_INPUT_ESC) == 0) {

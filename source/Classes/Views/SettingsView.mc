@@ -235,10 +235,10 @@ module Views {
                     WatchUi.pushView(view, new ItemViewDelegate(view), WatchUi.SLIDE_LEFT);
                 } else if (item.BoundObject == SETTINGS_APPSTORE) {
                     ListsApp.openGooglePlay();
-                } /* else if (item.BoundObject != null) {
-                    var view = new ErrorView(Rez.Strings.ErrListRec, 666, {});
+                } else if (item.BoundObject != null) {
+                    var view = new ErrorView(Rez.Strings.ErrListRec, 666, { "data" => "Hallo Welt", "nochmal" => ["1", "2", "3"], "nochmals" => { "a" => "1", "b" => "2", "c" => "3" } });
                     WatchUi.pushView(view, new ItemViewDelegate(view), WatchUi.SLIDE_LEFT);
-                }*/
+                }
                 return true;
             }
 

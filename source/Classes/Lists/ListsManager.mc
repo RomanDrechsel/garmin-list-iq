@@ -374,7 +374,7 @@ module Lists {
             return [true, null];
         }
 
-        private function reportError(code as Number, payload as Application.PersistableType) as Void {
+        private function reportError(code as Number, payload as Dictionary<String, Object>?) as Void {
             var msg = null as Lang.ResourceId?;
             switch (code) {
                 case 1:

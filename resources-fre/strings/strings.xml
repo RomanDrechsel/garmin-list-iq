@@ -1,6 +1,9 @@
 <strings>
     <string id="AppName" scope="glance">Listes</string>
 
+    <string id="Back">Retour</string>
+    <string id="Quit">Quitter</string>
+
     <string id="SettingsTh">Thème</string>
     <string id="ThGrey">Gris</string>
     <string id="ThRed">Rouge</string>
@@ -12,9 +15,11 @@
     <string id="EStorageFull">Le stockage est plein !</string>
     <string id="EStorageError">Impossible de sauvegarder la liste !</string>
     <string id="ListDel">Liste supprimée.</string>
+    <string id="LegacyPhoneApp">Il semble que tu utilises une ancienne version de l'application pour smartphone.\nVeuillez la mettre à jour.</string>
 
     <string id="NoLists">Aucune liste trouvée !</string>
     <string id="NoListsLink">Double-cliquez pour ouvrir le PlayStore Android sur le téléphone</string>
+    <string id="NoListsLinkBtn">Appuie sur la touche Entrée pour ouvrir Android PlayStore sur le téléphone.</string>
 
     <string id="ListNotFound">Liste non trouvée !</string>
     <string id="ListEmpty">La liste est vide.</string>
@@ -28,14 +33,15 @@
     <string id="StDoubleTapForDone">Double-cliquez, au lieu de cliquer une fois, sur un élément pour le marquer comme terminé</string>
     <string id="StShowNotes">Afficher les notes des éléments</string>
     <string id="StAutoExit">Fermer l'app lors de l'inactivité</string>
-    <string id="StAutoExit1">après 1 minute</string>
-    <string id="StAutoExit3">après 3 minutes</string>
-    <string id="StAutoExit5">après 5 minutes</string>
-    <string id="StAutoExit10">après 10 minutes</string>
-    <string id="StAutoExit15">après 15 minutes</string>
-    <string id="StAutoExit30">après 30 minutes</string>
-    <string id="StAutoExit60">après 60 minutes</string>
+    <string id="StAutoExit1">après 1 minute</string>
+    <string id="StAutoExit3">après 3 minutes</string>
+    <string id="StAutoExit5">après 5 minutes</string>
+    <string id="StAutoExit10">après 10 minutes</string>
+    <string id="StAutoExit15">après 15 minutes</string>
+    <string id="StAutoExit30">après 30 minutes</string>
+    <string id="StAutoExit60">après 60 minutes</string>
     <string id="StAutoExitOff">désactivé</string>
+    <string id="StBtnCtrl">Contrôle via les boutons matériels</string>
 
     <string id="StDelAll">Supprimer toutes les listes</string>
     <string id="StDelAllConfirm">Supprimer toutes les listes ?</string>
@@ -64,7 +70,9 @@
     <string id="StResetWeekly">Hebdomadaire</string>
     <string id="StResetMonthly">Mensuel</string>
 
-    <string id="ErrHint">Veuillez me signaler l'erreur sur votre smartphone afin que je puisse vous aider.\n\n(Appuyez ici pour ouvrir la possibilité de contact dans l'application sur votre smartphone)</string>
+    <string id="ErrHint">Veuillez me signaler l'erreur sur votre smartphone afin que je puisse vous aider.</string>
+    <string id="ErrHintTouch">(Appuyez ici pour ouvrir la possibilité de contact dans l'application sur votre smartphone)</string>
+    <string id="ErrHintBtn">(Appuie sur la touche Entrée pour ouvrir la possibilité de contact dans l'application sur ton smartphone)</string>
     <string id="ErrReport">Veuillez ouvrir le smartphone</string>
     <string id="ErrListRec">Une erreur est survenue lors du transfert de la liste:</string>
     <string id="ErrListDel">Une erreur est survenue lors de la suppression de la liste:</string>

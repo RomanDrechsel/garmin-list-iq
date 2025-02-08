@@ -3,13 +3,14 @@ import Toybox.Time;
 import Toybox.Application;
 import Toybox.System;
 
+(:glance)
 module Helper {
     class DateUtil {
-        public static function toString(timestamp as Number or Time.Moment, date_separator as String?) as String {
+        public static function DatetoString(timestamp as Number or Time.Moment, date_separator as String?) as String {
             var moment = timestamp instanceof Time.Moment ? timestamp : new Time.Moment(timestamp);
-            var greg = Time.Gregorian.info(moment, Time.Gregorian.FORMAT_SHORT);
-            var greg_long = Time.Gregorian.info(moment, Time.Gregorian.FORMAT_LONG);
-            var greg_now = Time.Gregorian.info(Time.now(), Time.Gregorian.FORMAT_SHORT);
+            var greg = Time.Gregorian.info(moment, Time.FORMAT_SHORT);
+            var greg_long = Time.Gregorian.info(moment, Time.FORMAT_LONG);
+            var greg_now = Time.Gregorian.info(Time.now(), Time.FORMAT_SHORT);
 
             var date;
             if (greg.year == greg_now.year) {
@@ -92,7 +93,7 @@ module Helper {
         }
 
         public static function TimezoneOffset() as Number? {
-            var offset_seconds = System.ClockTime.timeZoneOffset;
+            var offset_seconds = System.getClockTime().timeZoneOffset;
             if (offset_seconds == null && $.isDebug) {
                 offset_seconds = 7200;
             }

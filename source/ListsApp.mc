@@ -2,6 +2,7 @@ import Toybox.Application;
 import Toybox.Lang;
 import Toybox.WatchUi;
 import Toybox.System;
+import Toybox.Communications;
 import Views;
 import Comm;
 import Lists;
@@ -14,28 +15,35 @@ class ListsApp extends Application.AppBase {
     var Debug = null as DebugStorage?;
     var Inactivity = null as Helper.Inactivity?;
     var GlobalStates as Dictionary<String, Object> = {};
-    var onSettingsChangedListeners as Array<Object> = [];
+    var isGlanceView = false;
+    var NoBackButton = false;
+    private var onSettingsChangedListeners as Array<WeakReference> = [];
 
     function getInitialView() as Array<WatchUi.Views or WatchUi.InputDelegates>? {
-        $.isGlanceView = false;
-        var appVersion = "2025.01.0801";
+        self.isGlanceView = false;
+        var appVersion = "2025.02.0801";
         Application.Properties.setValue("appVersion", appVersion);
 
         self.Debug = new Debug.DebugStorage();
-        Debug.Log("App started (" + appVersion + ")");
+
+        var settings = System.getDeviceSettings();
+        if ((settings.inputButtons & System.BUTTON_INPUT_ESC) == 0) {
+            self.NoBackButton = true;
+        }
 
         self.ListsManager = new ListsManager();
         self.Phone = new Comm.PhoneCommunication();
         self.Inactivity = new Helper.Inactivity();
 
-        var listview = new Views.ListsSelectView(true);
-        return [listview, new Views.ListsSelectViewDelegate(listview)] as Array<WatchUi.Views or InputDelegates>;
+        //Debug.Log(self.getInfo());
+
+        var startview = new Views.ListsSelectView(true);
+        return [startview, new Views.ItemViewDelegate(startview)];
     }
 
     function getGlanceView() as Array<WatchUi.GlanceView or WatchUi.GlanceViewDelegate>? {
-        $.isGlanceView = true;
-        var glance = new Views.GlanceView();
-        return [glance];
+        self.isGlanceView = true;
+        return [new Views.GlanceView()];
     }
 
     function onSettingsChanged() as Void {
@@ -43,16 +51,17 @@ class ListsApp extends Application.AppBase {
     }
 
     function triggerOnSettingsChanged() as Void {
+        Debug.Log("Settings changed");
         if (self.Debug != null) {
             self.Debug.onSettingsChanged();
         }
         Themes.ThemesLoader.loadTheme();
-
-        Debug.Log("Settings changed");
-        if (self.onSettingsChangedListeners instanceof Array) {
-            for (var i = 0; i < self.onSettingsChangedListeners.size(); i++) {
-                if (self.onSettingsChangedListeners[i] has :onSettingsChanged) {
-                    self.onSettingsChangedListeners[i].onSettingsChanged();
+        for (var i = 0; i < self.onSettingsChangedListeners.size(); i++) {
+            var weak = self.onSettingsChangedListeners[i];
+            if (weak.stillAlive()) {
+                var obj = weak.get();
+                if (obj != null && obj has :onSettingsChanged) {
+                    obj.onSettingsChanged();
                 }
             }
         }
@@ -83,6 +92,9 @@ class ListsApp extends Application.AppBase {
         var ret = [] as Array<String>;
         ret.add("Version: " + Application.Properties.getValue("appVersion"));
         ret.add("Display: " + screenShape);
+        ret.add("Touchscreen: " + settings.isTouchScreen);
+        ret.add("Controls: " + Views.ItemView.SupportedControls());
+        ret.add("LowColors Display: " + Themes.ThemesLoader.LowColors());
         ret.add("Firmware: " + settings.firmwareVersion);
         ret.add("Monkey Version: " + settings.monkeyVersion);
         ret.add("Memory: " + stats.usedMemory + " / " + stats.totalMemory);
@@ -90,19 +102,51 @@ class ListsApp extends Application.AppBase {
         ret.add("Lists in Storage: " + self.ListsManager.GetLists().size());
         return ret;
     }
+
+    static function openGooglePlay() as Void {
+        Communications.openWebPage("https://play.google.com/store/apps/details?id=de.romandrechsel.lists", null, null);
+    }
+
+    function addSettingsChangedListener(obj as Object) as Void {
+        var del = [];
+        for (var i = 0; i < self.onSettingsChangedListeners.size(); i++) {
+            var weak = self.onSettingsChangedListeners[i];
+            if (weak.stillAlive()) {
+                var o = weak.get();
+                if (o == null || !(o has :onSettingsChanged)) {
+                    del.add(weak);
+                }
+            } else {
+                del.add(weak);
+            }
+        }
+        if (del.size() > 0) {
+            for (var i = 0; i < del.size(); i++) {
+                self.onSettingsChangedListeners.remove(del[i]);
+            }
+        }
+
+        if (obj has :onSettingsChanged) {
+            var ref = obj.weak();
+
+            if (self.onSettingsChangedListeners.indexOf(ref) < 0) {
+                self.onSettingsChangedListeners.add(ref);
+            }
+        }
+    }
 }
 
-var isRoundDisplay = System.getDeviceSettings().screenShape == System.SCREEN_SHAPE_ROUND;
-
+(:glance)
 function getApp() as ListsApp {
     return Application.getApp() as ListsApp;
 }
 
-function getAppStore() as String {
-    return "https://play.google.com/store/apps/details?id=de.romandrechsel.lists";
-}
+(:roundVersion)
+var isRoundDisplay = true;
+(:regularVersion)
+var isRoundDisplay = false;
 
-var isGlanceView = false;
+var screenHeight = System.getDeviceSettings().screenHeight;
 
 (:debug)
 var isDebug = true;

@@ -1,73 +1,81 @@
 <strings>
-    <string id="AppName" scope="glance">­聽­</string>
+    <string id="AppName" scope="glance">聽</string>
 
-    <string id="SettingsTh">­主­題­</string>
-    <string id="ThGrey">­灰­色­</string>
-    <string id="ThRed">­紅­色­</string>
-    <string id="ThBaW">­黑­白­</string>
-    <string id="ThWaB">­白­黑­</string>
-    <string id="ThBsoD">­藍­屏­死­機­</string>
+    <string id="Back">返回</string>
+    <string id="Quit">結束</string>
 
-    <string id="ListRec">­列­表­已­接­收­。­</string>
-    <string id="EStorageFull">­存­儲­已­滿­！­</string>
-    <string id="EStorageError">­無­法­保­存­列­表­！­</string>
-    <string id="ListDel">­列­表­已­刪­除­。­</string>
+    <string id="SettingsTh">主題</string>
+    <string id="ThGrey">灰色</string>
+    <string id="ThRed">紅色</string>
+    <string id="ThBaW">黑白</string>
+    <string id="ThWaB">白黑</string>
+    <string id="ThBsoD">藍屏死機</string>
 
-    <string id="NoLists">­未­找­到­列­表­！­</string>
-    <string id="NoListsLink">­雙­擊­以­在­手­機­上­打­開­An­droid Play商­店</string>
+    <string id="ListRec">列表已接收。</string>
+    <string id="EStorageFull">存儲已滿！</string>
+    <string id="EStorageError">無法保存列表！</string>
+    <string id="ListDel">列表已刪除。</string>
+    <string id="LegacyPhoneApp">您使用的似乎是舊版本的智慧型手機應用程式。\n請更新。</string>
 
-    <string id="ListNotFound">­未­找­到­列­表­！­</string>
-    <string id="ListEmpty">­列­表­為­空­。­</string>
+    <string id="NoLists">未找到列表！</string>
+    <string id="NoListsLink">雙擊以在手機上打開Android PlayStore</string>
+    <string id="NoListsLinkBtn">按下Enter鍵，以在手機上打開Android PlayStore</string>
 
-    <string id="LMSub">%s 點­­</string>
+    <string id="ListNotFound">未找到列表！</string>
+    <string id="ListEmpty">列表為空。</string>
 
-    <string id="StTitle">­設­置­</string>
-    <string id="StMoveBottom">­將­完­成­的­項­目­移­動­到­底­部­­</string>
-    <string id="StDelList">­刪­除­列­表­­</string>
-    <string id="DeleteConfirm">­刪­除­列­表­？­­</string>
-    <string id="StDoubleTapForDone">­雙­擊­而­不­是­單­擊­項­目­以­將­其­標­記­為­已­完­成­的­項­目­­</string>
-    <string id="StShowNotes">­顯­示­項­目­的­注­釋­­</string>
-    <string id="StAutoExit">應­用­程­式­在­不­活­躍­時­結­束</string>
-    <string id="StAutoExit1">每­分­鐘­後­一­分­鐘</string>
-    <string id="StAutoExit3">每­三­分­鐘­後­三­分­鐘</string>
-    <string id="StAutoExit5">每­五­分­鐘­後­五­分­鐘</string>
-    <string id="StAutoExit10">每­十­分­鐘­後­十­分­鐘</string>
-    <string id="StAutoExit15">每­十­五­分­鐘­後­十­五­分­鐘</string>
-    <string id="StAutoExit30">每­三­十­分­鐘­後­三­十­分­鐘</string>
-    <string id="StAutoExit60">每­六­十­分­鐘­後­六­十­分­鐘</string>
-    <string id="StAutoExitOff">已­關­閉</string>
+    <string id="LMSub">%s 點</string>
 
-    <string id="StDelAll">­刪­除­所­有­列­表­­</string>
-    <string id="StDelAllConfirm">­刪­除­所­有­列­表­？­­</string>
-    <string id="StDelAllDone">­所­有­列­表­已­刪­除­。­­</string>
-    <string id="StTheme">­選­擇­主­題­­</string>
-    <string id="StAppStore">到 An­droid Play Store</string>
-    <string id="StAppVersion">­應­用­版­本­­</string>
+    <string id="StTitle">設置</string>
+    <string id="StMoveBottom">將完成的項目移動到底部</string>
+    <string id="StDelList">刪除列表</string>
+    <string id="DeleteConfirm">刪除列表？</string>
+    <string id="StDoubleTapForDone">雙擊而不是單擊項目以將其標記為已完成的項目</string>
+    <string id="StShowNotes">顯示項目的注釋</string>
+    <string id="StAutoExit">應用程式在不活躍時結束</string>
+    <string id="StAutoExit1">每分鐘後一分鐘</string>
+    <string id="StAutoExit3">每三分鐘後三分鐘</string>
+    <string id="StAutoExit5">每五分鐘後五分鐘</string>
+    <string id="StAutoExit10">每十分鐘後十分鐘</string>
+    <string id="StAutoExit15">每十五分鐘後十五分鐘</string>
+    <string id="StAutoExit30">每三十分鐘後三十分鐘</string>
+    <string id="StAutoExit60">每六十分鐘後六十分鐘</string>
+    <string id="StAutoExitOff">已關閉</string>
+    <string id="StBtnCtrl">硬體按鈕控制</string>
 
-    <string id="SelTheme">­主­題­­</string>
+    <string id="StDelAll">刪除所有列表</string>
+    <string id="StDelAllConfirm">刪除所有列表？</string>
+    <string id="StDelAllDone">所有列表已刪除。</string>
+    <string id="StTheme">選擇主題</string>
+    <string id="StAppStore">到 Android Play Store</string>
+    <string id="StAppVersion">應用版本</string>
 
-    <string id="ListDateFormatShort">%D, %m月%d日­。</string>
-    <string id="ListDateFormat">%D, %y年%m月%d日­。</string>
-    <string id="ListTimeFormat">%h:%i­­</string>
+    <string id="SelTheme">主題</string>
+
+    <string id="ListDateFormatShort">%D, %m月%d日。</string>
+    <string id="ListDateFormat">%D, %y年%m月%d日。</string>
+    <string id="ListTimeFormat">%h:%i</string>
     <string id="oclock"></string>
 
-    <string id="StLogs">­保­存­日­志­­</string>
-    <string id="StPersistentLogs">­在­會­話­之­間­保­存­日­志­。這­會­顯­著­增­加­應­用­的­存­儲­使­用­量­。­</string>
-    <string id="StPersistentLogs1">­在­會­話­之­間­保­存­日­志­­</string>
-    <string id="StPersistentLogs2">這­會­顯­著­增­加­應­用­的­存­儲­使­用­量­。</string>
-    <string id="StSendLogs">將­­記­­錄­­傳­­送­­至­­智­­慧­­型­­手­­機</string>
-    <string id="StSendLogsOff">日­­誌­­已­­停­­用！</string>
-    <string id="StSendLogsOk">發­­送­­的­­日­­誌</string>
+    <string id="StLogs">保存日志</string>
+    <string id="StPersistentLogs">在會話之間保存日志。這會顯著增加應用的存儲使用量。</string>
+    <string id="StPersistentLogs1">在會話之間保存日志</string>
+    <string id="StPersistentLogs2">這會顯著增加應用的存儲使用量。</string>
+    <string id="StSendLogs">將記錄傳送至智慧型手機</string>
+    <string id="StSendLogsOff">日誌已停用！</string>
+    <string id="StSendLogsOk">發送的日誌</string>
 
-    <string id="StReset">­自­動­重­置­列­表­­</string>
-    <string id="StResetDaily">­每­天­­</string>
-    <string id="StResetWeekly">­每­周­­</string>
-    <string id="StResetMonthly">­每­月­­</string>
+    <string id="StReset">自動重置列表</string>
+    <string id="StResetDaily">每天</string>
+    <string id="StResetWeekly">每周</string>
+    <string id="StResetMonthly">每月</string>
 
-    <string id="ErrHint">請­­在­­智­­能­­手­­機­­上­­向­­我­­報­­告­­此­­錯­­誤，以­­便­­我­­能­­幫­­助­­你。\n\n(點­擊­­此­­處，在­­智­­能­­手­­機­­的­­應­­用­­程­­序­­中­­打­­開­­聯­­繫­­方­­式)</string>
-    <string id="ErrReport">請­­打­­開­­智­­能­­手­­機</string>
-    <string id="ErrListRec">傳­輸­­列­­表­­時­­發­­生­­錯­­誤：</string>
-    <string id="ErrListDel">刪­除­­列­­表­­時­­發­­生­­錯­­誤：</string>
+    <string id="ErrHint">請告訴我你的智能手機上的錯誤，以便我可以幫助你</string>
+    <string id="ErrHintTouch">（點擊這裡，以在你的智能手機上的應用程式中打開聯繫方式）</string>
+    <string id="ErrHintBtn">（按下Enter鍵，以在你的智能手機上的應用程式中打開聯繫方式）</string>
+    <string id="ErrReport">請打開智能手機</string>
+    <string id="ErrListRec">傳輸列表時發生錯誤：</string>
+    <string id="ErrListDel">刪除列表時發生錯誤：</string>
 
     <string id="GlNumLists" scope="glance">%d 個清單</string>
     <string id="GlOneList" scope="glance">1 列表</string>

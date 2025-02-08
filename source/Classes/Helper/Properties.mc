@@ -18,9 +18,10 @@ module Helper {
             LOGS = "Logs",
             PERSISTENTLOGS = "PersistentLogs",
             AUTOEXIT = "AutoExit",
+            HWBCTRL = "HWBCtrl",
         }
 
-        public static function Store(prop as EProps, value as PropType) as Void {
+        public static function Store(prop as EProps or String, value as PropType) as Void {
             var no_log = [LASTLISTSCROLL, INIT, LASTLIST];
 
             try {
@@ -33,7 +34,7 @@ module Helper {
             }
         }
 
-        public static function Get(prop as EProps, default_value as PropType?) as PropType {
+        public static function Get(prop as EProps or String, default_value as PropType?) as PropType {
             try {
                 return Props.getValue(prop as String);
             } catch (ex instanceof Lang.Exception) {

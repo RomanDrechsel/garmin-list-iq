@@ -7,10 +7,8 @@ module Controls {
         private var _y as Number;
         private var _width as Number;
         private var _height as Number;
-        private var _dc as Dc;
 
-        public function initialize(dc as Dc, x as Number, y as Number, w as Number, h as Number) {
-            self._dc = dc;
+        public function initialize(x as Number, y as Number, w as Number, h as Number) {
             self._x = x;
             self._y = y;
             self._width = w;
@@ -35,10 +33,6 @@ module Controls {
 
         public function getHeight() as Number {
             return self._height;
-        }
-
-        public function getDc() as Dc? {
-            return self._dc;
         }
     }
 }

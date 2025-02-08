@@ -10,223 +10,205 @@ import Controls.Listitems;
 import Helper;
 
 module Views {
-    class ListDetailsView extends Controls.CustomView {
-        var ScrollMode = SCROLL_DRAG;
-
-        var ListUuid as String? = null;
+    class ListDetailsView extends IconItemView {
+        private var _listUuid as String?;
         private var _startScroll as Number?;
-        private var _listFound = false;
-        private var _listOptimized = false;
-
-        private var _noListLabel as MultilineLabel? = null;
-        private var _itemIcon as Listitems.ViewItemIcon;
-        private var _itemIconDone as Listitems.ViewItemIcon;
-
-        protected var _fontoverride = Helper.Fonts.Large();
 
         function initialize(uuid as String, scrollTo as Number?) {
-            CustomView.initialize();
-            self.ListUuid = uuid;
+            IconItemView.initialize();
+            self._listUuid = uuid;
             self._startScroll = scrollTo;
-            self._itemIcon = $.getTheme().DarkTheme ? Application.loadResource(Rez.Drawables.Item) : Application.loadResource(Rez.Drawables.bItem);
-            self._itemIconDone = $.getTheme().DarkTheme ? Application.loadResource(Rez.Drawables.ItemDone) : Application.loadResource(Rez.Drawables.bItemDone);
+            self.loadIcons();
         }
 
-        function onLayout(dc as Dc) {
-            CustomView.onLayout(dc);
-        }
-
-        function onShow() as Void {
-            CustomView.onShow();
+        function onLayout(dc as Dc) as Void {
+            IconItemView.onLayout(dc);
             if ($.getApp().ListsManager != null) {
-                $.getApp().ListsManager.OnListsChanged.add(self);
+                $.getApp().ListsManager.addListChangedListener(self);
             }
-            self.publishItems(true);
+            self.publishItems(false);
         }
 
-        function onHide() as Void {
-            CustomView.onHide();
-            if ($.getApp().ListsManager != null) {
-                $.getApp().ListsManager.OnListsChanged.remove(self);
-            }
-        }
-
-        function onUpdate(dc as Dc) as Void {
-            CustomView.onUpdate(dc);
-            dc.setColor(getTheme().BackgroundColor, getTheme().BackgroundColor);
-            dc.clear();
-
-            if (self._listFound == false || self.Items.size() == 0) {
-                self.noLists(dc);
-            } else {
-                self.drawList(dc);
-
-                //store the wraped text
-                if (self._listOptimized == false && $.getApp().ListsManager != null) {
-                    var optimized1 = ({}) as Dictionary<Number, Array<String> >;
-                    var optimized2 = ({}) as Dictionary<Number, Array<String> >;
-                    for (var i = 0; i < self.Items.size(); i++) {
-                        var item = self.Items[i];
-                        if (item instanceof Listitems.Item) {
-                            var text = item.Title instanceof MultilineLabel ? item.Title.getText() : null;
-                            var note = item.Subtitle instanceof MultilineLabel ? item.Subtitle.getText() : null;
-                            if (text instanceof Array) {
-                                if (text.size() == 1) {
-                                    text = text[0];
-                                }
-                                optimized1.put(item.ItemPosition, text);
-                            }
-                            if (note instanceof Array) {
-                                if (note.size() == 1) {
-                                    note = note[0];
-                                }
-                                optimized2.put(item.ItemPosition, note);
-                            }
-                        }
-                    }
-                    if (optimized1.size() > 0) {
-                        $.getApp().ListsManager.Optimize(self.ListUuid, optimized1, optimized2);
-                    }
-                    self._listOptimized = true;
-                }
-            }
-        }
-
-        function onListTap(position as Number, item as Item, doubletap as Boolean) as Void {
+        protected function interactItem(item as Listitems.Item, doubletap as Boolean) as Void {
             if ($.getApp().ListsManager == null) {
-                return;
-            }
+                self.goBack();
+            } else if (item.BoundObject instanceof Boolean) {
+                var prop = Helper.Properties.Get(Helper.Properties.DOUBLETAPFORDONE, false);
+                if (doubletap || prop == 0 || prop == false) {
+                    if (item.BoundObject == false) {
+                        item.isDisabled = true;
+                        item.setIcon(self._itemIconDone);
+                        item.setIconInvert(self._itemIconDoneInvert);
+                    } else {
+                        item.isDisabled = false;
+                        item.setIcon(self._itemIcon);
+                        item.setIconInvert(self._itemIconInvert);
+                    }
+                    item.BoundObject = !item.BoundObject;
 
-            var prop = Helper.Properties.Get(Helper.Properties.DOUBLETAPFORDONE, false);
-            if (doubletap || prop == 0 || prop == false) {
-                if (item.BoundObject == false) {
-                    item.setColor(getTheme().DisabledColor);
-                    item.setIcon(self._itemIconDone);
-                } else {
-                    item.setColor(null);
-                    item.setIcon(self._itemIcon);
+                    $.getApp().ListsManager.updateListitem(self._listUuid, item.ItemPosition, item.BoundObject);
+                    self.publishItems(true);
+                    WatchUi.requestUpdate();
                 }
-                item.BoundObject = !item.BoundObject;
-
-                $.getApp().ListsManager.updateList(self.ListUuid, item.ItemPosition, item.BoundObject);
-                self.publishItems(false);
-
-                WatchUi.requestUpdate();
+            } else if (item.BoundObject instanceof String) {
+                if (item.BoundObject.equals("settings")) {
+                    self.openSettings();
+                } else if (item.BoundObject.equals("back")) {
+                    self.goBack();
+                }
             }
+        }
+
+        function onKeyEnter() as Boolean {
+            if (self._listUuid == null) {
+                self.goBack();
+                return true;
+            }
+
+            return ItemView.onKeyEnter();
+        }
+
+        function onKeyMenu() as Boolean {
+            ItemView.onKeyMenu();
+            self.openSettings();
+        }
+
+        function onTap(x as Number, y as Number) as Boolean {
+            if (ItemView.onTap(x, y) == false && self._listUuid == null) {
+                self.goBack();
+                return true;
+            }
+            return false;
         }
 
         function onListsChanged(index as ListIndex) as Void {
-            self.publishItems(false);
+            self.publishItems(true);
         }
 
-        function showSettings() as Void {
-            var view = new ListSettingsView(self.ListUuid);
-            var delegate = new ListSettingsViewDelegate(view);
-            WatchUi.pushView(view, delegate, WatchUi.SLIDE_BLINK);
+        function openSettings() as Void {
+            if (self._listUuid != null) {
+                var view = new ListSettingsView(self._listUuid);
+                WatchUi.pushView(view, new ItemViewDelegate(view), WatchUi.SLIDE_LEFT);
+            }
         }
 
         function onSettingsChanged() as Void {
-            CustomView.onSettingsChanged();
-            self._itemIcon = $.getTheme().DarkTheme ? Application.loadResource(Rez.Drawables.Item) : Application.loadResource(Rez.Drawables.bItem);
-            self._itemIconDone = $.getTheme().DarkTheme ? Application.loadResource(Rez.Drawables.ItemDone) : Application.loadResource(Rez.Drawables.bItemDone);
-            self.publishItems(false);
+            ItemView.onSettingsChanged();
+            self.loadIcons();
+            self.publishItems(true);
         }
 
         function onScroll(delta as Number) as Void {
-            CustomView.onScroll(delta);
+            ItemView.onScroll(delta);
             Helper.Properties.Store(Helper.Properties.LASTLISTSCROLL, self._scrollOffset);
         }
 
-        private function publishItems(initialize as Boolean) as Void {
+        private function publishItems(request_update as Boolean) as Void {
             self.Items = [];
 
-            if ($.getApp().ListsManager == null) {
-                return;
-            }
-
-            var list = getApp().ListsManager.getList(self.ListUuid) as List?;
-
-            //check if the time for an autoreset is come
-            if (initialize) {
-                self.checkAutoreset(list);
-            }
-
-            if (list == null) {
-                self._listFound = false;
+            if (self._listUuid == null || $.getApp().ListsManager == null) {
+                self.errorLoadingList();
             } else {
-                Helper.Properties.Store(Helper.Properties.LASTLIST, self.ListUuid);
-                var show_notes = Helper.Properties.Get(Helper.Properties.SHOWNOTES, true);
-                var move_down = Helper.Properties.Get(Helper.Properties.LISTMOVEDOWN, true);
-                self._listFound = true;
-                if (list.hasKey("name")) {
-                    self.setTitle(list.get("name") as String);
-                }
-
-                self._listOptimized = list.hasKey("opt");
-
-                if (list.hasKey("items")) {
-                    var ordered = [];
-                    var done = [];
-
-                    for (var i = 0; i < list["items"].size(); i++) {
-                        var item = list["items"][i];
-                        item.put("pos", i);
-                        if ((move_down == true || move_down == 1) && item.get("d") == true) {
-                            done.add(item);
-                        } else {
-                            ordered.add(item);
-                        }
+                var list = getApp().ListsManager.getList(self._listUuid) as List?;
+                if (list == null) {
+                    self.errorLoadingList();
+                } else {
+                    //check if the time for an autoreset is come
+                    if (request_update) {
+                        self.checkAutoreset(list);
                     }
 
-                    if (done.size() > 0) {
-                        ordered.addAll(done);
+                    Helper.Properties.Store(Helper.Properties.LASTLIST, self._listUuid);
+                    var show_notes = Helper.Properties.Get(Helper.Properties.SHOWNOTES, true);
+                    var move_down = Helper.Properties.Get(Helper.Properties.LISTMOVEDOWN, true);
+                    if (list.hasKey("name")) {
+                        self.setTitle(list.get("name") as String);
                     }
 
-                    for (var i = 0; i < ordered.size(); i++) {
-                        var item = ordered[i];
-                        var icon, obj;
+                    if (list.hasKey("items")) {
+                        var ordered = [];
+                        var done = [];
 
-                        if (item.hasKey("d") && item.get("d") == true) {
-                            icon = self._itemIconDone;
-                            obj = true;
-                        } else {
-                            icon = self._itemIcon;
-                            obj = false;
-                        }
+                        var count = 0;
 
-                        var text = item.get("i");
-                        var note = show_notes == true ? item.get("n") : null;
-
-                        if (text != null) {
-                            self.addItem(text, note, obj, icon, item.get("pos"));
-                            if (obj == true) {
-                                self.Items[self.Items.size() - 1].setColor(getTheme().DisabledColor);
+                        for (var i = 0; i < list["items"].size(); i++) {
+                            count++;
+                            var item = list["items"][i];
+                            item.put("pos", i);
+                            if ((move_down == true || move_down == 1) && item.get("d") == true) {
+                                done.add(item);
+                            } else {
+                                ordered.add(item);
                             }
                         }
+
+                        if (done.size() > 0) {
+                            ordered.addAll(done);
+                        }
+
+                        for (var i = 0; i < ordered.size(); i++) {
+                            var item = ordered[i];
+                            var icon, iconInvert, obj;
+
+                            if (item.hasKey("d") && item.get("d") == true) {
+                                icon = self._itemIconDone;
+                                iconInvert = self._itemIconDoneInvert;
+                                obj = true;
+                            } else {
+                                icon = self._itemIcon;
+                                iconInvert = self._itemIconInvert;
+                                obj = false;
+                            }
+
+                            var text = item.get("i");
+                            var note = show_notes == true ? item.get("n") : null;
+
+                            if (text != null) {
+                                var itemObj = self.addItem(text, note, obj, icon, item.get("pos"));
+                                itemObj.setIconInvert(iconInvert);
+                                itemObj.isDisabled = obj;
+                            }
+                        }
+
+                        if (count <= 0) {
+                            var item = new Listitems.Item(self._mainLayer, null, Application.loadResource(Rez.Strings.ListEmpty), null, null, null, 0, null);
+                            item.SubtitleJustification = Graphics.TEXT_JUSTIFY_CENTER;
+                            item.isSelectable = false;
+                            item.DrawLine = false;
+                            self.Items.add(item);
+                        }
+                        if (self.DisplayButtonSupport()) {
+                            self.addSettingsButton();
+                        }
+
+                        if ($.getApp().NoBackButton) {
+                            self.addBackButton(false);
+                        }
+                    }
+
+                    if (request_update == false) {
+                        Debug.Log("Displaying list '" + list.get("name") + "' (" + self._listUuid + ")");
+                    }
+
+                    //no lone below the last items
+                    if (self.Items.size() > 0) {
+                        self.Items[self.Items.size() - 1].DrawLine = false;
+                    }
+
+                    if (self._startScroll != null && self._startScroll > 0) {
+                        self._scrollOffset = self._startScroll;
+                        self._startScroll = null;
                     }
                 }
-                if (initialize) {
-                    Debug.Log("Displaying list '" + list.get("name") + "' (" + self.ListUuid + ")");
-                }
             }
-
-            //no lone below the last items
-            if (self.Items.size() > 0) {
-                self.Items[self.Items.size() - 1].DrawLine = false;
-            }
-
-            if (self._startScroll != null && self._startScroll > 0) {
-                self._scrollOffset = self._startScroll;
-                self._startScroll = null;
-            }
-
-            if (initialize == false) {
+            self._needValidation = true;
+            if (request_update) {
                 WatchUi.requestUpdate();
             }
         }
 
-        private function checkAutoreset(list as List?) as Void {
-            if (list == null || $.getApp().ListsManager == null) {
+        private function checkAutoreset(list as List) as Void {
+            if ($.getApp().ListsManager == null) {
                 return;
             }
 
@@ -249,24 +231,24 @@ module Views {
                 var last_reset = list.get("r_last") as Number?;
                 if (last_reset == null) {
                     list.put("r_last", Time.now().value());
-                    $.getApp().ListsManager.saveList(self.ListUuid, list);
+                    $.getApp().ListsManager.saveList(self._listUuid, list);
                     return;
                 }
 
                 var last_reset_moment = new Time.Moment(last_reset);
                 var last_reset_info = Time.Gregorian.info(last_reset_moment, Time.FORMAT_SHORT);
-                Debug.Log("Last reset for list " + self.ListUuid + " was " + Helper.DateUtil.toLogString(last_reset_info, true) + " (" + last_reset_moment.value() + ")");
+                Debug.Log("Last reset for list " + self._listUuid + " was " + Helper.DateUtil.toLogString(last_reset_info, true) + " (" + last_reset_moment.value() + ")");
 
                 var next_reset = null;
                 if (interval.equals("w")) {
                     if (reset_weekday == null) {
-                        Debug.Log("Could not reset list " + self.ListUuid + " weekly doe to missing parameter: weekday");
+                        Debug.Log("Could not reset list " + self._listUuid + " weekly doe to missing parameter: weekday");
                     } else {
                         //weekly reset
                         reset_weekday = reset_weekday.toNumber();
                         if (Time.now().value() - last_reset > Time.Gregorian.SECONDS_PER_DAY * 7) {
                             //last reset is more than 7 days ago ...
-                            Debug.Log("Next weekly reset for list " + self.ListUuid + " is NOW, 7+ days ago");
+                            Debug.Log("Next weekly reset for list " + self._listUuid + " is NOW, 7+ days ago");
                             do_reset = true;
                         } else {
                             next_reset = Time.Gregorian.moment({ :year => last_reset_info.year, :month => last_reset_info.month, :day => last_reset_info.day, :hour => reset_hour, :minute => reset_minute, :second => 0 });
@@ -280,12 +262,12 @@ module Views {
                 } else if (interval.equals("m")) {
                     //monthly reset
                     if (reset_day == null) {
-                        Debug.Log("Could not reset list " + self.ListUuid + " monthly doe to missing parameter: day");
+                        Debug.Log("Could not reset list " + self._listUuid + " monthly doe to missing parameter: day");
                     }
                     reset_day = reset_day.toNumber();
                     if (Time.now().value() - last_reset > Time.Gregorian.SECONDS_PER_DAY * 31) {
                         //last reset is more than 31 days ago ...
-                        Debug.Log("Next monthly reset for list " + self.ListUuid + " is NOW, 31+ days ago");
+                        Debug.Log("Next monthly reset for list " + self._listUuid + " is NOW, 31+ days ago");
                         do_reset = true;
                     } else {
                         //How many days does the month of the last reset have...
@@ -318,7 +300,7 @@ module Views {
                     //daily reset
                     if (Time.now().value() - last_reset > Time.Gregorian.SECONDS_PER_DAY) {
                         //last reset is more than 1 day ago...
-                        Debug.Log("Next daily reset for list " + self.ListUuid + " is NOW, 1+ day ago");
+                        Debug.Log("Next daily reset for list " + self._listUuid + " is NOW, 1+ day ago");
                         do_reset = true;
                     } else {
                         //this is the moment, when the reset should happen today...
@@ -340,7 +322,7 @@ module Views {
                             interval_str = "monthly";
                             break;
                     }
-                    Debug.Log("Next scheduled " + interval_str + " reset for list " + self.ListUuid + " is " + Helper.DateUtil.toLogString(next_reset, true) + " (" + next_reset.value() + ")");
+                    Debug.Log("Next scheduled " + interval_str + " reset for list " + self._listUuid + " is " + Helper.DateUtil.toLogString(next_reset, true) + " (" + next_reset.value() + ")");
                     if (Time.now().compare(next_reset) >= 0 && last_reset_moment.compare(next_reset) < 0) {
                         do_reset = true;
                     }
@@ -356,7 +338,7 @@ module Views {
                 if (reset_minute == null) {
                     missing.add("minute");
                 }
-                Debug.Log("Could not reset list " + self.ListUuid + " doe to missing parameters: " + missing);
+                Debug.Log("Could not reset list " + self._listUuid + " doe to missing parameters: " + missing);
             }
 
             if (do_reset) {
@@ -372,24 +354,19 @@ module Views {
                 if (count > 0) {
                     list.put("items", list_items);
                 }
-                $.getApp().ListsManager.saveList(self.ListUuid, list);
-                Debug.Log("List " + self.ListUuid + " reseted, changed " + count + " item(s) to undone");
+                $.getApp().ListsManager.saveList(self._listUuid, list);
+                Debug.Log("List " + self._listUuid + " reseted, changed " + count + " item(s) to undone");
             }
         }
 
-        private function noLists(dc as Dc) as Void {
-            if (self._noListLabel == null) {
-                var text;
-                if (self._listFound == false) {
-                    text = Application.loadResource(Rez.Strings.ListNotFound);
-                } else {
-                    text = Application.loadResource(Rez.Strings.ListEmpty);
-                }
-                self._noListLabel = new MultilineLabel(text, (dc.getWidth() * 0.8).toNumber(), Helper.Fonts.Normal());
-            }
-
-            var y = (dc.getHeight() - self._noListLabel.getHeight(dc)) / 2;
-            self._noListLabel.drawText(dc, (dc.getWidth() * 0.1).toNumber(), y, $.getTheme().MainColor, Graphics.TEXT_JUSTIFY_CENTER);
+        private function errorLoadingList() as Void {
+            self._listUuid = null;
+            self.Items = [];
+            var item = new Listitems.Item(self._mainLayer, Application.loadResource(Rez.Strings.ListNotFound), null, "back", null, null, 0, null);
+            item.TitleJustification = Graphics.TEXT_JUSTIFY_CENTER;
+            item.isSelectable = false;
+            item.DrawLine = false;
+            self.Items.add(item);
         }
     }
 }

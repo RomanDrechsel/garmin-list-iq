@@ -44,11 +44,12 @@ module Debug {
                 }
 
                 if (pre__logs.size() > self.LogCount) {
-                    self._logs = self._logs.slice(self._logs.size() - self.LogCount, self._logs.size());
+                    pre__logs = self._logs.slice(-self.LogCount, null);
+                    self._logs = pre__logs;
                 }
 
                 if (self._persistentLogs == true) {
-                    Storage /*>Application.Storage<*/.setValue("logs", self._logs);
+                    Storage /*>Application.Storage<*/.setValue("logs", pre__logs);
                 }
             } else {
                 self._logs = [];
@@ -70,7 +71,12 @@ module Debug {
 
         public function SendLogs() {
             if ($.getApp().Phone != null) {
-                $.getApp().Phone.SendToPhone({ "type" => "logs", "logs" => self.GetLogs() });
+                var send = ["type=logs"];
+                var logs = self.GetLogs();
+                for (var i = 0; i < logs.size(); i += 1) {
+                    send.add(i + "=" + logs[i]);
+                }
+                $.getApp().Phone.SendToPhone(send);
                 self.Log("Sent logs to smartphone");
             }
         }

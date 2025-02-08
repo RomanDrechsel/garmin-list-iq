@@ -21,7 +21,7 @@ class ListsApp extends Application.AppBase {
 
     function getInitialView() as Array<WatchUi.Views or WatchUi.InputDelegates>? {
         self.isGlanceView = false;
-        var appVersion = "2025.02.0800";
+        var appVersion = "2025.02.0801";
         Application.Properties.setValue("appVersion", appVersion);
 
         self.Debug = new Debug.DebugStorage();
@@ -35,7 +35,7 @@ class ListsApp extends Application.AppBase {
         self.Phone = new Comm.PhoneCommunication();
         self.Inactivity = new Helper.Inactivity();
 
-        Debug.Log(self.getInfo());
+        //Debug.Log(self.getInfo());
 
         var startview = new Views.ListsSelectView(true);
         return [startview, new Views.ItemViewDelegate(startview)];

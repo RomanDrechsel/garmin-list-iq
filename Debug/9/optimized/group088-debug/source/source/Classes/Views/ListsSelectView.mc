@@ -44,9 +44,11 @@ module Views {
                     x /*>item<*/ = self.Items[y /*>pre_0<*/];
                     if (x /*>item<*/.BoundObject instanceof String && x /*>item<*/.BoundObject.equals("store") && Helper.Properties.Get("Init", y /*>pre_0<*/) < y /*>pre_0<*/) {
                         ListsApp.openGooglePlay();
+                        return true;
                     }
                 }
             }
+            return false;
         }
 
         function onKeyMenu() as Void {
@@ -180,20 +182,24 @@ module Views {
             self._needValidation = true;
         }
 
-        protected function interactItem(item as Listitems.Item, doubletap as Boolean) as Void {
+        protected function interactItem(item as Listitems.Item, doubletap as Boolean) as Boolean {
             if (!ItemView.interactItem(item, doubletap)) {
                 if (item.BoundObject instanceof String) {
                     if (item.BoundObject.equals("settings")) {
                         self.openSettings();
+                        return true;
                     } else if (item.BoundObject.equals("store")) {
                         if (doubletap && Helper.Properties.Get("Init", 0) <= 0) {
                             ListsApp.openGooglePlay();
+                            return true;
                         }
                     } else {
                         self.GotoList(item.BoundObject, -1);
+                        return true;
                     }
                 }
             }
+            return false;
         }
 
         private function GotoList(uuid as String, scroll as Number) as Void {

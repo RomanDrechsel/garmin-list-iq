@@ -1,5 +1,4 @@
 using Rez;
-using Debug;
 import Toybox.Graphics;
 import Toybox.Lang;
 import Toybox.WatchUi;
@@ -228,8 +227,7 @@ module Views {
                 for (; x /*>i<*/ < self.Items.size(); x /*>i<*/ += 1) {
                     var item = self.Items[x /*>i<*/];
                     if (item.Clicked(y, self._scrollOffset)) {
-                        self.interactItem(item, true);
-                        return true;
+                        return self.interactItem(item, true);
                     }
                 }
             }
@@ -242,8 +240,7 @@ module Views {
                 for (; x /*>i<*/ < self.Items.size(); x /*>i<*/ += 1) {
                     var item = self.Items[x /*>i<*/];
                     if (item.Clicked(y, self._scrollOffset)) {
-                        self.interactItem(item, false);
-                        return true;
+                        return self.interactItem(item, false);
                     }
                 }
             }
@@ -282,7 +279,6 @@ module Views {
         }
 
         static function goBack() {
-            Debug.Log("Go Back");
             WatchUi.popView(2 as Toybox.WatchUi.SlideType);
         }
 
@@ -381,6 +377,9 @@ module Views {
                             self._paddingTop = self._mainLayer.getHeight() / pre_2 - (self.Items[pre_1].getHeight(dc) / pre_2).toNumber() - self.Items[pre_0].getHeight(dc);
                         } else {
                             self._paddingTop = self._mainLayer.getHeight() / pre_2 - (self.Items[pre_0].getHeight(dc) / pre_2).toNumber();
+                        }
+                        if (self._paddingTop < pre_0) {
+                            self._paddingTop = pre_0;
                         }
                     } else {
                         self._paddingTop = pre_0;

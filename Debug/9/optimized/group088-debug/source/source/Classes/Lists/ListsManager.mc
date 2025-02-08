@@ -21,143 +21,168 @@ module Lists {
     class ListsManager {
         private var onListsChangedListeners as Array<WeakReference> = [];
 
-        function addList(data as Application.PropertyValueType) as Boolean {
-            var pre__item_, pre__note_, items, date, save, pre__data_, pre__items_, pre__name_, pre__order_, pre_0, pre_1;
-            pre_1 = 1;
-            /* check, if all nessesary data is available... */
-            var listuuid;
-            var listname;
-            var listorder;
-            var listitems;
-            if (data instanceof Dictionary) {
-                pre__order_ = "order";
-                pre__name_ = "name";
-                pre__items_ = "items";
-                listname = data.get(pre__name_);
-                listorder = data.get(pre__order_);
-                listuuid = data.get("uuid");
-                listitems = data.get(pre__items_);
-                if (listitems instanceof Array == false) {
-                    listitems = null;
-                }
-                pre__data_ = "data";
-                if (listname == null || listorder == null || listuuid == null || listitems == null) {
-                    save /*>missing<*/ = [] as Array<String>;
-                    if (listname == null) {
-                        save /*>missing<*/.add(pre__name_);
-                    }
-                    if (listorder == null) {
-                        save /*>missing<*/.add(pre__order_);
-                    }
-                    if (listuuid == null) {
-                        save /*>missing<*/.add("uuid");
-                    }
-                    if (listitems == null) {
-                        save /*>missing<*/.add(pre__items_);
-                    }
-                    Debug.Log("Could not add list: missing properties - " + save /*>missing<*/);
-                    self.reportError(2, { pre__data_ => data, "missing" => save /*>missing<*/ });
-                    return false;
-                }
-            } else {
-                Debug.Log("Could not add list: invalid data, " + data);
-                self.reportError(pre_1, data);
-                return false;
-            }
-
-            //Store list
+        function addList(data as Dictionary) as Boolean {
+            var pre__data_, list, save, pre__name_, pre__order_, pre_0, pre_1, pre_4, pre_5;
             pre_0 = 0;
-            var list = {};
-            list.put(pre__name_, listname);
+            var keys = data.keys();
+            var listuuid = null;
+            var listname = null;
+            var listorder = null;
+            var listitems = {};
+            var listdate = null;
+            var reset = null;
+            var reset_interval = null;
+            var reset_hour = null;
+            var reset_minute = null;
+            var reset_weekday = null;
+            var reset_day = null;
 
-            //items
-            items = [];
-            pre__note_ = "note";
-            pre__item_ = "item";
+            pre_5 = 5;
+            pre_4 = 4;
+            pre_1 = 1;
+            pre__order_ = "order";
+            pre__name_ = "name";
             {
-                save /*>i<*/ = pre_0;
-                for (; save /*>i<*/ < listitems.size(); save /*>i<*/ += pre_1) {
-                    date /*>listitem<*/ = listitems[save /*>i<*/] as ListItemsItem;
-                    if (date /*>listitem<*/.hasKey(pre__item_)) {
-                        if (!date /*>listitem<*/.hasKey(pre__note_) || date /*>listitem<*/[pre__note_] == null) {
-                            //only an item
-                            items.add({ "i" => date /*>listitem<*/[pre__item_].toString(), "d" => false });
-                        } else {
-                            //item with note
-                            items.add({ "i" => date /*>listitem<*/[pre__item_].toString(), "n" => date /*>listitem<*/[pre__note_].toString(), "d" => false });
+                pre__data_ /*>i<*/ = pre_0;
+                for (; pre__data_ /*>i<*/ < keys.size(); pre__data_ /*>i<*/ += pre_1) {
+                    save /*>key<*/ = keys[pre__data_ /*>i<*/];
+                    var val = data.get(save /*>key<*/);
+                    if (save /*>key<*/.equals("uuid")) {
+                        listuuid = val.toString();
+                    } else if (save /*>key<*/.equals(pre__name_)) {
+                        listname = val.toString();
+                    } else if (save /*>key<*/.equals(pre__order_)) {
+                        listorder = val.toNumber();
+                    } else if (save /*>key<*/.equals("date")) {
+                        listdate = val.toLong();
+                        if (listdate != null) {
+                            if (listdate > 999999999) {
+                                // date is in milliseconds
+                                listdate = (listdate / 1000).toNumber();
+                            }
+                        }
+                    } else if (save /*>key<*/.substring(pre_0, pre_4).equals("item")) {
+                        var index = save /*>key<*/.substring(pre_4, pre_5).toNumber();
+                        save /*>split<*/ = Helper.StringUtil.split(save /*>key<*/.substring(pre_5, save /*>key<*/.length()), "_", 2);
+                        list /*>prop<*/ = save /*>split<*/.size() > pre_1 ? save /*>split<*/[pre_1] : null;
+                        if (list /*>prop<*/ != null) {
+                            if (listitems.hasKey(index)) {
+                                save /*>item<*/ = listitems.get(index);
+                            } else {
+                                save /*>item<*/ = { "d" => false };
+                            }
+                            if (list /*>prop<*/.equals("item")) {
+                                save /*>item<*/.put("i", val.toString());
+                            } else if (list /*>prop<*/.equals("note")) {
+                                save /*>item<*/.put("n", val.toString());
+                            }
+                            listitems.put(index, save /*>item<*/);
+                        }
+                    } else if (save /*>key<*/.substring(pre_0, pre_5).equals("reset")) {
+                        if (save /*>key<*/.equals("reset_active")) {
+                            val = Helper.StringUtil.StringToBool(val);
+                            if (val != null) {
+                                reset = val;
+                            }
+                        } else if (save /*>key<*/.equals("reset_interval")) {
+                            reset_interval = val.toString(); //no reference
+                        } else if (save /*>key<*/.equals("reset_hour")) {
+                            val = val.toNumber();
+                            if (val != null) {
+                                reset_hour = val;
+                            }
+                        } else if (save /*>key<*/.equals("reset_minute")) {
+                            val = val.toNumber();
+                            if (val != null) {
+                                reset_minute = val;
+                            }
+                        } else if (save /*>key<*/.equals("reset_weekday")) {
+                            val = val.toNumber();
+                            if (val != null) {
+                                reset_weekday = val;
+                            }
+                        } else if (save /*>key<*/.equals("reset_day")) {
+                            val = val.toNumber();
+                            if (val != null) {
+                                reset_day = val;
+                            }
                         }
                     }
                 }
             }
-            list.put(pre__items_, items);
 
-            //reset list automatically
-            save /*>reset<*/ = data.get("reset") as Dictionary<String, String or Number or Boolean>?;
-            if (save /*>reset<*/ instanceof Dictionary) {
-                items /*>active<*/ = save /*>reset<*/.get("active") as Boolean?;
-                pre__note_ /*>interval<*/ = save /*>reset<*/.get("interval") as String?;
-                pre__item_ /*>hour<*/ = save /*>reset<*/.get("hour") as Number?;
-                var minute = save /*>reset<*/.get("minute") as Number?;
-                var weekday = save /*>reset<*/.get("weekday") as Number?;
-                save /*>day<*/ = save /*>reset<*/.get("day") as Number?;
-                date /*>missing<*/ = [] as Array<String>;
-                if (items /*>active<*/ != null && pre__note_ /*>interval<*/ != null && pre__item_ /*>hour<*/ != null && minute != null) {
-                    if (pre__note_ /*>interval<*/ == "w" && weekday == null) {
-                        date /*>missing<*/.add("weekday");
-                    } else if (pre__note_ /*>interval<*/ == "m" && save /*>day<*/ == null) {
-                        date /*>missing<*/.add("day");
+            //verify data
+            pre__data_ = "data";
+            if (listname == null || listorder == null || listuuid == null) {
+                save /*>missing<*/ = [] as Array<String>;
+                if (listname == null) {
+                    save /*>missing<*/.add(pre__name_);
+                }
+                if (listorder == null) {
+                    save /*>missing<*/.add(pre__order_);
+                }
+                if (listuuid == null) {
+                    save /*>missing<*/.add("uuid");
+                }
+                Debug.Log("Could not add list: missing properties - " + save /*>missing<*/);
+                self.reportError(2, { pre__data_ => data, "missing" => save /*>missing<*/ });
+                return false;
+            }
+
+            if (listdate == null) {
+                listdate = Time.now().value();
+            }
+
+            list = {};
+            list.put(pre__name_, listname);
+            list.put("items", listitems);
+
+            if (reset != null) {
+                save /*>missing<*/ = [] as Array<String>;
+                if (reset_interval != null && reset_hour != null && reset_minute != null) {
+                    if (reset_interval == "w" && reset_weekday == null) {
+                        save /*>missing<*/.add("weekday");
+                    } else if (reset_interval == "m" && reset_day == null) {
+                        save /*>missing<*/.add("day");
                     }
                 } else {
-                    if (items /*>active<*/ == null) {
-                        date /*>missing<*/.add("active");
+                    if (reset_interval == null) {
+                        save /*>missing<*/.add("interval");
                     }
-                    if (pre__note_ /*>interval<*/ == null) {
-                        date /*>missing<*/.add("interval");
+                    if (reset_hour == null) {
+                        save /*>missing<*/.add("hour");
                     }
-                    if (pre__item_ /*>hour<*/ == null) {
-                        date /*>missing<*/.add("hour");
-                    }
-                    if (minute == null) {
-                        date /*>missing<*/.add("minute");
+                    if (reset_minute == null) {
+                        save /*>missing<*/.add("minute");
                     }
                 }
 
-                if (date /*>missing<*/.size() > pre_0) {
-                    Debug.Log("Could not add list reset: missing properties - " + date /*>missing<*/);
+                if (save /*>missing<*/.size() > pre_0) {
+                    Debug.Log("Could not add list reset: missing properties - " + save /*>missing<*/);
                 } else {
-                    list.put("r_a", items /*>active<*/);
-                    list.put("r_i", pre__note_ /*>interval<*/);
-                    list.put("r_h", pre__item_ /*>hour<*/);
-                    list.put("r_m", minute);
-                    if (pre__note_ /*>interval<*/.equals("w")) {
-                        list.put("r_wd", weekday);
-                    } else if (pre__note_ /*>interval<*/.equals("m")) {
-                        list.put("r_d", save /*>day<*/);
+                    list.put("r_a", reset);
+                    list.put("r_i", reset_interval);
+                    list.put("r_h", reset_hour);
+                    list.put("r_m", reset_minute);
+                    if (reset_interval.equals("w")) {
+                        list.put("r_wd", reset_weekday);
+                    } else if (reset_interval.equals("m")) {
+                        list.put("r_d", reset_day);
                     }
                     list.put("r_last", Time.now().value());
                 }
-            }
-
-            date = data.get("date") as Number?;
-            if (date != null) {
-                if (date > 999999999) {
-                    // date is in milliseconds
-                    date = (date / 1000).toNumber();
-                }
-            } else {
-                date = Time.now().value();
             }
 
             save = self.saveList(listuuid, list);
             if (save[pre_0] == true) {
                 //Store Index...
                 save /*>listindex<*/ = self.GetLists();
-                save /*>listindex<*/.put(listuuid, ({ "key" => listuuid, pre__name_ => listname, pre__order_ => listorder, pre__items_ => listitems.size(), "date" => date }) as ListIndexItem);
+                save /*>listindex<*/.put(listuuid, ({ "key" => listuuid, pre__name_ => listname, pre__order_ => listorder, "items" => listitems.size(), "date" => listdate }) as ListIndexItem);
 
                 save /*>saveIndex<*/ = self.StoreIndex(save /*>listindex<*/);
                 if (save /*>saveIndex<*/[pre_0] == false) {
                     Storage /*>Application.Storage<*/.deleteValue(listuuid);
-                    self.reportError(4, { pre__data_ => data, "list" => list, "exception" => save /*>saveIndex<*/[pre_1].getErrorMessage() });
+                    self.reportError(pre_4, { pre__data_ => data, "list" => list, "exception" => save /*>saveIndex<*/[pre_1].getErrorMessage() });
                     return false;
                 }
 
@@ -369,7 +394,7 @@ module Lists {
             return [true, null];
         }
 
-        private function reportError(code as Number, payload as Application.PersistableType) as Void {
+        private function reportError(code as Number, payload as Dictionary<String, Object>?) as Void {
             var errorView;
             errorView /*>msg<*/ = null;
             switch (code) {

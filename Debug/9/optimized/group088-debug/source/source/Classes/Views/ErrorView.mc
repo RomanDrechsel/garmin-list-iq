@@ -11,9 +11,9 @@ module Views {
     class ErrorView extends ItemView {
         private var _errorMsg as Lang.ResourceId? = null;
         private var _errorCode as Lang.Number? = null;
-        private var _errorPayload as Application.PersistableType = null;
+        private var _errorPayload as Dictionary<String, Object>?;
 
-        function initialize(msg as Lang.ResourceId?, code as Lang.Number?, payload as Application.PersistableType) {
+        function initialize(msg as Lang.ResourceId?, code as Lang.Number?, payload as Dictionary<String, Object>?) {
             ItemView.initialize();
             self._errorMsg = msg;
             self._errorCode = code;
@@ -26,14 +26,18 @@ module Views {
         }
 
         function onTap(x as Number, y as Number) as Boolean {
-            ItemView.onTap(x, y);
-            self.sendReport();
+            if (!ItemView.onTap(x, y)) {
+                self.sendReport();
+            }
+            return false;
         }
 
         function onKeyEnter() as Boolean {
-            ItemView.onKeyEnter();
-            self.sendReport();
-            return true;
+            if (!ItemView.onKeyEnter()) {
+                self.sendReport();
+                return true;
+            }
+            return false;
         }
 
         function onKeyEsc() as Boolean {
@@ -43,23 +47,56 @@ module Views {
         }
 
         private function sendReport() as Void {
-            var pre__errorMsg;
+            var pre__errorMsg, pre____, pre_0, pre_1;
             var app = $.getApp();
             if (app.Phone != null && app.Debug != null) {
+                var logs;
                 pre__errorMsg = self._errorMsg;
-                var resp = ({}) as Dictionary<String, String or Number or Array<String> >;
-                resp.put("type", "reportError");
+                var send = ["type=reportError"];
                 if (pre__errorMsg != null) {
-                    resp.put("errorMsg", Application.loadResource(pre__errorMsg));
+                    send.add("msg=" + Application.loadResource(pre__errorMsg));
                 }
                 if (self._errorCode) {
-                    resp.put("errorCode", "0x" + self._errorCode.format("%04x"));
+                    send.add("code=0x" + self._errorCode.format("%04x"));
                 }
+                pre_1 = 1;
+                pre_0 = 0;
+                pre____ = "=";
                 if (self._errorPayload != null) {
-                    resp.put("errorPayload", self._errorPayload);
+                    var payload_index = pre_0;
+                    var keys = self._errorPayload.keys();
+                    for (var i = pre_0; i < keys.size(); i += pre_1) {
+                        var val = self._errorPayload.get(keys[i]);
+                        if (val instanceof Array) {
+                            {
+                                pre__errorMsg /*>j<*/ = pre_0;
+                                for (; pre__errorMsg /*>j<*/ < val.size(); pre__errorMsg /*>j<*/ += pre_1) {
+                                    send.add("payload" + payload_index + pre____ + keys[i] + pre__errorMsg /*>j<*/ + pre____ + val[pre__errorMsg /*>j<*/]);
+                                    payload_index += pre_1;
+                                }
+                            }
+                        } else if (val instanceof Dictionary) {
+                            var val_keys = val.keys();
+                            {
+                                logs /*>j<*/ = pre_0;
+                                for (; logs /*>j<*/ < val_keys.size(); logs /*>j<*/ += pre_1) {
+                                    pre__errorMsg /*>key<*/ = val_keys[logs /*>j<*/];
+                                    send.add("payload" + payload_index + pre____ + keys[i] + logs /*>j<*/ + pre____ + pre__errorMsg /*>key<*/ + pre____ + val.get(pre__errorMsg /*>key<*/));
+                                    payload_index += pre_1;
+                                }
+                            }
+                        }
+                    }
                 }
-                resp.put("logs", app.Debug.GetLogs());
-                app.Phone.SendToPhone(resp);
+
+                logs = app.Debug.GetLogs();
+                {
+                    pre__errorMsg /*>i<*/ = pre_0;
+                    for (; pre__errorMsg /*>i<*/ < logs.size(); pre__errorMsg /*>i<*/ += pre_1) {
+                        send.add("log" + pre__errorMsg /*>i<*/ + pre____ + logs[pre__errorMsg /*>i<*/]);
+                    }
+                }
+                app.Phone.SendToPhone(send);
                 Debug.Log("Send error report code 0x" + self._errorCode.format("%04x") + " to smartphone");
                 Helper.ToastUtil.Toast(Rez.Strings.ErrReport, 2);
                 self.goBack();
@@ -104,6 +141,10 @@ module Views {
             txt /*>hint2<*/.isSelectable = false;
             txt /*>hint2<*/.SubtitleJustification = pre_1 as Toybox.Graphics.TextJustification;
             self.Items.add(txt /*>hint2<*/);
+
+            if ($.getApp().NoBackButton) {
+                self.addBackButton(false);
+            }
         }
     }
 }

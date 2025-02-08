@@ -24,10 +24,9 @@ class ListsApp extends Application.AppBase {
 
     function getInitialView() as Array<WatchUi.Views or WatchUi.InputDelegates>? {
         self.isGlanceView = false;
-        Properties /*>Application.Properties<*/.setValue("appVersion", "2025.01.3100");
+        Properties /*>Application.Properties<*/.setValue("appVersion", "2025.02.0801");
 
         self.Debug = new Debug.DebugStorage();
-        Debug.Log("App started (2025.01.3100)");
 
         if ((System.getDeviceSettings().inputButtons & 128) == 0) {
             self.NoBackButton = true;
@@ -37,7 +36,7 @@ class ListsApp extends Application.AppBase {
         self.Phone = new Comm.PhoneCommunication();
         self.Inactivity = new Helper.Inactivity();
 
-        Debug.Log(self.getInfo());
+        //Debug.Log(self.getInfo());
 
         var startview = new Views.ListsSelectView(true);
         return [startview, new Views.ItemViewDelegate(startview)];
@@ -154,8 +153,9 @@ function getApp() as ListsApp {
     return Application.getApp() as ListsApp;
 }
 
-(:roundVersion)
-var isRoundDisplay = true;
+(:regularVersion)
+var isRoundDisplay = false;
+
 var screenHeight = System.getDeviceSettings().screenHeight;
 
 (:debug)

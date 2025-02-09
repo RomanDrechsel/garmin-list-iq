@@ -1,6 +1,9 @@
 <strings>
     <string id="AppName" scope="glance">Lists</string>
 
+    <string id="Back">Back</string>
+    <string id="Quit">Quit</string>
+
     <string id="SettingsTh">Theme</string>
     <string id="ThGrey">Grey</string>
     <string id="ThRed">Red</string>
@@ -12,9 +15,11 @@
     <string id="EStorageFull">Storage full!</string>
     <string id="EStorageError">List could not be stored!</string>
     <string id="ListDel">List deleted.</string>
+    <string id="LegacyPhoneApp">You seem to be using an old version of the smartphone app.\nPlease update it.</string>
 
     <string id="NoLists">No lists found!</string>
     <string id="NoListsLink">Double-Tap to open Android PlayStore on your Phone</string>
+    <string id="NoListsLinkBtn">Press enter to open Android PlayStore on your Phone</string>
 
     <string id="ListNotFound">List not found!</string>
     <string id="ListEmpty">The list is empty.</string>
@@ -28,14 +33,15 @@
     <string id="StDoubleTapForDone">Double tap instead of single tap on an item to set it to done</string>
     <string id="StShowNotes">Display item notes</string>
     <string id="StAutoExit">Close app when inactive</string>
-    <string id="StAutoExit1">after 1 minute</string>
-    <string id="StAutoExit3">after 3 minutes</string>
-    <string id="StAutoExit5">after 5 minutes</string>
-    <string id="StAutoExit10">after 10 minutes</string>
-    <string id="StAutoExit15">after 15 minutes</string>
-    <string id="StAutoExit30">after 30 minutes</string>
-    <string id="StAutoExit60">after 60 minutes</string>
+    <string id="StAutoExit1">after 1 minute</string>
+    <string id="StAutoExit3">after 3 minutes</string>
+    <string id="StAutoExit5">after 5 minutes</string>
+    <string id="StAutoExit10">after 10 minutes</string>
+    <string id="StAutoExit15">after 15 minutes</string>
+    <string id="StAutoExit30">after 30 minutes</string>
+    <string id="StAutoExit60">after 60 minutes</string>
     <string id="StAutoExitOff">disabled</string>
+    <string id="StBtnCtrl">Hardware button control support</string>
 
     <string id="StDelAll">Delete all lists</string>
     <string id="StDelAllConfirm">Delete all lists?</string>
@@ -64,7 +70,9 @@
     <string id="StResetWeekly">Weekly</string>
     <string id="StResetMonthly">Monthly</string>
 
-    <string id="ErrHint">Please report the error to me on your smartphone so that I can help you further.\n\n(Tap here to open the contact option in the app on your smartphone)</string>
+    <string id="ErrHint">Please report the error to me on your smartphone so that I can help you further.</string>
+    <string id="ErrHintTouch">(Tap here to open the contact option in the app on your smartphone)</string>
+    <string id="ErrHintBtn">(Press Enter to open the contact option in the app on your smartphone)</string>
     <string id="ErrReport">Please open smartphone</string>
     <string id="ErrListRec">An error occurred while transferring the list:</string>
     <string id="ErrListDel">An error occurred while deleting the list:</string>

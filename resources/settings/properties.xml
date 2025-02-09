@@ -1,5 +1,5 @@
 <properties>
-    <property type="string" id="appVersion">2025.01.0801</property>
+    <property type="string" id="appVersion">2025.02.0900</property>
     <property type="number" id="Init">0</property>
     <property type="number" id="Theme">0</property>
     <property type="boolean" id="ListMoveDown">true</property>
@@ -10,4 +10,6 @@
     <property type="string" id="LastList"></property>
     <property type="number" id="LastListScroll">-1</property>
     <property type="number" id="AutoExit">0</property>
+    <property type="boolean" id="HWBCtrl">true</property>
+    <property type="boolean" id="LowColors">true</property>
 </properties>

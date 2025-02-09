@@ -6,11 +6,12 @@ import Controls.Listitems;
 import Helper;
 
 module Views {
-    class SettingsThemeView extends Controls.CustomView {
+    class SettingsThemeView extends IconItemView {
         private var _themes as Dictionary<Number, String> = {};
+        private var _lastScroll as Number = 0;
 
         function initialize() {
-            CustomView.initialize();
+            ItemView.initialize();
 
             self._themes = {};
             self._themes.put(0, Application.loadResource(Rez.Strings.ThGrey));
@@ -21,37 +22,45 @@ module Views {
         }
 
         function onLayout(dc as Dc) as Void {
-            CustomView.onLayout(dc);
+            IconItemView.onLayout(dc);
             self.loadThemes();
         }
 
-        function onUpdate(dc as Dc) as Void {
-            CustomView.onUpdate(dc);
-
-            dc.setColor(getTheme().BackgroundColor, getTheme().BackgroundColor);
-            dc.clear();
-            self.drawList(dc);
+        function onShow() as Void {
+            IconItemView.onShow();
+            self._scrollOffset = self._lastScroll;
         }
 
         function onSettingsChanged() as Void {
-            CustomView.onSettingsChanged();
+            IconItemView.onSettingsChanged();
+            self._scrollOffset = self._lastScroll;
             self.loadThemes();
-            WatchUi.requestUpdate();
         }
 
-        function onListTap(position as Number, item as Item, doubletap as Boolean) as Void {
+        function onScroll(delta as Number) as Void {
+            IconItemView.onScroll(delta);
+            self._lastScroll = self._scrollOffset;
+        }
+
+        protected function interactItem(item as Listitems.Item, doubletap as Boolean) as Boolean {
             if ($.getApp().ListsManager == null) {
-                return;
+                return false;
             }
 
             var theme = Helper.Properties.Get(Helper.Properties.THEME, 0);
+            if (item.BoundObject instanceof String && item.BoundObject.equals("back")) {
+                self.goBack();
+                return true;
+            }
             if (item.BoundObject != theme) {
                 var name = self._themes.get(item.BoundObject);
                 if (name != null) {
                     Helper.Properties.Store(Helper.Properties.THEME, item.BoundObject);
-                    $.getApp().onSettingsChanged();
+                    $.getApp().triggerOnSettingsChanged();
+                    return true;
                 }
             }
+            return false;
         }
 
         private function loadThemes() as Void {
@@ -59,8 +68,6 @@ module Views {
             self.setTitle(Application.loadResource(Rez.Strings.SelTheme));
 
             var theme = Helper.Properties.Get(Helper.Properties.THEME, 0);
-            var itemIcon = $.getTheme().DarkTheme ? Application.loadResource(Rez.Drawables.Item) : Application.loadResource(Rez.Drawables.bItem);
-            var itemIconDone = $.getTheme().DarkTheme ? Application.loadResource(Rez.Drawables.ItemDone) : Application.loadResource(Rez.Drawables.bItemDone);
 
             var keys = self._themes.keys();
             for (var i = 0; i < keys.size(); i++) {
@@ -70,12 +77,19 @@ module Views {
                     continue;
                 }
 
-                self.addItem(name, null, key, key == theme ? itemIconDone : itemIcon, i);
+                var item = self.addItem(name, null, key, key == theme ? self._itemIconDone : self._itemIcon, i);
+                if (key == theme) {
+                    self._centerItemOnDraw = item;
+                }
             }
 
             //no lone below the last items
             if (self.Items.size() > 0) {
                 self.Items[self.Items.size() - 1].DrawLine = false;
+            }
+
+            if (self.DisplayButtonSupport()) {
+                self.addBackButton(false);
             }
         }
     }

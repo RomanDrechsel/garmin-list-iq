@@ -16,90 +16,131 @@ module Lists {
     typedef ListIndex as Dictionary<String, ListIndexItem>; /* the list-index, with list uuid as key, and some list data as value */
 
     class ListsManager {
-        var OnListsChanged as Array<Object> = [];
+        private var onListsChangedListeners as Array<WeakReference> = [];
 
-        function addList(data as Application.PropertyValueType) as Boolean {
-            /* check, if all nessesary data is available... */
+        function addList(data as Dictionary) as Boolean {
+            var keys = data.keys();
             var listuuid = null;
             var listname = null;
             var listorder = null;
-            var listitems = null;
-            if (data instanceof Dictionary) {
-                listname = data.get("name");
-                listorder = data.get("order");
-                listuuid = data.get("uuid");
-                listitems = data.get("items");
-                if (listname == null || listorder == null || listuuid == null || listitems == null) {
-                    var missing = [] as Array<String>;
-                    if (listname == null) {
-                        missing.add("name");
+            var listitems = {};
+            var listdate = null;
+            var reset = null;
+            var reset_interval = null;
+            var reset_hour = null;
+            var reset_minute = null;
+            var reset_weekday = null;
+            var reset_day = null;
+
+            for (var i = 0; i < keys.size(); i++) {
+                var key = keys[i];
+                var val = data.get(key);
+                if (key.equals("uuid")) {
+                    listuuid = val.toString();
+                } else if (key.equals("name")) {
+                    listname = val.toString();
+                } else if (key.equals("order")) {
+                    listorder = val.toNumber();
+                } else if (key.equals("date")) {
+                    listdate = val.toLong();
+                    if (listdate != null) {
+                        if (listdate > 999999999) {
+                            // date is in milliseconds
+                            listdate /= 1000;
+                            listdate = listdate.toNumber();
+                        }
                     }
-                    if (listorder == null) {
-                        missing.add("order");
+                } else if (key.substring(0, 4).equals("item")) {
+                    var index = key.substring(4, 5).toNumber();
+                    var split = Helper.StringUtil.split(key.substring(5, key.length()), "_", 2);
+                    var prop = split.size() > 1 ? split[1] : null;
+                    if (prop != null) {
+                        var item;
+                        if (listitems.hasKey(index)) {
+                            item = listitems.get(index);
+                        } else {
+                            item = { "d" => false };
+                        }
+                        if (prop.equals("item")) {
+                            item.put("i", val.toString());
+                        } else if (prop.equals("note")) {
+                            item.put("n", val.toString());
+                        }
+                        listitems.put(index, item);
                     }
-                    if (listuuid == null) {
-                        missing.add("uuid");
+                } else if (key.substring(0, 5).equals("reset")) {
+                    if (key.equals("reset_active")) {
+                        val = Helper.StringUtil.StringToBool(val);
+                        if (val != null) {
+                            reset = val;
+                        }
+                    } else if (key.equals("reset_interval")) {
+                        reset_interval = val.toString(); //no reference
+                    } else if (key.equals("reset_hour")) {
+                        val = val.toNumber();
+                        if (val != null) {
+                            reset_hour = val;
+                        }
+                    } else if (key.equals("reset_minute")) {
+                        val = val.toNumber();
+                        if (val != null) {
+                            reset_minute = val;
+                        }
+                    } else if (key.equals("reset_weekday")) {
+                        val = val.toNumber();
+                        if (val != null) {
+                            reset_weekday = val;
+                        }
+                    } else if (key.equals("reset_day")) {
+                        val = val.toNumber();
+                        if (val != null) {
+                            reset_day = val;
+                        }
                     }
-                    if (listitems == null) {
-                        missing.add("items");
-                    }
-                    Debug.Log("Could not add list: missing properties - " + missing);
-                    self.reportError(2, { "data" => data, "missing" => missing });
-                    return false;
                 }
-            } else {
-                Debug.Log("Could not add list: invalid data, " + data);
-                self.reportError(1, data);
+            }
+
+            //verify data
+            if (listname == null || listorder == null || listuuid == null) {
+                var missing = [] as Array<String>;
+                if (listname == null) {
+                    missing.add("name");
+                }
+                if (listorder == null) {
+                    missing.add("order");
+                }
+                if (listuuid == null) {
+                    missing.add("uuid");
+                }
+                Debug.Log("Could not add list: missing properties - " + missing);
+                self.reportError(2, { "data" => data, "missing" => missing });
                 return false;
             }
 
-            //Store list
+            if (listdate == null) {
+                listdate = Time.now().value();
+            }
+
             var list = {};
             list.put("name", listname);
+            list.put("items", listitems);
 
-            //items
-            var items = [];
-            for (var i = 0; i < listitems.size(); i++) {
-                var listitem = listitems[i];
-                if (listitem.hasKey("item")) {
-                    if (!listitem.hasKey("note") || listitem["note"] == null) {
-                        //only an item
-                        items.add({ "i" => listitem["item"].toString(), "d" => false });
-                    } else {
-                        //item with note
-                        items.add({ "i" => listitem["item"].toString(), "n" => listitem["note"].toString(), "d" => false });
-                    }
-                }
-            }
-            list.put("items", items);
-
-            //reset list automatically
-            var reset = data.get("reset") as Dictionary<String, String or Number or Boolean>?;
-            if (reset instanceof Dictionary) {
-                var active = reset.get("active") as Boolean?;
-                var interval = reset.get("interval") as String?;
-                var hour = reset.get("hour") as Number?;
-                var minute = reset.get("minute") as Number?;
-                var weekday = reset.get("weekday") as Number?;
-                var day = reset.get("day") as Number?;
+            if (reset != null) {
                 var missing = [] as Array<String>;
-                if (active != null && interval != null && hour != null && minute != null) {
-                    if (interval == "w" && weekday == null) {
+                if (reset_interval != null && reset_hour != null && reset_minute != null) {
+                    if (reset_interval == "w" && reset_weekday == null) {
                         missing.add("weekday");
-                    } else if (interval == "m" && day == null) {
+                    } else if (reset_interval == "m" && reset_day == null) {
                         missing.add("day");
                     }
                 } else {
-                    if (active == null) {
-                        missing.add("active");
-                    }
-                    if (interval == null) {
+                    if (reset_interval == null) {
                         missing.add("interval");
                     }
-                    if (hour == null) {
+                    if (reset_hour == null) {
                         missing.add("hour");
                     }
-                    if (minute == null) {
+                    if (reset_minute == null) {
                         missing.add("minute");
                     }
                 }
@@ -107,30 +148,17 @@ module Lists {
                 if (missing.size() > 0) {
                     Debug.Log("Could not add list reset: missing properties - " + missing);
                 } else {
-                    list.put("r_a", active);
-                    list.put("r_i", interval);
-                    list.put("r_h", hour);
-                    list.put("r_m", minute);
-                    if (interval.equals("w")) {
-                        list.put("r_wd", weekday);
-                    } else if (interval.equals("m")) {
-                        list.put("r_d", day);
+                    list.put("r_a", reset);
+                    list.put("r_i", reset_interval);
+                    list.put("r_h", reset_hour);
+                    list.put("r_m", reset_minute);
+                    if (reset_interval.equals("w")) {
+                        list.put("r_wd", reset_weekday);
+                    } else if (reset_interval.equals("m")) {
+                        list.put("r_d", reset_day);
                     }
                     list.put("r_last", Time.now().value());
                 }
-            } else if (reset != null) {
-                Debug.Log("Could not add list reset: invalid type - " + reset);
-            }
-
-            var date = data.get("date") as Number?;
-            if (date != null) {
-                if (date > 999999999) {
-                    // date is in milliseconds
-                    date /= 1000;
-                    date = date.toNumber();
-                }
-            } else {
-                date = Time.now().value();
             }
 
             var save = self.saveList(listuuid, list);
@@ -143,7 +171,7 @@ module Lists {
                         "name" => listname,
                         "order" => listorder,
                         "items" => listitems.size(),
-                        "date" => date,
+                        "date" => listdate,
                     }) as ListIndexItem;
 
                 listindex.put(listuuid, indexitem);
@@ -183,7 +211,7 @@ module Lists {
             }
         }
 
-        function updateList(uuid as String, position as Number, state as Boolean) as Void {
+        function updateListitem(uuid as String, position as Number, state as Boolean) as Void {
             if (position < 0) {
                 return;
             }
@@ -223,14 +251,14 @@ module Lists {
                     Helper.Properties.Store(Helper.Properties.LASTLISTSCROLL, -1);
                 }
 
-                Debug.Log("Saved list " + uuid + "(" + listname + ")");
+                Debug.Log("Stored list " + uuid + "(" + listname + ")");
                 return [true, null];
             } catch (e instanceof Lang.StorageFullException) {
-                Debug.Log("Could not update list '" + listname + "' (" + uuid + "): storage is full: " + e);
+                Debug.Log("Could not store list '" + listname + "' (" + uuid + "): storage is full: " + e);
                 Helper.ToastUtil.Toast(Rez.Strings.EStorageFull, Helper.ToastUtil.ERROR);
                 return [false, e];
             } catch (e) {
-                Debug.Log("Could not update list '" + listname + "' (" + uuid + "): " + e);
+                Debug.Log("Could not store list '" + listname + "' (" + uuid + "): " + e);
                 Helper.ToastUtil.Toast(Rez.Strings.EStorageError, Helper.ToastUtil.ERROR);
                 return [false, e];
             }
@@ -260,33 +288,33 @@ module Lists {
             Application.Storage.clearValues();
             Debug.Log("Deleted all lists!");
             Helper.ToastUtil.Toast(Rez.Strings.StDelAllDone, Helper.ToastUtil.SUCCESS);
+            self.triggerOnListsChanged(null);
         }
 
-        function Optimize(uuid as String, titles as Dictionary<Number, Array<String> >, notes as Dictionary<Number, Array<String> >) {
-            var list = self.getList(uuid);
-            if (list != null) {
-                var items = list.get("items");
-                if (items != null && items instanceof Array) {
-                    for (var i = 0; i < items.size(); i++) {
-                        var text = titles.hasKey(i) ? titles.get(i) : null;
-                        var note = notes.hasKey(i) ? notes.get(i) : null;
-                        if (text != null) {
-                            var item = list["items"][i];
-                            item.put("i", text);
-                            if (note != null) {
-                                item.put("n", note);
-                            }
-                            list["items"][i] = item;
-                        }
+        function addListChangedListener(obj as Object) as Void {
+            var del = [];
+            for (var i = 0; i < self.onListsChangedListeners.size(); i++) {
+                var weak = self.onListsChangedListeners[i];
+                if (weak.stillAlive()) {
+                    var o = weak.get();
+                    if (o == null || !(o has :onListsChanged)) {
+                        del.add(weak);
                     }
+                } else {
+                    del.add(weak);
                 }
-                var listname = list.get("name");
-                if (listname == null) {
-                    listname = "?";
+            }
+            if (del.size() > 0) {
+                for (var i = 0; i < del.size(); i++) {
+                    self.onListsChangedListeners.remove(del[i]);
                 }
-                list.put("opt", true);
-                Debug.Log("Optimized list '" + listname + "' (" + uuid + ")");
-                Application.Storage.setValue(uuid, list);
+            }
+
+            if (obj has :onListsChanged) {
+                var ref = obj.weak();
+                if (self.onListsChangedListeners.indexOf(ref) < 0) {
+                    self.onListsChangedListeners.add(ref);
+                }
             }
         }
 
@@ -341,18 +369,12 @@ module Lists {
                 Helper.ToastUtil.Toast(Rez.Strings.EStorageError, Helper.ToastUtil.ERROR);
                 return [false, e];
             }
-            if (self.OnListsChanged.size() > 0) {
-                for (var i = 0; i < self.OnListsChanged.size(); i++) {
-                    if (self.OnListsChanged[i] has :onListsChanged) {
-                        self.OnListsChanged[i].onListsChanged(index);
-                    }
-                }
-            }
+            self.triggerOnListsChanged(index);
 
             return [true, null];
         }
 
-        private function reportError(code as Number, payload as Application.PersistableType) as Void {
+        private function reportError(code as Number, payload as Dictionary<String, Object>?) as Void {
             var msg = null as Lang.ResourceId?;
             switch (code) {
                 case 1:
@@ -366,7 +388,19 @@ module Lists {
                     break;
             }
             var errorView = new Views.ErrorView(msg, code, payload);
-            WatchUi.pushView(errorView, new Views.ErrorViewDelegate(errorView), WatchUi.SLIDE_BLINK);
+            WatchUi.pushView(errorView, new Views.ItemViewDelegate(errorView), WatchUi.SLIDE_BLINK);
+        }
+
+        private function triggerOnListsChanged(index as ListIndex?) as Void {
+            for (var i = 0; i < self.onListsChangedListeners.size(); i++) {
+                var listener = self.onListsChangedListeners[i];
+                if (listener.stillAlive()) {
+                    var obj = listener.get();
+                    if (obj != null && obj has :onListsChanged) {
+                        obj.onListsChanged(index);
+                    }
+                }
+            }
         }
     }
 }

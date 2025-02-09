@@ -7,70 +7,48 @@ import Controls.Listitems;
 import Helper;
 
 module Views {
-    class ListSettingsView extends Controls.CustomView {
+    class ListSettingsView extends IconItemView {
         var ListUuid = null;
-        var ScrollMode = SCROLL_DRAG;
-
-        private var _itemIconUncheck as Listitems.ViewItemIcon;
-        private var _itemIconCheck as Listitems.ViewItemIcon;
 
         private var _resetActive as Boolean? = null;
         private var _resetInterval as String? = null;
 
         function initialize(uuid as String) {
-            CustomView.initialize();
+            IconItemView.initialize();
+            self.ScrollMode = SCROLL_DRAG;
             self.ListUuid = uuid;
-            self._itemIconUncheck = $.getTheme().DarkTheme ? Application.loadResource(Rez.Drawables.Item) : Application.loadResource(Rez.Drawables.bItem);
-            self._itemIconCheck = $.getTheme().DarkTheme ? Application.loadResource(Rez.Drawables.ItemDone) : Application.loadResource(Rez.Drawables.bItemDone);
-
             self.readList();
         }
 
         function onLayout(dc as Dc) {
-            CustomView.onLayout(dc);
-            self.loadItems();
-        }
-
-        function onUpdate(dc as Dc) {
-            CustomView.onUpdate(dc);
-
-            dc.setColor(getTheme().BackgroundColor, getTheme().BackgroundColor);
-            dc.clear();
-            self.drawList(dc);
-        }
-
-        function onShow() as Void {
-            CustomView.onShow();
+            IconItemView.onLayout(dc);
             if ($.getApp().ListsManager != null) {
-                $.getApp().ListsManager.OnListsChanged.add(self);
+                $.getApp().ListsManager.addListChangedListener(self);
             }
+            self.loadItems(false);
         }
 
-        function onHide() as Void {
-            CustomView.onHide();
-            if ($.getApp().ListsManager != null) {
-                $.getApp().ListsManager.OnListsChanged.remove(self);
-            }
-        }
-
-        function onListTap(position as Number, item as Item, doubletab as Boolean) as Void {
+        protected function interactItem(item as Listitems.Item, doubletap as Boolean) as Boolean {
             if ($.getApp().ListsManager == null) {
                 return;
             }
 
             if (item.BoundObject.equals("del")) {
                 var dialog = new WatchUi.Confirmation(Application.loadResource(Rez.Strings.DeleteConfirm));
-                var delegate = new ConfirmDelegate(self.method(:deleteList));
+                var delegate = new Controls.ConfirmDelegate(self.method(:deleteList));
                 WatchUi.pushView(dialog, delegate, WatchUi.SLIDE_BLINK);
+                return true;
             } else if (item.BoundObject.equals("reset")) {
                 var list = $.getApp().ListsManager.getList(self.ListUuid) as Lists.List?;
                 if (list != null) {
                     var active = list.get("r_a") as Boolean?;
                     if (active != null) {
-                        list.put("r_a", !active);
+                        active = !active;
+                        list.put("r_a", active);
                         list.put("r_last", Time.now().value());
                         $.getApp().ListsManager.saveList(self.ListUuid, list);
-                        item.setIcon(!active ? self._itemIconCheck : self._itemIconUncheck);
+                        item.setIcon(active ? self._itemIconDone : self._itemIcon);
+                        item.setIconInvert(active ? self._itemIconDoneInvert : self._itemIconInvert);
                         WatchUi.requestUpdate();
                         if (active) {
                             Debug.Log("Activeded auto reset for list " + self.ListUuid);
@@ -83,40 +61,58 @@ module Views {
                 } else {
                     Debug.Log("List " + self.ListUuid + " not found for toggling reset setting");
                 }
+                return true;
+            } else if (item.BoundObject.equals("back")) {
+                $.getApp().GlobalStates.put("movetop", true);
+                self.goBack();
+                return true;
             }
         }
 
         function deleteList() as Void {
             if ($.getApp().ListsManager != null) {
-                getApp().ListsManager.deleteList(self.ListUuid, true);
+                $.getApp().ListsManager.deleteList(self.ListUuid, true);
                 $.getApp().GlobalStates.put("movetop", true);
             }
+            $.getApp().GlobalStates.put("startpage", true);
             WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
             WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
         }
 
         function onSettingsChanged() as Void {
-            CustomView.onSettingsChanged();
-            self.loadItems();
+            IconItemView.onSettingsChanged();
+            self.loadItems(true);
         }
 
         function onListsChanged(index as ListIndex) as Void {
             self.readList();
-            self.loadItems();
+            self.loadItems(true);
         }
 
-        private function loadItems() as Void {
+        function onKeyEsc() as Boolean {
+            IconItemView.onKeyEsc();
+            self.goBack();
+            return true;
+        }
+
+        function onKeyMenu() as Boolean {
+            IconItemView.onKeyMenu();
+            self.goBack();
+            return true;
+        }
+
+        private function loadItems(request_update as Boolean) as Void {
             self.Items = [];
             self.setTitle(Application.loadResource(Rez.Strings.StTitle));
 
-            self.Items.add(new Listitems.Button(self._mainLayer, Application.loadResource(Rez.Strings.StDelList), "del", self._verticalItemMargin, false));
+            self.Items.add(new Listitems.Button(self._mainLayer, Application.loadResource(Rez.Strings.StDelList), "del", null, false));
 
             if (self._resetActive != null) {
                 var icon;
                 if (self._resetActive == true) {
-                    icon = self._itemIconCheck;
+                    icon = self._itemIconDone;
                 } else {
-                    icon = self._itemIconUncheck;
+                    icon = self._itemIcon;
                 }
 
                 var interval = null;
@@ -131,16 +127,21 @@ module Views {
                 }
 
                 self.Items[self.Items.size() - 1].DrawLine = true;
-                self.Items.add(new Listitems.Item(self._mainLayer, Application.loadResource(Rez.Strings.StReset), interval, "reset", icon, self._verticalItemMargin, 0, null));
+                self.Items.add(new Listitems.Item(self._mainLayer, Application.loadResource(Rez.Strings.StReset), interval, "reset", icon, null, 0, null));
                 self.Items[self.Items.size() - 1].SubtitleJustification = Graphics.TEXT_JUSTIFY_CENTER;
             }
 
-            //no lone below the last items
-            if (self.Items.size() > 0) {
-                self.Items[self.Items.size() - 1].DrawLine = false;
+            //no line below the last items
+            self.Items[self.Items.size() - 1].DrawLine = false;
+
+            if (self.DisplayButtonSupport()) {
+                self.addBackButton(false);
             }
 
-            WatchUi.requestUpdate();
+            self._needValidation = true;
+            if (request_update) {
+                WatchUi.requestUpdate();
+            }
         }
 
         private function readList() as Void {

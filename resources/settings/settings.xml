@@ -4,7 +4,7 @@
         <settingConfig type="alphaNumeric" readonly="true" />
     </setting>
 
-    <!-- ´theme -->
+    <!-- theme -->
     <setting propertyKey="@Properties.Theme" title="@Strings.SettingsTh">
         <settingConfig type="list">
             <listEntry value="0">@Strings.ThGrey</listEntry>

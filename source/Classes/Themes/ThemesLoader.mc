@@ -5,6 +5,8 @@ module Themes {
     var CurrentTheme = null;
 
     class ThemesLoader {
+        static var _lowColors as Boolean? = null;
+
         static function loadTheme() as Void {
             switch (Helper.Properties.Get(Helper.Properties.THEME, 0)) {
                 default:
@@ -25,12 +27,19 @@ module Themes {
                     break;
             }
         }
+
+        static function LowColors() as Boolean {
+            if (self._lowColors == null) {
+                self._lowColors = Helper.Properties.Get("LowColors", true);
+            }
+            return self._lowColors;
+        }
     }
 }
 
 (:glance)
 function getTheme() as Themes.ThemeSettingsBase {
-    if ($.isGlanceView) {
+    if ($.getApp().isGlanceView) {
         return new Themes.ThemeSettingsBase();
     }
 

@@ -3,6 +3,7 @@ import Toybox.Graphics;
 import Toybox.Time;
 import Toybox.Application;
 
+(:glance)
 module Debug {
     class DebugStorage {
         private var _logs as Array<String> = [];
@@ -37,7 +38,7 @@ module Debug {
                 }
 
                 if (self._logs.size() > self.LogCount) {
-                    self._logs = self._logs.slice(self._logs.size() - self.LogCount, self._logs.size());
+                    self._logs = self._logs.slice(-self.LogCount, null);
                 }
 
                 if (self._persistentLogs == true) {
@@ -50,20 +51,21 @@ module Debug {
         }
 
         public function GetLogs() as Array<String> {
-            if (self._totalCount > self.LogCount) {
-                return $.getApp().getInfo().addAll(self._logs);
+            if (self._storeLogs == false) {
+                return ["Logs disabled"];
             } else {
-                if (self._storeLogs == false) {
-                    return ["Logs disabled"];
-                } else {
-                    return self._logs;
-                }
+                return $.getApp().getInfo().addAll(self._logs);
             }
         }
 
         public function SendLogs() {
             if ($.getApp().Phone != null) {
-                $.getApp().Phone.SendToPhone({ "type" => "logs", "logs" => self.GetLogs() });
+                var send = ["type=logs"];
+                var logs = self.GetLogs();
+                for (var i = 0; i < logs.size(); i++) {
+                    send.add(i + "=" + logs[i]);
+                }
+                $.getApp().Phone.SendToPhone(send);
                 self.Log("Sent logs to smartphone");
             }
         }
@@ -81,7 +83,6 @@ module Debug {
         }
     }
 
-    (:glance)
     function Log(obj as Lang.Object) {
         var info = Time.Gregorian.info(Time.now(), Time.FORMAT_SHORT);
         var date = Helper.DateUtil.toLogString(info, null);
@@ -106,7 +107,7 @@ module Debug {
         }
     }
 
-    (:debug,:glance)
+    (:debug)
     function Box(dc as Dc, x as Number, y as Number, w as Number, h as Number, c as ColorValue?) {
         if (c == null) {
             c = Graphics.COLOR_RED;
@@ -115,6 +116,6 @@ module Debug {
         dc.setPenWidth(1);
         dc.drawRectangle(x, y, w, h);
     }
-    (:release,:glance)
-    function Box(dc as Dc, x as Number, y as Number, w as Number, h as Number, c as Number) {}
+    (:release)
+    function Box(dc as Dc, x as Number, y as Number, w as Number, h as Number, c as ColorValue?) {}
 }

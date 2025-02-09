@@ -1,27 +1,28 @@
-module Themes
-{
-    class BSoD extends ThemeSettingsBase
-    {
-        function initialize()
-        {
+module Themes {
+    class BSoD extends ThemeSettingsBase {
+        function initialize() {
             self.LineBitmap = Application.loadResource(Rez.Drawables.LineWhite);
 
             self.MainColor = 0xffffff;
-            self.SecondColor = 0xffffff;
-            self.DisabledColor = 0x707070;
+            self.MainColorSelected = 0x0827f5;
+            self.SecondColor = self.MainColor;
+            self.SecondColorSelected = self.MainColorSelected;
+            self.DisabledColor = self.MainColor;
+            self.DisabledColorSelected = self.MainColorSelected;
 
-            self.BackgroundColor = 0x0827F5;
-            self.LineSeparatorColor = 0xffffff;
+            self.LineSeparatorColor = self.MainColor;
+            self.SelectedItemBackground = self.MainColor;
+            self.BackgroundColor = 0x0827f5;
+            self.TitleSeparatorColor = self.MainColor;
 
-            self.ListBackground = 0x0827F5;
-            self.LineSeparatorColor = 0xffffff;
-
-            self.ScrollbarBackground = 0xffffff;
-            self.ScrollbarThumbColor = 0xffffff;
+            self.ScrollbarBackground = self.MainColor;
+            self.ScrollbarThumbColor = self.MainColor;
             self.ScrollbarThumbBorder = 0x5e5e5e;
 
-            self.ButtonBorder = 0xffffff;
-            self.ButtonBackground = 0x0827F5;
+            self.ButtonColor = self.MainColor;
+            self.ButtonBorder = self.MainColor;
+            self.ButtonBackground = self.MainColorSelected;
+            self.InvertSelectedItemIcon = true;
         }
     }
 }

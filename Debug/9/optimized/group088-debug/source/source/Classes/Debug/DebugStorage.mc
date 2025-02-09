@@ -58,14 +58,10 @@ module Debug {
         }
 
         public function GetLogs() as Array<String> {
-            if (self._totalCount > self.LogCount) {
-                return $.getApp().getInfo().addAll(self._logs);
+            if (self._storeLogs == false) {
+                return ["Logs disabled"];
             } else {
-                if (self._storeLogs == false) {
-                    return ["Logs disabled"];
-                } else {
-                    return self._logs;
-                }
+                return $.getApp().getInfo().addAll(self._logs);
             }
         }
 

@@ -24,7 +24,7 @@ class ListsApp extends Application.AppBase {
 
     function getInitialView() as Array<WatchUi.Views or WatchUi.InputDelegates>? {
         self.isGlanceView = false;
-        Properties /*>Application.Properties<*/.setValue("appVersion", "2025.02.0801");
+        Properties /*>Application.Properties<*/.setValue("appVersion", "2025.02.0900");
 
         self.Debug = new Debug.DebugStorage();
 

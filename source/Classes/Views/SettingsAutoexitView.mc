@@ -7,6 +7,10 @@ import Helper;
 
 module Views {
     class SettingsAutoexitView extends IconItemView {
+        function initialize() {
+            IconItemView.initialize();
+        }
+
         function onLayout(dc as Dc) as Void {
             IconItemView.onLayout(dc);
             self.loadList();
@@ -17,15 +21,16 @@ module Views {
             self.loadList();
         }
 
-        protected function interactItem(item as Listitems.Item, doubletap as Boolean) as Void {
+        protected function interactItem(item as Listitems.Item, doubletap as Boolean) as Boolean {
             var prop = Helper.Properties.Get(Helper.Properties.AUTOEXIT, 0);
-            if (prop != item.BoundObject) {
-                Helper.Properties.Store(Helper.Properties.AUTOEXIT, item.BoundObject);
+            if (item.BoundObject instanceof Number && prop != item.BoundObject) {
+                Helper.Properties.Store(Helper.Properties.AUTOEXIT, item.BoundObject as Number);
                 if ($.getApp().ListsManager != null) {
                     $.getApp().triggerOnSettingsChanged();
                 }
                 self.goBack();
             }
+            return true;
         }
 
         private function loadList() as Void {

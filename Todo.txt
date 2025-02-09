@@ -8,7 +8,7 @@ TEST: Button controlling
 TEST: don't select title on Button Controls
 TEST: new line break
 TEST: send logs to phone
-TODO: Background service
+WIP: Background service
 
 1 Button, 64 Color:
 - Vivoactive 3

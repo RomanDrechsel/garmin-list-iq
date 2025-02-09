@@ -83,15 +83,11 @@ module Views {
             self._view.Interaction();
             var key = keyEvent.getKey();
             if (key == WatchUi.KEY_ENTER) {
-                if (self._view has :onKeyEnter) {
-                    return self._view.onKeyEnter();
-                }
+                return self._view.onKeyEnter();
             } else if (key == WatchUi.KEY_ESC) {
                 return self._view.onKeyEsc();
             } else if (key == WatchUi.KEY_MENU) {
-                if (self._view has :onKeyMenu) {
-                    return self._view.onKeyMenu();
-                }
+                return self._view.onKeyMenu();
             } else if (key == WatchUi.KEY_UP) {
                 if (self._view.ScrollMode == ItemView.SCROLL_DRAG) {
                     var height = System.getDeviceSettings().screenHeight;

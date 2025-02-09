@@ -77,7 +77,7 @@ module Views {
                     }
                 }
 
-                var logs = app.Debug.GetLogs();
+                var logs = app.Debug.GetLogs() as Array<String>;
                 for (var i = 0; i < logs.size(); i++) {
                     send.add("log" + i + "=" + logs[i]);
                 }

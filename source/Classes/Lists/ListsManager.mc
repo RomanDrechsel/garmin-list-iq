@@ -7,6 +7,7 @@ import Helper;
 import Controls.Listitems;
 import Views;
 
+(:background)
 module Lists {
     typedef ListItemsItem as Dictionary<String, String or Array<String> or Boolean or Number>; /* a list item (with key "i" for item-text, "n" for note-text, "d" for done?) */
     typedef List as Dictionary<String, String or Array<ListItemsItem> or Boolean or Number>; /* a list */
@@ -33,8 +34,11 @@ module Lists {
             var reset_day = null;
 
             for (var i = 0; i < keys.size(); i++) {
-                var key = keys[i];
-                var val = data.get(key);
+                var key = keys[i] as String;
+                var val = data.get(key) as String?;
+                if (val == null) {
+                    continue;
+                }
                 if (key.equals("uuid")) {
                     listuuid = val.toString();
                 } else if (key.equals("name")) {
@@ -217,7 +221,7 @@ module Lists {
             }
             var list = self.getList(uuid);
             if (list != null && list.hasKey("items")) {
-                var items = list.get("items");
+                var items = list.get("items") as Array<ListItemsItem>;
                 if (items.size() > position) {
                     items[position].put("d", state);
                     list.put("items", items);

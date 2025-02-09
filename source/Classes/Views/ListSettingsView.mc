@@ -30,7 +30,7 @@ module Views {
 
         protected function interactItem(item as Listitems.Item, doubletap as Boolean) as Boolean {
             if ($.getApp().ListsManager == null) {
-                return;
+                return false;
             }
 
             if (item.BoundObject.equals("del")) {
@@ -67,6 +67,7 @@ module Views {
                 self.goBack();
                 return true;
             }
+            return false;
         }
 
         function deleteList() as Void {
@@ -90,14 +91,17 @@ module Views {
         }
 
         function onKeyEsc() as Boolean {
-            IconItemView.onKeyEsc();
-            self.goBack();
+            if (!IconItemView.onKeyEsc()) {
+                self.goBack();
+            }
+
             return true;
         }
 
         function onKeyMenu() as Boolean {
-            IconItemView.onKeyMenu();
-            self.goBack();
+            if (!IconItemView.onKeyMenu()) {
+                self.goBack();
+            }
             return true;
         }
 

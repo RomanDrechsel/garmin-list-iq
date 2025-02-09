@@ -48,14 +48,18 @@ module Views {
             return false;
         }
 
-        function onKeyMenu() as Void {
-            ItemView.onKeyMenu();
-            self.openSettings();
+        function onKeyMenu() as Boolean {
+            if (!ItemView.onKeyMenu()) {
+                self.openSettings();
+            }
+            return true;
         }
 
-        function onKeyEsc() as Void {
-            ItemView.onKeyEsc();
-            System.exit();
+        function onKeyEsc() as Boolean {
+            if (!ItemView.onKeyEsc()) {
+                System.exit();
+            }
+            return true;
         }
 
         function onListsChanged(index as ListIndex) as Void {
@@ -185,7 +189,7 @@ module Views {
                             return true;
                         }
                     } else {
-                        self.GotoList(item.BoundObject, -1);
+                        self.GotoList(item.BoundObject as String, -1);
                         return true;
                     }
                 }

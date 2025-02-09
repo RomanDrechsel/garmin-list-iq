@@ -6,6 +6,7 @@ import Toybox.Application;
 using Toybox.Communications;
 import Views;
 
+(:background)
 module Comm {
     class PhoneCommunication extends Toybox.Communications.ConnectionListener {
         private enum EMessageType {
@@ -14,8 +15,12 @@ module Comm {
             REQUEST_LOGS = "req_logs",
         }
 
-        function initialize() {
-            Communications.registerForPhoneAppMessages(method(:phoneMessageCallback));
+        function initialize(register_callback as Boolean) {
+            ConnectionListener.initialize();
+
+            if (register_callback) {
+                Communications.registerForPhoneAppMessages(method(:phoneMessageCallback));
+            }
         }
 
         function phoneMessageCallback(msg as Communications.PhoneAppMessage) as Void {
@@ -90,7 +95,7 @@ module Comm {
                         resp.add("tid=" + tid);
                     }
                     if ($.getApp().Debug != null) {
-                        var logs = $.getApp().Debug.GetLogs();
+                        var logs = $.getApp().Debug.GetLogs() as Array<String>;
                         for (var i = 0; i < logs.size(); i++) {
                             resp.add(i + "=" + logs[i]);
                         }

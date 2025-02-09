@@ -3,10 +3,10 @@ import Toybox.Graphics;
 
 module Views {
     class IconItemView extends ItemView {
-        protected var _itemIcon as Listitems.ViewItemIcon;
-        protected var _itemIconDone as Listitems.ViewItemIcon;
-        protected var _itemIconInvert as Listitems.ViewItemIcon? = null;
-        protected var _itemIconDoneInvert as Listitems.ViewItemIcon? = null;
+        protected var _itemIcon as Listitems.ViewItemIcon = null;
+        protected var _itemIconDone as Listitems.ViewItemIcon = null;
+        protected var _itemIconInvert as Listitems.ViewItemIcon = null;
+        protected var _itemIconDoneInvert as Listitems.ViewItemIcon = null;
 
         function initialize() {
             ItemView.initialize();

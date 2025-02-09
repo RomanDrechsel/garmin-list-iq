@@ -10,6 +10,10 @@ module Views {
         private var _sub as Label? = null;
         private var _lists = new Lists.GlanceListsManager();
 
+        function initialize() {
+            GlanceView.initialize();
+        }
+
         public function onLayout(dc as Dc) as Void {
             self._title = new Controls.Label(Application.loadResource(Rez.Strings.AppName), Graphics.FONT_XTINY, dc.getWidth());
             self._sub = new Controls.Label(self._lists.GetInfo(), Graphics.FONT_XTINY, dc.getWidth());

@@ -1,8 +1,8 @@
 import Toybox.Lang;
 import Toybox.Graphics;
 
+(:glance,:background)
 module Helper {
-    (:glance)
     class StringUtil {
         private static const lineBreaks = [0x0a /*New Line*/, 0x0b /*Line tabulation*/, 0x0d /*CR*/, 0x85 /*Next Line*/, 0xad /*Soft-Hyphen*/] as Array<Number>;
 

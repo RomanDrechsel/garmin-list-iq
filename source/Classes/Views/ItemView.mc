@@ -74,9 +74,13 @@ module Views {
         /** display hardware button support? */
         protected static var _buttonDisplay as Boolean? = null;
 
+        function initialize() {
+            WatchUi.View.initialize();
+        }
+
         function onLayout(dc as Dc) {
             View.onLayout(dc);
-            if (dc has :setAntialias) {
+            if (dc has :setAntiAlias) {
                 dc.setAntiAlias(true);
             }
 
@@ -418,7 +422,6 @@ module Views {
                     return true;
                 } else if (item.BoundObject.equals("quit")) {
                     System.exit();
-                    return true;
                 }
             }
             return false;

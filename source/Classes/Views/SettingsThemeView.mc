@@ -11,7 +11,7 @@ module Views {
         private var _lastScroll as Number = 0;
 
         function initialize() {
-            ItemView.initialize();
+            IconItemView.initialize();
 
             self._themes = {};
             self._themes.put(0, Application.loadResource(Rez.Strings.ThGrey));
@@ -52,10 +52,10 @@ module Views {
                 self.goBack();
                 return true;
             }
-            if (item.BoundObject != theme) {
-                var name = self._themes.get(item.BoundObject);
+            if (item.BoundObject instanceof Number && item.BoundObject != theme) {
+                var name = self._themes.get(item.BoundObject as Number);
                 if (name != null) {
-                    Helper.Properties.Store(Helper.Properties.THEME, item.BoundObject);
+                    Helper.Properties.Store(Helper.Properties.THEME, item.BoundObject as Number);
                     $.getApp().triggerOnSettingsChanged();
                     return true;
                 }

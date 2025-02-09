@@ -29,13 +29,16 @@ module Views {
             self.publishItems(false);
         }
 
-        protected function interactItem(item as Listitems.Item, doubletap as Boolean) as Void {
+        protected function interactItem(item as Listitems.Item, doubletap as Boolean) as Boolean {
             if ($.getApp().ListsManager == null) {
                 self.goBack();
+                return true;
             } else if (item.BoundObject instanceof Boolean) {
                 var prop = Helper.Properties.Get(Helper.Properties.DOUBLETAPFORDONE, false);
+                var active = item.BoundObject as Boolean;
                 if (doubletap || prop == 0 || prop == false) {
-                    if (item.BoundObject == false) {
+                    active = !active;
+                    if (active) {
                         item.isDisabled = true;
                         item.setIcon(self._itemIconDone);
                         item.setIconInvert(self._itemIconDoneInvert);
@@ -44,19 +47,24 @@ module Views {
                         item.setIcon(self._itemIcon);
                         item.setIconInvert(self._itemIconInvert);
                     }
-                    item.BoundObject = !item.BoundObject;
+
+                    item.BoundObject = active;
 
                     $.getApp().ListsManager.updateListitem(self._listUuid, item.ItemPosition, item.BoundObject);
                     self.publishItems(true);
                     WatchUi.requestUpdate();
+                    return true;
                 }
             } else if (item.BoundObject instanceof String) {
                 if (item.BoundObject.equals("settings")) {
                     self.openSettings();
+                    return true;
                 } else if (item.BoundObject.equals("back")) {
                     self.goBack();
+                    return true;
                 }
             }
+            return false;
         }
 
         function onKeyEnter() as Boolean {
@@ -69,16 +77,17 @@ module Views {
         }
 
         function onKeyMenu() as Boolean {
-            ItemView.onKeyMenu();
-            self.openSettings();
+            if (!ItemView.onKeyMenu()) {
+                self.openSettings();
+            }
+            return true;
         }
 
         function onTap(x as Number, y as Number) as Boolean {
             if (ItemView.onTap(x, y) == false && self._listUuid == null) {
                 self.goBack();
-                return true;
             }
-            return false;
+            return true;
         }
 
         function onListsChanged(index as ListIndex) as Void {
@@ -133,7 +142,7 @@ module Views {
 
                         for (var i = 0; i < list["items"].size(); i++) {
                             count++;
-                            var item = list["items"][i];
+                            var item = (list["items"] as Array<ListItemsItem>)[i];
                             item.put("pos", i);
                             if ((move_down == true || move_down == 1) && item.get("d") == true) {
                                 done.add(item);

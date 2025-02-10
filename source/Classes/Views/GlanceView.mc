@@ -3,8 +3,8 @@ import Toybox.Graphics;
 import Toybox.Application;
 import Controls;
 
-(:glance)
 module Views {
+    (:glance)
     class GlanceView extends WatchUi.GlanceView {
         private var _title as Label? = null;
         private var _sub as Label? = null;

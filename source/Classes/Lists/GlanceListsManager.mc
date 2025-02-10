@@ -1,8 +1,8 @@
 import Toybox.Application;
 import Toybox.Lang;
 
-(:glance)
 module Lists {
+    (:glance)
     class GlanceListsManager {
         public function GetInfo() as String {
             var index = Application.Storage.getValue("listindex") as ListIndex?;

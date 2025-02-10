@@ -9,7 +9,6 @@ module BackgroundService {
         }
 
         function onPhoneAppMessage(msg as Communications.PhoneAppMessage) as Void {
-            Debug.Log("Received background message");
             var phone = $.getApp().Phone as Comm.PhoneCommunication?;
             if (phone != null) {
                 phone.phoneMessageCallback(msg);

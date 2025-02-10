@@ -9,6 +9,7 @@ TEST: don't select title on Button Controls
 TEST: new line break
 TEST: send logs to phone
 WIP: Background service
+TODO: Could not store property Init as 1: Background processes cannot modify the object store
 
 1 Button, 64 Color:
 - Vivoactive 3

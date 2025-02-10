@@ -188,9 +188,10 @@ module Lists {
                 }
 
                 Helper.Properties.Store(Helper.Properties.INIT, 1);
-
                 Debug.Log("Added list " + listuuid + "(" + listname + ")");
-                Helper.ToastUtil.Toast(Rez.Strings.ListRec, Helper.ToastUtil.SUCCESS);
+                if (!$.getApp().isBackground) {
+                    Helper.ToastUtil.Toast(Rez.Strings.ListRec, Helper.ToastUtil.SUCCESS);
+                }
 
                 return true;
             } else {
@@ -233,10 +234,14 @@ module Lists {
                         Application.Storage.setValue(uuid, list);
                         Debug.Log("Updated list " + uuid);
                     } catch (e instanceof Lang.StorageFullException) {
-                        Helper.ToastUtil.Toast(Rez.Strings.EStorageFull, Helper.ToastUtil.ERROR);
+                        if (!$.getApp().isBackground) {
+                            Helper.ToastUtil.Toast(Rez.Strings.EStorageFull, Helper.ToastUtil.ERROR);
+                        }
                         Debug.Log("Could not update list '" + name + "' (" + uuid + "): storage is full: " + e.getErrorMessage());
                     } catch (e instanceof Lang.Exception) {
-                        Helper.ToastUtil.Toast(Rez.Strings.EStorageError, Helper.ToastUtil.ERROR);
+                        if (!$.getApp().isBackground) {
+                            Helper.ToastUtil.Toast(Rez.Strings.EStorageError, Helper.ToastUtil.ERROR);
+                        }
                         Debug.Log("Could not update list '" + name + "' (" + uuid + "): " + e.getErrorMessage());
                     }
                 }
@@ -259,11 +264,15 @@ module Lists {
                 return [true, null];
             } catch (e instanceof Lang.StorageFullException) {
                 Debug.Log("Could not store list '" + listname + "' (" + uuid + "): storage is full: " + e);
-                Helper.ToastUtil.Toast(Rez.Strings.EStorageFull, Helper.ToastUtil.ERROR);
+                if (!$.getApp().isBackground) {
+                    Helper.ToastUtil.Toast(Rez.Strings.EStorageFull, Helper.ToastUtil.ERROR);
+                }
                 return [false, e];
             } catch (e) {
                 Debug.Log("Could not store list '" + listname + "' (" + uuid + "): " + e);
-                Helper.ToastUtil.Toast(Rez.Strings.EStorageError, Helper.ToastUtil.ERROR);
+                if (!$.getApp().isBackground) {
+                    Helper.ToastUtil.Toast(Rez.Strings.EStorageError, Helper.ToastUtil.ERROR);
+                }
                 return [false, e];
             }
         }
@@ -275,7 +284,7 @@ module Lists {
             var store = self.StoreIndex(index);
             if (store[0] == true) {
                 Application.Storage.deleteValue(uuid);
-                if (with_toast == true) {
+                if (with_toast == true && !$.getApp().isBackground) {
                     Helper.ToastUtil.Toast(Rez.Strings.ListDel, Helper.ToastUtil.SUCCESS);
                 }
                 if (Helper.Properties.Get(Helper.Properties.LASTLIST, "").equals(uuid)) {
@@ -291,7 +300,9 @@ module Lists {
         function clearAll() as Void {
             Application.Storage.clearValues();
             Debug.Log("Deleted all lists!");
-            Helper.ToastUtil.Toast(Rez.Strings.StDelAllDone, Helper.ToastUtil.SUCCESS);
+            if (!$.getApp().isBackground) {
+                Helper.ToastUtil.Toast(Rez.Strings.StDelAllDone, Helper.ToastUtil.SUCCESS);
+            }
             self.triggerOnListsChanged(null);
         }
 
@@ -365,12 +376,16 @@ module Lists {
                 Application.Storage.setValue("listindex", index);
                 Debug.Log("Stored list index with " + index.size() + " items");
             } catch (e instanceof Lang.StorageFullException) {
-                Helper.ToastUtil.Toast(Rez.Strings.EStorageFull, Helper.ToastUtil.ERROR);
+                if (!$.getApp().isBackground) {
+                    Helper.ToastUtil.Toast(Rez.Strings.EStorageFull, Helper.ToastUtil.ERROR);
+                }
                 Debug.Log("Could not store list index, storage is full: " + e.getErrorMessage());
                 return [false, e];
             } catch (e instanceof Lang.Exception) {
                 Debug.Log("Could not store list index: " + e.getErrorMessage());
-                Helper.ToastUtil.Toast(Rez.Strings.EStorageError, Helper.ToastUtil.ERROR);
+                if (!$.getApp().isBackground) {
+                    Helper.ToastUtil.Toast(Rez.Strings.EStorageError, Helper.ToastUtil.ERROR);
+                }
                 return [false, e];
             }
             self.triggerOnListsChanged(index);
@@ -379,20 +394,22 @@ module Lists {
         }
 
         private function reportError(code as Number, payload as Dictionary<String, Object>?) as Void {
-            var msg = null as Lang.ResourceId?;
-            switch (code) {
-                case 1:
-                case 2:
-                case 3:
-                case 4:
-                    msg = Rez.Strings.ErrListRec;
-                    break;
-                case 5:
-                    msg = Rez.Strings.ErrListDel;
-                    break;
+            if (!$.getApp().isBackground) {
+                var msg = null as Lang.ResourceId?;
+                switch (code) {
+                    case 1:
+                    case 2:
+                    case 3:
+                    case 4:
+                        msg = Rez.Strings.ErrListRec;
+                        break;
+                    case 5:
+                        msg = Rez.Strings.ErrListDel;
+                        break;
+                }
+                var errorView = new Views.ErrorView(msg, code, payload);
+                WatchUi.pushView(errorView, new Views.ItemViewDelegate(errorView), WatchUi.SLIDE_BLINK);
             }
-            var errorView = new Views.ErrorView(msg, code, payload);
-            WatchUi.pushView(errorView, new Views.ItemViewDelegate(errorView), WatchUi.SLIDE_BLINK);
         }
 
         private function triggerOnListsChanged(index as ListIndex?) as Void {

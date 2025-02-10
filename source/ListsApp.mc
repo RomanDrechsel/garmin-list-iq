@@ -23,14 +23,13 @@ class ListsApp extends Application.AppBase {
 
     function initialize() {
         AppBase.initialize();
-        if (Background.getPhoneAppMessageEventRegistered()) {
+        if (!Background.getPhoneAppMessageEventRegistered()) {
             Background.registerForPhoneAppMessageEvent();
         }
     }
 
     function getInitialView() as [WatchUi.Views] or [WatchUi.Views, WatchUi.InputDelegates] {
-        var appVersion = "2025.02.0900";
-        Application.Properties.setValue("appVersion", appVersion);
+        Application.Properties.setValue("appVersion", "2025.02.0901");
 
         self.Debug = new Debug.DebugStorage();
 
@@ -54,6 +53,7 @@ class ListsApp extends Application.AppBase {
 
     function getServiceDelegate() as [System.ServiceDelegate] {
         self.isBackground = true;
+        self.Debug = new Debug.DebugStorage();
         self.ListsManager = new ListsManager();
         self.Phone = new Comm.PhoneCommunication(false);
         return [new BackgroundService.BGService()];
@@ -161,7 +161,7 @@ var isRoundDisplay = false;
 
 var screenHeight = System.getDeviceSettings().screenHeight;
 
-(:debug)
+(:debug,:background)
 var isDebug = true;
-(:release)
+(:release,:background)
 var isDebug = false;

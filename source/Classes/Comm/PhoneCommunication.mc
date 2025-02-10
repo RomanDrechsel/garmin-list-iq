@@ -110,8 +110,10 @@ module Comm {
         private function processDataLegacy(message as Dictionary) as Void {
             var size = Helper.StringUtil.formatBytes(message.toString().length());
             Debug.Log("Received legacy message (" + size + ")");
-            var error = new Views.ErrorViewLegacyApp();
-            WatchUi.pushView(error, new Views.ItemViewDelegate(error), WatchUi.SLIDE_IMMEDIATE);
+            if (!$.getApp().isBackground) {
+                var error = new Views.ErrorViewLegacyApp();
+                WatchUi.pushView(error, new Views.ItemViewDelegate(error), WatchUi.SLIDE_IMMEDIATE);
+            }
         }
 
         protected function ArrayToDict(arr as Array) as Dictionary {

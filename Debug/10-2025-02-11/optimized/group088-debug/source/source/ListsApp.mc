@@ -1,3 +1,6 @@
+using Themes;
+using Helper;
+using Toybox.Application.Properties;
 import Toybox.Application;
 import Toybox.Lang;
 import Toybox.WatchUi;
@@ -10,10 +13,10 @@ import Debug;
 
 (:glance)
 class ListsApp extends Application.AppBase {
-    var Phone = null as PhoneCommunication?;
-    var ListsManager = null as ListsManager?;
-    var Debug = null as DebugStorage?;
-    var Inactivity = null as Helper.Inactivity?;
+    var Phone = null;
+    var ListsManager = null;
+    var Debug = null;
+    var Inactivity = null;
     var GlobalStates as Dictionary<String, Object> = {};
     var isGlanceView = false;
     var NoBackButton = false;
@@ -21,13 +24,11 @@ class ListsApp extends Application.AppBase {
 
     function getInitialView() as Array<WatchUi.Views or WatchUi.InputDelegates>? {
         self.isGlanceView = false;
-        var appVersion = "2025.02.1100";
-        Application.Properties.setValue("appVersion", appVersion);
+        Properties /*>Application.Properties<*/.setValue("appVersion", "2025.02.1100");
 
         self.Debug = new Debug.DebugStorage();
 
-        var settings = System.getDeviceSettings();
-        if ((settings.inputButtons & System.BUTTON_INPUT_ESC) == 0) {
+        if ((System.getDeviceSettings().inputButtons & 128) == 0) {
             self.NoBackButton = true;
         }
 
@@ -51,17 +52,19 @@ class ListsApp extends Application.AppBase {
     }
 
     function triggerOnSettingsChanged() as Void {
+        var pre_Debug;
         Debug.Log("Settings changed");
-        if (self.Debug != null) {
-            self.Debug.onSettingsChanged();
+        pre_Debug = self.Debug;
+        if (pre_Debug != null) {
+            pre_Debug.onSettingsChanged();
         }
         Themes.ThemesLoader.loadTheme();
-        for (var i = 0; i < self.onSettingsChangedListeners.size(); i++) {
-            var weak = self.onSettingsChangedListeners[i];
-            if (weak.stillAlive()) {
-                var obj = weak.get();
-                if (obj != null && obj has :onSettingsChanged) {
-                    obj.onSettingsChanged();
+        for (var i = 0; i < self.onSettingsChangedListeners.size(); i += 1) {
+            pre_Debug /*>weak<*/ = self.onSettingsChangedListeners[i];
+            if (pre_Debug /*>weak<*/.stillAlive()) {
+                pre_Debug /*>obj<*/ = pre_Debug /*>weak<*/.get();
+                if (pre_Debug /*>obj<*/ != null && pre_Debug /*>obj<*/ has :onSettingsChanged) {
+                    pre_Debug /*>obj<*/.onSettingsChanged();
                 }
             }
         }
@@ -75,22 +78,22 @@ class ListsApp extends Application.AppBase {
 
         var screenShape = settings.screenShape;
         switch (screenShape) {
-            case System.SCREEN_SHAPE_ROUND:
+            case 1 as Toybox.System.ScreenShape:
                 screenShape = "Round";
                 break;
-            case System.SCREEN_SHAPE_RECTANGLE:
+            case 3 as Toybox.System.ScreenShape:
                 screenShape = "Square";
                 break;
-            case System.SCREEN_SHAPE_SEMI_OCTAGON:
+            case 4 as Toybox.System.ScreenShape:
                 screenShape = "Semi-Octagon";
                 break;
-            case System.SCREEN_SHAPE_SEMI_ROUND:
+            case 2 as Toybox.System.ScreenShape:
                 screenShape = "Semi-Round";
                 break;
         }
 
         var ret = [] as Array<String>;
-        ret.add("Version: " + Application.Properties.getValue("appVersion"));
+        ret.add("Version: " + Properties /*>Application.Properties<*/.getValue("appVersion"));
         ret.add("Display: " + screenShape);
         ret.add("Touchscreen: " + settings.isTouchScreen);
         ret.add("Controls: " + Views.ItemView.SupportedControls());
@@ -108,28 +111,37 @@ class ListsApp extends Application.AppBase {
     }
 
     function addSettingsChangedListener(obj as Object) as Void {
+        var ref, pre_onSettingsChangedListeners, pre_0;
+        pre_0 = 0;
         var del = [];
-        for (var i = 0; i < self.onSettingsChangedListeners.size(); i++) {
-            var weak = self.onSettingsChangedListeners[i];
-            if (weak.stillAlive()) {
-                var o = weak.get();
-                if (o == null || !(o has :onSettingsChanged)) {
+        pre_onSettingsChangedListeners = self.onSettingsChangedListeners;
+        {
+            ref /*>i<*/ = pre_0;
+            for (; ref /*>i<*/ < pre_onSettingsChangedListeners.size(); ref /*>i<*/ += 1) {
+                var weak = self.onSettingsChangedListeners[ref /*>i<*/];
+                if (weak.stillAlive()) {
+                    var o = weak.get();
+                    if (o == null || !(o has :onSettingsChanged)) {
+                        del.add(weak);
+                    }
+                } else {
                     del.add(weak);
                 }
-            } else {
-                del.add(weak);
             }
         }
-        if (del.size() > 0) {
-            for (var i = 0; i < del.size(); i++) {
-                self.onSettingsChangedListeners.remove(del[i]);
+        if (del.size() > pre_0) {
+            {
+                ref /*>i<*/ = pre_0;
+                for (; ref /*>i<*/ < del.size(); ref /*>i<*/ += 1) {
+                    self.onSettingsChangedListeners.remove(del[ref /*>i<*/]);
+                }
             }
         }
 
         if (obj has :onSettingsChanged) {
-            var ref = obj.weak();
+            ref = obj.weak();
 
-            if (self.onSettingsChangedListeners.indexOf(ref) < 0) {
+            if (pre_onSettingsChangedListeners.indexOf(ref) < pre_0) {
                 self.onSettingsChangedListeners.add(ref);
             }
         }
@@ -141,8 +153,6 @@ function getApp() as ListsApp {
     return Application.getApp() as ListsApp;
 }
 
-(:roundVersion)
-var isRoundDisplay = true;
 (:regularVersion)
 var isRoundDisplay = false;
 
@@ -150,5 +160,3 @@ var screenHeight = System.getDeviceSettings().screenHeight;
 
 (:debug)
 var isDebug = true;
-(:release)
-var isDebug = false;

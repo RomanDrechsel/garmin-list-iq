@@ -29,16 +29,13 @@ module Views {
             self.publishItems(false);
         }
 
-        protected function interactItem(item as Listitems.Item, doubletap as Boolean) as Boolean {
+        protected function interactItem(item as Listitems.Item, doubletap as Boolean) as Void {
             if ($.getApp().ListsManager == null) {
                 self.goBack();
-                return true;
             } else if (item.BoundObject instanceof Boolean) {
                 var prop = Helper.Properties.Get(Helper.Properties.DOUBLETAPFORDONE, false);
-                var active = item.BoundObject as Boolean;
                 if (doubletap || prop == 0 || prop == false) {
-                    active = !active;
-                    if (active) {
+                    if (item.BoundObject == false) {
                         item.isDisabled = true;
                         item.setIcon(self._itemIconDone);
                         item.setIconInvert(self._itemIconDoneInvert);
@@ -47,24 +44,19 @@ module Views {
                         item.setIcon(self._itemIcon);
                         item.setIconInvert(self._itemIconInvert);
                     }
-
-                    item.BoundObject = active;
+                    item.BoundObject = !item.BoundObject;
 
                     $.getApp().ListsManager.updateListitem(self._listUuid, item.ItemPosition, item.BoundObject);
                     self.publishItems(true);
                     WatchUi.requestUpdate();
-                    return true;
                 }
             } else if (item.BoundObject instanceof String) {
                 if (item.BoundObject.equals("settings")) {
                     self.openSettings();
-                    return true;
                 } else if (item.BoundObject.equals("back")) {
                     self.goBack();
-                    return true;
                 }
             }
-            return false;
         }
 
         function onKeyEnter() as Boolean {
@@ -77,17 +69,16 @@ module Views {
         }
 
         function onKeyMenu() as Boolean {
-            if (!ItemView.onKeyMenu()) {
-                self.openSettings();
-            }
-            return true;
+            ItemView.onKeyMenu();
+            self.openSettings();
         }
 
         function onTap(x as Number, y as Number) as Boolean {
             if (ItemView.onTap(x, y) == false && self._listUuid == null) {
                 self.goBack();
+                return true;
             }
-            return true;
+            return false;
         }
 
         function onListsChanged(index as ListIndex) as Void {
@@ -140,9 +131,27 @@ module Views {
 
                         var count = 0;
 
-                        for (var i = 0; i < list["items"].size(); i++) {
+                        var items = [];
+
+                        if (list.hasKey("items")) {
+                            var itemsDict = list.get("items");
+                            if (itemsDict instanceof Dictionary) {
+                                //bugfix from version 9
+                                if (itemsDict.size() > 0) {
+                                    var itemKeys = (itemsDict as Dictionary).keys();
+                                    itemKeys = Helper.Quicksort.Sort(itemKeys);
+                                    for (var i = 0; i < itemKeys.size(); i++) {
+                                        items.add((itemsDict as Dictionary).get(itemKeys[i]));
+                                    }
+                                }
+                            } else if (itemsDict instanceof Array) {
+                                items = itemsDict;
+                            }
+                        }
+
+                        for (var i = 0; i < items.size(); i++) {
                             count++;
-                            var item = (list["items"] as Array<ListItemsItem>)[i];
+                            var item = items[i];
                             item.put("pos", i);
                             if ((move_down == true || move_down == 1) && item.get("d") == true) {
                                 done.add(item);

@@ -3,8 +3,8 @@ import Toybox.Time;
 import Toybox.Application;
 import Toybox.System;
 
+(:glance,:Background)
 module Helper {
-    (:glance,:background)
     class DateUtil {
         public static function DatetoString(timestamp as Number or Time.Moment, date_separator as String?) as String {
             var moment = timestamp instanceof Time.Moment ? timestamp : new Time.Moment(timestamp);

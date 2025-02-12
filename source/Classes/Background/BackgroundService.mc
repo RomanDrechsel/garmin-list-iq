@@ -9,6 +9,10 @@ module BackgroundService {
         }
 
         function onPhoneAppMessage(msg as Communications.PhoneAppMessage) as Void {
+<<<<<<< HEAD
+=======
+            Debug.Log("Received background message");
+>>>>>>> de36478 (added background service)
             var phone = $.getApp().Phone as Comm.PhoneCommunication?;
             if (phone != null) {
                 phone.phoneMessageCallback(msg);

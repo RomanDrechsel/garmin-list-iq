@@ -3,12 +3,13 @@ import Toybox.Lang;
 import Toybox.WatchUi;
 import Toybox.System;
 import Toybox.Communications;
+import Toybox.Background;
 import Views;
 import Comm;
 import Lists;
 import Debug;
 
-(:glance)
+(:glance,:background)
 class ListsApp extends Application.AppBase {
     var Phone = null as PhoneCommunication?;
     var ListsManager = null as ListsManager?;
@@ -16,12 +17,19 @@ class ListsApp extends Application.AppBase {
     var Inactivity = null as Helper.Inactivity?;
     var GlobalStates as Dictionary<String, Object> = {};
     var isGlanceView = false;
+    var isBackground = false;
     var NoBackButton = false;
     private var onSettingsChangedListeners as Array<WeakReference> = [];
 
-    function getInitialView() as Array<WatchUi.Views or WatchUi.InputDelegates>? {
-        self.isGlanceView = false;
-        var appVersion = "2025.02.1100";
+    function initialize() {
+        AppBase.initialize();
+        if (Background.getPhoneAppMessageEventRegistered()) {
+            Background.registerForPhoneAppMessageEvent();
+        }
+    }
+
+    function getInitialView() as [WatchUi.Views] or [WatchUi.Views, WatchUi.InputDelegates] {
+        var appVersion = "2025.02.0900";
         Application.Properties.setValue("appVersion", appVersion);
 
         self.Debug = new Debug.DebugStorage();
@@ -32,18 +40,23 @@ class ListsApp extends Application.AppBase {
         }
 
         self.ListsManager = new ListsManager();
-        self.Phone = new Comm.PhoneCommunication();
+        self.Phone = new Comm.PhoneCommunication(true);
         self.Inactivity = new Helper.Inactivity();
-
-        //Debug.Log(self.getInfo());
 
         var startview = new Views.ListsSelectView(true);
         return [startview, new Views.ItemViewDelegate(startview)];
     }
 
-    function getGlanceView() as Array<WatchUi.GlanceView or WatchUi.GlanceViewDelegate>? {
+    function getGlanceView() as [WatchUi.GlanceView] or [WatchUi.GlanceView, WatchUi.GlanceViewDelegate] or Null {
         self.isGlanceView = true;
         return [new Views.GlanceView()];
+    }
+
+    function getServiceDelegate() as [System.ServiceDelegate] {
+        self.isBackground = true;
+        self.ListsManager = new ListsManager();
+        self.Phone = new Comm.PhoneCommunication(false);
+        return [new BackgroundService.BGService()];
     }
 
     function onSettingsChanged() as Void {
@@ -136,7 +149,7 @@ class ListsApp extends Application.AppBase {
     }
 }
 
-(:glance)
+(:glance,:background)
 function getApp() as ListsApp {
     return Application.getApp() as ListsApp;
 }

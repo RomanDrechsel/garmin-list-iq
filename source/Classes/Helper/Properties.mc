@@ -2,8 +2,8 @@ import Toybox.Lang;
 import Toybox.Application;
 using Toybox.Application.Properties as Props;
 
+(:glance,:background)
 module Helper {
-    (:glance,:background)
     class Properties {
         typedef PropType as Number or Boolean or String;
 
@@ -22,10 +22,6 @@ module Helper {
         }
 
         public static function Store(prop as EProps or String, value as PropType) as Void {
-            if ($.getApp().isBackground) {
-                return;
-            }
-
             var no_log = [LASTLISTSCROLL, INIT, LASTLIST];
 
             try {

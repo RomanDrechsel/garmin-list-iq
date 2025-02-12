@@ -123,7 +123,17 @@ module Lists {
 
             var list = {};
             list.put("name", listname);
-            list.put("items", listitems);
+
+            //reduce items to a simple array, ordered by item-index
+            var itemsArr = [];
+            if (listitems.size() > 0) {
+                var itemKeys = listitems.keys();
+                itemKeys = Helper.Quicksort.Sort(itemKeys);
+                for (var i = 0; i < itemKeys.size(); i++) {
+                    itemsArr.add(listitems.get(itemKeys[i]));
+                }
+            }
+            list.put("items", itemsArr);
 
             if (reset != null) {
                 var missing = [] as Array<String>;

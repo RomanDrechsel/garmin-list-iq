@@ -131,9 +131,27 @@ module Views {
 
                         var count = 0;
 
-                        for (var i = 0; i < list["items"].size(); i++) {
+                        var items = [];
+
+                        if (list.hasKey("items")) {
+                            var itemsDict = list.get("items");
+                            if (itemsDict instanceof Dictionary) {
+                                //bugfix from version 9
+                                if (itemsDict.size() > 0) {
+                                    var itemKeys = (itemsDict as Dictionary).keys();
+                                    itemKeys = Helper.Quicksort.Sort(itemKeys);
+                                    for (var i = 0; i < itemKeys.size(); i++) {
+                                        items.add((itemsDict as Dictionary).get(itemKeys[i]));
+                                    }
+                                }
+                            } else if (itemsDict instanceof Array) {
+                                items = itemsDict;
+                            }
+                        }
+
+                        for (var i = 0; i < items.size(); i++) {
                             count++;
-                            var item = list["items"][i];
+                            var item = items[i];
                             item.put("pos", i);
                             if ((move_down == true || move_down == 1) && item.get("d") == true) {
                                 done.add(item);

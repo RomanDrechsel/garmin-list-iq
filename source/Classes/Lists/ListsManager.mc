@@ -74,6 +74,9 @@ module Lists {
                             item.put("i", val.toString());
                         } else if (prop.equals("note")) {
                             item.put("n", val.toString());
+                        } else if (prop.equals("uuid")) {
+                            var num = Helper.StringUtil.StringToNumber(val);
+                            item.put("id", num != null ? num : val);
                         }
                         listitems.put(index, item);
                     }
@@ -183,6 +186,10 @@ module Lists {
                     }
                     list.put("r_last", Time.now().value());
                 }
+            }
+
+            if (donot_undone) {
+                self.copyDone(listuuid, list);
             }
 
             var save = self.saveList(listuuid, list);
@@ -413,6 +420,37 @@ module Lists {
             self.triggerOnListsChanged(index);
 
             return [true, null];
+        }
+
+        private function copyDone(listuuid as String or Number, list as List) as Void {
+            if (list.hasKey("items")) {
+                var new_items = list.get("items") as Array<ListItemsItem>;
+                if (new_items.size() > 0) {
+                    var oldlist = self.getList(listuuid);
+                    if (oldlist != null && oldlist.hasKey("items")) {
+                        var old_items = oldlist.get("items") as Array<ListItemsItem>;
+                        if (old_items.size() > 0) {
+                            for (var i = 0; i < old_items.size(); i++) {
+                                var old = old_items[i];
+                                if (old.hasKey("d") && old.get("d") == true) {
+                                    var uuid = old.get("id");
+                                    if (uuid != null) {
+                                        for (var j = 0; j < new_items.size(); j++) {
+                                            var new_item = new_items[j];
+                                            var new_uuid = new_item.get("id");
+                                            if (new_uuid != null) {
+                                                if (new_uuid.equals(uuid) || uuid == new_uuid) {
+                                                    new_item.put("d", true);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         private function reportError(code as Number, payload as Dictionary<String, Object>?) as Void {

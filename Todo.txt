@@ -4,11 +4,8 @@ adb -e forward tcp:7381 tcp:7381
 For Smartphone
 adb -d forward tcp:7381 tcp:7381
 
-TEST: Button controlling
-TEST: don't select title on Button Controls
-TEST: new line break
-TEST: send logs to phone
 WIP: Background service
+TODO: List settings: reset list button
 TODO: send success response to phone, when list added
 
 1 Button, 64 Color:

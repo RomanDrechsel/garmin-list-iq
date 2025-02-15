@@ -71,37 +71,34 @@ module Comm {
 
             data = data.slice(1, null);
 
-            var types = [LIST, DELETE_LIST, REQUEST_LOGS];
-            if (types.indexOf(message_type) >= 0) {
-                if (message_type.equals(LIST)) {
-                    var dict = self.ArrayToDict(data);
-                    if ($.getApp().ListsManager.addList(dict) == false) {
-                        Debug.Log("Could not store list");
-                    }
-                } else if (message_type.equals(DELETE_LIST)) {
-                    if (data.size() > 0) {
-                        var uuid = data[0];
-                        if ($.getApp().ListsManager.deleteList(uuid, false) == false) {
-                            Debug.Log("Could not delete list " + uuid);
-                        }
-                    } else {
-                        Debug.Log("Received delete list but no uuid provided - ignoring");
-                    }
-                } else if (message_type.equals(REQUEST_LOGS)) {
-                    var message = self.ArrayToDict(data);
-                    var tid = message.get("tid") as String?;
-                    var resp = [];
-                    if (tid != null && tid.length() > 0) {
-                        resp.add("tid=" + tid);
-                    }
-                    if ($.getApp().Debug != null) {
-                        var logs = $.getApp().Debug.GetLogs() as Array<String>;
-                        for (var i = 0; i < logs.size(); i++) {
-                            resp.add(i + "=" + logs[i]);
-                        }
-                    }
-                    self.SendToPhone(resp);
+            if (message_type.equals(LIST)) {
+                var dict = self.ArrayToDict(data);
+                if (($.getApp().ListsManager as Lists.ListsManager).addList(dict) == false) {
+                    Debug.Log("Could not store list");
                 }
+            } else if (message_type.equals(DELETE_LIST)) {
+                if (data.size() > 0) {
+                    var uuid = data[0];
+                    if (($.getApp().ListsManager as Lists.ListsManager).deleteList(uuid, false) == false) {
+                        Debug.Log("Could not delete list " + uuid);
+                    }
+                } else {
+                    Debug.Log("Received delete list but no uuid provided - ignoring");
+                }
+            } else if (message_type.equals(REQUEST_LOGS)) {
+                var message = self.ArrayToDict(data);
+                var tid = message.get("tid") as String?;
+                var resp = [];
+                if (tid != null && tid.length() > 0) {
+                    resp.add("tid=" + tid);
+                }
+                if ($.getApp().Debug != null) {
+                    var logs = $.getApp().Debug.GetLogs() as Array<String>;
+                    for (var i = 0; i < logs.size(); i++) {
+                        resp.add(i + "=" + logs[i]);
+                    }
+                }
+                self.SendToPhone(resp);
             } else {
                 Debug.Log("Received unknown message " + message_type.toString() + " from phone");
             }

@@ -32,6 +32,7 @@ module Lists {
             var reset_minute = null;
             var reset_weekday = null;
             var reset_day = null;
+            var donot_undone = false;
 
             for (var i = 0; i < keys.size(); i++) {
                 var key = keys[i] as String;
@@ -100,6 +101,11 @@ module Lists {
                         if (val != null) {
                             reset_day = val;
                         }
+                    }
+                } else if (key.equals("donot_undone")) {
+                    val = Helper.StringUtil.StringToBool(val);
+                    if (val != null) {
+                        donot_undone = val;
                     }
                 }
             }

@@ -13,8 +13,8 @@ module Helper {
             var equal = [];
 
             for (var i = 0; i < arr.size(); i++) {
-                var item = arr[i].toString();
-                var comp = self.compareStrings(item, pivot);
+                var item = arr[i];
+                var comp = self.compareStrings(item.toString(), pivot);
 
                 if (comp < 0) {
                     left.add(item);

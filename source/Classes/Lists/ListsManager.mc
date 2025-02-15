@@ -42,6 +42,10 @@ module Lists {
                 }
                 if (key.equals("uuid")) {
                     listuuid = val.toString();
+                    var num = Helper.StringUtil.StringToNumber(listuuid);
+                    if (num != null) {
+                        listuuid = num;
+                    }
                 } else if (key.equals("name")) {
                     listname = val.toString();
                 } else if (key.equals("order")) {
@@ -204,7 +208,7 @@ module Lists {
                 }
 
                 Helper.Properties.Store(Helper.Properties.INIT, 1);
-                Debug.Log("Added list " + listuuid + "(" + listname + ")");
+                Debug.Log("Added list " + listuuid + " (" + listname + ")");
                 if (!$.getApp().isBackground) {
                     Helper.ToastUtil.Toast(Rez.Strings.ListRec, Helper.ToastUtil.SUCCESS);
                 }
@@ -293,7 +297,7 @@ module Lists {
             }
         }
 
-        function deleteList(uuid as String, with_toast as Boolean) as Void {
+        function deleteList(uuid as String or Number, with_toast as Boolean) as Boolean {
             var index = self.GetLists();
             var index_log = index;
             index.remove(uuid);
@@ -308,8 +312,10 @@ module Lists {
                     Helper.Properties.Store(Helper.Properties.LASTLIST, "");
                 }
                 Debug.Log("Deleted list " + uuid);
+                return true;
             } else {
                 self.reportError(5, { "index" => index_log, "delete" => uuid, "exception" => store[1].getErrorMessage() });
+                return false;
             }
         }
 

@@ -146,5 +146,17 @@ module Helper {
                 return null;
             }
         }
+
+        static function StringToNumber(str as String) as Number? {
+            try {
+                var num = str.toNumber();
+                if (num != null && num.toString().equals(str)) {
+                    return num;
+                }
+                return null;
+            } catch (e) {
+                return null;
+            }
+        }
     }
 }

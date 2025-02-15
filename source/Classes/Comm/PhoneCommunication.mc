@@ -15,16 +15,19 @@ module Comm {
             REQUEST_LOGS = "req_logs",
         }
 
+        private var _listsManager as Lists.ListsManager? = null;
+
         function initialize(register_callback as Boolean) {
             ConnectionListener.initialize();
 
             if (register_callback) {
                 Communications.registerForPhoneAppMessages(method(:phoneMessageCallback));
             }
+            self._listsManager = $.getApp().ListsManager;
         }
 
         function phoneMessageCallback(msg as Communications.PhoneAppMessage) as Void {
-            if ($.getApp().ListsManager == null) {
+            if (self._listsManager == null) {
                 Debug.Log("No ListsManager found, cannot handle phone app messages");
                 return;
             }
@@ -58,6 +61,9 @@ module Comm {
         }
 
         private function processData(data as Array) as Void {
+            if (self._listsManager == null) {
+                return;
+            }
             var size = Helper.StringUtil.formatBytes(data.toString().length());
             var message_type = null;
             if (data[0] instanceof String) {
@@ -73,13 +79,13 @@ module Comm {
 
             if (message_type.equals(LIST)) {
                 var dict = self.ArrayToDict(data);
-                if (($.getApp().ListsManager as Lists.ListsManager).addList(dict) == false) {
+                if (self._listsManager.addList(dict) == false) {
                     Debug.Log("Could not store list");
                 }
             } else if (message_type.equals(DELETE_LIST)) {
                 if (data.size() > 0) {
-                    var uuid = data[0];
-                    if (($.getApp().ListsManager as Lists.ListsManager).deleteList(uuid, false) == false) {
+                    var uuid = data[0] as String;
+                    if (self._listsManager.deleteList(uuid, false) == false) {
                         Debug.Log("Could not delete list " + uuid);
                     }
                 } else {

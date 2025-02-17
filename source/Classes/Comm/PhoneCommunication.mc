@@ -70,6 +70,7 @@ module Comm {
             if (types.indexOf(message_type) >= 0) {
                 if (message_type.equals(LIST)) {
                     var dict = self.ArrayToDict(data);
+                    Debug.Log("Received list: " + dict);
                     if ($.getApp().ListsManager.addList(dict) == false) {
                         Debug.Log("Could not store list");
                     }

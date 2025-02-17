@@ -7,7 +7,7 @@ module Helper {
                 return arr;
             }
 
-            var pivot = arr[arr.size() / 2].toString();
+            var pivot = arr[(arr.size() / 2).toNumber()].toString();
             var left = [];
             var right = [];
             var equal = [];

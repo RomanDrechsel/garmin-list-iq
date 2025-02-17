@@ -195,7 +195,7 @@ module Lists {
 
                 Helper.Properties.Store(Helper.Properties.INIT, 1);
 
-                Debug.Log("Added list " + listuuid + "(" + listname + ")");
+                Debug.Log("Added list " + listuuid + "(" + listname + ") with " + itemsArr.size() + " items");
                 Helper.ToastUtil.Toast(Rez.Strings.ListRec, Helper.ToastUtil.SUCCESS);
 
                 return true;

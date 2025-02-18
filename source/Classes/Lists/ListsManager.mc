@@ -60,8 +60,8 @@ module Lists {
                         }
                     }
                 } else if (key.substring(0, 4).equals("item")) {
-                    var index = key.substring(4, 5).toNumber();
-                    var split = Helper.StringUtil.split(key.substring(5, key.length()), "_", 2);
+                    var split = Helper.StringUtil.split(key.substring(4, null), "_", 2);
+                    var index = split[0].toNumber();
                     var prop = split.size() > 1 ? split[1] : null;
                     if (prop != null) {
                         var item;
@@ -145,7 +145,7 @@ module Lists {
             var itemsArr = [];
             if (listitems.size() > 0) {
                 var itemKeys = listitems.keys();
-                itemKeys = Helper.Quicksort.Sort(itemKeys);
+                itemKeys = Helper.Quicksort.SortNumbers(itemKeys);
                 for (var i = 0; i < itemKeys.size(); i++) {
                     itemsArr.add(listitems.get(itemKeys[i]));
                 }

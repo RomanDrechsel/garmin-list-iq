@@ -139,7 +139,7 @@ module Views {
                                 //bugfix from version 9
                                 if (itemsDict.size() > 0) {
                                     var itemKeys = (itemsDict as Dictionary).keys();
-                                    itemKeys = Helper.Quicksort.Sort(itemKeys);
+                                    itemKeys = Helper.Quicksort.SortNumbers(itemKeys);
                                     for (var i = 0; i < itemKeys.size(); i++) {
                                         items.add((itemsDict as Dictionary).get(itemKeys[i]));
                                     }

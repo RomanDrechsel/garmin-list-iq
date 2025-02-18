@@ -14,10 +14,9 @@ module Helper {
 
             for (var i = 0; i < arr.size(); i++) {
                 var item = arr[i];
-                var comp = item - pivot;
-                if (comp < 0) {
+                if (item < pivot) {
                     left.add(item);
-                } else if (comp > 0) {
+                } else if (item > pivot) {
                     right.add(item);
                 } else {
                     equal.add(item);

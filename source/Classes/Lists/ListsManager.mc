@@ -63,7 +63,7 @@ module Lists {
                     var split = Helper.StringUtil.split(key.substring(4, null), "_", 2);
                     var index = split[0].toNumber();
                     var prop = split.size() > 1 ? split[1] : null;
-                    if (prop != null) {
+                    if (prop != null && index != null) {
                         var item;
                         if (listitems.hasKey(index)) {
                             item = listitems.get(index);

@@ -60,7 +60,7 @@ module Lists {
                         }
                     }
                 } else if (key.substring(0, 4).equals("item")) {
-                    var split = Helper.StringUtil.split(key.substring(4, null), "_", 2);
+                    var split = Helper.StringUtil.split(key.substring(4, key.length()), "_", 2);
                     var index = split[0].toNumber();
                     var prop = split.size() > 1 ? split[1] : null;
                     if (prop != null && index != null) {

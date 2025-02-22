@@ -12,6 +12,7 @@ d2delta.resourcePath = $(base.resourcePath);resources-small
 d2deltapx.resourcePath = $(base.resourcePath);resources-small
 d2deltas.resourcePath = $(base.resourcePath);resources-small
 d2mach1.resourcePath = $(base.resourcePath);resources-touch;resources-highcolor
+descentg2.resourcePath = $(base.resourcePath);resources-touch-button;resources-highcolor
 descentmk2.resourcePath = $(base.resourcePath);resources-small
 descentmk2s.resourcePath = $(base.resourcePath);resources-small
 descentmk343mm.resourcePath = $(base.resourcePath);resources-touch-button;resources-highcolor

@@ -87,14 +87,14 @@ module Debug {
         var info = Time.Gregorian.info(Time.now(), Time.FORMAT_SHORT);
         var date = Helper.DateUtil.toLogString(info, null);
         var app = $.getApp();
-        var prefix = "";
-        if (app.isBackground) {
-            prefix = "[B] ";
-        } else if (app.isGlanceView) {
-            prefix = "[G] ";
-        }
 
         if (app.isBackground || app.isGlanceView) {
+            var prefix = "";
+            if (app.isBackground) {
+                prefix = "[B] ";
+            } else if (app.isGlanceView) {
+                prefix = "[G] ";
+            }
             Toybox.System.println(date + ": " + prefix + obj);
             return;
         }
@@ -102,7 +102,7 @@ module Debug {
         if (obj instanceof Lang.Array) {
             for (var i = 0; i < obj.size(); i++) {
                 if (obj[i] instanceof Lang.String) {
-                    obj[i] = date + ": " + prefix + obj[i];
+                    obj[i] = date + ": " + obj[i];
                 }
                 Toybox.System.println(obj[i]);
             }
@@ -111,10 +111,10 @@ module Debug {
                 debug.AddLog(obj);
             }
         } else {
-            Toybox.System.println(date + ": " + prefix + obj);
+            Toybox.System.println(date + ": " + obj);
             var debug = $.getApp().Debug;
             if (debug != null) {
-                debug.AddLog(date + ": " + prefix + obj);
+                debug.AddLog(date + ": " + obj);
             }
         }
     }

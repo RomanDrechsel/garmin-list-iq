@@ -4,7 +4,6 @@ import Toybox.Time;
 import Toybox.Application;
 
 module Debug {
-    (:glance,:background)
     class DebugStorage {
         private var _logs as Array<String> = [];
         public var LogCount = 100;
@@ -93,6 +92,11 @@ module Debug {
             prefix = "[B] ";
         } else if (app.isGlanceView) {
             prefix = "[G] ";
+        }
+
+        if (app.isBackground || app.isGlanceView) {
+            Toybox.System.println(date + ": " + prefix + obj);
+            return;
         }
 
         if (obj instanceof Lang.Array) {

@@ -371,11 +371,11 @@ module Lists {
             if (index != null && index.size() > 0) {
                 var delete = [] as Array<String>;
                 for (var i = 0; i < index.keys().size(); i++) {
-                    var key = index.keys()[i] as String;
+                    var key = index.keys()[i] as String or Number;
                     var dict = index.get(key);
                     if (dict != null && dict instanceof Dictionary) {
                         //check of all keys are present
-                        if (!dict.hasKey("key") || !(dict.get("key") instanceof String) || !dict.hasKey("name") || !(dict.get("name") instanceof String)) {
+                        if (!dict.hasKey("key") || !(dict.get("key") instanceof String || dict.get("key") instanceof Number) || !dict.hasKey("name") || !(dict.get("name") instanceof String)) {
                             delete.add(key);
                             continue;
                         }
@@ -478,12 +478,14 @@ module Lists {
         }
 
         private function triggerOnListsChanged(index as ListIndex?) as Void {
-            for (var i = 0; i < self.onListsChangedListeners.size(); i++) {
-                var listener = self.onListsChangedListeners[i];
-                if (listener.stillAlive()) {
-                    var obj = listener.get();
-                    if (obj != null && obj has :onListsChanged) {
-                        obj.onListsChanged(index);
+            if (!$.getApp().isBackground) {
+                for (var i = 0; i < self.onListsChangedListeners.size(); i++) {
+                    var listener = self.onListsChangedListeners[i];
+                    if (listener.stillAlive()) {
+                        var obj = listener.get();
+                        if (obj != null && obj has :onListsChanged) {
+                            obj.onListsChanged(index);
+                        }
                     }
                 }
             }

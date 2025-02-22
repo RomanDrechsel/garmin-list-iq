@@ -72,7 +72,6 @@ module Comm {
                 Debug.Log("Received unknown message from phone (" + size + ")");
                 return;
             }
-
             Debug.Log("Received message " + message_type + " (" + size + ")");
 
             data = data.slice(1, null);
@@ -103,6 +102,8 @@ module Comm {
                     for (var i = 0; i < logs.size(); i++) {
                         resp.add(i + "=" + logs[i]);
                     }
+                } else if ($.getApp().isBackground) {
+                    resp.add("error=background");
                 }
                 self.SendToPhone(resp);
             } else {

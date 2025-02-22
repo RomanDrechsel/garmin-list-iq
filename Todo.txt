@@ -5,6 +5,7 @@ For Smartphone
 adb -d forward tcp:7381 tcp:7381
 
 WIP: Background service
+WIP: logs can't be send in background!
 TODO: List settings: reset list button
 TODO: send success response to phone, when list added
 

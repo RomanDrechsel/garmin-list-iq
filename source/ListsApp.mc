@@ -23,13 +23,13 @@ class ListsApp extends Application.AppBase {
 
     function initialize() {
         AppBase.initialize();
-        if (Background.getPhoneAppMessageEventRegistered()) {
+        if (!Background.getPhoneAppMessageEventRegistered()) {
             Background.registerForPhoneAppMessageEvent();
         }
     }
 
     function getInitialView() as [WatchUi.Views] or [WatchUi.Views, WatchUi.InputDelegates] {
-        var appVersion = "2025.02.2200";
+        var appVersion = "2025.02.2201";
         Application.Properties.setValue("appVersion", appVersion);
 
         self.Debug = new Debug.DebugStorage();

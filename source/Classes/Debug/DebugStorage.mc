@@ -87,11 +87,18 @@ module Debug {
     function Log(obj as Lang.Object) {
         var info = Time.Gregorian.info(Time.now(), Time.FORMAT_SHORT);
         var date = Helper.DateUtil.toLogString(info, null);
+        var app = $.getApp();
+        var prefix = "";
+        if (app.isBackground) {
+            prefix = "[B] ";
+        } else if (app.isGlanceView) {
+            prefix = "[G] ";
+        }
 
         if (obj instanceof Lang.Array) {
             for (var i = 0; i < obj.size(); i++) {
                 if (obj[i] instanceof Lang.String) {
-                    obj[i] = date + ": " + obj[i];
+                    obj[i] = date + ": " + prefix + obj[i];
                 }
                 Toybox.System.println(obj[i]);
             }
@@ -100,10 +107,10 @@ module Debug {
                 debug.AddLog(obj);
             }
         } else {
-            Toybox.System.println(date + ": " + obj);
+            Toybox.System.println(date + ": " + prefix + obj);
             var debug = $.getApp().Debug;
             if (debug != null) {
-                debug.AddLog(date + ": " + obj);
+                debug.AddLog(date + ": " + prefix + obj);
             }
         }
     }

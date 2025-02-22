@@ -22,6 +22,9 @@ module Helper {
         }
 
         public static function Store(prop as EProps or String, value as PropType) as Void {
+            if ($.getApp().isBackground) {
+                return;
+            }
             var no_log = [LASTLISTSCROLL, INIT, LASTLIST];
 
             try {

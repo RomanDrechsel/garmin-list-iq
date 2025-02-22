@@ -15,6 +15,7 @@ module BackgroundService {
             } else {
                 Debug.Log("Could not process background message");
             }
+            System.exit();
         }
     }
 }

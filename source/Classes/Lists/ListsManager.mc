@@ -24,7 +24,7 @@ module Lists {
             var listuuid = null;
             var listname = null;
             var listorder = null;
-            var listitems = {};
+            var listitems = ({}) as Dictionary<Number, ListItemsItem>;
             var listdate = null;
             var reset = null;
             var reset_interval = null;
@@ -33,6 +33,7 @@ module Lists {
             var reset_weekday = null;
             var reset_day = null;
             var donot_undone = false;
+            var isSync = false;
 
             for (var i = 0; i < keys.size(); i++) {
                 var key = keys[i] as String;
@@ -114,6 +115,11 @@ module Lists {
                     if (val != null) {
                         donot_undone = val;
                     }
+                } else if (key.equals("sync")) {
+                    val = Helper.StringUtil.StringToBool(val);
+                    if (val != null) {
+                        isSync = val;
+                    }
                 }
             }
 
@@ -145,7 +151,7 @@ module Lists {
             var itemsArr = [];
             if (listitems.size() > 0) {
                 var itemKeys = listitems.keys();
-                itemKeys = Helper.Quicksort.SortNumbers(itemKeys);
+                itemKeys = Helper.QuickSort.SortNumbers(itemKeys);
                 for (var i = 0; i < itemKeys.size(); i++) {
                     itemsArr.add(listitems.get(itemKeys[i]));
                 }
@@ -215,8 +221,7 @@ module Lists {
                 }
 
                 Helper.Properties.Store(Helper.Properties.INIT, 1);
-                Debug.Log("Added list " + listuuid + " (" + listname + ")");
-                if (!$.getApp().isBackground) {
+                if (!isSync && !$.getApp().isBackground) {
                     Helper.ToastUtil.Toast(Rez.Strings.ListRec, Helper.ToastUtil.SUCCESS);
                 }
 
@@ -287,7 +292,7 @@ module Lists {
                     Helper.Properties.Store(Helper.Properties.LASTLISTSCROLL, -1);
                 }
 
-                Debug.Log("Stored list " + uuid + "(" + listname + ")");
+                Debug.Log("Stored list " + listname + " (" + uuid + ")");
                 return [true, null];
             } catch (e instanceof Lang.StorageFullException) {
                 Debug.Log("Could not store list '" + listname + "' (" + uuid + "): storage is full: " + e);

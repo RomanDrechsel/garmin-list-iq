@@ -40,7 +40,7 @@ module Views {
                 if (self.Items.size() > 0) {
                     var item = self.Items[0];
                     if (item.BoundObject instanceof String && item.BoundObject.equals("store") && Helper.Properties.Get(Helper.Properties.INIT, 0) < 0) {
-                        ListsApp.openGooglePlay();
+                        $.openGooglePlay();
                         return true;
                     }
                 }
@@ -185,7 +185,7 @@ module Views {
                         return true;
                     } else if (item.BoundObject.equals("store")) {
                         if (doubletap && Helper.Properties.Get(Helper.Properties.INIT, 0) <= 0) {
-                            ListsApp.openGooglePlay();
+                            $.openGooglePlay();
                             return true;
                         }
                     } else {

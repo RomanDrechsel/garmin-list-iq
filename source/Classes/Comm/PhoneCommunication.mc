@@ -91,21 +91,21 @@ module Comm {
                     Debug.Log("Received delete list but no uuid provided - ignoring");
                 }
             } else if (message_type.equals(REQUEST_LOGS)) {
-                var message = self.ArrayToDict(data);
-                var tid = message.get("tid") as String?;
-                var resp = [];
-                if (tid != null && tid.length() > 0) {
-                    resp.add("tid=" + tid);
-                }
-                if ($.getApp().Debug != null) {
-                    var logs = $.getApp().Debug.GetLogs() as Array<String>;
-                    for (var i = 0; i < logs.size(); i++) {
-                        resp.add(i + "=" + logs[i]);
+                if (!$.getApp().isBackground) {
+                    var message = self.ArrayToDict(data);
+                    var tid = message.get("tid") as String?;
+                    var resp = [];
+                    if (tid != null && tid.length() > 0) {
+                        resp.add("tid=" + tid);
                     }
-                } else if ($.getApp().isBackground) {
-                    resp.add("error=background");
+                    if ($.getApp().Debug != null) {
+                        var logs = $.getApp().Debug.GetLogs() as Array<String>;
+                        for (var i = 0; i < logs.size(); i++) {
+                            resp.add(i + "=" + logs[i]);
+                        }
+                    }
+                    self.SendToPhone(resp);
                 }
-                self.SendToPhone(resp);
             } else {
                 Debug.Log("Received unknown message " + message_type.toString() + " from phone");
             }

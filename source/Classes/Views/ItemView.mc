@@ -438,7 +438,6 @@ module Views {
             self._selectedItem = null;
         }
 
-        (:background)
         static function SupportedControls() as EControls {
             if (self._controls == null) {
                 var settings = System.getDeviceSettings();

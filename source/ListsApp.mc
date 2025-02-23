@@ -9,18 +9,22 @@ import Comm;
 import Lists;
 import Debug;
 
-(:glance,:background)
 class ListsApp extends Application.AppBase {
+    (:background)
     var Phone = null as PhoneCommunication?;
+    (:background)
     var ListsManager = null as ListsManager?;
     var Debug = null as DebugStorage?;
     var Inactivity = null as Helper.Inactivity?;
     var GlobalStates as Dictionary<String, Object> = {};
+    (:glance,:background)
     var isGlanceView = false;
+    (:glance,:background)
     var isBackground = false;
     var NoBackButton = false;
     private var onSettingsChangedListeners as Array<WeakReference> = [];
 
+    (:glance,:background)
     function initialize() {
         AppBase.initialize();
         if (!Background.getPhoneAppMessageEventRegistered()) {
@@ -28,8 +32,9 @@ class ListsApp extends Application.AppBase {
         }
     }
 
+    (:glance,:background)
     function getInitialView() as [WatchUi.Views] or [WatchUi.Views, WatchUi.InputDelegates] {
-        var appVersion = "2025.02.2202";
+        var appVersion = "2025.02.2301";
         Application.Properties.setValue("appVersion", appVersion);
 
         self.Debug = new Debug.DebugStorage();
@@ -47,11 +52,13 @@ class ListsApp extends Application.AppBase {
         return [startview, new Views.ItemViewDelegate(startview)];
     }
 
+    (:glance)
     function getGlanceView() as [WatchUi.GlanceView] or [WatchUi.GlanceView, WatchUi.GlanceViewDelegate] or Null {
         self.isGlanceView = true;
         return [new Views.GlanceView()];
     }
 
+    (:background)
     function getServiceDelegate() as [System.ServiceDelegate] {
         self.isBackground = true;
         self.ListsManager = new ListsManager();
@@ -116,10 +123,6 @@ class ListsApp extends Application.AppBase {
         return ret;
     }
 
-    static function openGooglePlay() as Void {
-        Communications.openWebPage("https://play.google.com/store/apps/details?id=de.romandrechsel.lists", null, null);
-    }
-
     function addSettingsChangedListener(obj as Object) as Void {
         var del = [];
         for (var i = 0; i < self.onSettingsChangedListeners.size(); i++) {
@@ -154,14 +157,13 @@ function getApp() as ListsApp {
     return Application.getApp() as ListsApp;
 }
 
+function openGooglePlay() as Void {
+    Communications.openWebPage("https://play.google.com/store/apps/details?id=de.romandrechsel.lists", null, null);
+}
+
 (:roundVersion)
 var isRoundDisplay = true;
 (:regularVersion)
 var isRoundDisplay = false;
 
 var screenHeight = System.getDeviceSettings().screenHeight;
-
-(:debug)
-var isDebug = true;
-(:release)
-var isDebug = false;

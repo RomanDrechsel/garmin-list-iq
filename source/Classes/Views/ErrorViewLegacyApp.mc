@@ -53,7 +53,7 @@ module Views {
         }
 
         private function openPlaystore() as Void {
-            $.getApp().openGooglePlay();
+            $.openGooglePlay();
         }
     }
 }

@@ -7,18 +7,20 @@ import Helper;
 import Controls.Listitems;
 import Views;
 
-(:background)
 module Lists {
+    (:background)
     typedef ListItemsItem as Dictionary<String, String or Array<String> or Boolean or Number>; /* a list item (with key "i" for item-text, "n" for note-text, "d" for done?) */
+    (:background)
     typedef List as Dictionary<String, String or Array<ListItemsItem> or Boolean or Number>; /* a list */
-    (:glance)
+    (:glance,:background)
     typedef ListIndexItem as Dictionary<String, String or Number>; /* data of a list, stored in list index */
-    (:glance)
+    (:glance,:background)
     typedef ListIndex as Dictionary<String, ListIndexItem>; /* the list-index, with list uuid as key, and some list data as value */
 
     class ListsManager {
         private var onListsChangedListeners as Array<WeakReference> = [];
 
+        (:background)
         function addList(data as Dictionary) as Boolean {
             var keys = data.keys();
             var listuuid = null;
@@ -32,12 +34,12 @@ module Lists {
             var reset_minute = null;
             var reset_weekday = null;
             var reset_day = null;
-            var donot_undone = false;
             var isSync = false;
 
             for (var i = 0; i < keys.size(); i++) {
                 var key = keys[i] as String;
                 var val = data.get(key) as String?;
+                data.remove(key);
                 if (val == null) {
                     continue;
                 }
@@ -110,16 +112,15 @@ module Lists {
                             reset_day = val;
                         }
                     }
-                } else if (key.equals("donot_undone")) {
-                    val = Helper.StringUtil.StringToBool(val);
-                    if (val != null) {
-                        donot_undone = val;
-                    }
                 } else if (key.equals("sync")) {
                     val = Helper.StringUtil.StringToBool(val);
                     if (val != null) {
                         isSync = val;
                     }
+                }
+                if ($.getApp().isBackground) {
+                    var stats = System.getSystemStats();
+                    Debug.Log("Add Memory: " + stats.usedMemory + " / " + stats.totalMemory);
                 }
             }
 
@@ -136,7 +137,9 @@ module Lists {
                     missing.add("uuid");
                 }
                 Debug.Log("Could not add list: missing properties - " + missing);
-                self.reportError(2, { "data" => data, "missing" => missing });
+                if (!$.getApp().isBackground) {
+                    self.reportError(2, { "data" => data, "missing" => missing });
+                }
                 return false;
             }
 
@@ -156,6 +159,7 @@ module Lists {
                     itemsArr.add(listitems.get(itemKeys[i]));
                 }
             }
+            listitems = null;
             list.put("items", itemsArr);
 
             if (reset != null) {
@@ -194,10 +198,6 @@ module Lists {
                 }
             }
 
-            if (donot_undone) {
-                self.copyDone(listuuid, list);
-            }
-
             var save = self.saveList(listuuid, list);
             if (save[0] == true) {
                 //Store Index...
@@ -207,7 +207,7 @@ module Lists {
                         "key" => listuuid,
                         "name" => listname,
                         "order" => listorder,
-                        "items" => listitems.size(),
+                        "items" => itemsArr.size(),
                         "date" => listdate,
                     }) as ListIndexItem;
 
@@ -216,7 +216,9 @@ module Lists {
                 var saveIndex = self.StoreIndex(listindex);
                 if (saveIndex[0] == false) {
                     Application.Storage.deleteValue(listuuid);
-                    self.reportError(4, { "data" => data, "list" => list, "exception" => saveIndex[1].getErrorMessage() });
+                    if (!$.getApp().isBackground) {
+                        self.reportError(4, { "data" => data, "list" => list, "exception" => saveIndex[1].getErrorMessage() });
+                    }
                     return false;
                 }
 
@@ -227,14 +229,19 @@ module Lists {
 
                 return true;
             } else {
-                self.reportError(3, { "data" => data, "list" => list, "exception" => save[1].getErrorMessage() });
+                if (!$.getApp().isBackground) {
+                    self.reportError(3, { "data" => data, "list" => list, "exception" => save[1].getErrorMessage() });
+                }
                 return false;
             }
         }
 
+        (:background)
         function GetLists() as ListIndex {
             var index = Application.Storage.getValue("listindex") as ListIndex;
-            index = self.checkListIndex(index);
+            if (!$.getApp().isBackground) {
+                index = self.checkListIndex(index);
+            }
             return index;
         }
 
@@ -280,6 +287,7 @@ module Lists {
             }
         }
 
+        (:background)
         function saveList(uuid as String, list as List) as Array<Boolean or Lang.Exception or Null> {
             var listname = list.get("name");
             if (listname == null) {
@@ -326,7 +334,9 @@ module Lists {
                 Debug.Log("Deleted list " + uuid);
                 return true;
             } else {
-                self.reportError(5, { "index" => index_log, "delete" => uuid, "exception" => store[1].getErrorMessage() });
+                if (!$.getApp().isBackground) {
+                    self.reportError(5, { "index" => index_log, "delete" => uuid, "exception" => store[1].getErrorMessage() });
+                }
                 return false;
             }
         }
@@ -405,6 +415,7 @@ module Lists {
             return ({}) as ListIndex;
         }
 
+        (:background)
         private function StoreIndex(index as ListIndex) as Array<Boolean or Lang.Exception or Null> {
             try {
                 Application.Storage.setValue("listindex", index);
@@ -427,54 +438,21 @@ module Lists {
             return [true, null];
         }
 
-        private function copyDone(listuuid as String or Number, list as List) as Void {
-            if (list.hasKey("items")) {
-                var new_items = list.get("items") as Array<ListItemsItem>;
-                if (new_items.size() > 0) {
-                    var oldlist = self.getList(listuuid);
-                    if (oldlist != null && oldlist.hasKey("items")) {
-                        var old_items = oldlist.get("items") as Array<ListItemsItem>;
-                        if (old_items.size() > 0) {
-                            for (var i = 0; i < old_items.size(); i++) {
-                                var old = old_items[i];
-                                if (old.hasKey("d") && old.get("d") == true) {
-                                    var uuid = old.get("id");
-                                    if (uuid != null) {
-                                        for (var j = 0; j < new_items.size(); j++) {
-                                            var new_item = new_items[j];
-                                            var new_uuid = new_item.get("id");
-                                            if (new_uuid != null) {
-                                                if (new_uuid.equals(uuid) || uuid == new_uuid) {
-                                                    new_item.put("d", true);
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
         private function reportError(code as Number, payload as Dictionary<String, Object>?) as Void {
-            if (!$.getApp().isBackground) {
-                var msg = null as Lang.ResourceId?;
-                switch (code) {
-                    case 1:
-                    case 2:
-                    case 3:
-                    case 4:
-                        msg = Rez.Strings.ErrListRec;
-                        break;
-                    case 5:
-                        msg = Rez.Strings.ErrListDel;
-                        break;
-                }
-                var errorView = new Views.ErrorView(msg, code, payload);
-                WatchUi.pushView(errorView, new Views.ItemViewDelegate(errorView), WatchUi.SLIDE_BLINK);
+            var msg = null as Lang.ResourceId?;
+            switch (code) {
+                case 1:
+                case 2:
+                case 3:
+                case 4:
+                    msg = Rez.Strings.ErrListRec;
+                    break;
+                case 5:
+                    msg = Rez.Strings.ErrListDel;
+                    break;
             }
+            var errorView = new Views.ErrorView(msg, code, payload);
+            WatchUi.pushView(errorView, new Views.ItemViewDelegate(errorView), WatchUi.SLIDE_BLINK);
         }
 
         private function triggerOnListsChanged(index as ListIndex?) as Void {

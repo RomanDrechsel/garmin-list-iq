@@ -12,6 +12,8 @@ module BackgroundService {
             var phone = $.getApp().Phone as Comm.PhoneCommunication?;
             if (phone != null) {
                 phone.phoneMessageCallback(msg);
+                var stats = System.getSystemStats();
+                Debug.Log("Memory: " + stats.usedMemory + " / " + stats.totalMemory);
             } else {
                 Debug.Log("Could not process background message");
             }

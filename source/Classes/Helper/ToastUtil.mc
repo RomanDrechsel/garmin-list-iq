@@ -3,7 +3,6 @@ import Toybox.Application;
 import Toybox.WatchUi;
 import Toybox.Attention;
 
-(:background)
 module Helper {
     class ToastUtil {
         enum ToastType {
@@ -13,9 +12,6 @@ module Helper {
         }
 
         public static function Toast(msg_id as Lang.ResourceId, type as ToastType) as Void {
-            if ($.getApp().isBackground) {
-                return;
-            }
             if (WatchUi has :showToast) {
                 var str = Application.loadResource(msg_id);
 

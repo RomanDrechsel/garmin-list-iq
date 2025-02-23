@@ -28,7 +28,6 @@ module Themes {
             }
         }
 
-        (:background)
         static function LowColors() as Boolean {
             if (self._lowColors == null) {
                 self._lowColors = Helper.Properties.Get("LowColors", true);

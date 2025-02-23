@@ -64,8 +64,10 @@ module Lists {
                     }
                 } else if (key.substring(0, 4).equals("item")) {
                     var split = Helper.StringUtil.split(key.substring(4, key.length()), "_", 2);
+                    key = null;
                     var index = split[0].toNumber();
                     var prop = split.size() > 1 ? split[1] : null;
+                    split = null;
                     if (prop != null && index != null) {
                         var item;
                         if (listitems.hasKey(index)) {
@@ -122,6 +124,9 @@ module Lists {
                     var stats = System.getSystemStats();
                     Debug.Log("Add Memory: " + stats.usedMemory + " / " + stats.totalMemory);
                 }
+
+                key = null;
+                val = null;
             }
 
             //verify data
@@ -201,6 +206,7 @@ module Lists {
             var save = self.saveList(listuuid, list);
             if (save[0] == true) {
                 //Store Index...
+                list = null;
                 var listindex = self.GetLists();
                 var indexitem =
                     ({
@@ -222,9 +228,12 @@ module Lists {
                     return false;
                 }
 
-                Helper.Properties.Store(Helper.Properties.INIT, 1);
-                if (!isSync && !$.getApp().isBackground) {
-                    Helper.ToastUtil.Toast(Rez.Strings.ListRec, Helper.ToastUtil.SUCCESS);
+                if (!$.getApp().isBackground) {
+                    Helper.Properties.Store(Helper.Properties.INIT, 1);
+
+                    if (!isSync) {
+                        Helper.ToastUtil.Toast(Rez.Strings.ListRec, Helper.ToastUtil.SUCCESS);
+                    }
                 }
 
                 return true;

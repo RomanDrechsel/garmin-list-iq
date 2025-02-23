@@ -34,7 +34,7 @@ class ListsApp extends Application.AppBase {
 
     (:glance,:background)
     function getInitialView() as [WatchUi.Views] or [WatchUi.Views, WatchUi.InputDelegates] {
-        var appVersion = "2025.02.2301";
+        var appVersion = "2025.02.2302";
         Application.Properties.setValue("appVersion", appVersion);
 
         self.Debug = new Debug.DebugStorage();

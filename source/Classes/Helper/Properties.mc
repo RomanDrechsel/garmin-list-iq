@@ -2,11 +2,11 @@ import Toybox.Lang;
 import Toybox.Application;
 using Toybox.Application.Properties as Props;
 
-(:glance,:background)
 module Helper {
     class Properties {
         typedef PropType as Number or Boolean or String;
 
+        (:glance,:background)
         public enum EProps {
             INIT = "Init",
             THEME = "Theme",
@@ -37,6 +37,7 @@ module Helper {
             }
         }
 
+        (:glance,:background)
         public static function Get(prop as EProps or String, default_value as PropType?) as PropType {
             try {
                 return Props.getValue(prop as String);

@@ -131,6 +131,8 @@ module Comm {
                 }
             }
 
+            arr = null;
+
             return dict;
         }
     }

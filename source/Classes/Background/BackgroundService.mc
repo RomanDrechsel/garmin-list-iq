@@ -1,9 +1,9 @@
 import Toybox.System;
 import Toybox.Communications;
 
-(:background)
-module BackgroundService {
-    class BGService extends System.ServiceDelegate {
+module BG {
+    (:background)
+    class Service extends System.ServiceDelegate {
         function initialize() {
             ServiceDelegate.initialize();
         }
@@ -11,13 +11,16 @@ module BackgroundService {
         function onPhoneAppMessage(msg as Communications.PhoneAppMessage) as Void {
             var phone = $.getApp().Phone as Comm.PhoneCommunication?;
             if (phone != null) {
-                phone.phoneMessageCallback(msg);
-                var stats = System.getSystemStats();
-                Debug.Log("Memory: " + stats.usedMemory + " / " + stats.totalMemory);
+                try {
+                    phone.phoneMessageCallback(msg);
+                } catch (ex instanceof NoDataProcessedException) {
+                    Background.exit(msg.data);
+                }
+                Background.exit(null);
             } else {
                 Debug.Log("Could not process background message");
             }
-            System.exit();
+            Background.exit(msg.data);
         }
     }
 }

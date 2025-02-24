@@ -9,22 +9,20 @@ import Comm;
 import Lists;
 import Debug;
 
+(:glance,:background)
 class ListsApp extends Application.AppBase {
-    (:background)
     var Phone = null as PhoneCommunication?;
-    (:background)
     var ListsManager = null as ListsManager?;
     var Debug = null as DebugStorage?;
     var Inactivity = null as Helper.Inactivity?;
     var GlobalStates as Dictionary<String, Object> = {};
-    (:glance,:background)
     var isGlanceView = false;
-    (:glance,:background)
     var isBackground = false;
     var NoBackButton = false;
     private var onSettingsChangedListeners as Array<WeakReference> = [];
+    private var _backgroundReceive as Array<Array<Object> > = [];
+    private var _backgroundReceiveTimer = null as Timer.Timer?;
 
-    (:glance,:background)
     function initialize() {
         AppBase.initialize();
         if (!Background.getPhoneAppMessageEventRegistered()) {
@@ -32,9 +30,8 @@ class ListsApp extends Application.AppBase {
         }
     }
 
-    (:glance,:background)
     function getInitialView() as [WatchUi.Views] or [WatchUi.Views, WatchUi.InputDelegates] {
-        var appVersion = "2025.02.2302";
+        var appVersion = "2025.02.2400";
         Application.Properties.setValue("appVersion", appVersion);
 
         self.Debug = new Debug.DebugStorage();
@@ -48,26 +45,42 @@ class ListsApp extends Application.AppBase {
         self.Phone = new Comm.PhoneCommunication(true);
         self.Inactivity = new Helper.Inactivity();
 
+        if (self._backgroundReceive.size() > 0) {
+            self._backgroundReceiveTimer = new Timer.Timer();
+            self._backgroundReceiveTimer.start(method(:handleBackgroundData), 1000, true);
+        }
+
         var startview = new Views.ListsSelectView(true);
         return [startview, new Views.ItemViewDelegate(startview)];
     }
 
-    (:glance)
     function getGlanceView() as [WatchUi.GlanceView] or [WatchUi.GlanceView, WatchUi.GlanceViewDelegate] or Null {
         self.isGlanceView = true;
         return [new Views.GlanceView()];
     }
 
-    (:background)
     function getServiceDelegate() as [System.ServiceDelegate] {
         self.isBackground = true;
         self.ListsManager = new ListsManager();
         self.Phone = new Comm.PhoneCommunication(false);
-        return [new BackgroundService.BGService()];
+        return [new BG.Service()];
     }
 
     function onSettingsChanged() as Void {
         self.triggerOnSettingsChanged();
+    }
+
+    function onBackgroundData(data as Application.PersistableType) as Void {
+        if (data instanceof Array) {
+            Debug.Log("Received message from background");
+            self._backgroundReceive.add(data);
+            if (self._backgroundReceive.size() > 10) {
+                Debug.Log("Received too many messages from background, only keep the 10 newest");
+                self._backgroundReceive = self._backgroundReceive.slice(-10, null);
+            }
+        } else {
+            Debug.Log("Received invalid message from background");
+        }
     }
 
     function triggerOnSettingsChanged() as Void {
@@ -148,6 +161,17 @@ class ListsApp extends Application.AppBase {
             if (self.onSettingsChangedListeners.indexOf(ref) < 0) {
                 self.onSettingsChangedListeners.add(ref);
             }
+        }
+    }
+
+    function handleBackgroundData() as Void {
+        if (self._backgroundReceive.size() > 0) {
+            var data = self._backgroundReceive[0];
+            self._backgroundReceive = self._backgroundReceive.slice(0, 1);
+            self.Phone.processData(data);
+        } else if (self._backgroundReceiveTimer != null) {
+            self._backgroundReceiveTimer.stop();
+            self._backgroundReceiveTimer = null;
         }
     }
 }

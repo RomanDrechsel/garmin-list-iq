@@ -14,6 +14,7 @@
     <string id="ListRec">List received.</string>
     <string id="EStorageFull">Storage full!</string>
     <string id="EStorageError">List could not be stored!</string>
+    <string id="ListRecOOM">The app's memory is not sufficient to process the received list.\n\nPlease consider a smaller list.</string>
     <string id="ListDel">List deleted.</string>
     <string id="LegacyPhoneApp">You seem to be using an old version of the smartphone app.\nPlease update it.</string>
 

@@ -17,10 +17,11 @@ module Lists {
     (:glance,:background)
     typedef ListIndex as Dictionary<String, ListIndexItem>; /* the list-index, with list uuid as key, and some list data as value */
 
+    (:background)
     class ListsManager {
         private var onListsChangedListeners as Array<WeakReference> = [];
+        private var _memoryChecker = new BG.MemoryChecker();
 
-        (:background)
         function addList(data as Dictionary) as Boolean {
             var keys = data.keys();
             var listuuid = null;
@@ -120,13 +121,10 @@ module Lists {
                         isSync = val;
                     }
                 }
-                if ($.getApp().isBackground) {
-                    var stats = System.getSystemStats();
-                    Debug.Log("Add Memory: " + stats.usedMemory + " / " + stats.totalMemory);
-                }
 
                 key = null;
                 val = null;
+                self._memoryChecker.Check();
             }
 
             //verify data
@@ -164,6 +162,7 @@ module Lists {
                     itemsArr.add(listitems.get(itemKeys[i]));
                 }
             }
+            self._memoryChecker.Check();
             listitems = null;
             list.put("items", itemsArr);
 
@@ -202,6 +201,7 @@ module Lists {
                     list.put("r_last", Time.now().value());
                 }
             }
+            self._memoryChecker.Check();
 
             var save = self.saveList(listuuid, list);
             if (save[0] == true) {
@@ -245,18 +245,17 @@ module Lists {
             }
         }
 
-        (:background)
         function GetLists() as ListIndex {
             var index = Application.Storage.getValue("listindex") as ListIndex;
-            if (!$.getApp().isBackground) {
-                index = self.checkListIndex(index);
-            }
+            self._memoryChecker.Check();
+            index = self.checkListIndex(index);
             return index;
         }
 
         function getList(uuid as String) as List? {
             try {
                 var list = Application.Storage.getValue(uuid);
+                self._memoryChecker.Check();
                 return list;
             } catch (ex instanceof Lang.Exception) {
                 Debug.Log("Could not load list " + uuid + ": " + ex.getErrorMessage());
@@ -271,6 +270,7 @@ module Lists {
             var list = self.getList(uuid);
             if (list != null && list.hasKey("items")) {
                 var items = list.get("items") as Array<ListItemsItem>;
+                self._memoryChecker.Check();
                 if (items.size() > position) {
                     items[position].put("d", state);
                     list.put("items", items);
@@ -296,8 +296,8 @@ module Lists {
             }
         }
 
-        (:background)
         function saveList(uuid as String, list as List) as Array<Boolean or Lang.Exception or Null> {
+            self._memoryChecker.Check();
             var listname = list.get("name");
             if (listname == null) {
                 listname = "?";
@@ -305,7 +305,7 @@ module Lists {
             try {
                 Application.Storage.setValue(uuid, list);
 
-                if (Helper.Properties.Get(Helper.Properties.LASTLIST, "").equals(uuid)) {
+                if (!$.getApp().isBackground && Helper.Properties.Get(Helper.Properties.LASTLIST, "").equals(uuid)) {
                     Helper.Properties.Store(Helper.Properties.LASTLISTSCROLL, -1);
                 }
 
@@ -336,7 +336,7 @@ module Lists {
                 if (with_toast == true && !$.getApp().isBackground) {
                     Helper.ToastUtil.Toast(Rez.Strings.ListDel, Helper.ToastUtil.SUCCESS);
                 }
-                if (Helper.Properties.Get(Helper.Properties.LASTLIST, "").equals(uuid)) {
+                if (!$.getApp().isBackground && Helper.Properties.Get(Helper.Properties.LASTLIST, "").equals(uuid)) {
                     Helper.Properties.Store(Helper.Properties.LASTLISTSCROLL, -1);
                     Helper.Properties.Store(Helper.Properties.LASTLIST, "");
                 }
@@ -387,6 +387,9 @@ module Lists {
         }
 
         private function checkListIndex(index as ListIndex?) as ListIndex {
+            if ($.getApp().isBackground) {
+                return index;
+            }
             if (index != null && index.size() > 0) {
                 var delete = [] as Array<String>;
                 for (var i = 0; i < index.keys().size(); i++) {
@@ -424,8 +427,8 @@ module Lists {
             return ({}) as ListIndex;
         }
 
-        (:background)
         private function StoreIndex(index as ListIndex) as Array<Boolean or Lang.Exception or Null> {
+            self._memoryChecker.Check();
             try {
                 Application.Storage.setValue("listindex", index);
                 Debug.Log("Stored list index with " + index.size() + " items");
@@ -448,20 +451,22 @@ module Lists {
         }
 
         private function reportError(code as Number, payload as Dictionary<String, Object>?) as Void {
-            var msg = null as Lang.ResourceId?;
-            switch (code) {
-                case 1:
-                case 2:
-                case 3:
-                case 4:
-                    msg = Rez.Strings.ErrListRec;
-                    break;
-                case 5:
-                    msg = Rez.Strings.ErrListDel;
-                    break;
+            if (!$.getApp().isBackground) {
+                var msg = null as Lang.ResourceId?;
+                switch (code) {
+                    case 1:
+                    case 2:
+                    case 3:
+                    case 4:
+                        msg = Rez.Strings.ErrListRec;
+                        break;
+                    case 5:
+                        msg = Rez.Strings.ErrListDel;
+                        break;
+                }
+                var errorView = new Views.ErrorView(msg, code, payload);
+                WatchUi.pushView(errorView, new Views.ItemViewDelegate(errorView), WatchUi.SLIDE_BLINK);
             }
-            var errorView = new Views.ErrorView(msg, code, payload);
-            WatchUi.pushView(errorView, new Views.ItemViewDelegate(errorView), WatchUi.SLIDE_BLINK);
         }
 
         private function triggerOnListsChanged(index as ListIndex?) as Void {

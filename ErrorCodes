@@ -3,3 +3,4 @@ x0002  = ListsManager: missing properties in list data
 x0003  = ListsManager: list could not be saved
 x0004  = ListsManager: list index could not be saved
 x0005  = ListsManager: list could not be deleted
+x0064  = App is out of memory while processing a received list

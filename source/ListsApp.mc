@@ -31,7 +31,7 @@ class ListsApp extends Application.AppBase {
     }
 
     function getInitialView() as [WatchUi.Views] or [WatchUi.Views, WatchUi.InputDelegates] {
-        var appVersion = "2025.02.2400";
+        var appVersion = "2025.02.2500";
         Application.Properties.setValue("appVersion", appVersion);
 
         self.Debug = new Debug.DebugStorage();
@@ -71,12 +71,13 @@ class ListsApp extends Application.AppBase {
     }
 
     function onBackgroundData(data as Application.PersistableType) as Void {
+        var maxMessages = 5;
         if (data instanceof Array) {
             Debug.Log("Received message from background");
             self._backgroundReceive.add(data);
-            if (self._backgroundReceive.size() > 10) {
-                Debug.Log("Received too many messages from background, only keep the 10 newest");
-                self._backgroundReceive = self._backgroundReceive.slice(-10, null);
+            if (self._backgroundReceive.size() > maxMessages) {
+                Debug.Log("Received too many messages from background, only keep the " + maxMessages + " newest");
+                self._backgroundReceive = self._backgroundReceive.slice(-maxMessages, null);
             }
         } else {
             Debug.Log("Received invalid message from background");
@@ -168,7 +169,9 @@ class ListsApp extends Application.AppBase {
         if (self._backgroundReceive.size() > 0) {
             var data = self._backgroundReceive[0];
             self._backgroundReceive = self._backgroundReceive.slice(0, 1);
-            self.Phone.processData(data);
+            try {
+                self.Phone.processData(data);
+            } catch (ex instanceof BG.NoDataProcessedException) {}
         } else if (self._backgroundReceiveTimer != null) {
             self._backgroundReceiveTimer.stop();
             self._backgroundReceiveTimer = null;

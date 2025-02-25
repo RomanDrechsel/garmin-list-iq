@@ -38,7 +38,7 @@ module Helper {
         }
 
         (:glance,:background)
-        public static function Get(prop as EProps or String, default_value as PropType?) as PropType {
+        public static function Get(prop as EProps or String, default_value as PropType?) as PropType? {
             try {
                 return Props.getValue(prop as String);
             } catch (ex instanceof Lang.Exception) {

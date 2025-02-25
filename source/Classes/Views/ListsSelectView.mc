@@ -77,8 +77,8 @@ module Views {
         private function publishLists(index as ListIndex?) as Void {
             if (self._firstDisplay) {
                 self._firstDisplay = false;
-                var startuplist = Helper.Properties.Get(Helper.Properties.LASTLIST, "");
-                if (startuplist.length() > 0) {
+                var startuplist = Helper.Properties.Get(Helper.Properties.LASTLIST, null);
+                if (startuplist != null) {
                     if (index.hasKey(startuplist)) {
                         var startscroll = Helper.Properties.Get(Helper.Properties.LASTLISTSCROLL, -1);
                         Helper.Properties.Store(Helper.Properties.LASTLIST, "");

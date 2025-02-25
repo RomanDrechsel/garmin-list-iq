@@ -14,13 +14,13 @@
     <string id="ListRec">Список отримано.</string>
     <string id="EStorageFull">Пам’ять переповнена!</string>
     <string id="EStorageError">Не вдалося зберегти список!</string>
+    <string id="ListRecOOM">Пам’яті додатка недостатньо для обробки отриманого списку.\n\nБудь ласка, розгляньте можливість використання меншого списку.</string>
     <string id="ListDel">Список видалено.</string>
     <string id="LegacyPhoneApp">Здається, ви використовуєте стару версію програми для смартфона.\nБудь ласка, оновіть її.</string>
 
     <string id="NoLists">Списки не знайдено!</string>
     <string id="NoListsLink">Подвійне торкання, щоб відкрити Android Play Store на телефоні.</string>
     <string id="NoListsLinkBtn">Натисніть клавішу Enter, щоб відкрити Android Play Store на телефоні.</string>
-
 
     <string id="ListNotFound">Список не знайдено!</string>
     <string id="ListEmpty">Список порожній.</string>

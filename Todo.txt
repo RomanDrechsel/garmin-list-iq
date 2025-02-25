@@ -5,8 +5,6 @@ For Smartphone
 adb -d forward tcp:7381 tcp:7381
 
 TEST: Background service
-TODO: Translate ListRecOOM
-TODO: only show ErrorView once on start
 TODO: List settings: reset list button
 TODO: send success response to phone, when list added
 

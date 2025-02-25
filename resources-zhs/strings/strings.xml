@@ -14,6 +14,7 @@
     <string id="ListRec">列表已接收。</string>
     <string id="EStorageFull">存储已满！</string>
     <string id="EStorageError">无法保存列表！</string>
+    <string id="ListRecOOM">应用的内存不足，无法处理接收到的列表。\n\n请考虑使用更小的列表。</string>
     <string id="ListDel">列表已删除。</string>
     <string id="LegacyPhoneApp">您使用的似乎是旧版本的智能手机应用程序。\n请更新。</string>
 

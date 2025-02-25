@@ -14,6 +14,7 @@
     <string id="ListRec">リストを受信しました。</string>
     <string id="EStorageFull">ストレージが満杯です！</string>
     <string id="EStorageError">リストを保存できませんでした！</string>
+    <string id="ListRecOOM">アプリのメモリが不足しているため、受信したリストを処理できません。\n\nより小さいリストを検討してください。</string>
     <string id="ListDel">リストが削除されました。</string>
     <string id="LegacyPhoneApp">スマートフォンアプリのバージョンが古いようです。\nアップデートしてください。</string>
 

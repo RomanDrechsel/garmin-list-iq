@@ -387,38 +387,37 @@ module Lists {
         }
 
         private function checkListIndex(index as ListIndex?) as ListIndex {
-            if ($.getApp().isBackground) {
-                return index;
-            }
             if (index != null && index.size() > 0) {
-                var delete = [] as Array<String>;
-                for (var i = 0; i < index.keys().size(); i++) {
-                    var key = index.keys()[i] as String or Number;
-                    var dict = index.get(key);
-                    if (dict != null && dict instanceof Dictionary) {
-                        //check of all keys are present
-                        if (!dict.hasKey("key") || !(dict.get("key") instanceof String || dict.get("key") instanceof Number) || !dict.hasKey("name") || !(dict.get("name") instanceof String)) {
-                            delete.add(key);
-                            continue;
-                        }
+                if (!$.getApp().isBackground) {
+                    var delete = [] as Array<String>;
+                    for (var i = 0; i < index.keys().size(); i++) {
+                        var key = index.keys()[i] as String or Number;
+                        var dict = index.get(key);
+                        if (dict != null && dict instanceof Dictionary) {
+                            //check of all keys are present
+                            if (!dict.hasKey("key") || !(dict.get("key") instanceof String || dict.get("key") instanceof Number) || !dict.hasKey("name") || !(dict.get("name") instanceof String)) {
+                                delete.add(key);
+                                continue;
+                            }
 
-                        //check if the list still exists in storage
-                        var storage_key = dict.get("key") as String;
-                        if (Application.Storage.getValue(storage_key) == null) {
+                            //check if the list still exists in storage
+                            var storage_key = dict.get("key") as String;
+                            if (Application.Storage.getValue(storage_key) == null) {
+                                delete.add(key);
+                            }
+                        } else {
                             delete.add(key);
                         }
-                    } else {
-                        delete.add(key);
-                    }
-                }
-
-                if (delete.size() > 0) {
-                    for (var i = 0; i < delete.size(); i++) {
-                        index.remove(delete[i]);
                     }
 
-                    Debug.Log("Deleted " + delete.size() + " lists from index: " + delete);
-                    self.StoreIndex(index);
+                    if (delete.size() > 0) {
+                        for (var i = 0; i < delete.size(); i++) {
+                            index.remove(delete[i]);
+                        }
+
+                        Debug.Log("Deleted " + delete.size() + " lists from index: " + delete);
+                        self.StoreIndex(index);
+                    }
                 }
 
                 return index;

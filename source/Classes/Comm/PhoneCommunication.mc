@@ -62,6 +62,10 @@ module Comm {
 
         function processData(data as Array) as Void {
             if (self._listsManager == null) {
+                Debug.Log("No ListsManager found, cannot handle phone app messages");
+                if ($.getApp().isBackground) {
+                    throw new BG.NoDataProcessedException();
+                }
                 return;
             }
             try {
@@ -81,7 +85,6 @@ module Comm {
                     if (self._listsManager.addList(dict) == false) {
                         Debug.Log("Could not store list");
                     }
-                    return;
                 } else if (message_type.equals(DELETE_LIST)) {
                     if (data.size() > 0) {
                         var uuid = data[0] as String;
@@ -91,7 +94,6 @@ module Comm {
                     } else {
                         Debug.Log("Received delete list but no uuid provided - ignoring");
                     }
-                    return;
                 } else if (message_type.equals(REQUEST_LOGS)) {
                     if (!$.getApp().isBackground) {
                         var message = self.ArrayToDict(data);
@@ -114,7 +116,7 @@ module Comm {
             } catch (ex instanceof BG.OutOfMemoryException) {
                 var stats = System.getSystemStats();
                 Debug.Log("Out of Memory: " + stats.usedMemory + " / " + stats.totalMemory + " (" + ex.Usage.format("%.2f") + "%)");
-                if (!$.getApp().isBackground) {
+                if (!$.getApp().isBackground && !(WatchUi.getCurrentView() instanceof Views.ErrorView)) {
                     var errorView = new Views.ErrorView(Rez.Strings.ListRecOOM, null, null);
                     WatchUi.pushView(errorView, new Views.ItemViewDelegate(errorView), WatchUi.SLIDE_BLINK);
                 } else {

@@ -5,8 +5,16 @@ For Smartphone
 adb -d forward tcp:7381 tcp:7381
 
 TEST: Background service
+WIP: Optimize: less Dictionary, more Arrayf
+TODO: ListsManager.reportError: no dictionary but class
+TODO: ListsManager.triggerOnListsChanged() trigger on save List, not Listindex
+TODO: ListDetailsView.publishItems(), remove every item after adding it so save memory
+TODO: replace Dictionary.has() with (Dictionary["key"] != null)
 TODO: List settings: reset list button
 TODO: send success response to phone, when list added
+TODO: ListsSelectView.publishLists(): what if list contains only 1 item? is the text correct?
+TODO: notes function
+TODO: import or using?
 
 1 Button, 64 Color:
 - Vivoactive 3

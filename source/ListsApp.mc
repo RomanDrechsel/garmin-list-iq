@@ -4,6 +4,7 @@ import Toybox.WatchUi;
 import Toybox.System;
 import Toybox.Communications;
 import Toybox.Background;
+import Toybox.Timer;
 import Views;
 import Comm;
 import Lists;
@@ -15,19 +16,22 @@ class ListsApp extends Application.AppBase {
     var ListsManager = null as ListsManager?;
     var Debug = null as DebugStorage?;
     var Inactivity = null as Helper.Inactivity?;
+    var BackgroundService = null as BG.Service?;
+    var MemoryCheck as Helper.MemoryChecker;
     var GlobalStates as Dictionary<String, Object> = {};
     var isGlanceView = false;
     var isBackground = false;
     var NoBackButton = false;
     private var onSettingsChangedListeners as Array<WeakReference> = [];
     private var _backgroundReceive as Array<Array<Object> > = [];
-    private var _backgroundReceiveTimer = null as Timer.Timer?;
+    private var _backgroundReceiveTimer = null as Timer?;
 
     function initialize() {
         AppBase.initialize();
-        if (!Background.getPhoneAppMessageEventRegistered()) {
+        if (Background has :getPhoneAppMessageEventRegistered && !Background.getPhoneAppMessageEventRegistered()) {
             Background.registerForPhoneAppMessageEvent();
         }
+        self.MemoryCheck = new Helper.MemoryChecker(self);
     }
 
     function getInitialView() as [WatchUi.Views] or [WatchUi.Views, WatchUi.InputDelegates] {
@@ -42,7 +46,7 @@ class ListsApp extends Application.AppBase {
         }
 
         self.ListsManager = new ListsManager();
-        self.Phone = new Comm.PhoneCommunication(true);
+        self.Phone = new Comm.PhoneCommunication(self, true);
         self.Inactivity = new Helper.Inactivity();
 
         if (self._backgroundReceive.size() > 0) {
@@ -62,8 +66,9 @@ class ListsApp extends Application.AppBase {
     function getServiceDelegate() as [System.ServiceDelegate] {
         self.isBackground = true;
         self.ListsManager = new ListsManager();
-        self.Phone = new Comm.PhoneCommunication(false);
-        return [new BG.Service()];
+        self.Phone = new Comm.PhoneCommunication(self, false);
+        self.BackgroundService = new BG.Service();
+        return [self.BackgroundService];
     }
 
     function onSettingsChanged() as Void {
@@ -133,7 +138,7 @@ class ListsApp extends Application.AppBase {
         ret.add("Monkey Version: " + settings.monkeyVersion);
         ret.add("Memory: " + stats.usedMemory + " / " + stats.totalMemory);
         ret.add("Language: " + settings.systemLanguage);
-        ret.add("Lists in Storage: " + self.ListsManager.GetLists().size());
+        ret.add("Lists in Storage: " + self.ListsManager.GetListsIndex().size());
         return ret;
     }
 
@@ -171,7 +176,7 @@ class ListsApp extends Application.AppBase {
             self._backgroundReceive = self._backgroundReceive.slice(0, 1);
             try {
                 self.Phone.processData(data);
-            } catch (ex instanceof BG.NoDataProcessedException) {}
+            } catch (ex instanceof Lang.Exception) {}
         } else if (self._backgroundReceiveTimer != null) {
             self._backgroundReceiveTimer.stop();
             self._backgroundReceiveTimer = null;

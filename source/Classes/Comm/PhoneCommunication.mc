@@ -15,22 +15,18 @@ module Comm {
             REQUEST_LOGS = "req_logs",
         }
 
-        private var _listsManager as Lists.ListsManager? = null;
+        private var _app as ListsApp;
 
-        function initialize(register_callback as Boolean) {
+        function initialize(app as ListsApp, register_callback as Boolean) {
             ConnectionListener.initialize();
+            self._app = app;
 
             if (register_callback) {
                 Communications.registerForPhoneAppMessages(method(:phoneMessageCallback));
             }
-            self._listsManager = $.getApp().ListsManager;
         }
 
         function phoneMessageCallback(msg as Communications.PhoneAppMessage) as Void {
-            if (self._listsManager == null) {
-                Debug.Log("No ListsManager found, cannot handle phone app messages");
-                return;
-            }
             var message = msg.data as Application.PropertyValueType;
             if (message instanceof Array) {
                 self.processData(message);
@@ -61,93 +57,68 @@ module Comm {
         }
 
         function processData(data as Array) as Void {
-            if (self._listsManager == null) {
+            if (self._app.ListsManager == null) {
                 Debug.Log("No ListsManager found, cannot handle phone app messages");
-                if ($.getApp().isBackground) {
-                    throw new BG.NoDataProcessedException();
+                if (self._app.BackgroundService != null) {
+                    self._app.BackgroundService.Finish(false);
                 }
                 return;
             }
-            try {
-                var size = Helper.StringUtil.formatBytes(data.toString().length());
-                var message_type = null;
-                if (data[0] instanceof String) {
-                    message_type = data[0];
-                } else {
-                    Debug.Log("Received unknown message from phone (" + size + ")");
-                    return;
-                }
-                Debug.Log("Received message " + message_type + " (" + size + ")");
 
-                data = data.slice(1, null);
-                if (message_type.equals(LIST)) {
-                    var dict = self.ArrayToDict(data);
-                    if (self._listsManager.addList(dict) == false) {
-                        Debug.Log("Could not store list");
-                    }
-                } else if (message_type.equals(DELETE_LIST)) {
-                    if (data.size() > 0) {
-                        var uuid = data[0] as String;
-                        if (self._listsManager.deleteList(uuid, false) == false) {
-                            Debug.Log("Could not delete list " + uuid);
-                        }
-                    } else {
-                        Debug.Log("Received delete list but no uuid provided - ignoring");
-                    }
-                } else if (message_type.equals(REQUEST_LOGS)) {
-                    if (!$.getApp().isBackground) {
-                        var message = self.ArrayToDict(data);
-                        var tid = message.get("tid") as String?;
-                        var resp = [];
-                        if (tid != null && tid.length() > 0) {
-                            resp.add("tid=" + tid);
-                        }
-                        if ($.getApp().Debug != null) {
-                            var logs = $.getApp().Debug.GetLogs() as Array<String>;
-                            for (var i = 0; i < logs.size(); i++) {
-                                resp.add(i + "=" + logs[i]);
-                            }
-                        }
-                        self.SendToPhone(resp);
+            var size = Helper.StringUtil.formatBytes(Helper.StringUtil.getSize(data));
+            var message_type = null;
+            if (data[0] instanceof String) {
+                message_type = data[0];
+            } else {
+                Debug.Log("Received unknown message from phone (" + size + ")");
+                return;
+            }
+            Debug.Log("Received message " + message_type + " (" + size + ")");
+
+            data = data.slice(1, null);
+            if (message_type.equals(LIST)) {
+                self._app.ListsManager.addList(data);
+            } else if (message_type.equals(DELETE_LIST)) {
+                if (data.size() > 0) {
+                    var uuid = data[0] as String;
+                    if (self._app.ListsManager.deleteList(uuid, false) == false) {
+                        Debug.Log("Could not delete list " + uuid);
                     }
                 } else {
-                    Debug.Log("Received unknown message " + message_type.toString() + " from phone");
+                    Debug.Log("Received delete list but no uuid provided - ignoring");
                 }
-            } catch (ex instanceof BG.OutOfMemoryException) {
-                var stats = System.getSystemStats();
-                Debug.Log("Out of Memory: " + stats.usedMemory + " / " + stats.totalMemory + " (" + ex.Usage.format("%.2f") + "%)");
-                if (!$.getApp().isBackground && !(WatchUi.getCurrentView() instanceof Views.ErrorView)) {
-                    var errorView = new Views.ErrorView(Rez.Strings.ListRecOOM, null, null);
-                    WatchUi.pushView(errorView, new Views.ItemViewDelegate(errorView), WatchUi.SLIDE_BLINK);
-                } else {
-                    throw new BG.NoDataProcessedException();
+            } else if (message_type.equals(REQUEST_LOGS)) {
+                if (!self._app.isBackground) {
+                    var tid = null;
+                    var split = Helper.StringUtil.split(data[0] as String, "=", 2);
+                    if (split.size() > 1) {
+                        tid = split[1];
+                    }
+
+                    var resp = [];
+                    if (tid != null && tid.length() > 0) {
+                        resp.add("tid=" + tid);
+                    }
+                    if (self._app.Debug != null) {
+                        var logs = self._app.Debug.GetLogs() as Array<String>;
+                        for (var i = 0; i < logs.size(); i++) {
+                            resp.add(i + "=" + logs[i]);
+                        }
+                    }
+                    self.SendToPhone(resp);
                 }
+            } else {
+                Debug.Log("Received unknown message " + message_type.toString() + " from phone");
             }
         }
 
         private function processDataLegacy(message as Dictionary) as Void {
             var size = Helper.StringUtil.formatBytes(message.toString().length());
             Debug.Log("Received legacy message (" + size + ")");
-            if (!$.getApp().isBackground) {
+            if (!self._app.isBackground) {
                 var error = new Views.ErrorViewLegacyApp();
                 WatchUi.pushView(error, new Views.ItemViewDelegate(error), WatchUi.SLIDE_IMMEDIATE);
             }
-        }
-
-        protected function ArrayToDict(arr as Array) as Dictionary {
-            var dict = {};
-            for (var i = 0; i < arr.size(); i++) {
-                var split = Helper.StringUtil.split(arr[i], "=", 2);
-                if (split.size() == 1) {
-                    dict.put(split[0], "");
-                } else {
-                    dict.put(split[0], split[1]);
-                }
-            }
-
-            arr = null;
-
-            return dict;
         }
     }
 }

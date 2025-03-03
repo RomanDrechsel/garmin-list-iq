@@ -2,8 +2,8 @@ import Toybox.Lang;
 import Toybox.Graphics;
 
 module Helper {
+    (:glance,:background)
     class StringUtil {
-        (:glance)
         static function stringReplace(str as String, oldString as String, newString as String) as String {
             var result = str;
             while (true) {
@@ -19,7 +19,6 @@ module Helper {
             return "";
         }
 
-        (:glance,:background)
         static function split(str as String, split as String, maxCount as Number) as Array<String> {
             var ret = [];
             if (maxCount < 2) {
@@ -55,7 +54,6 @@ module Helper {
             return ret;
         }
 
-        (:background)
         static function formatBytes(bytes as Number) as String {
             if (bytes >= 1048576) {
                 return (bytes / 1048576).format("%.1f") + "Mb";
@@ -66,8 +64,10 @@ module Helper {
             }
         }
 
-        (:background)
-        static function StringToBool(str as String) as Boolean? {
+        static function StringToBool(str as String?) as Boolean? {
+            if (str == null) {
+                return null;
+            }
             if (str.equals("true")) {
                 return true;
             } else if (str.equals("false")) {
@@ -77,8 +77,11 @@ module Helper {
             }
         }
 
-        (:background)
-        static function StringToNumber(str as String) as Number? {
+        static function StringToNumber(str as String?) as Number? {
+            if (str == null) {
+                return null;
+            }
+
             try {
                 var num = str.toNumber();
                 if (num != null && num.toString().equals(str)) {
@@ -88,6 +91,45 @@ module Helper {
             } catch (e) {
                 return null;
             }
+        }
+
+        static function getSize(obj as Object) as Number {
+            var size = 0;
+            if (obj instanceof Lang.Array) {
+                for (var i = 0; i < obj.size(); i++) {
+                    size += self.getSize(obj[i]);
+                }
+            } else {
+                size = obj.toString().length() * 2;
+            }
+            return size;
+        }
+
+        static function compareStrings(str1 as String, str2 as String) as Number {
+            if (str1 has :compareTo) {
+                return str1.compareTo(str2);
+            }
+
+            var len1 = str1.length();
+            var len2 = str2.length();
+            var minLength = len1 < len2 ? len1 : len2;
+
+            var chars1 = str1.toCharArray();
+            var chars2 = str2.toCharArray();
+
+            for (var i = 0; i < minLength; i++) {
+                var char1 = chars1[i];
+                var char2 = chars2[i];
+
+                if (char1 != char2) {
+                    return char1 < char2 ? -1 : 1;
+                }
+            }
+
+            if (len1 == len2) {
+                return 0;
+            }
+            return len1 < len2 ? -1 : 1;
         }
     }
 }

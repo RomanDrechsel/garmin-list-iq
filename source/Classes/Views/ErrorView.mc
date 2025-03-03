@@ -23,6 +23,11 @@ module Views {
             self.loadVisuals();
         }
 
+        function onHide() as Void {
+            ItemView.onHide();
+            $.getApp().MemoryCheck.ShowErrorView = true;
+        }
+
         function onTap(x as Number, y as Number) as Boolean {
             if (!ItemView.onTap(x, y)) {
                 self.sendReport();

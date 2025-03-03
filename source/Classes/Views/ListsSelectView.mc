@@ -11,7 +11,6 @@ module Views {
     class ListsSelectView extends ItemView {
         private const _listIconCode = 48;
         private var _firstDisplay = true;
-        private var _numLists as Number? = null;
 
         function initialize(first_display as Boolean) {
             ItemView.initialize();
@@ -19,20 +18,21 @@ module Views {
             self._firstDisplay = first_display;
         }
 
-        function onLayout(dc as Dc) as Void {
-            ItemView.onLayout(dc);
-            if ($.getApp().ListsManager != null) {
-                $.getApp().ListsManager.addListChangedListener(self);
-                self.publishLists($.getApp().ListsManager.GetLists());
-            }
-        }
-
         function onShow() as Void {
             ItemView.onShow();
-            if (self.Items.size() == 0) {
-                self.publishLists($.getApp().ListsManager.GetLists());
+            if ($.getApp().ListsManager != null) {
+                $.getApp().ListsManager.addListIndexChangedListener(self);
             }
+            self.publishLists($.getApp().ListsManager.GetListsIndex(), false);
             Helper.Properties.Store(Helper.Properties.LASTLIST, "");
+        }
+
+        function onHide() as Void {
+            ItemView.onHide();
+            self.Items = [];
+            if ($.getApp().ListsManager != null) {
+                $.getApp().ListsManager.removeListIndexChangedListener(self);
+            }
         }
 
         function onDoubleTap(x as Number, y as Number) as Boolean {
@@ -62,28 +62,30 @@ module Views {
             return true;
         }
 
-        function onListsChanged(index as ListIndex) as Void {
-            self.publishLists(index);
+        function onListIndexChanged(index as Array<Lists.ListIndexItem>?) as Void {
+            self.publishLists(index, true);
         }
 
         function onSettingsChanged() as Void {
             ItemView.onSettingsChanged();
             if ($.getApp().ListsManager != null) {
-                self._numLists = null;
-                self.publishLists($.getApp().ListsManager.GetLists());
+                self.publishLists($.getApp().ListsManager.GetListsIndex(), true);
             }
         }
 
-        private function publishLists(index as ListIndex?) as Void {
-            if (self._firstDisplay) {
+        private function publishLists(index as Lists.ListIndex?, request_update as Boolean) as Void {
+            if (self._firstDisplay && index != null) {
                 self._firstDisplay = false;
                 var startuplist = Helper.Properties.Get(Helper.Properties.LASTLIST, null);
                 if (startuplist != null) {
-                    if (index.hasKey(startuplist)) {
-                        var startscroll = Helper.Properties.Get(Helper.Properties.LASTLISTSCROLL, -1);
-                        Helper.Properties.Store(Helper.Properties.LASTLIST, "");
-                        self.GotoList(startuplist, startscroll);
-                        return;
+                    var keys = index.keys();
+                    for (var i = 0; i < keys.size(); i++) {
+                        if ((keys[i] instanceof Number && keys[i] == startuplist) || (keys[i] instanceof String && keys[i].equals(startuplist))) {
+                            var startscroll = Helper.Properties.Get(Helper.Properties.LASTLISTSCROLL, -1);
+                            Helper.Properties.Store(Helper.Properties.LASTLIST, "");
+                            self.GotoList(startuplist, startscroll);
+                            return;
+                        }
                     }
                 }
             }
@@ -100,25 +102,28 @@ module Views {
             }
 
             var lists = index.values() as Array<ListIndexItem>;
-            lists = Helper.MergeSort.Sort(lists, "order");
+            lists = Helper.MergeSort.Sort(lists, "o");
+            index = null;
 
             self.Items = [] as Array<Item>;
-            for (var i = 0; i < lists.size(); i++) {
-                var list = lists[i] as ListIndexItem;
+            while (lists.size() > 0) {
+                var item = lists[0];
+                lists = lists.slice(1, null);
+                var uuid = item.get(Lists.List.UUID);
+                var items = item.get(Lists.List.ITEMS);
+                var date = item.get(Lists.List.DATE);
+                var title = item.get(Lists.List.TITLE);
                 var substring = "";
-                var items = list.get("items") as Number;
                 if (items != null) {
-                    substring = Application.loadResource(Rez.Strings.LMSub) as String;
-                    substring = Helper.StringUtil.stringReplace(substring, "%s", items.toString());
+                    substring = Helper.StringUtil.stringReplace(Application.loadResource(Rez.Strings.LMSub), "%s", items.toString());
                 }
-                var date = list.get("date");
                 if (date != null) {
                     if (substring.length() > 0) {
                         substring += "\n";
                     }
                     substring += Helper.DateUtil.DatetoString(date, null);
                 }
-                self.addItem(list.get("name") as String, substring, list.get("key") as String, self._listIconCode, i);
+                self.addItem(title, substring, uuid, self._listIconCode, item.get("o"));
             }
 
             //no line below the last item
@@ -135,8 +140,7 @@ module Views {
                 self.addBackButton(true);
             }
 
-            if (self._numLists == null || self._numLists != lists.size()) {
-                self._numLists = lists.size();
+            if (request_update) {
                 WatchUi.requestUpdate();
             }
         }

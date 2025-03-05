@@ -18,7 +18,7 @@ class ListsApp extends Application.AppBase {
     var Inactivity = null as Helper.Inactivity?;
     var BackgroundService = null as BG.Service?;
     var MemoryCheck as Helper.MemoryChecker;
-    var GlobalStates as Dictionary<String, Object> = {};
+    var GlobalStates as Array<Object> = [];
     var isGlanceView = false;
     var isBackground = false;
     var NoBackButton = false;
@@ -45,7 +45,7 @@ class ListsApp extends Application.AppBase {
             self.NoBackButton = true;
         }
 
-        self.ListsManager = new ListsManager();
+        self.ListsManager = new ListsManager(self);
         self.Phone = new Comm.PhoneCommunication(self, true);
         self.Inactivity = new Helper.Inactivity();
 
@@ -65,7 +65,7 @@ class ListsApp extends Application.AppBase {
 
     function getServiceDelegate() as [System.ServiceDelegate] {
         self.isBackground = true;
-        self.ListsManager = new ListsManager();
+        self.ListsManager = new ListsManager(self);
         self.Phone = new Comm.PhoneCommunication(self, false);
         self.BackgroundService = new BG.Service();
         return [self.BackgroundService];

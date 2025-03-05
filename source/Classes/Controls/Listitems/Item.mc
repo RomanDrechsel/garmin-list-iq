@@ -1,7 +1,7 @@
 import Toybox.Lang;
 import Toybox.Graphics;
 import Toybox.WatchUi;
-import Helper;
+import Exceptions;
 
 module Controls {
     module Listitems {

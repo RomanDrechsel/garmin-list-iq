@@ -199,7 +199,7 @@ module Views {
                         item.setIconInvert(val ? self._itemIconDoneInvert : self._itemIconInvert);
                         WatchUi.requestUpdate();
                         if ($.getApp().ListsManager != null) {
-                            $.getApp().GlobalStates.put("movetop", true);
+                            $.getApp().GlobalStates.add("movetop");
                         }
                     }
                 } else if (item.BoundObject == SETTINGS_HWBCTRL) {

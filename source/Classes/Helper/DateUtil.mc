@@ -96,7 +96,7 @@ module Helper {
         (:background)
         public static function TimezoneOffset() as Number? {
             var offset_seconds = System.getClockTime().timeZoneOffset;
-            if (offset_seconds == null && Debug.isDebug) {
+            if (Debug.isDebug) {
                 offset_seconds = 7200;
             }
             return offset_seconds;

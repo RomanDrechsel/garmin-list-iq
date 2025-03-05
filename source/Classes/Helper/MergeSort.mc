@@ -2,7 +2,7 @@ import Toybox.Lang;
 
 module Helper {
     class MergeSort {
-        static function Sort(array as Array<Object>, propertykey as String?) as Array? {
+        static function Sort(array as Array<Object>, propertykey as String or Number or Null) as Array? {
             if (array.size() <= 1) {
                 return array;
             }
@@ -16,7 +16,7 @@ module Helper {
             return self.Merge(subarray1, subarray2, propertykey);
         }
 
-        private static function Merge(array1 as Array, array2 as Array, propertykey as String?) as Array {
+        private static function Merge(array1 as Array, array2 as Array, propertykey as String or Number or Null) as Array {
             var result = [];
 
             var val1, val2;
@@ -39,7 +39,7 @@ module Helper {
                         array1 = array1.slice(1, null);
                     }
                 } else {
-                    if (val1 != null && (val2 == null || Helper.StringUtil.compareStrings(val1, val2) > 0)) {
+                    if (val1 != null && (val2 == null || Helper.StringUtil.compareStrings(val1.toString(), val2.toString()) > 0)) {
                         result.add(array2[0]);
                         array2 = array2.slice(1, null);
                     } else {

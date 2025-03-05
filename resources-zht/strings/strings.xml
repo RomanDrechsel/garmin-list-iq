@@ -15,6 +15,7 @@
     <string id="EStorageFull">存儲已滿！</string>
     <string id="EStorageError">無法保存列表！</string>
     <string id="ListRecOOM">應用的記憶體不足，無法處理接收到的列表。\n\n請考慮使用更小的列表。</string>
+    <string id="ListLegacy">請重新傳輸您的列表。\n由於記憶體優化，舊列表無法再顯示！</string>
     <string id="ListDel">列表已刪除。</string>
     <string id="LegacyPhoneApp">您使用的似乎是舊版本的智慧型手機應用程式。\n請更新。</string>
 
@@ -25,7 +26,8 @@
     <string id="ListNotFound">未找到列表！</string>
     <string id="ListEmpty">列表為空。</string>
 
-    <string id="LMSub">%s 點</string>
+    <string id="LMSub">%s 元素</string>
+    <string id="LMSubOne">1 元素</string>
 
     <string id="StTitle">設置</string>
     <string id="StMoveBottom">將完成的項目移動到底部</string>

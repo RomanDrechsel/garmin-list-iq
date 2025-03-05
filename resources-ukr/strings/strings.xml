@@ -15,6 +15,7 @@
     <string id="EStorageFull">Пам’ять переповнена!</string>
     <string id="EStorageError">Не вдалося зберегти список!</string>
     <string id="ListRecOOM">Пам’яті додатка недостатньо для обробки отриманого списку.\n\nБудь ласка, розгляньте можливість використання меншого списку.</string>
+    <string id="ListLegacy">Будь ласка, передайте свої списки заново.\nЧерез оптимізацію пам’яті старі списки більше не можуть відображатися!</string>
     <string id="ListDel">Список видалено.</string>
     <string id="LegacyPhoneApp">Здається, ви використовуєте стару версію програми для смартфона.\nБудь ласка, оновіть її.</string>
 
@@ -25,7 +26,8 @@
     <string id="ListNotFound">Список не знайдено!</string>
     <string id="ListEmpty">Список порожній.</string>
 
-    <string id="LMSub">%s бали</string>
+    <string id="LMSub">%s елементи</string>
+    <string id="LMSubOne">1 елемент</string>
 
     <string id="StTitle">Налаштування</string>
     <string id="StMoveBottom">Перенести виконані пункти вниз</string>

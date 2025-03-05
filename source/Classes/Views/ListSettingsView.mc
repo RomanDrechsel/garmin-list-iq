@@ -4,7 +4,7 @@ import Toybox.Time;
 import Lists;
 import Controls;
 import Controls.Listitems;
-import Helper;
+import Exceptions;
 
 module Views {
     class ListSettingsView extends IconItemView {
@@ -57,7 +57,7 @@ module Views {
                 }
                 return true;
             } else if (item.BoundObject.equals("back")) {
-                $.getApp().GlobalStates.put("movetop", true);
+                $.getApp().GlobalStates.add("movetop");
                 self.goBack();
                 return true;
             }
@@ -67,9 +67,9 @@ module Views {
         function deleteList() as Void {
             if ($.getApp().ListsManager != null) {
                 $.getApp().ListsManager.deleteList(self.ListUuid, true);
-                $.getApp().GlobalStates.put("movetop", true);
+                $.getApp().GlobalStates.add("movetop");
             }
-            $.getApp().GlobalStates.put("startpage", true);
+            $.getApp().GlobalStates.add("startpage");
             WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
             WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
         }

@@ -15,7 +15,8 @@
     <string id="EStorageFull">ストレージが満杯です！</string>
     <string id="EStorageError">リストを保存できませんでした！</string>
     <string id="ListRecOOM">アプリのメモリが不足しているため、受信したリストを処理できません。\n\nより小さいリストを検討してください。</string>
-    <string id="ListDel">リストが削除されました。</string>
+    <string id="ListLegacy">リストを再転送してください。\nメモリ最適化のため、古いリストは表示できなくなりました！</string>
+<string id="ListDel">リストが削除されました。</string>
     <string id="LegacyPhoneApp">スマートフォンアプリのバージョンが古いようです。\nアップデートしてください。</string>
 
     <string id="NoLists">リストが見つかりません！</string>
@@ -25,7 +26,8 @@
     <string id="ListNotFound">リストが見つかりません！</string>
     <string id="ListEmpty">リストが空です。</string>
 
-    <string id="LMSub">%s 点</string>
+    <string id="LMSub">%s 項目</string>
+    <string id="LMSubOne">1 項目</string>
 
     <string id="StTitle">設定</string>
     <string id="StMoveBottom">完了項目を下へ移動</string>

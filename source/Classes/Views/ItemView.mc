@@ -5,7 +5,7 @@ import Toybox.Application;
 import Toybox.Time;
 import Toybox.System;
 import Controls;
-import Helper;
+import Exceptions;
 import Controls.Listitems;
 
 module Views {
@@ -103,8 +103,8 @@ module Views {
         }
 
         function onShow() as Void {
-            if ($.getApp().GlobalStates.hasKey("startpage")) {
-                if (self instanceof ListsSelectView == false) {
+            if ($.getApp().GlobalStates.indexOf("startpage") >= 0) {
+                if (!(self instanceof ListsSelectView)) {
                     WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
                     return;
                 } else {
@@ -113,7 +113,7 @@ module Views {
             } else {
                 self.Interaction();
             }
-            if ($.getApp().GlobalStates.hasKey("movetop")) {
+            if ($.getApp().GlobalStates.indexOf("movetop") >= 0) {
                 self._scrollOffset = 0;
                 self.setIterator(0);
                 $.getApp().GlobalStates.remove("movetop");
@@ -364,7 +364,10 @@ module Views {
                 if (self.DisplayButtonSupport() || $.isRoundDisplay) {
                     if (self.Items.size() > 0) {
                         if (self.Items[0] instanceof Listitems.Title) {
-                            self._paddingTop = self._mainLayer.getHeight() / 2 - (self.Items[1].getHeight(dc) / 2).toNumber() - self.Items[0].getHeight(dc);
+                            self._paddingTop = self._mainLayer.getHeight() / 2 - self.Items[0].getHeight(dc);
+                            if (self.Items.size() > 1) {
+                                self._paddingTop -= (self.Items[1].getHeight(dc) / 2).toNumber();
+                            }
                         } else {
                             self._paddingTop = self._mainLayer.getHeight() / 2 - (self.Items[0].getHeight(dc) / 2).toNumber();
                         }

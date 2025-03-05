@@ -36,6 +36,11 @@ module Lists {
         function initialize(data as Dictionary<String or Number, Object>?) {
             if (data != null) {
                 self.Uuid = data.get(UUID) as String or Number or Null;
+
+                if (self.Uuid == null && data.get("uuid") != null) {
+                    throw new Exceptions.LegacyNotSupportedException();
+                }
+
                 self.Title = data.get(TITLE) as String?;
                 self.Order = data.get(ORDER) as Number?;
                 self.Date = data.get(DATE) as Number?;
@@ -56,8 +61,6 @@ module Lists {
                 self.ResetWeekday = data.get(RESET_WEEKDAY) as Number?;
                 self.ResetDay = data.get(RESET_DAY) as Number?;
                 self.ResetLast = data.get(RESET_LAST) as Number?;
-
-                //TODO: Add legacy
 
                 if (self.Date == null) {
                     self.Date = Time.now().value();
@@ -227,6 +230,14 @@ module Lists {
                 return self.Items[index];
             }
             return null;
+        }
+
+        public function ReduceItem() as Listitem? {
+            var item = self.GetItem(0);
+            if (item != null) {
+                self.Items = self.Items.slice(1, null);
+            }
+            return item;
         }
 
         public function ToBackend() as ListModel? {

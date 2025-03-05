@@ -3,7 +3,7 @@ import Toybox.Lang;
 import Toybox.Application;
 import Controls;
 import Controls.Listitems;
-import Helper;
+import Exceptions;
 
 module Views {
     class SettingsThemeView extends IconItemView {

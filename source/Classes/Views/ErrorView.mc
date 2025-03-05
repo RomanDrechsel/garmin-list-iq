@@ -1,6 +1,6 @@
 import Controls;
 import Controls.Listitems;
-import Helper;
+import Exceptions;
 import Toybox.Graphics;
 import Toybox.Lang;
 import Toybox.Application;
@@ -9,9 +9,9 @@ module Views {
     class ErrorView extends ItemView {
         private var _errorMsg as Lang.ResourceId? = null;
         private var _errorCode as Lang.Number? = null;
-        private var _errorPayload as Dictionary<String, Object>?;
+        private var _errorPayload as Array<String>?;
 
-        function initialize(msg as Lang.ResourceId?, code as Lang.Number?, payload as Dictionary<String, Object>?) {
+        function initialize(msg as Lang.ResourceId?, code as Lang.Number?, payload as Array<String>?) {
             ItemView.initialize();
             self._errorMsg = msg;
             self._errorCode = code;
@@ -62,23 +62,10 @@ module Views {
                 if (self._errorPayload != null) {
                     var str = "payload";
                     var payload_index = 0;
-                    var keys = self._errorPayload.keys();
-                    for (var i = 0; i < keys.size(); i++) {
-                        var val = self._errorPayload.get(keys[i]);
-                        if (val instanceof Array) {
-                            for (var j = 0; j < val.size(); j++) {
-                                send.add(str + payload_index + "=" + keys[i] + j + "=" + val[j]);
-                                payload_index++;
-                            }
-                        } else if (val instanceof Dictionary) {
-                            var val_keys = val.keys();
-                            for (var j = 0; j < val_keys.size(); j++) {
-                                var key = val_keys[j];
-                                var val2 = val.get(key);
-                                send.add(str + payload_index + "=" + keys[i] + j + "=" + key + "=" + val2);
-                                payload_index++;
-                            }
-                        }
+                    while (self._errorPayload.size() > 0) {
+                        send.add(str + payload_index + "=" + self._errorPayload[0]);
+                        self._errorPayload = self._errorPayload.slice(1, null);
+                        payload_index += 1;
                     }
                 }
 

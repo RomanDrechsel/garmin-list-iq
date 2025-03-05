@@ -5,7 +5,7 @@ import Toybox.Time;
 import Lists;
 import Controls;
 import Controls.Listitems;
-import Helper;
+import Exceptions;
 
 module Views {
     class ListsSelectView extends ItemView {
@@ -77,16 +77,11 @@ module Views {
             if (self._firstDisplay && index != null) {
                 self._firstDisplay = false;
                 var startuplist = Helper.Properties.Get(Helper.Properties.LASTLIST, null);
-                if (startuplist != null) {
-                    var keys = index.keys();
-                    for (var i = 0; i < keys.size(); i++) {
-                        if ((keys[i] instanceof Number && keys[i] == startuplist) || (keys[i] instanceof String && keys[i].equals(startuplist))) {
-                            var startscroll = Helper.Properties.Get(Helper.Properties.LASTLISTSCROLL, -1);
-                            Helper.Properties.Store(Helper.Properties.LASTLIST, "");
-                            self.GotoList(startuplist, startscroll);
-                            return;
-                        }
-                    }
+                if (startuplist != null && index.hasKey(startuplist)) {
+                    var startscroll = Helper.Properties.Get(Helper.Properties.LASTLISTSCROLL, -1);
+                    Helper.Properties.Store(Helper.Properties.LASTLIST, "");
+                    self.GotoList(startuplist, startscroll);
+                    return;
                 }
             }
 
@@ -102,7 +97,7 @@ module Views {
             }
 
             var lists = index.values() as Array<ListIndexItem>;
-            lists = Helper.MergeSort.Sort(lists, "o");
+            lists = Helper.MergeSort.Sort(lists, Lists.List.ORDER);
             index = null;
 
             self.Items = [] as Array<Item>;
@@ -115,7 +110,11 @@ module Views {
                 var title = item.get(Lists.List.TITLE);
                 var substring = "";
                 if (items != null) {
-                    substring = Helper.StringUtil.stringReplace(Application.loadResource(Rez.Strings.LMSub), "%s", items.toString());
+                    if (items == 1) {
+                        substring = Application.loadResource(Rez.Strings.LMSubOne);
+                    } else {
+                        substring = Helper.StringUtil.stringReplace(Application.loadResource(Rez.Strings.LMSub), "%s", items.toString());
+                    }
                 }
                 if (date != null) {
                     if (substring.length() > 0) {
@@ -153,8 +152,14 @@ module Views {
             item.isSelectable = false;
             self.Items.add(item);
 
-            var init = Helper.Properties.Get(Helper.Properties.INIT, 0);
-            if (init < 1) {
+            if ($.getApp().GlobalStates.indexOf("legacyList") >= 0) {
+                item = new Listitems.Item(self._mainLayer, null, Application.loadResource(Rez.Strings.ListLegacy), "store", null, null, 1, null);
+                item.setSubFont(Helper.Fonts.Normal());
+                item.DrawLine = false;
+                item.isSelectable = false;
+                item.SubtitleJustification = Graphics.TEXT_JUSTIFY_CENTER;
+                self.Items.add(item);
+            } else if (Helper.Properties.Get(Helper.Properties.INIT, 0) < 1) {
                 var txtRez;
                 if (System.getDeviceSettings().isTouchScreen) {
                     txtRez = Rez.Strings.NoListsLink;
@@ -168,6 +173,7 @@ module Views {
                 item.SubtitleJustification = Graphics.TEXT_JUSTIFY_CENTER;
                 self.Items.add(item);
             }
+
             if (self.DisplayButtonSupport()) {
                 self.addSettingsButton();
             }

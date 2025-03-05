@@ -22,7 +22,7 @@ module Helper {
                         var errorView = new Views.ErrorView(Rez.Strings.ListRecOOM, null, null);
                         WatchUi.pushView(errorView, new Views.ItemViewDelegate(errorView), WatchUi.SLIDE_BLINK);
                     }
-                    throw new OutOfMemoryException(usage, stats.usedMemory, stats.totalMemory);
+                    throw new Exceptions.OutOfMemoryException(usage, stats.usedMemory, stats.totalMemory);
                 }
             }
         }

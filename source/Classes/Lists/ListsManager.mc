@@ -4,7 +4,7 @@ import Toybox.Lang;
 import Toybox.Time;
 import Toybox.System;
 import Toybox.Timer;
-import Helper;
+import Exceptions;
 import Controls.Listitems;
 import Views;
 
@@ -20,10 +20,10 @@ module Lists {
         private var onListIndexChangedListeners as Array<WeakReference>?;
         private var _batchQueue = null as Array<AddListBatch>?;
         private var _batchTimer = null as Timer?;
-        private var _memoryCheck as Helper.MemoryChecker;
+        private var _app as ListsApp;
 
-        function initialize() {
-            self._memoryCheck = $.getApp().MemoryCheck;
+        function initialize(app as ListsApp) {
+            self._app = app;
         }
 
         function addList(data as Array) as Void {
@@ -42,8 +42,8 @@ module Lists {
                 return {};
             }
             try {
-                self._memoryCheck.Check();
-            } catch (ex instanceof Helper.OutOfMemoryException) {
+                self._app.MemoryCheck.Check();
+            } catch (ex instanceof Exceptions.OutOfMemoryException) {
                 return {};
             }
             return index;
@@ -52,13 +52,21 @@ module Lists {
         function GetList(uuid as String) as List? {
             try {
                 var list = new List(Application.Storage.getValue(uuid));
-                self._memoryCheck.Check();
+                self._app.MemoryCheck.Check();
                 if (list.FinishBatch()) {
                     return list;
                 } else {
                     return null;
                 }
-            } catch (ex instanceof Helper.OutOfMemoryException) {
+            } catch (ex instanceof Exceptions.OutOfMemoryException) {
+                return null;
+            } catch (ex instanceof Exceptions.LegacyNotSupportedException) {
+                self.clearAll();
+                Debug.Log("Legacy list data found in storage - cleared memory...");
+                if (self._app.GlobalStates.indexOf("legacyList") < 0) {
+                    self._app.GlobalStates.add("legacyList");
+                    self._app.GlobalStates.add("startpage");
+                }
                 return null;
             } catch (ex instanceof Lang.Exception) {
                 Debug.Log("Could not load list " + uuid + ": " + ex.getErrorMessage());
@@ -74,7 +82,7 @@ module Lists {
                 var list = self.GetList(uuid);
                 if (list != null) {
                     var item = list.GetItem(position);
-                    self._memoryCheck.Check();
+                    self._app.MemoryCheck.Check();
 
                     if (item != null) {
                         item.Done = done;
@@ -84,12 +92,12 @@ module Lists {
                                 Application.Storage.setValue(uuid, save);
                                 Debug.Log("Updated list " + list.toString());
                             } catch (e instanceof Lang.StorageFullException) {
-                                if (!$.getApp().isBackground) {
+                                if (!self._app.isBackground) {
                                     Helper.ToastUtil.Toast(Rez.Strings.EStorageFull, Helper.ToastUtil.ERROR);
                                 }
                                 Debug.Log("Could not update list " + list.toString() + ": storage is full: " + e.getErrorMessage());
                             } catch (e instanceof Lang.Exception) {
-                                if (!$.getApp().isBackground) {
+                                if (!self._app.isBackground) {
                                     Helper.ToastUtil.Toast(Rez.Strings.EStorageError, Helper.ToastUtil.ERROR);
                                 }
                                 Debug.Log("Could not update list " + list.toString() + ": " + e.getErrorMessage());
@@ -99,7 +107,7 @@ module Lists {
                 } else {
                     Debug.Log("Could not update list " + uuid + " - not found");
                 }
-            } catch (ex instanceof Helper.OutOfMemoryException) {}
+            } catch (ex instanceof Exceptions.OutOfMemoryException) {}
         }
 
         function StoreList(list as List) as Array<Boolean or Exception or String or Null> {
@@ -108,29 +116,29 @@ module Lists {
             }
 
             try {
-                self._memoryCheck.Check();
+                self._app.MemoryCheck.Check();
                 Application.Storage.setValue(list.Uuid, list.ToBackend());
 
-                if (!$.getApp().isBackground && Helper.Properties.Get(Helper.Properties.LASTLIST, "").equals(list.Uuid)) {
+                if (!self._app.isBackground && Helper.Properties.Get(Helper.Properties.LASTLIST, "").equals(list.Uuid)) {
                     Helper.Properties.Store(Helper.Properties.LASTLISTSCROLL, -1);
                 }
 
                 Debug.Log("Stored list " + list.toString());
-                self._memoryCheck.Check();
+                self._app.MemoryCheck.Check();
                 self.triggerOnListChanged(list);
                 return [true, null];
-            } catch (e instanceof Helper.OutOfMemoryException) {
+            } catch (e instanceof Exceptions.OutOfMemoryException) {
                 Debug.Log("Could not store list " + list.toString() + ": out of memory");
                 return [false, e];
             } catch (e instanceof Lang.StorageFullException) {
                 Debug.Log("Could not store list " + list.toString() + ": storage is full: " + e.getErrorMessage());
-                if (!$.getApp().isBackground) {
+                if (!self._app.isBackground) {
                     Helper.ToastUtil.Toast(Rez.Strings.EStorageFull, Helper.ToastUtil.ERROR);
                 }
                 return [false, e];
             } catch (e) {
                 Debug.Log("Could not store list " + list.toString() + ": " + e.getErrorMessage());
-                if (!$.getApp().isBackground) {
+                if (!self._app.isBackground) {
                     Helper.ToastUtil.Toast(Rez.Strings.EStorageError, Helper.ToastUtil.ERROR);
                 }
                 return [false, e];
@@ -144,10 +152,10 @@ module Lists {
             var store = self.storeIndex(index);
             if (store[0] == true) {
                 Application.Storage.deleteValue(uuid);
-                if (with_toast == true && !$.getApp().isBackground) {
+                if (with_toast == true && !self._app.isBackground) {
                     Helper.ToastUtil.Toast(Rez.Strings.ListDel, Helper.ToastUtil.SUCCESS);
                 }
-                if (!$.getApp().isBackground && Helper.Properties.Get(Helper.Properties.LASTLIST, "").equals(uuid)) {
+                if (!self._app.isBackground && Helper.Properties.Get(Helper.Properties.LASTLIST, "").equals(uuid)) {
                     Helper.Properties.Store(Helper.Properties.LASTLISTSCROLL, -1);
                     Helper.Properties.Store(Helper.Properties.LASTLIST, "");
                 }
@@ -155,8 +163,8 @@ module Lists {
                 self.triggerOnListChanged(null);
                 return true;
             } else {
-                if (!$.getApp().isBackground) {
-                    self.reportError(5, { "index" => index, "delete" => uuid, "exception" => store[1].getErrorMessage() });
+                if (!self._app.isBackground) {
+                    self.reportError(5, ["index=" + index.toString(), "delete=" + uuid, "exception=" + store[1].getErrorMessage()]);
                 }
                 return false;
             }
@@ -165,7 +173,7 @@ module Lists {
         function clearAll() as Void {
             Application.Storage.clearValues();
             Debug.Log("Deleted all lists!");
-            if (!$.getApp().isBackground) {
+            if (!self._app.isBackground) {
                 Helper.ToastUtil.Toast(Rez.Strings.StDelAllDone, Helper.ToastUtil.SUCCESS);
             }
             self.triggerOnListChanged(null);
@@ -252,13 +260,13 @@ module Lists {
         }
 
         public function BatchTimer() as Void {
-            var background = $.getApp().BackgroundService;
+            var background = self._app.BackgroundService;
             if (self._batchQueue != null && self._batchQueue.size() > 0) {
                 var batch = (self._batchQueue as Array<AddListBatch>)[0];
                 var finish = null;
                 try {
-                    finish = batch.ProcessBatch(self._memoryCheck);
-                } catch (e instanceof Helper.OutOfMemoryException) {
+                    finish = batch.ProcessBatch(self._app.MemoryCheck);
+                } catch (e instanceof Exceptions.OutOfMemoryException) {
                     Debug.Log("Out of Memory: " + e.Used + " / " + e.Total + " (" + e.Usage.format("%.2f") + "%)");
                 }
                 if (finish instanceof Lang.Array) {
@@ -269,7 +277,7 @@ module Lists {
                             self._batchQueue = null;
                         }
                         if (finish[1] == false) {
-                            if (!$.getApp().isBackground) {
+                            if (!self._app.isBackground) {
                                 self.reportError(2, null);
                             }
                         } else {
@@ -281,11 +289,11 @@ module Lists {
                                 var saveIndex = self.storeIndex(listindex);
                                 if (saveIndex[0] == false) {
                                     Application.Storage.deleteValue(batch.List.Uuid);
-                                    if (!$.getApp().isBackground) {
-                                        self.reportError(4, { "list" => batch.List.ToBackend(), "exception" => saveIndex[1].getErrorMessage() });
+                                    if (!self._app.isBackground) {
+                                        self.reportError(4, ["list=" + batch.List.ToBackend(), "exception=" + saveIndex[1].getErrorMessage()]);
                                     }
                                 } else {
-                                    if (!$.getApp().isBackground) {
+                                    if (!self._app.isBackground) {
                                         Helper.Properties.Store(Helper.Properties.INIT, 1);
 
                                         if (batch.IsSync == false) {
@@ -293,9 +301,9 @@ module Lists {
                                         }
                                     }
                                 }
-                            } else if (!(save[0] instanceof Helper.OutOfMemoryException)) {
-                                if (!$.getApp().isBackground) {
-                                    self.reportError(3, { "list" => batch.List.ToBackend(), "exception" => save[1].getErrorMessage() });
+                            } else if (!(save[0] instanceof Exceptions.OutOfMemoryException)) {
+                                if (!self._app.isBackground) {
+                                    self.reportError(3, ["list=" + batch.List.ToBackend(), "exception=" + save[1].getErrorMessage()]);
                                 }
                             }
                         }
@@ -328,7 +336,7 @@ module Lists {
 
         private function purgeIndex(index as ListIndex?) as ListIndex? {
             if (index != null && index.size() > 0) {
-                if (!$.getApp().isBackground) {
+                if (!self._app.isBackground) {
                     var delete = [] as Array<String or Number>;
                     var keys = index.keys();
                     for (var i = 0; i < keys.size(); i++) {
@@ -365,24 +373,24 @@ module Lists {
                 if (index == null || index.size() == 0) {
                     self.clearAll();
                 } else {
-                    self._memoryCheck.Check();
+                    self._app.MemoryCheck.Check();
                     Application.Storage.setValue("listindex", index);
                     self.triggerOnListIndexChanged(index);
                     Debug.Log("Stored list index with " + index.size() + " items");
                 }
             } catch (e instanceof Lang.StorageFullException) {
-                if (!$.getApp().isBackground) {
+                if (!self._app.isBackground) {
                     Helper.ToastUtil.Toast(Rez.Strings.EStorageFull, Helper.ToastUtil.ERROR);
                 }
                 Debug.Log("Could not store list index, storage is full: " + e.getErrorMessage());
                 return [false, e];
-            } catch (e instanceof Helper.OutOfMemoryException) {
+            } catch (e instanceof Exceptions.OutOfMemoryException) {
                 Debug.Log("Could notstore list index, out of memory: " + e.Usage);
                 //TODO: Toast
                 return [false, e];
             } catch (e instanceof Lang.Exception) {
                 Debug.Log("Could not store list index: " + e.getErrorMessage());
-                if (!$.getApp().isBackground) {
+                if (!self._app.isBackground) {
                     Helper.ToastUtil.Toast(Rez.Strings.EStorageError, Helper.ToastUtil.ERROR);
                 }
                 return [false, e];
@@ -390,8 +398,8 @@ module Lists {
             return [true, null];
         }
 
-        private function reportError(code as Number, payload as Dictionary<String, Object>?) as Void {
-            if (!$.getApp().isBackground) {
+        private function reportError(code as Number, payload as Array<String>?) as Void {
+            if (!self._app.isBackground) {
                 var msg = null as Lang.ResourceId?;
                 switch (code) {
                     case 1:
@@ -410,7 +418,7 @@ module Lists {
         }
 
         private function triggerOnListChanged(list as List?) as Void {
-            if (self.onListChangedListeners != null && !$.getApp().isBackground) {
+            if (self.onListChangedListeners != null && !self._app.isBackground) {
                 for (var i = 0; i < self.onListChangedListeners.size(); i++) {
                     var listener = self.onListChangedListeners[i];
                     if (listener.stillAlive()) {
@@ -424,7 +432,7 @@ module Lists {
         }
 
         private function triggerOnListIndexChanged(index as ListIndex?) as Void {
-            if (self.onListIndexChangedListeners != null && !$.getApp().isBackground) {
+            if (self.onListIndexChangedListeners != null && !self._app.isBackground) {
                 for (var i = 0; i < self.onListIndexChangedListeners.size(); i++) {
                     var listener = self.onListIndexChangedListeners[i];
                     if (listener.stillAlive()) {

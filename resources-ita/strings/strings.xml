@@ -15,6 +15,7 @@
     <string id="EStorageFull">La memoria è piena!</string>
     <string id="EStorageError">Impossibile salvare la lista!</string>
     <string id="ListRecOOM">La memoria dell'app non è sufficiente per elaborare l'elenco ricevuto.\n\nSi prega di considerare un elenco più piccolo.</string>
+    <string id="ListLegacy">Per favore, trasferisci di nuovo le tue liste.\nA causa di ottimizzazioni della memoria, le vecchie liste non possono più essere visualizzate!</string>
     <string id="ListDel">Lista eliminata.</string>
     <string id="LegacyPhoneApp">Sembra che si stia utilizzando una vecchia versione dell'applicazione per smartphone.\nSi prega di aggiornarla.</string>
 
@@ -25,7 +26,8 @@
     <string id="ListNotFound">Lista non trovata!</string>
     <string id="ListEmpty">La lista è vuota.</string>
 
-    <string id="LMSub">%s punti</string>
+    <string id="LMSub">%s elementi</string>
+    <string id="LMSubOne">1 elemento</string>
 
     <string id="StTitle">Impostazioni</string>
     <string id="StMoveBottom">Sposta i punti completati in fondo</string>

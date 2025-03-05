@@ -15,6 +15,7 @@
     <string id="EStorageFull">Der Speicher ist voll!</string>
     <string id="EStorageError">Liste konnte nicht gespeichert werden!</string>
     <string id="ListRecOOM">Der Speicher der App reicht nicht aus, um die empfangene Liste zu verarbeiten.\n\nBitte ziehe eine kleinere Liste in Betracht.</string>
+    <string id="ListLegacy">Bitte übertrage deine Listen neu.\nAufgrund von Speicher-Optimierungen können die alten Listen nichtmehr angezeigt werden!</string>
     <string id="ListDel">Liste gelöscht.</string>
     <string id="LegacyPhoneApp">Du scheints eine alte Version der Smartphone-App zu verwenden.\nBitte aktualisiere sie.</string>
 
@@ -26,6 +27,7 @@
     <string id="ListEmpty">Die Liste ist leer.</string>
 
     <string id="LMSub">%s Punkte</string>
+    <string id="LMSubOne">1 Punkt</string>
 
     <string id="StTitle">Einstellungen</string>
     <string id="StMoveBottom">erledigte Punkte nach unten schieben</string>

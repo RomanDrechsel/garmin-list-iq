@@ -15,6 +15,7 @@
     <string id="EStorageFull">存储已满！</string>
     <string id="EStorageError">无法保存列表！</string>
     <string id="ListRecOOM">应用的内存不足，无法处理接收到的列表。\n\n请考虑使用更小的列表。</string>
+    <string id="ListLegacy">请重新传输您的列表。\n由于内存优化，旧列表无法再显示！</string>
     <string id="ListDel">列表已删除。</string>
     <string id="LegacyPhoneApp">您使用的似乎是旧版本的智能手机应用程序。\n请更新。</string>
 
@@ -25,7 +26,8 @@
     <string id="ListNotFound">未找到列表！</string>
     <string id="ListEmpty">列表为空。</string>
 
-    <string id="LMSub">%s 点</string>
+    <string id="LMSub">%s 元素</string>
+    <string id="LMSubOne">1 元素</string>
 
     <string id="StTitle">设置</string>
     <string id="StMoveBottom">将完成的项目移动到底部</string>

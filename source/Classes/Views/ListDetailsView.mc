@@ -7,7 +7,7 @@ import Toybox.System;
 import Lists;
 import Controls;
 import Controls.Listitems;
-import Helper;
+import Exceptions;
 
 module Views {
     class ListDetailsView extends IconItemView {
@@ -139,25 +139,24 @@ module Views {
                     var show_notes = Helper.Properties.Get(Helper.Properties.SHOWNOTES, true);
                     var move_down = Helper.Properties.Get(Helper.Properties.LISTMOVEDOWN, true);
                     self.setTitle(list.Title);
-                    var index = 0;
                     if (list.Items.size() > 0) {
                         var ordered = [] as Array<Listitem>;
                         var done = [] as Array<Listitem>;
 
-                        var count = 0;
-                        for (var i = 0; i < list.Items.size(); i++) {
-                            count++;
-                            var item = list.Items[i];
-                            item.Order = index;
+                        var index = 0;
+                        var listitem = list.ReduceItem();
+                        while (listitem != null) {
+                            listitem.Order = index;
                             index += 1;
-                            if (!item.isValid()) {
+                            if (!listitem.isValid()) {
                                 continue;
                             }
-                            if ((move_down == true || move_down == 1) && item.Done == true) {
-                                done.add(item);
+                            if ((move_down == true || move_down == 1) && listitem.Done == true) {
+                                done.add(listitem);
                             } else {
-                                ordered.add(item);
+                                ordered.add(listitem);
                             }
+                            listitem = list.ReduceItem();
                         }
 
                         if (done.size() > 0) {
@@ -184,7 +183,7 @@ module Views {
                         }
                         ordered = null;
 
-                        if (count <= 0) {
+                        if (index <= 0) {
                             var item = new Listitems.Item(self._mainLayer, null, Application.loadResource(Rez.Strings.ListEmpty), null, null, null, 0, null);
                             item.SubtitleJustification = Graphics.TEXT_JUSTIFY_CENTER;
                             item.isSelectable = false;

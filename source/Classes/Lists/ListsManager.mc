@@ -10,9 +10,9 @@ import Views;
 
 module Lists {
     (:glance,:background)
-    typedef ListIndexItem as Dictionary<Number, String or Number>; /* data of a list, stored in list index */
+    typedef ListIndexItem as Dictionary<Number, String or Number>;
     (:glance,:background)
-    typedef ListIndex as Dictionary<String or Number, ListIndexItem>; /* the list-index, with list uuid as key, and some list data as value */
+    typedef ListIndex as Dictionary<String or Number, ListIndexItem>;
 
     (:background)
     class ListsManager {
@@ -44,6 +44,7 @@ module Lists {
             try {
                 self._app.MemoryCheck.Check();
             } catch (ex instanceof Exceptions.OutOfMemoryException) {
+                Debug.Log("Could not get list index: " + ex.toString());
                 return {};
             }
             return index;
@@ -59,13 +60,14 @@ module Lists {
                     return null;
                 }
             } catch (ex instanceof Exceptions.OutOfMemoryException) {
+                Debug.Log("Could not get list " + uuid + ": " + ex.toString());
                 return null;
             } catch (ex instanceof Exceptions.LegacyNotSupportedException) {
                 self.clearAll();
                 Debug.Log("Legacy list data found in storage - cleared memory...");
-                if (self._app.GlobalStates.indexOf("legacyList") < 0) {
-                    self._app.GlobalStates.add("legacyList");
-                    self._app.GlobalStates.add("startpage");
+                if (self._app.GlobalStates.indexOf(ListsApp.LEGACYLIST) < 0) {
+                    self._app.GlobalStates.add(ListsApp.LEGACYLIST);
+                    self._app.GlobalStates.add(ListsApp.STARTPAGE);
                 }
                 return null;
             } catch (ex instanceof Lang.Exception) {
@@ -107,7 +109,41 @@ module Lists {
                 } else {
                     Debug.Log("Could not update list " + uuid + " - not found");
                 }
-            } catch (ex instanceof Exceptions.OutOfMemoryException) {}
+            } catch (ex instanceof Exceptions.OutOfMemoryException) {
+                Debug.Log("Could not set item in list " + uuid + " to " + done.toString() + ": " + ex.toString());
+            }
+        }
+
+        function ResetList(uuid as String or Number) as Boolean {
+            try {
+                var list = self.GetList(uuid);
+                if (list != null) {
+                    var store = false;
+                    for (var i = 0; i < list.Items.size(); i++) {
+                        if (list.Items[i].Done == true) {
+                            list.Items[i].Done = false;
+                            store = true;
+                        }
+                    }
+                    if (store) {
+                        store = self.StoreList(list);
+                        if (store[0] == true) {
+                            Debug.Log("Reset list " + list.toString() + " manually");
+                        } else {
+                            Debug.Log("Could not reset list " + list.toString() + " manually");
+                        }
+
+                        return store[0];
+                    } else {
+                        return true;
+                    }
+                } else {
+                    Debug.Log("Could not reset list " + uuid + " - not found");
+                }
+            } catch (ex instanceof Exceptions.OutOfMemoryException) {
+                Debug.Log("Could not reset list " + uuid + " manually: " + ex.toString());
+            }
+            return false;
         }
 
         function StoreList(list as List) as Array<Boolean or Exception or String or Null> {
@@ -127,21 +163,21 @@ module Lists {
                 self._app.MemoryCheck.Check();
                 self.triggerOnListChanged(list);
                 return [true, null];
-            } catch (e instanceof Exceptions.OutOfMemoryException) {
-                Debug.Log("Could not store list " + list.toString() + ": out of memory");
-                return [false, e];
-            } catch (e instanceof Lang.StorageFullException) {
-                Debug.Log("Could not store list " + list.toString() + ": storage is full: " + e.getErrorMessage());
+            } catch (ex instanceof Exceptions.OutOfMemoryException) {
+                Debug.Log("Could not store list " + list.toString() + ": " + ex.toString());
+                return [false, ex];
+            } catch (ex instanceof Lang.StorageFullException) {
+                Debug.Log("Could not store list " + list.toString() + ": storage is full: " + ex.getErrorMessage());
                 if (!self._app.isBackground) {
                     Helper.ToastUtil.Toast(Rez.Strings.EStorageFull, Helper.ToastUtil.ERROR);
                 }
-                return [false, e];
-            } catch (e) {
-                Debug.Log("Could not store list " + list.toString() + ": " + e.getErrorMessage());
+                return [false, ex];
+            } catch (ex) {
+                Debug.Log("Could not store list " + list.toString() + ": " + ex.getErrorMessage());
                 if (!self._app.isBackground) {
                     Helper.ToastUtil.Toast(Rez.Strings.EStorageError, Helper.ToastUtil.ERROR);
                 }
-                return [false, e];
+                return [false, ex];
             }
         }
 
@@ -163,7 +199,7 @@ module Lists {
                 self.triggerOnListChanged(null);
                 return true;
             } else {
-                if (!self._app.isBackground) {
+                if (!self._app.isBackground && !(store[1] instanceof Exceptions.OutOfMemoryException)) {
                     self.reportError(5, ["index=" + index.toString(), "delete=" + uuid, "exception=" + store[1].getErrorMessage()]);
                 }
                 return false;
@@ -266,8 +302,8 @@ module Lists {
                 var finish = null;
                 try {
                     finish = batch.ProcessBatch(self._app.MemoryCheck);
-                } catch (e instanceof Exceptions.OutOfMemoryException) {
-                    Debug.Log("Out of Memory: " + e.Used + " / " + e.Total + " (" + e.Usage.format("%.2f") + "%)");
+                } catch (ex instanceof Exceptions.OutOfMemoryException) {
+                    Debug.Log("Could not add list " + batch.List.toString() + ": " + ex.toString());
                 }
                 if (finish instanceof Lang.Array) {
                     if (finish[0] == true) {
@@ -289,7 +325,7 @@ module Lists {
                                 var saveIndex = self.storeIndex(listindex);
                                 if (saveIndex[0] == false) {
                                     Application.Storage.deleteValue(batch.List.Uuid);
-                                    if (!self._app.isBackground) {
+                                    if (!self._app.isBackground && !(saveIndex[1] instanceof Exceptions.OutOfMemoryException)) {
                                         self.reportError(4, ["list=" + batch.List.ToBackend(), "exception=" + saveIndex[1].getErrorMessage()]);
                                     }
                                 } else {
@@ -301,7 +337,7 @@ module Lists {
                                         }
                                     }
                                 }
-                            } else if (!(save[0] instanceof Exceptions.OutOfMemoryException)) {
+                            } else if (!(save[1] instanceof Exceptions.OutOfMemoryException)) {
                                 if (!self._app.isBackground) {
                                     self.reportError(3, ["list=" + batch.List.ToBackend(), "exception=" + save[1].getErrorMessage()]);
                                 }
@@ -357,7 +393,7 @@ module Lists {
                             index.remove(delete[i]);
                         }
 
-                        Debug.Log("Deleted " + delete.size() + " lists from index: " + delete);
+                        Debug.Log("Deleted " + delete.size() + " invalid lists from index: " + delete);
                     }
                 }
 
@@ -378,22 +414,21 @@ module Lists {
                     self.triggerOnListIndexChanged(index);
                     Debug.Log("Stored list index with " + index.size() + " items");
                 }
-            } catch (e instanceof Lang.StorageFullException) {
+            } catch (ex instanceof Lang.StorageFullException) {
                 if (!self._app.isBackground) {
                     Helper.ToastUtil.Toast(Rez.Strings.EStorageFull, Helper.ToastUtil.ERROR);
                 }
-                Debug.Log("Could not store list index, storage is full: " + e.getErrorMessage());
-                return [false, e];
-            } catch (e instanceof Exceptions.OutOfMemoryException) {
-                Debug.Log("Could notstore list index, out of memory: " + e.Usage);
-                //TODO: Toast
-                return [false, e];
-            } catch (e instanceof Lang.Exception) {
-                Debug.Log("Could not store list index: " + e.getErrorMessage());
+                Debug.Log("Could not store list index, storage is full: " + ex.getErrorMessage());
+                return [false, ex];
+            } catch (ex instanceof Exceptions.OutOfMemoryException) {
+                Debug.Log("Could not store list index: " + ex.toString());
+                return [false, ex];
+            } catch (ex instanceof Lang.Exception) {
+                Debug.Log("Could not store list index: " + ex.getErrorMessage());
                 if (!self._app.isBackground) {
                     Helper.ToastUtil.Toast(Rez.Strings.EStorageError, Helper.ToastUtil.ERROR);
                 }
-                return [false, e];
+                return [false, ex];
             }
             return [true, null];
         }

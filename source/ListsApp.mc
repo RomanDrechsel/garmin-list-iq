@@ -12,13 +12,19 @@ import Debug;
 
 (:glance,:background)
 class ListsApp extends Application.AppBase {
+    enum EState {
+        STARTPAGE = 1,
+        MOVETOP = 2,
+        LEGACYLIST = 3,
+    }
+
     var Phone = null as PhoneCommunication?;
     var ListsManager = null as ListsManager?;
     var Debug = null as DebugStorage?;
     var Inactivity = null as Helper.Inactivity?;
     var BackgroundService = null as BG.Service?;
     var MemoryCheck as Helper.MemoryChecker;
-    var GlobalStates as Array<Object> = [];
+    var GlobalStates as Array<EState> = [];
     var isGlanceView = false;
     var isBackground = false;
     var NoBackButton = false;

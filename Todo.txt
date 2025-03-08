@@ -5,10 +5,9 @@ For Smartphone
 adb -d forward tcp:7381 tcp:7381
 
 TEST: Background service
-WIP: Optimize: less Dictionary, more Array
-TODO: List settings: reset list button
+BUG: Error: Permission Required
+-> Details: Module 'Toybox.Timer' not available to 'Background'
 TODO: send success response to phone, when list added
-WIP: ListsSelectView.publishLists(): what if list contains only 1 item? is the text correct?
 TODO: notes function
 
 1 Button, 64 Color:

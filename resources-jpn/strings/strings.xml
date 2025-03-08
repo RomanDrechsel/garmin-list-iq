@@ -16,7 +16,7 @@
     <string id="EStorageError">リストを保存できませんでした！</string>
     <string id="ListRecOOM">アプリのメモリが不足しているため、受信したリストを処理できません。\n\nより小さいリストを検討してください。</string>
     <string id="ListLegacy">リストを再転送してください。\nメモリ最適化のため、古いリストは表示できなくなりました！</string>
-<string id="ListDel">リストが削除されました。</string>
+    <string id="ListDel">リストが削除されました。</string>
     <string id="LegacyPhoneApp">スマートフォンアプリのバージョンが古いようです。\nアップデートしてください。</string>
 
     <string id="NoLists">リストが見つかりません！</string>
@@ -72,6 +72,8 @@
     <string id="StResetDaily">毎日</string>
     <string id="StResetWeekly">毎週</string>
     <string id="StResetMonthly">毎月</string>
+    <string id="StResetBtn">リストをリセットする</string>
+    <string id="StResetSuccess">リストがリセット</string>
 
     <string id="ErrHint">スマートフォンでエラーを報告してください。</string>
     <string id="ErrHintTouch">(ここをタップして、スマートフォン上のアプリ内の連絡先を開きます)</string>

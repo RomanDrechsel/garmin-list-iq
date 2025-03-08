@@ -8,11 +8,17 @@ import Exceptions;
 
 module Views {
     class ListSettingsView extends IconItemView {
-        var ListUuid as String;
+        private enum {
+            DELETE = 0,
+            RESET = 1,
+            AUTO_RESET = 2,
+        }
+
+        var ListUuid as String or Number;
         private var _resetActive as Boolean? = null;
         private var _resetInterval as String? = null;
 
-        function initialize(uuid as String) {
+        function initialize(uuid as String or Number) {
             IconItemView.initialize();
             self.ScrollMode = SCROLL_DRAG;
             self.ListUuid = uuid;
@@ -28,48 +34,53 @@ module Views {
         }
 
         protected function interactItem(item as Listitems.Item, doubletap as Boolean) as Boolean {
-            if ($.getApp().ListsManager == null) {
+            if (!IconItemView.interactItem(item, doubletap)) {
+                if ($.getApp().ListsManager == null) {
+                    return false;
+                }
+
+                if (item.BoundObject instanceof Number) {
+                    if (item.BoundObject == DELETE) {
+                        var dialog = new WatchUi.Confirmation(Application.loadResource(Rez.Strings.DeleteConfirm));
+                        var delegate = new Controls.ConfirmDelegate(self.method(:deleteList));
+                        WatchUi.pushView(dialog, delegate, WatchUi.SLIDE_BLINK);
+                        return true;
+                    } else if (item.BoundObject == RESET) {
+                        if ($.getApp().ListsManager.ResetList(self.ListUuid)) {
+                            Helper.ToastUtil.Toast(Rez.Strings.StResetSuccess, Helper.ToastUtil.SUCCESS);
+                        }
+                    } else if (item.BoundObject == AUTO_RESET) {
+                        var list = $.getApp().ListsManager.GetList(self.ListUuid) as Lists.List?;
+                        if (list != null) {
+                            if (list.Reset != null) {
+                                list.Reset = !list.Reset;
+                                list.ResetLast = Time.now().value();
+                                if (list.Reset) {
+                                    Debug.Log("Activeded auto reset for list " + list.toString());
+                                } else {
+                                    Debug.Log("Deactivated auto reset for list " + list.toString());
+                                }
+                                $.getApp().ListsManager.StoreList(list);
+                            } else {
+                                Debug.Log("List " + list.toString() + " has no reset settings.");
+                            }
+                        } else {
+                            Debug.Log("List " + self.ListUuid + " not found for toggling reset setting");
+                        }
+                        return true;
+                    }
+                }
                 return false;
             }
-
-            if (item.BoundObject.equals("del")) {
-                var dialog = new WatchUi.Confirmation(Application.loadResource(Rez.Strings.DeleteConfirm));
-                var delegate = new Controls.ConfirmDelegate(self.method(:deleteList));
-                WatchUi.pushView(dialog, delegate, WatchUi.SLIDE_BLINK);
-                return true;
-            } else if (item.BoundObject.equals("reset")) {
-                var list = $.getApp().ListsManager.GetList(self.ListUuid) as Lists.List?;
-                if (list != null) {
-                    if (list.Reset != null) {
-                        list.Reset = !list.Reset;
-                        list.ResetLast = Time.now().value();
-                        if (list.Reset) {
-                            Debug.Log("Activeded auto reset for list " + list.toString());
-                        } else {
-                            Debug.Log("Deactivated auto reset for list " + list.toString());
-                        }
-                        $.getApp().ListsManager.StoreList(list);
-                    } else {
-                        Debug.Log("List " + list.toString() + " has no reset settings.");
-                    }
-                } else {
-                    Debug.Log("List " + self.ListUuid + " not found for toggling reset setting");
-                }
-                return true;
-            } else if (item.BoundObject.equals("back")) {
-                $.getApp().GlobalStates.add("movetop");
-                self.goBack();
-                return true;
-            }
-            return false;
+            return true;
         }
 
         function deleteList() as Void {
             if ($.getApp().ListsManager != null) {
                 $.getApp().ListsManager.deleteList(self.ListUuid, true);
-                $.getApp().GlobalStates.add("movetop");
+                $.getApp().GlobalStates.add(ListsApp.MOVETOP);
             }
-            $.getApp().GlobalStates.add("startpage");
+            $.getApp().GlobalStates.add(ListsApp.STARTPAGE);
             WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
             WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
         }
@@ -105,7 +116,8 @@ module Views {
             self.Items = [];
             self.setTitle(Application.loadResource(Rez.Strings.StTitle));
 
-            self.Items.add(new Listitems.Button(self._mainLayer, Application.loadResource(Rez.Strings.StDelList), "del", null, false));
+            self.Items.add(new Listitems.Button(self._mainLayer, Application.loadResource(Rez.Strings.StDelList), DELETE, null, false));
+            self.Items.add(new Listitems.Button(self._mainLayer, Application.loadResource(Rez.Strings.StResetBtn), RESET, null, false));
 
             if (self._resetActive != null) {
                 var icon;
@@ -127,7 +139,7 @@ module Views {
                 }
 
                 self.Items[self.Items.size() - 1].DrawLine = true;
-                self.Items.add(new Listitems.Item(self._mainLayer, Application.loadResource(Rez.Strings.StReset), interval, "reset", icon, null, 0, null));
+                self.Items.add(new Listitems.Item(self._mainLayer, Application.loadResource(Rez.Strings.StReset), interval, AUTO_RESET, icon, null, 0, null));
                 self.Items[self.Items.size() - 1].SubtitleJustification = Graphics.TEXT_JUSTIFY_CENTER;
             }
 

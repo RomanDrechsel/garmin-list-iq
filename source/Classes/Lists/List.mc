@@ -1,7 +1,7 @@
 import Toybox.Lang;
 
 module Lists {
-    typedef ListModel as Dictionary<Number, String or Number or Boolean or Array<ListitemModel> >;
+    typedef ListModel as Dictionary<Number or String, String or Number or Boolean or Array<ListitemModel> >;
 
     (:glance,:background)
     class List {
@@ -33,7 +33,7 @@ module Lists {
         public var ResetDay as Number?;
         public var ResetLast as Number?;
 
-        function initialize(data as Dictionary<String or Number, Object>?) {
+        function initialize(data as ListModel?) {
             if (data != null) {
                 self.Uuid = data.get(UUID) as String or Number or Null;
 

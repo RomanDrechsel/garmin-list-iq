@@ -72,6 +72,8 @@
     <string id="StResetDaily">Quotidianamente</string>
     <string id="StResetWeekly">Settimanalmente</string>
     <string id="StResetMonthly">Mensilmente</string>
+    <string id="StResetBtn">Reimpostare la lista</string>
+    <string id="StResetSuccess">Lista ripristinata</string>
 
     <string id="ErrHint">Per favore segnalami l'errore sul tuo smartphone così posso aiutarti.\n\n</string>
     <string id="ErrHintTouch">(Tocca qui per aprire le opzioni di contatto nell'app sul tuo smartphone)</string>

@@ -68,10 +68,12 @@
     <string id="StSendLogsOff">Журнали деактивовано!</string>
     <string id="StSendLogsOk">Журнали надіслано</string>
 
-    <string id="StReset">Автоматичне скидання списку</string>
+    <string id="StReset">Автоматично скинути список</string>
     <string id="StResetDaily">Щоденно</string>
     <string id="StResetWeekly">Щотижня</string>
     <string id="StResetMonthly">Щомісяця</string>
+    <string id="StResetBtn">Скинути список</string>
+    <string id="StResetSuccess">Список скинуто</string>
 
     <string id="ErrHint">Будь ласка, повідомте мені про помилку на вашому смартфоні, щоб я міг вам допомогти.\n\n</string>
     <string id="ErrHintTouch">(Доторкніться тут, щоб відкрити спосіб зв'язку в додатку на вашому смартфоні)</string>

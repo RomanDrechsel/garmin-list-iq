@@ -12,6 +12,10 @@ module Views {
         private const _listIconCode = 48;
         private var _firstDisplay = true;
 
+        private enum {
+            STORE = 0,
+        }
+
         function initialize(first_display as Boolean) {
             ItemView.initialize();
             self.ScrollMode = SCROLL_DRAG;
@@ -33,19 +37,6 @@ module Views {
             if ($.getApp().ListsManager != null) {
                 $.getApp().ListsManager.removeListIndexChangedListener(self);
             }
-        }
-
-        function onDoubleTap(x as Number, y as Number) as Boolean {
-            if (!ItemView.onDoubleTap(x, y)) {
-                if (self.Items.size() > 0) {
-                    var item = self.Items[0];
-                    if (item.BoundObject instanceof String && item.BoundObject.equals("store") && Helper.Properties.Get(Helper.Properties.INIT, 0) < 0) {
-                        $.openGooglePlay();
-                        return true;
-                    }
-                }
-            }
-            return false;
         }
 
         function onKeyMenu() as Boolean {
@@ -146,14 +137,14 @@ module Views {
 
         private function noLists() as Void {
             self.Items = [] as Array<Item>;
-            var item = new Listitems.Item(self._mainLayer, Application.loadResource(Rez.Strings.NoLists), null, "store", null, ($.screenHeight * 0.1).toNumber(), 0, null);
+            var item = new Listitems.Item(self._mainLayer, Application.loadResource(Rez.Strings.NoLists), null, STORE, null, ($.screenHeight * 0.1).toNumber(), 0, null);
             item.DrawLine = false;
             item.TitleJustification = Graphics.TEXT_JUSTIFY_CENTER;
             item.isSelectable = false;
             self.Items.add(item);
 
-            if ($.getApp().GlobalStates.indexOf("legacyList") >= 0) {
-                item = new Listitems.Item(self._mainLayer, null, Application.loadResource(Rez.Strings.ListLegacy), "store", null, null, 1, null);
+            if ($.getApp().GlobalStates.indexOf(ListsApp.LEGACYLIST) >= 0) {
+                item = new Listitems.Item(self._mainLayer, null, Application.loadResource(Rez.Strings.ListLegacy), STORE, null, null, 1, null);
                 item.setSubFont(Helper.Fonts.Normal());
                 item.DrawLine = false;
                 item.isSelectable = false;
@@ -166,7 +157,7 @@ module Views {
                 } else {
                     txtRez = Rez.Strings.NoListsLinkBtn;
                 }
-                item = new Listitems.Item(self._mainLayer, null, Application.loadResource(txtRez), "store", null, null, 0, null);
+                item = new Listitems.Item(self._mainLayer, null, Application.loadResource(txtRez), STORE, null, null, 0, null);
                 item.setSubFont(Helper.Fonts.Normal());
                 item.DrawLine = false;
                 item.isSelectable = false;
@@ -189,25 +180,26 @@ module Views {
 
         protected function interactItem(item as Listitems.Item, doubletap as Boolean) as Boolean {
             if (!ItemView.interactItem(item, doubletap)) {
-                if (item.BoundObject instanceof String) {
-                    if (item.BoundObject.equals("settings")) {
+                if (item.BoundObject instanceof Number) {
+                    if (item.BoundObject == ItemView.SETTINGS) {
                         self.openSettings();
                         return true;
-                    } else if (item.BoundObject.equals("store")) {
+                    } else if (item.BoundObject == STORE) {
                         if (doubletap && Helper.Properties.Get(Helper.Properties.INIT, 0) <= 0) {
                             $.openGooglePlay();
                             return true;
                         }
                     } else {
-                        self.GotoList(item.BoundObject as String, -1);
+                        self.GotoList(item.BoundObject as Number, -1);
                         return true;
                     }
-                } else if (item.BoundObject instanceof Number) {
-                    self.GotoList(item.BoundObject as Number, -1);
+                } else if (item.BoundObject instanceof String) {
+                    self.GotoList(item.BoundObject as String, -1);
                     return true;
                 }
+                return false;
             }
-            return false;
+            return true;
         }
 
         private function GotoList(uuid as String or Number, scroll as Number) as Void {

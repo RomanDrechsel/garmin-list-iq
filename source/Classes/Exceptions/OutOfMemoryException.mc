@@ -13,5 +13,9 @@ module Exceptions {
             self.Used = used;
             self.Total = total;
         }
+
+        function toString() as String {
+            return "Out Of Memory: " + self.Used + "/" + self.Total + " (" + (self.Usage * 100).format("%.2f") + "%)";
+        }
     }
 }

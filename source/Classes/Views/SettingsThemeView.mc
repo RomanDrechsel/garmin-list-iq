@@ -13,12 +13,13 @@ module Views {
         function initialize() {
             IconItemView.initialize();
 
-            self._themes = {};
-            self._themes.put(0, Application.loadResource(Rez.Strings.ThGrey));
-            self._themes.put(1, Application.loadResource(Rez.Strings.ThRed));
-            self._themes.put(2, Application.loadResource(Rez.Strings.ThBaW));
-            self._themes.put(3, Application.loadResource(Rez.Strings.ThWaB));
-            self._themes.put(666, Application.loadResource(Rez.Strings.ThBsoD));
+            self._themes = {
+                0 => Application.loadResource(Rez.Strings.ThGrey),
+                1 => Application.loadResource(Rez.Strings.ThRed),
+                2 => Application.loadResource(Rez.Strings.ThBaW),
+                3 => Application.loadResource(Rez.Strings.ThWaB),
+                666 => Application.loadResource(Rez.Strings.ThBsoD),
+            };
         }
 
         function onLayout(dc as Dc) as Void {
@@ -43,24 +44,23 @@ module Views {
         }
 
         protected function interactItem(item as Listitems.Item, doubletap as Boolean) as Boolean {
-            if ($.getApp().ListsManager == null) {
+            if (!IconItemView.interactItem(item, doubletap)) {
+                if ($.getApp().ListsManager == null) {
+                    return false;
+                }
+
+                var theme = Helper.Properties.Get(Helper.Properties.THEME, 0);
+                if (item.BoundObject instanceof Number && item.BoundObject != theme) {
+                    if (self._themes.hasKey(item.BoundObject as Number)) {
+                        Helper.Properties.Store(Helper.Properties.THEME, item.BoundObject as Number);
+                        $.getApp().triggerOnSettingsChanged();
+                        return true;
+                    }
+                }
+
                 return false;
             }
-
-            var theme = Helper.Properties.Get(Helper.Properties.THEME, 0);
-            if (item.BoundObject instanceof String && item.BoundObject.equals("back")) {
-                self.goBack();
-                return true;
-            }
-            if (item.BoundObject instanceof Number && item.BoundObject != theme) {
-                var name = self._themes.get(item.BoundObject as Number);
-                if (name != null) {
-                    Helper.Properties.Store(Helper.Properties.THEME, item.BoundObject as Number);
-                    $.getApp().triggerOnSettingsChanged();
-                    return true;
-                }
-            }
-            return false;
+            return true;
         }
 
         private function loadThemes() as Void {

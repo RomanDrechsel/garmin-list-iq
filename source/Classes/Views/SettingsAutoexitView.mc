@@ -22,13 +22,16 @@ module Views {
         }
 
         protected function interactItem(item as Listitems.Item, doubletap as Boolean) as Boolean {
-            var prop = Helper.Properties.Get(Helper.Properties.AUTOEXIT, 0);
-            if (item.BoundObject instanceof Number && prop != item.BoundObject) {
-                Helper.Properties.Store(Helper.Properties.AUTOEXIT, item.BoundObject as Number);
-                if ($.getApp().ListsManager != null) {
-                    $.getApp().triggerOnSettingsChanged();
+            if (!IconItemView.interactItem(item, doubletap)) {
+                var prop = Helper.Properties.Get(Helper.Properties.AUTOEXIT, 0);
+                if (item.BoundObject instanceof Number && prop != item.BoundObject) {
+                    Helper.Properties.Store(Helper.Properties.AUTOEXIT, item.BoundObject as Number);
+                    if ($.getApp().ListsManager != null) {
+                        $.getApp().triggerOnSettingsChanged();
+                    }
+                    self.goBack();
                 }
-                self.goBack();
+                return true;
             }
             return true;
         }

@@ -72,6 +72,8 @@
     <string id="StResetDaily">每天</string>
     <string id="StResetWeekly">每周</string>
     <string id="StResetMonthly">每月</string>
+    <string id="StResetBtn">重置列表</string>
+    <string id="StResetSuccess">列表已重設</string>
 
     <string id="ErrHint">請告訴我你的智能手機上的錯誤，以便我可以幫助你</string>
     <string id="ErrHintTouch">（點擊這裡，以在你的智能手機上的應用程式中打開聯繫方式）</string>

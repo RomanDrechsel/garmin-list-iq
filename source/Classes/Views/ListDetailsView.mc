@@ -33,43 +33,43 @@ module Views {
         }
 
         protected function interactItem(item as Listitems.Item, doubletap as Boolean) as Boolean {
-            if ($.getApp().ListsManager == null) {
-                self.goBack();
-                return true;
-            } else if (item.BoundObject instanceof Boolean && self._listUuid != null) {
-                var active = item.BoundObject as Boolean;
-                if (doubletap || self._doubleTap == 0 || self._doubleTap == false) {
-                    active = !active;
-                    if (active) {
-                        item.isDisabled = true;
-                        item.setIcon(self._itemIconDone);
-                        item.setIconInvert(self._itemIconDoneInvert);
-                    } else {
-                        item.isDisabled = false;
-                        item.setIcon(self._itemIcon);
-                        item.setIconInvert(self._itemIconInvert);
-                    }
-
-                    item.BoundObject = active;
-
-                    $.getApp().ListsManager.updateListitem(self._listUuid, item.ItemPosition, active);
-                    if (self._moveDown) {
-                        self.publishItems(true, null);
-                    } else {
-                        WatchUi.requestUpdate();
-                    }
-                    return true;
-                }
-            } else if (item.BoundObject instanceof String) {
-                if (item.BoundObject.equals("settings")) {
-                    self.openSettings();
-                    return true;
-                } else if (item.BoundObject.equals("back")) {
+            if (!IconItemView.interactItem(item, doubletap)) {
+                if ($.getApp().ListsManager == null) {
                     self.goBack();
                     return true;
+                } else if (item.BoundObject instanceof Boolean && self._listUuid != null) {
+                    var active = item.BoundObject as Boolean;
+                    if (doubletap || self._doubleTap == 0 || self._doubleTap == false) {
+                        active = !active;
+                        if (active) {
+                            item.isDisabled = true;
+                            item.setIcon(self._itemIconDone);
+                            item.setIconInvert(self._itemIconDoneInvert);
+                        } else {
+                            item.isDisabled = false;
+                            item.setIcon(self._itemIcon);
+                            item.setIconInvert(self._itemIconInvert);
+                        }
+
+                        item.BoundObject = active;
+
+                        $.getApp().ListsManager.updateListitem(self._listUuid, item.ItemPosition, active);
+                        if (self._moveDown) {
+                            self.publishItems(true, null);
+                        } else {
+                            WatchUi.requestUpdate();
+                        }
+                        return true;
+                    }
+                } else if (item.BoundObject instanceof Number) {
+                    if (item.BoundObject == ItemView.SETTINGS) {
+                        self.openSettings();
+                        return true;
+                    }
                 }
+                return false;
             }
-            return false;
+            return true;
         }
 
         function onKeyEnter() as Boolean {

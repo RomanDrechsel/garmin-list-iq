@@ -33,7 +33,9 @@ module Lists {
             } else {
                 self._batchQueue.add(batch);
             }
-            self.BatchTimer();
+            if (self._batchTimer == null) {
+                self.BatchTimer();
+            }
         }
 
         function GetListsIndex() as ListIndex {
@@ -200,7 +202,7 @@ module Lists {
                 return true;
             } else {
                 if (!self._app.isBackground && !(store[1] instanceof Exceptions.OutOfMemoryException)) {
-                    self.reportError(5, ["index=" + index.toString(), "delete=" + uuid, "exception=" + store[1].getErrorMessage()]);
+                    Views.ErrorView.Show(Views.ErrorView.LIST_DEL_FAILED, ["index=" + index.toString(), "delete=" + uuid, "exception=" + store[1].getErrorMessage()]);
                 }
                 return false;
             }
@@ -304,6 +306,8 @@ module Lists {
                     finish = batch.ProcessBatch(self._app.MemoryCheck);
                 } catch (ex instanceof Exceptions.OutOfMemoryException) {
                     Debug.Log("Could not add list " + batch.List.toString() + ": " + ex.toString());
+                } catch (ex instanceof Exceptions.LegacyNotSupportedException) {
+                    Views.ErrorView.Show(Views.ErrorView.LEGACY_APP, null);
                 }
                 if (finish instanceof Lang.Array) {
                     if (finish[0] == true) {
@@ -314,7 +318,7 @@ module Lists {
                         }
                         if (finish[1] == false) {
                             if (!self._app.isBackground) {
-                                self.reportError(2, null);
+                                Views.ErrorView.Show(Views.ErrorView.LIST_REC_INVALID, null);
                             }
                         } else {
                             var save = self.StoreList(batch.List);
@@ -326,7 +330,7 @@ module Lists {
                                 if (saveIndex[0] == false) {
                                     Application.Storage.deleteValue(batch.List.Uuid);
                                     if (!self._app.isBackground && !(saveIndex[1] instanceof Exceptions.OutOfMemoryException)) {
-                                        self.reportError(4, ["list=" + batch.List.ToBackend(), "exception=" + saveIndex[1].getErrorMessage()]);
+                                        Views.ErrorView.Show(Views.ErrorView.LIST_REC_INDEX_STORE_FAILED, ["list=" + batch.List.ToBackend(), "exception=" + saveIndex[1].getErrorMessage()]);
                                     }
                                 } else {
                                     if (!self._app.isBackground) {
@@ -339,7 +343,7 @@ module Lists {
                                 }
                             } else if (!(save[1] instanceof Exceptions.OutOfMemoryException)) {
                                 if (!self._app.isBackground) {
-                                    self.reportError(3, ["list=" + batch.List.ToBackend(), "exception=" + save[1].getErrorMessage()]);
+                                    Views.ErrorView.Show(Views.ErrorView.LIST_REC_STORE_FAILED, ["list=" + batch.List.ToBackend(), "exception=" + save[1].getErrorMessage()]);
                                 }
                             }
                         }
@@ -362,6 +366,9 @@ module Lists {
                 if (background != null) {
                     background.Finish(true);
                 }
+            } else if (background != null) {
+                /* doe to Timer.Timer() is not available in background -> send it to the next foreground session */
+                background.Finish(false);
             } else {
                 if (self._batchTimer == null) {
                     self._batchTimer = new Timer.Timer();
@@ -431,25 +438,6 @@ module Lists {
                 return [false, ex];
             }
             return [true, null];
-        }
-
-        private function reportError(code as Number, payload as Array<String>?) as Void {
-            if (!self._app.isBackground) {
-                var msg = null as Lang.ResourceId?;
-                switch (code) {
-                    case 1:
-                    case 2:
-                    case 3:
-                    case 4:
-                        msg = Rez.Strings.ErrListRec;
-                        break;
-                    case 5:
-                        msg = Rez.Strings.ErrListDel;
-                        break;
-                }
-                var errorView = new Views.ErrorView(msg, code, payload);
-                WatchUi.pushView(errorView, new Views.ItemViewDelegate(errorView), WatchUi.SLIDE_BLINK);
-            }
         }
 
         private function triggerOnListChanged(list as List?) as Void {

@@ -4,79 +4,134 @@ import Exceptions;
 import Toybox.Graphics;
 import Toybox.Lang;
 import Toybox.Application;
+import Toybox.WatchUi;
 
 module Views {
     class ErrorView extends ItemView {
         private var _errorMsg as Lang.ResourceId? = null;
+        private var _errorMsg2 as Lang.ResourceId? = null;
+        private var _errorMsg3 as Lang.ResourceId? = null;
         private var _errorCode as Lang.Number? = null;
         private var _errorPayload as Array<String>?;
 
-        function initialize(msg as Lang.ResourceId?, code as Lang.Number?, payload as Array<String>?) {
-            ItemView.initialize();
-            self._errorMsg = msg;
-            self._errorCode = code;
-            self._errorPayload = payload;
+        private static var _instance as ErrorView? = null;
+        public static var ErrorCode = null as ECode;
+        private var _isValid = false;
+
+        public enum ECode {
+            OUT_OF_MEMORY = 0,
+            LIST_REC_INVALID = 1,
+            LIST_REC_STORE_FAILED = 2,
+            LIST_REC_INDEX_STORE_FAILED = 3,
+            LIST_DEL_FAILED = 100,
+            LEGACY_APP = 150,
         }
 
-        function onLayout(dc as Dc) as Void {
+        function initialize() {
+            ItemView.initialize();
+            self._instance = self;
+        }
+
+        public function onLayout(dc as Dc) as Void {
             ItemView.onLayout(dc);
             self.loadVisuals();
         }
 
-        function onHide() as Void {
+        public function onHide() as Void {
             ItemView.onHide();
-            $.getApp().MemoryCheck.ShowErrorView = true;
+            self._instance = null;
         }
 
-        function onTap(x as Number, y as Number) as Boolean {
+        public function onUpdate(dc as Dc) as Void {
+            if (!self._isValid) {
+                self.loadVisuals();
+            }
+            ItemView.onUpdate(dc);
+        }
+
+        public function onTap(x as Number, y as Number) as Boolean {
             if (!ItemView.onTap(x, y)) {
-                self.sendReport();
+                self.interact();
             }
             return false;
         }
 
-        function onKeyEnter() as Boolean {
+        public function onKeyEnter() as Boolean {
             if (!ItemView.onKeyEnter()) {
-                self.sendReport();
+                self.interact();
                 return true;
             }
             return false;
         }
 
-        function onKeyEsc() as Boolean {
+        public function onKeyEsc() as Boolean {
             ItemView.onKeyEsc();
             self.goBack();
             return true;
         }
 
-        private function sendReport() as Void {
-            var app = $.getApp();
-            if (app.Phone != null && app.Debug != null) {
-                var send = ["type=reportError"];
-                if (self._errorMsg != null) {
-                    send.add("msg=" + Application.loadResource(self._errorMsg));
-                }
-                if (self._errorCode) {
-                    send.add("code=0x" + self._errorCode.format("%04x"));
-                }
-                if (self._errorPayload != null) {
-                    var str = "payload";
-                    var payload_index = 0;
-                    while (self._errorPayload.size() > 0) {
-                        send.add(str + payload_index + "=" + self._errorPayload[0]);
-                        self._errorPayload = self._errorPayload.slice(1, null);
-                        payload_index += 1;
-                    }
-                }
+        public function SetError(code as ECode, payload as Array<String>?) {
+            self.ErrorCode = code;
+            self._errorCode = null;
+            self._errorPayload = payload;
+            self._errorMsg = null;
+            self._errorMsg2 = null;
+            self._errorMsg3 = null;
 
-                var logs = app.Debug.GetLogs() as Array<String>;
-                for (var i = 0; i < logs.size(); i++) {
-                    send.add("log" + i + "=" + logs[i]);
+            if (code == OUT_OF_MEMORY) {
+                self._errorMsg = Rez.Strings.ListRecOOM;
+            } else if (code == LIST_REC_INVALID || code == LIST_REC_STORE_FAILED || code == LIST_REC_INDEX_STORE_FAILED) {
+                self._errorMsg = Rez.Strings.ErrListRec;
+                self._errorMsg2 = Rez.Strings.ErrHint;
+                self._errorMsg3 = self.DisplayButtonSupport() ? Rez.Strings.ErrHintTouch : Rez.Strings.ErrHintBtn;
+                self._errorCode = code;
+            } else if (code == LIST_DEL_FAILED) {
+                self._errorMsg = Rez.Strings.ErrListDel;
+                self._errorMsg2 = Rez.Strings.ErrHint;
+                self._errorMsg3 = self.DisplayButtonSupport() ? Rez.Strings.ErrHintTouch : Rez.Strings.ErrHintBtn;
+                self._errorCode = LIST_DEL_FAILED;
+            } else if (code == LEGACY_APP) {
+                self._errorMsg = Rez.Strings.LegacyPhoneApp;
+                self._errorMsg2 = self.DisplayButtonSupport() ? Rez.Strings.NoListsLinkBtn : Rez.Strings.NoListsLink;
+            } else {
+                self._errorMsg = Rez.Strings.ErrUnknown;
+            }
+
+            self._isValid = false;
+        }
+
+        private function interact() as Void {
+            if ([LIST_REC_INVALID, LIST_REC_STORE_FAILED, LIST_REC_INDEX_STORE_FAILED, LIST_DEL_FAILED].indexOf(self.ErrorCode) >= 0) {
+                var app = $.getApp();
+                if (app.Phone != null && app.Debug != null) {
+                    var send = ["type=reportError"];
+                    if (self._errorMsg != null) {
+                        send.add("msg=" + Application.loadResource(self._errorMsg));
+                    }
+                    if (self._errorCode != null) {
+                        send.add("code=0x" + self._errorCode.format("%04x"));
+                    }
+                    if (self._errorPayload != null) {
+                        var str = "payload";
+                        var payload_index = 0;
+                        while (self._errorPayload.size() > 0) {
+                            send.add(str + payload_index + "=" + self._errorPayload[0]);
+                            self._errorPayload = self._errorPayload.slice(1, null);
+                            payload_index += 1;
+                        }
+                    }
+
+                    var logs = app.Debug.GetLogs() as Array<String>;
+                    for (var i = 0; i < logs.size(); i++) {
+                        send.add("log" + i + "=" + logs[i]);
+                    }
+                    app.Phone.SendToPhone(send);
+                    Debug.Log("Send error report code 0x" + self._errorCode.format("%04x") + " to smartphone");
+                    Helper.ToastUtil.Toast(Rez.Strings.ErrReport, Helper.ToastUtil.ATTENTION);
+                    self.goBack();
                 }
-                app.Phone.SendToPhone(send);
-                Debug.Log("Send error report code 0x" + self._errorCode.format("%04x") + " to smartphone");
-                Helper.ToastUtil.Toast(Rez.Strings.ErrReport, Helper.ToastUtil.ATTENTION);
-                self.goBack();
+            } else if (self.ErrorCode == LEGACY_APP) {
+                $.openGooglePlay();
             }
         }
 
@@ -99,16 +154,19 @@ module Views {
                 errCode.isSelectable = false;
                 errCode.TitleJustification = Graphics.TEXT_JUSTIFY_CENTER;
                 self.Items.add(errCode);
+            }
 
-                var hint = new Listitems.Item(self._mainLayer, null, Application.loadResource(Rez.Strings.ErrHint), null, null, null, 2, null);
+            if (self._errorMsg2 != null) {
+                var hint = new Listitems.Item(self._mainLayer, null, Application.loadResource(self._errorMsg2), null, null, null, 2, null);
                 hint.setSubFont(Helper.Fonts.Normal());
                 hint.DrawLine = false;
                 hint.isSelectable = false;
                 hint.SubtitleJustification = Graphics.TEXT_JUSTIFY_CENTER;
                 self.Items.add(hint);
+            }
 
-                var txt = self.DisplayButtonSupport() ? Application.loadResource(Rez.Strings.ErrHintTouch) : Application.loadResource(Rez.Strings.ErrHintBtn);
-                var hint2 = new Listitems.Item(self._mainLayer, null, txt, null, null, null, 3, null);
+            if (self._errorMsg3 != null) {
+                var hint2 = new Listitems.Item(self._mainLayer, null, Application.loadResource(self._errorMsg3), null, null, null, 3, null);
                 hint2.setSubFont(Helper.Fonts.Normal());
                 hint2.DrawLine = false;
                 hint2.isSelectable = false;
@@ -118,6 +176,20 @@ module Views {
 
             if ($.getApp().NoBackButton) {
                 self.addBackButton(false);
+            }
+            self._isValid = true;
+        }
+
+        public static function Show(code as ECode, payload as Array<String>?) {
+            if (self._instance != null) {
+                if (self.ErrorCode != code) {
+                    self._instance.SetError(code, payload);
+                    WatchUi.requestUpdate();
+                }
+            } else {
+                var errorView = new Views.ErrorView();
+                errorView.SetError(code, payload);
+                WatchUi.pushView(errorView, new Views.ItemViewDelegate(errorView), WatchUi.SLIDE_BLINK);
             }
         }
     }

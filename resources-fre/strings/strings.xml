@@ -81,6 +81,7 @@
     <string id="ErrReport">Veuillez ouvrir le smartphone</string>
     <string id="ErrListRec">Une erreur est survenue lors du transfert de la liste:</string>
     <string id="ErrListDel">Une erreur est survenue lors de la suppression de la liste:</string>
+    <string id="ErrUnknown">Erreur inconnue</string>
 
     <string id="GlNumLists" scope="glance">%d listes</string>
     <string id="GlOneList" scope="glance">1 liste</string>

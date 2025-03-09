@@ -81,6 +81,7 @@
     <string id="ErrReport">请打开智能手机</string>
     <string id="ErrListRec">传输列表时发生错误：</string>
     <string id="ErrListDel">删除列表时发生错误：</string>
+    <string id="ErrUnknown">未知错误</string>
 
     <string id="GlNumLists" scope="glance">%d 份清单</string>
     <string id="GlOneList" scope="glance">1 列表</string>

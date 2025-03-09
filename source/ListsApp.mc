@@ -57,8 +57,10 @@ class ListsApp extends Application.AppBase {
 
         if (self._backgroundReceive.size() > 0) {
             self._backgroundReceiveTimer = new Timer.Timer();
-            self._backgroundReceiveTimer.start(method(:handleBackgroundData), 1000, true);
+            self._backgroundReceiveTimer.start(method(:handleBackgroundData), 100, true);
         }
+
+        (new BG.ListCacher(self)).ProcessCache();
 
         var startview = new Views.ListsSelectView(true);
         return [startview, new Views.ItemViewDelegate(startview)];

@@ -80,6 +80,7 @@
     <string id="ErrReport">Bitte Smartphone öffnen</string>
     <string id="ErrListRec">Beim Übertragen der Liste ist ein Fehler aufgetreten:</string>
     <string id="ErrListDel">Beim Löschen der Liste ist ein Fehler aufgetreten:</string>
+    <string id="ErrUnknown">Unbekannter Fehler</string>
 
     <string id="GlNumLists" scope="glance">%d Listen</string>
     <string id="GlOneList" scope="glance">1 Liste</string>

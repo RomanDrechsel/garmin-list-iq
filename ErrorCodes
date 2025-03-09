@@ -1,5 +1,7 @@
-x0001  = ListsManager: invalid list data
-x0002  = ListsManager: missing properties in list data
-x0003  = ListsManager: list could not be saved
-x0004  = ListsManager: list index could not be saved
-x0005  = ListsManager: list could not be deleted
+x0000  = Out of Memory
+x0001  = ListsManager: missing properties in list data
+x0002  = ListsManager: list could not be saved
+x0003  = ListsManager: list index could not be saved
+x0063  = ListsManager: list could not be deleted
+x0096  = ListsManager: received list is from unsupported android app version
+xFFFF  = Unknown error

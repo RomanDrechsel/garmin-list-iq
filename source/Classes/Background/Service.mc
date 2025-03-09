@@ -5,6 +5,11 @@ import Toybox.Communications;
 module BG {
     (:background)
     class Service extends System.ServiceDelegate {
+        public enum {
+            OUTOFMEMORY = 0,
+            NOT_STORED = 1,
+        }
+
         private var _pendingMessage as Communications.PhoneAppMessage?;
 
         function initialize() {
@@ -24,11 +29,18 @@ module BG {
         }
 
         function Finish(success as Boolean) as Void {
-            if (success || self._pendingMessage == null) {
-                Background.exit(null);
-            } else {
-                Background.exit(self._pendingMessage.data);
+            if (!success && self._pendingMessage != null) {
+                try {
+                    (new ListCacher($.getApp())).Cache(self._pendingMessage.data);
+                } catch (ex instanceof Exceptions.OutOfMemoryException) {
+                    Debug.Log("Could not cache message for foreground: " + ex.toString());
+                    Background.exit(OUTOFMEMORY);
+                } catch (ex instanceof Lang.Exception) {
+                    Debug.Log("Could not cache message for foreground: " + ex.getErrorMessage());
+                    Background.exit(NOT_STORED);
+                }
             }
+            Background.exit(null);
         }
     }
 }

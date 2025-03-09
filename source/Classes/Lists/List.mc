@@ -18,7 +18,10 @@ module Lists {
             RESET_WEEKDAY = 9,
             RESET_DAY = 10,
             RESET_LAST = 11,
+            REVISION = 999,
         }
+
+        private const CurrentRevision = 1;
 
         public var Uuid as String or Number or Null;
         public var Title as String?;
@@ -32,15 +35,17 @@ module Lists {
         public var ResetWeekday as Number?;
         public var ResetDay as Number?;
         public var ResetLast as Number?;
+        public var Revision as Number?;
 
         function initialize(data as ListModel?) {
             if (data != null) {
-                self.Uuid = data.get(UUID) as String or Number or Null;
+                self.Revision = data.get(REVISION) as Number?;
 
-                if (self.Uuid == null && data.get("uuid") != null) {
+                if (self.Revision == null || self.Revision != self.CurrentRevision) {
                     throw new Exceptions.LegacyNotSupportedException();
                 }
 
+                self.Uuid = data.get(UUID) as String or Number or Null;
                 self.Title = data.get(TITLE) as String?;
                 self.Order = data.get(ORDER) as Number?;
                 self.Date = data.get(DATE) as Number?;
@@ -159,6 +164,15 @@ module Lists {
                     if (num != null) {
                         self.ResetLast = num;
                     }
+                } else if (key.equals("rev")) {
+                    self.Revision = val.toNumber();
+                    if (self.Revision != self.CurrentRevision) {
+                        Debug.Log("Old list revision number: " + self.Revision + " <> " + self.CurrentRevision);
+                        throw new Exceptions.LegacyNotSupportedException();
+                    } else {
+                        Debug.Log("Invalid revision number: " + val);
+                        throw new Exceptions.LegacyNotSupportedException();
+                    }
                 }
                 key = null;
                 val = null;
@@ -169,6 +183,10 @@ module Lists {
         }
 
         public function FinishBatch() as Boolean {
+            if (self.Revision != self.CurrentRevision) {
+                throw new Exceptions.LegacyNotSupportedException();
+            }
+
             if (self.IsValid()) {
                 if (self.Reset != null) {
                     var missing = [];
@@ -248,6 +266,7 @@ module Lists {
                         TITLE => self.Title,
                         ORDER => self.Order,
                         DATE => self.Date,
+                        REVISION => self.Revision,
                     }) as ListModel;
                 var items = [] as Array<ListitemModel>;
                 for (var i = 0; i < self.Items.size(); i++) {
@@ -300,7 +319,7 @@ module Lists {
 
         public function toString() as String {
             if (self.IsValid()) {
-                return "'" + self.Title + "' (" + self.Uuid.toString() + ")";
+                return "'" + self.Title + "' (" + self.Uuid.toString() + "/" + self.Revision + ")";
             }
             return "invalid list";
         }
@@ -377,6 +396,15 @@ module Lists {
             }
 
             return result;
+        }
+
+        private function invalidate() as Void {
+            self.Title = null;
+            self.Order = null;
+            self.Date = null;
+            self.Items = null;
+            self.Revision = null;
+            self.RemoveReset();
         }
 
         public static function IsValidIndex(index as ListIndexItem?) as Boolean {

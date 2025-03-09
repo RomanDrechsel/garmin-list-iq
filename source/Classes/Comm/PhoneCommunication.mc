@@ -9,7 +9,7 @@ import Views;
 module Comm {
     (:background)
     class PhoneCommunication extends Toybox.Communications.ConnectionListener {
-        private enum EMessageType {
+        public enum EMessageType {
             LIST = "list",
             DELETE_LIST = "dellist",
             REQUEST_LOGS = "req_logs",
@@ -80,8 +80,8 @@ module Comm {
                 self._app.ListsManager.addList(data);
             } else if (message_type.equals(DELETE_LIST)) {
                 if (data.size() > 0) {
-                    var uuid = data[0] as String;
-                    if (self._app.ListsManager.deleteList(uuid, false) == false) {
+                    var uuid = Helper.StringUtil.StringToNumber(data[0] as String);
+                    if (self._app.ListsManager.deleteList(uuid != null ? uuid : data[0] as String, false) == false) {
                         Debug.Log("Could not delete list " + uuid);
                     }
                 } else {
@@ -116,8 +116,7 @@ module Comm {
             var size = Helper.StringUtil.formatBytes(message.toString().length());
             Debug.Log("Received legacy message (" + size + ")");
             if (!self._app.isBackground) {
-                var error = new Views.ErrorViewLegacyApp();
-                WatchUi.pushView(error, new Views.ItemViewDelegate(error), WatchUi.SLIDE_IMMEDIATE);
+                Views.ErrorView.Show(Views.ErrorView.LEGACY_APP, null);
             }
         }
     }

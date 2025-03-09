@@ -81,6 +81,7 @@
     <string id="ErrReport">スマートフォンを開く</string>
     <string id="ErrListRec">リスト転送中にエラーが発生しました：</string>
     <string id="ErrListDel">リストの削除中にエラーが発生しました：</string>
+    <string id="ErrUnknown">不明なエラー</string>
 
     <string id="GlNumLists" scope="glance">%d リスト</string>
     <string id="GlOneList" scope="glance">1 リスト</string>

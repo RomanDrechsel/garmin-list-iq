@@ -9,9 +9,9 @@ import Controls.Listitems;
 import Views;
 
 module Lists {
-    (:glance,:background)
+    (:background)
     typedef ListIndexItem as Dictionary<Number, String or Number>;
-    (:glance,:background)
+    (:background)
     typedef ListIndex as Dictionary<String or Number, ListIndexItem>;
 
     (:background)
@@ -215,6 +215,7 @@ module Lists {
                 Helper.ToastUtil.Toast(Rez.Strings.StDelAllDone, Helper.ToastUtil.SUCCESS);
             }
             self.triggerOnListChanged(null);
+            self.triggerOnListIndexChanged(null);
         }
 
         function addListChangedListener(obj as Object) as Void {
@@ -307,7 +308,9 @@ module Lists {
                 } catch (ex instanceof Exceptions.OutOfMemoryException) {
                     Debug.Log("Could not add list " + batch.List.toString() + ": " + ex.toString());
                 } catch (ex instanceof Exceptions.LegacyNotSupportedException) {
-                    Views.ErrorView.Show(Views.ErrorView.LEGACY_APP, null);
+                    if (!$.getApp().isBackground) {
+                        Views.ErrorView.Show(Views.ErrorView.LEGACY_APP, null);
+                    }
                 }
                 if (finish instanceof Lang.Array) {
                     if (finish[0] == true) {
@@ -415,6 +418,7 @@ module Lists {
                 index = self.purgeIndex(index);
                 if (index == null || index.size() == 0) {
                     self.clearAll();
+                    self.triggerOnListIndexChanged(null);
                 } else {
                     self._app.MemoryCheck.Check();
                     Application.Storage.setValue("listindex", index);

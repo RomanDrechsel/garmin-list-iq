@@ -1,7 +1,7 @@
 import Toybox.System;
 
 module Helper {
-    (:background)
+    (:background,:glance)
     class MemoryChecker {
         private var _app as ListsApp;
 

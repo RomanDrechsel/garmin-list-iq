@@ -1,7 +1,7 @@
 import Toybox.Lang;
 
 module Lists {
-    (:background)
+    (:background,:glance)
     class AddListBatch {
         public var List as List;
         public var IsSync = false;

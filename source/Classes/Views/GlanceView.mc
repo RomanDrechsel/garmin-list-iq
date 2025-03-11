@@ -3,6 +3,7 @@ import Toybox.Graphics;
 import Toybox.Application;
 import Controls;
 
+(:withGlance)
 module Views {
     (:glance)
     class GlanceView extends WatchUi.GlanceView {

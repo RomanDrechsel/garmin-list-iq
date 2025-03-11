@@ -1,7 +1,7 @@
 import Toybox.Lang;
 
 module Exceptions {
-    (:background)
+    (:background,:glance)
     class OutOfMemoryException extends Lang.Exception {
         public var Usage as Double;
         public var Used as Number;

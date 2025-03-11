@@ -1,9 +1,9 @@
 import Toybox.Lang;
 
+(:glance,:background)
 module Lists {
     typedef ListModel as Dictionary<Number or String, String or Number or Boolean or Array<ListitemModel> >;
 
-    (:glance,:background)
     class List {
         enum EKey {
             UUID = 0,
@@ -169,9 +169,6 @@ module Lists {
                     if (self.Revision != self.CurrentRevision) {
                         Debug.Log("Old list revision number: " + self.Revision + " <> " + self.CurrentRevision);
                         throw new Exceptions.LegacyNotSupportedException();
-                    } else {
-                        Debug.Log("Invalid revision number: " + val);
-                        throw new Exceptions.LegacyNotSupportedException();
                     }
                 }
                 key = null;
@@ -183,7 +180,12 @@ module Lists {
         }
 
         public function FinishBatch() as Boolean {
+            if (self.Revision == null) {
+                Debug.Log("No revision number in list received from phone");
+                throw new Exceptions.LegacyNotSupportedException();
+            }
             if (self.Revision != self.CurrentRevision) {
+                Debug.Log("Old list revision number: " + self.Revision + " <> " + self.CurrentRevision);
                 throw new Exceptions.LegacyNotSupportedException();
             }
 

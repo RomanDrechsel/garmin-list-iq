@@ -83,7 +83,7 @@ module Views {
             self._snapPosition = 0;
 
             if (index == null || index.size() == 0) {
-                self.noLists();
+                self.noLists(request_update);
                 return;
             }
 
@@ -111,7 +111,7 @@ module Views {
                     if (substring.length() > 0) {
                         substring += "\n";
                     }
-                    substring += Helper.DateUtil.DatetoString(date, null);
+                    substring += Helper.DateUtil.DateToString(date, null);
                 }
                 self.addItem(title, substring, uuid, self._listIconCode, item.get("o"));
             }
@@ -135,7 +135,7 @@ module Views {
             }
         }
 
-        private function noLists() as Void {
+        private function noLists(request_update as Boolean) as Void {
             self.Items = [] as Array<Item>;
             var item = new Listitems.Item(self._mainLayer, Application.loadResource(Rez.Strings.NoLists), null, STORE, null, ($.screenHeight * 0.1).toNumber(), 0, null);
             item.DrawLine = false;
@@ -176,6 +176,10 @@ module Views {
             self._scrollOffset = 0;
             self.moveIterator(0);
             self._needValidation = true;
+
+            if (request_update) {
+                WatchUi.requestUpdate();
+            }
         }
 
         protected function interactItem(item as Listitems.Item, doubletap as Boolean) as Boolean {

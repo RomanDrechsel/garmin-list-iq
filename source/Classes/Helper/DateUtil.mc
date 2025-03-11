@@ -6,7 +6,7 @@ import Toybox.System;
 (:glance)
 module Helper {
     class DateUtil {
-        public static function DatetoString(timestamp as Number or Time.Moment, date_separator as String?) as String {
+        public static function DateToString(timestamp as Number or Time.Moment, date_separator as String?) as String {
             var moment = timestamp instanceof Time.Moment ? timestamp : new Time.Moment(timestamp);
             var greg = Time.Gregorian.info(moment, Time.FORMAT_SHORT);
             var greg_long = Time.Gregorian.info(moment, Time.FORMAT_LONG);

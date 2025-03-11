@@ -5,6 +5,7 @@ import Toybox.Time;
 module BG {
     (:background)
     class ListCacher {
+        (:withBackground)
         public enum ECacheType {
             LIST = "bg_",
             LISTINDEX = "bg_listindex",
@@ -12,6 +13,7 @@ module BG {
             REQUEST_LOGS = "bg_requestlogs",
         }
 
+        (:withBackground)
         private const _maxListCache = 5;
         private var _app as ListsApp;
 
@@ -19,6 +21,7 @@ module BG {
             self._app = app;
         }
 
+        (:withBackground)
         public function Cache(data as Object?) as Void {
             if (data instanceof Array) {
                 var message_type = null;
@@ -105,6 +108,7 @@ module BG {
             }
         }
 
+        (:withBackground)
         public function ProcessCache() as Void {
             var listindex = Application.Storage.getValue(LISTINDEX);
             if (listindex != null) {
@@ -161,6 +165,10 @@ module BG {
             }
         }
 
+        (:withoutBackground)
+        public function ProcessCache() as Void {}
+
+        (:withBackground)
         private function removeListFromIndex(uuid as String, index as Array?) as Void {
             if (index == null) {
                 index = Application.Storage.getValue(LISTINDEX);

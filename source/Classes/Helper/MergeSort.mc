@@ -1,6 +1,7 @@
 import Toybox.Lang;
 
 module Helper {
+    (:background,:glance)
     class MergeSort {
         static function Sort(array as Array<Object>, propertykey as String or Number or Null) as Array? {
             if (array.size() <= 1) {

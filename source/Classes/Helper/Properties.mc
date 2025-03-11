@@ -4,6 +4,7 @@ using Toybox.Application.Properties as Props;
 
 module Helper {
     class Properties {
+        (:glance,:background)
         typedef PropType as Number or Boolean or String;
 
         (:glance,:background)

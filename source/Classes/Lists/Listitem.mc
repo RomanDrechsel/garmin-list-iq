@@ -1,9 +1,9 @@
 import Toybox.Lang;
 
+(:background)
 module Lists {
     typedef ListitemModel as Dictionary<Number, String or Boolean or Number or Null>;
 
-    (:background)
     class Listitem {
         private enum EKey {
             UUID = 0,

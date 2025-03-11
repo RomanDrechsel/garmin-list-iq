@@ -1,6 +1,6 @@
 import Toybox.Lang;
 
-(:background)
+(:background,:debug)
 module Helper {
     class QuickSort {
         static function SortNumbers(arr as Array<Number>) as Array<Number> {

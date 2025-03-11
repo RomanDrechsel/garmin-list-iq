@@ -5,17 +5,20 @@ import Toybox.Communications;
 module BG {
     (:background)
     class Service extends System.ServiceDelegate {
+        (:withBackground)
         public enum {
             OUTOFMEMORY = 0,
             NOT_STORED = 1,
         }
 
+        (:withBackground)
         private var _pendingMessage as Communications.PhoneAppMessage?;
 
         function initialize() {
             ServiceDelegate.initialize();
         }
 
+        (:withBackground)
         function onPhoneAppMessage(msg as Communications.PhoneAppMessage) as Void {
             var phone = $.getApp().Phone as Comm.PhoneCommunication?;
             if (phone != null) {
@@ -28,6 +31,7 @@ module BG {
             }
         }
 
+        (:withBackground)
         function Finish(success as Boolean) as Void {
             if (!success && self._pendingMessage != null) {
                 try {
@@ -42,5 +46,8 @@ module BG {
             }
             Background.exit(null);
         }
+
+        (:withoutBackground)
+        function Finish(success as Boolean) as Void {}
     }
 }

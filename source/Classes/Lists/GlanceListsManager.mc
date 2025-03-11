@@ -1,6 +1,7 @@
 import Toybox.Application;
 import Toybox.Lang;
 
+(:withGlance)
 module Lists {
     (:glance)
     class GlanceListsManager {

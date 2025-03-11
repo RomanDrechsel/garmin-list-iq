@@ -29,12 +29,14 @@ class ListsApp extends Application.AppBase {
     var isBackground = false;
     var NoBackButton = false;
     private var onSettingsChangedListeners as Array<WeakReference> = [];
+    (:withBackground)
     private var _backgroundReceive as Array<Array<Object> > = [];
+    (:withBackground)
     private var _backgroundReceiveTimer = null as Timer?;
 
     function initialize() {
         AppBase.initialize();
-        if (Background has :getPhoneAppMessageEventRegistered && !Background.getPhoneAppMessageEventRegistered()) {
+        if (Background has :getPhoneAppMessageEventRegistered && !Background.getPhoneAppMessageEventRegistered() && $.hasBackground) {
             Background.registerForPhoneAppMessageEvent();
         }
         self.MemoryCheck = new Helper.MemoryChecker(self);
@@ -54,23 +56,19 @@ class ListsApp extends Application.AppBase {
         self.ListsManager = new ListsManager(self);
         self.Phone = new Comm.PhoneCommunication(self, true);
         self.Inactivity = new Helper.Inactivity();
-
-        if (self._backgroundReceive.size() > 0) {
-            self._backgroundReceiveTimer = new Timer.Timer();
-            self._backgroundReceiveTimer.start(method(:handleBackgroundData), 100, true);
-        }
-
-        (new BG.ListCacher(self)).ProcessCache();
+        self.processBackground();
 
         var startview = new Views.ListsSelectView(true);
         return [startview, new Views.ItemViewDelegate(startview)];
     }
 
+    (:glance,:withGlance)
     function getGlanceView() as [WatchUi.GlanceView] or [WatchUi.GlanceView, WatchUi.GlanceViewDelegate] or Null {
         self.isGlanceView = true;
         return [new Views.GlanceView()];
     }
 
+    (:withBackground,:background)
     function getServiceDelegate() as [System.ServiceDelegate] {
         self.isBackground = true;
         self.ListsManager = new ListsManager(self);
@@ -83,6 +81,7 @@ class ListsApp extends Application.AppBase {
         self.triggerOnSettingsChanged();
     }
 
+    (:withBackground)
     function onBackgroundData(data as Application.PersistableType) as Void {
         var maxMessages = 5;
         if (data instanceof Array) {
@@ -145,6 +144,7 @@ class ListsApp extends Application.AppBase {
         ret.add("Firmware: " + settings.firmwareVersion);
         ret.add("Monkey Version: " + settings.monkeyVersion);
         ret.add("Memory: " + stats.usedMemory + " / " + stats.totalMemory);
+        ret.add("LowBGMemory: " + !$.hasBackground);
         ret.add("Language: " + settings.systemLanguage);
         ret.add("Lists in Storage: " + self.ListsManager.GetListsIndex().size());
         return ret;
@@ -178,6 +178,19 @@ class ListsApp extends Application.AppBase {
         }
     }
 
+    (:withBackground)
+    private function processBackground() as Void {
+        if (self._backgroundReceive.size() > 0) {
+            self._backgroundReceiveTimer = new Timer.Timer();
+            self._backgroundReceiveTimer.start(method(:handleBackgroundData), 100, true);
+        }
+        (new BG.ListCacher(self)).ProcessCache();
+    }
+
+    (:withoutBackground)
+    private function processBackground() as Void {}
+
+    (:withBackground)
     function handleBackgroundData() as Void {
         if (self._backgroundReceive.size() > 0) {
             var data = self._backgroundReceive[0];
@@ -200,6 +213,11 @@ function getApp() as ListsApp {
 function openGooglePlay() as Void {
     Communications.openWebPage("https://play.google.com/store/apps/details?id=de.romandrechsel.lists", null, null);
 }
+
+(:withBackground)
+var hasBackground = true;
+(:withoutBackground)
+var hasBackground = false;
 
 (:roundVersion)
 var isRoundDisplay = true;

@@ -154,9 +154,9 @@ fr645m.resourcePath = $(base.resourcePath);resources-small
 fr745.resourcePath = $(base.resourcePath);resources-small
 
 fr935.resourcePath = $(base.resourcePath);resources-small
+fr935.excludeAnnotations = regularVersion;withBackground;withGlance
 
 fr945.resourcePath = $(base.resourcePath);resources-small
-fr935.excludeAnnotations = regularVersion;withBackground;withGlance
 
 fr945lte.resourcePath = $(base.resourcePath);resources-small
 
@@ -231,7 +231,7 @@ vivoactive3.resourcePath = $(base.resourcePath);resources-touch;resources-small
 vivoactive3.excludeAnnotations = regularVersion;withBackground;withGlance
 
 vivoactive3m.resourcePath = $(base.resourcePath);resources-touch;resources-small
-vivoactive3m.excludeAnnotations = regularVersion;withGlance;withoutBackground
+vivoactive3m.excludeAnnotations = regularVersion;withBackground;withGlance
 
 vivoactive3mlte.resourcePath = $(base.resourcePath);resources-touch;resources-small
 

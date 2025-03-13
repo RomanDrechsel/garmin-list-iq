@@ -33,6 +33,7 @@ module BG {
 
         (:withBackground)
         function Finish(success as Boolean) as Void {
+            success = false;
             if (!success && self._pendingMessage != null) {
                 try {
                     (new ListCacher($.getApp())).Cache(self._pendingMessage.data);

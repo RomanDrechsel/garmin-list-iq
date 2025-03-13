@@ -119,15 +119,15 @@ module BG {
                         listindex = listindex.slice(1, null);
                         var list = Application.Storage.getValue(LIST + uuid);
                         if (list != null && list instanceof Array) {
-                            Debug.Log("Process list cache for list " + uuid);
+                            Debug.Log("Process background cache for list " + uuid);
                             self._app.Phone.processData(list);
                         } else {
-                            Debug.Log("Could not find list cache for list " + uuid);
+                            Debug.Log("Could not find list background cache for list " + uuid);
                         }
                         Application.Storage.deleteValue(LIST + uuid);
                     }
                     if (count > 0) {
-                        Debug.Log("Processing " + count + " cached lists");
+                        Debug.Log("Processing " + count + " cached lists from background");
                     }
                 }
 
@@ -163,6 +163,8 @@ module BG {
                 Application.Storage.deleteValue(REQUEST_LOGS);
                 logrequest = null;
             }
+
+            self._app.ListCacher = null;
         }
 
         (:withoutBackground)

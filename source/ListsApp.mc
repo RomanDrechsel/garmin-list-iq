@@ -28,6 +28,7 @@ class ListsApp extends Application.AppBase {
     var isGlanceView = false;
     var isBackground = false;
     var NoBackButton = false;
+    var ListCacher = null as BG.ListCacher?;
     private var onSettingsChangedListeners as Array<WeakReference> = [];
     (:withBackground)
     private var _backgroundReceive as Array<Array<Object> > = [];
@@ -36,14 +37,14 @@ class ListsApp extends Application.AppBase {
 
     function initialize() {
         AppBase.initialize();
-        if (Background has :getPhoneAppMessageEventRegistered && !Background.getPhoneAppMessageEventRegistered() && $.hasBackground) {
+        if (Background has :getPhoneAppMessageEventRegistered && !Background.getPhoneAppMessageEventRegistered() && $.hasBackgroundCapability) {
             Background.registerForPhoneAppMessageEvent();
         }
         self.MemoryCheck = new Helper.MemoryChecker(self);
     }
 
     function getInitialView() as [WatchUi.Views] or [WatchUi.Views, WatchUi.InputDelegates] {
-        var appVersion = "2025.02.2500";
+        var appVersion = "2025.03.1300";
         Application.Properties.setValue("appVersion", appVersion);
 
         self.Debug = new Debug.DebugStorage();
@@ -59,6 +60,15 @@ class ListsApp extends Application.AppBase {
         self.processBackground();
 
         var startview = new Views.ListsSelectView(true);
+
+        //just clean up the storage, if there are any relics
+        if (self.ListCacher == null) {
+            if (self.ListsManager.GetListsIndex().size() == 0) {
+                Debug.Log("Cleanup storage, due to no listindex found");
+                Application.Storage.clearValues();
+            }
+        }
+
         return [startview, new Views.ItemViewDelegate(startview)];
     }
 
@@ -144,7 +154,7 @@ class ListsApp extends Application.AppBase {
         ret.add("Firmware: " + settings.firmwareVersion);
         ret.add("Monkey Version: " + settings.monkeyVersion);
         ret.add("Memory: " + stats.usedMemory + " / " + stats.totalMemory);
-        ret.add("LowBGMemory: " + !$.hasBackground);
+        ret.add("LowBGMemory: " + !$.hasBackgroundCapability);
         ret.add("Language: " + settings.systemLanguage);
         ret.add("Lists in Storage: " + self.ListsManager.GetListsIndex().size());
         return ret;
@@ -184,7 +194,8 @@ class ListsApp extends Application.AppBase {
             self._backgroundReceiveTimer = new Timer.Timer();
             self._backgroundReceiveTimer.start(method(:handleBackgroundData), 100, true);
         }
-        (new BG.ListCacher(self)).ProcessCache();
+        self.ListCacher = new BG.ListCacher(self);
+        self.ListCacher.ProcessCache();
     }
 
     (:withoutBackground)
@@ -215,9 +226,9 @@ function openGooglePlay() as Void {
 }
 
 (:withBackground)
-var hasBackground = true;
+var hasBackgroundCapability = true;
 (:withoutBackground)
-var hasBackground = false;
+var hasBackgroundCapability = false;
 
 (:roundVersion)
 var isRoundDisplay = true;

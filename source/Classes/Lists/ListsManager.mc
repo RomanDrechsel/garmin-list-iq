@@ -41,8 +41,6 @@ module Lists {
         function GetListsIndex() as ListIndex {
             var index = Application.Storage.getValue("listindex") as ListIndex?;
             if (index == null || !(index instanceof Dictionary) || index.size() == 0) {
-                //just clean up the storage, if there are any relics
-                Application.Storage.clearValues();
                 return {};
             }
             try {

@@ -94,7 +94,7 @@ module Views {
         }
 
         function onListChanged(list as Lists.List?) as Void {
-            if (list != null && list.equals(self._listUuid)) {
+            if (list == null || list.equals(self._listUuid)) {
                 self.publishItems(true, list);
             }
         }

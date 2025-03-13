@@ -1,10 +1,11 @@
 import Toybox.Lang;
 
-(:glance,:background)
+(:background)
 module Lists {
     typedef ListModel as Dictionary<Number or String, String or Number or Boolean or Array<ListitemModel> >;
 
     class List {
+        (:glance)
         enum EKey {
             UUID = 0,
             TITLE = 1,
@@ -180,16 +181,15 @@ module Lists {
         }
 
         public function FinishBatch() as Boolean {
-            if (self.Revision == null) {
-                Debug.Log("No revision number in list received from phone");
-                throw new Exceptions.LegacyNotSupportedException();
-            }
-            if (self.Revision != self.CurrentRevision) {
-                Debug.Log("Old list revision number: " + self.Revision + " <> " + self.CurrentRevision);
-                throw new Exceptions.LegacyNotSupportedException();
-            }
-
             if (self.IsValid()) {
+                if (self.Revision == null) {
+                    Debug.Log("No revision number in list received from phone");
+                    throw new Exceptions.LegacyNotSupportedException();
+                }
+                if (self.Revision != self.CurrentRevision) {
+                    Debug.Log("Old list revision number: " + self.Revision + " <> " + self.CurrentRevision);
+                    throw new Exceptions.LegacyNotSupportedException();
+                }
                 if (self.Reset != null) {
                     var missing = [];
                     if (self.ResetInterval != null && self.ResetHour != null && self.ResetMinute != null) {

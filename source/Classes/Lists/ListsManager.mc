@@ -56,7 +56,7 @@ module Lists {
             try {
                 var list = new List(Application.Storage.getValue(uuid));
                 self._app.MemoryCheck.Check();
-                if (list.FinishBatch()) {
+                if (list.IsValid()) {
                     return list;
                 } else {
                     return null;

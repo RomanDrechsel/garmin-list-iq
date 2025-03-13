@@ -6,9 +6,7 @@ adb -d forward tcp:7381 tcp:7381
 
 TEST: Background service
 WIP: GlanceListsManager uses List index as Array -> should be dict
-BUG: ListsSelectView: does not update when deleting a list --> event not triggered in ListsManager!
-TODO: update glance view when new list arrives in background
-TODO: API 3.2.0 is needed to store data in Application.Storage in background
+WIP: API 3.2.0 is needed to store data in Application.Storage in background
 TODO: make Application.Storage.clearValues() on start, if no lists are in storage
 TEST: ListsManager.addList() only run Batch Method. if timer not running
 TODO: send success response to phone, when list added

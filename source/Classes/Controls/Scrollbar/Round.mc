@@ -2,8 +2,8 @@ import Toybox.Graphics;
 import Toybox.Lang;
 import Toybox.Math;
 
-(:roundVersion)
 module Controls {
+    (:roundVersion)
     class Scrollbar {
         private var _scrollbarWidth = 10;
         private var _layer as LayerDef;

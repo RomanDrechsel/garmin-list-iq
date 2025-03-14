@@ -5,7 +5,7 @@ import Toybox.Application;
 import Toybox.Time;
 import Toybox.System;
 import Controls;
-import Helper;
+import Exceptions;
 import Controls.Listitems;
 
 module Views {
@@ -19,6 +19,12 @@ module Views {
             CONTROLS_BUTTONS,
             CONTROLS_TOUCHSCREEN,
             CONTROLS_BOTH,
+        }
+
+        enum EButtons {
+            SETTINGS = -1,
+            BACK = -2,
+            QUIT = -3,
         }
 
         var Items as Array<Item> = new Array<Item>[0];
@@ -74,9 +80,13 @@ module Views {
         /** display hardware button support? */
         protected static var _buttonDisplay as Boolean? = null;
 
+        function initialize() {
+            WatchUi.View.initialize();
+        }
+
         function onLayout(dc as Dc) {
             View.onLayout(dc);
-            if (dc has :setAntialias) {
+            if (dc has :setAntiAlias) {
                 dc.setAntiAlias(true);
             }
 
@@ -99,20 +109,20 @@ module Views {
         }
 
         function onShow() as Void {
-            if ($.getApp().GlobalStates.hasKey("startpage")) {
-                if (self instanceof ListsSelectView == false) {
+            if ($.getApp().GlobalStates.indexOf(ListsApp.STARTPAGE) >= 0) {
+                if (!(self instanceof ListsSelectView)) {
                     WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
                     return;
                 } else {
-                    $.getApp().GlobalStates.remove("startpage");
+                    $.getApp().GlobalStates.removeAll(ListsApp.STARTPAGE);
                 }
             } else {
                 self.Interaction();
             }
-            if ($.getApp().GlobalStates.hasKey("movetop")) {
+            if ($.getApp().GlobalStates.indexOf(ListsApp.MOVETOP) >= 0) {
                 self._scrollOffset = 0;
                 self.setIterator(0);
-                $.getApp().GlobalStates.remove("movetop");
+                $.getApp().GlobalStates.removeAll(ListsApp.MOVETOP);
             }
             WatchUi.View.onShow();
             $.getApp().addSettingsChangedListener(self);
@@ -360,7 +370,10 @@ module Views {
                 if (self.DisplayButtonSupport() || $.isRoundDisplay) {
                     if (self.Items.size() > 0) {
                         if (self.Items[0] instanceof Listitems.Title) {
-                            self._paddingTop = self._mainLayer.getHeight() / 2 - (self.Items[1].getHeight(dc) / 2).toNumber() - self.Items[0].getHeight(dc);
+                            self._paddingTop = self._mainLayer.getHeight() / 2 - self.Items[0].getHeight(dc);
+                            if (self.Items.size() > 1) {
+                                self._paddingTop -= (self.Items[1].getHeight(dc) / 2).toNumber();
+                            }
                         } else {
                             self._paddingTop = self._mainLayer.getHeight() / 2 - (self.Items[0].getHeight(dc) / 2).toNumber();
                         }
@@ -403,22 +416,21 @@ module Views {
         }
 
         protected function addSettingsButton() as Void {
-            self.Items.add(new Listitems.Button(self._mainLayer, Application.loadResource(Rez.Strings.StTitle), "settings", ($.screenHeight * 0.1).toNumber(), false));
+            self.Items.add(new Listitems.Button(self._mainLayer, Application.loadResource(Rez.Strings.StTitle), SETTINGS, ($.screenHeight * 0.1).toNumber(), false));
         }
 
         protected function addBackButton(quit as Boolean) as Void {
             var rez = quit ? Rez.Strings.Quit : Rez.Strings.Back;
-            self.Items.add(new Listitems.Button(self._mainLayer, Application.loadResource(rez), quit ? "quit" : "back", ($.screenHeight * 0.1).toNumber(), false));
+            self.Items.add(new Listitems.Button(self._mainLayer, Application.loadResource(rez), quit ? QUIT : BACK, ($.screenHeight * 0.1).toNumber(), false));
         }
 
         protected function interactItem(item as Listitems.Item, doubletap as Boolean) as Boolean {
-            if (item.BoundObject instanceof String) {
-                if (item.BoundObject.equals("back")) {
+            if (item.BoundObject instanceof Lang.Number) {
+                if (item.BoundObject == BACK) {
                     self.goBack();
                     return true;
-                } else if (item.BoundObject.equals("quit")) {
+                } else if (item.BoundObject == QUIT) {
                     System.exit();
-                    return true;
                 }
             }
             return false;

@@ -14,6 +14,8 @@
     <string id="ListRec">Liste empfangen.</string>
     <string id="EStorageFull">Der Speicher ist voll!</string>
     <string id="EStorageError">Liste konnte nicht gespeichert werden!</string>
+    <string id="ListRecOOM">Der Speicher der App reicht nicht aus, um die empfangene Liste zu verarbeiten.\n\nBitte ziehe eine kleinere Liste in Betracht.</string>
+    <string id="ListLegacy">Bitte übertrage deine Listen neu.\nAufgrund von Speicher-Optimierungen können die alten Listen nichtmehr angezeigt werden!</string>
     <string id="ListDel">Liste gelöscht.</string>
     <string id="LegacyPhoneApp">Du scheints eine alte Version der Smartphone-App zu verwenden.\nBitte aktualisiere sie.</string>
 
@@ -25,6 +27,7 @@
     <string id="ListEmpty">Die Liste ist leer.</string>
 
     <string id="LMSub">%s Punkte</string>
+    <string id="LMSubOne">1 Punkt</string>
 
     <string id="StTitle">Einstellungen</string>
     <string id="StMoveBottom">erledigte Punkte nach unten schieben</string>
@@ -68,6 +71,8 @@
     <string id="StResetDaily">Täglich</string>
     <string id="StResetWeekly">Wöchentlich</string>
     <string id="StResetMonthly">Monatlich</string>
+    <string id="StResetBtn">Liste zurücksetzen</string>
+    <string id="StResetSuccess">Liste zurückgesetzt</string>
 
     <string id="ErrHint">Bitte melde mir den Fehler auf deinem Smartphone, damit ich dir weiterhelfen kann.</string>
     <string id="ErrHintTouch">(Tippe hier, um die Kontaktmöglichkeit in der App auf deinem Smartphone zu öffnen)</string>
@@ -75,6 +80,7 @@
     <string id="ErrReport">Bitte Smartphone öffnen</string>
     <string id="ErrListRec">Beim Übertragen der Liste ist ein Fehler aufgetreten:</string>
     <string id="ErrListDel">Beim Löschen der Liste ist ein Fehler aufgetreten:</string>
+    <string id="ErrUnknown">Unbekannter Fehler</string>
 
     <string id="GlNumLists" scope="glance">%d Listen</string>
     <string id="GlOneList" scope="glance">1 Liste</string>

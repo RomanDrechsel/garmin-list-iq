@@ -3,11 +3,10 @@ import Toybox.Graphics;
 import Toybox.Time;
 import Toybox.Application;
 
-(:glance)
 module Debug {
     class DebugStorage {
         private var _logs as Array<String> = [];
-        public var LogCount = 100;
+        public var LogCount = 50;
         public var _totalCount = 0;
         private var _persistentLogs = false;
         private var _storeLogs = false;
@@ -83,9 +82,22 @@ module Debug {
         }
     }
 
+    (:glance,:background)
     function Log(obj as Lang.Object) {
         var info = Time.Gregorian.info(Time.now(), Time.FORMAT_SHORT);
         var date = Helper.DateUtil.toLogString(info, null);
+        var app = $.getApp();
+
+        if (app.isBackground || app.isGlanceView) {
+            var prefix = "";
+            if (app.isBackground) {
+                prefix = "[B] ";
+            } else if (app.isGlanceView) {
+                prefix = "[G] ";
+            }
+            Toybox.System.println(date + ": " + prefix + obj);
+            return;
+        }
 
         if (obj instanceof Lang.Array) {
             for (var i = 0; i < obj.size(); i++) {
@@ -118,4 +130,9 @@ module Debug {
     }
     (:release)
     function Box(dc as Dc, x as Number, y as Number, w as Number, h as Number, c as ColorValue?) {}
+
+    (:debug)
+    var isDebug = true;
+    (:release)
+    var isDebug = false;
 }

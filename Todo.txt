@@ -4,10 +4,10 @@ adb -e forward tcp:7381 tcp:7381
 For Smartphone
 adb -d forward tcp:7381 tcp:7381
 
-TEST: Button controlling
-TEST: don't select title on Button Controls
-TEST: new line break
-TEST: send logs to phone
+TEST: Background service
+TODO: Theme Switch with excludeAnnotations for Low-Color Displays
+TODO: send success response to phone, when list added
+TODO: notes function
 
 1 Button, 64 Color:
 - Vivoactive 3
@@ -26,3 +26,6 @@ Touch, Round, 5 Buttons, 64 Colors:
 
 64 Colors
 - Vivoactive 3
+
+
+,

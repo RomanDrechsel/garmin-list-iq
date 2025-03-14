@@ -1,6 +1,7 @@
 module Themes {
     class Red extends ThemeSettingsBase {
         function initialize() {
+            ThemeSettingsBase.initialize();
             self.LineBitmap = Application.loadResource(Rez.Drawables.LineRed);
 
             if (ThemesLoader.LowColors()) {

@@ -8,10 +8,10 @@ module Helper {
         enum ToastType {
             SUCCESS,
             ERROR,
-            ATTENTION
+            ATTENTION,
         }
 
-        public static function Toast(msg_id as Lang.ResourceId, type as ToastType) {
+        public static function Toast(msg_id as Lang.ResourceId, type as ToastType) as Void {
             if (WatchUi has :showToast) {
                 var str = Application.loadResource(msg_id);
 
@@ -19,8 +19,7 @@ module Helper {
                     WatchUi.showToast(str, { :icon => Rez.Drawables.Success });
                 } else if (type == ERROR) {
                     WatchUi.showToast(str, { :icon => Rez.Drawables.Error });
-                }
-                else if (type == ATTENTION) {
+                } else if (type == ATTENTION) {
                     WatchUi.showToast(str, { :icon => Rez.Drawables.Attention });
                 }
             }

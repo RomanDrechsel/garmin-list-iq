@@ -14,6 +14,8 @@
     <string id="ListRec">列表已接收。</string>
     <string id="EStorageFull">存储已满！</string>
     <string id="EStorageError">无法保存列表！</string>
+    <string id="ListRecOOM">应用的内存不足，无法处理接收到的列表。\n\n请考虑使用更小的列表。</string>
+    <string id="ListLegacy">请重新传输您的列表。\n由于内存优化，旧列表无法再显示！</string>
     <string id="ListDel">列表已删除。</string>
     <string id="LegacyPhoneApp">您使用的似乎是旧版本的智能手机应用程序。\n请更新。</string>
 
@@ -24,7 +26,8 @@
     <string id="ListNotFound">未找到列表！</string>
     <string id="ListEmpty">列表为空。</string>
 
-    <string id="LMSub">%s 点</string>
+    <string id="LMSub">%s 元素</string>
+    <string id="LMSubOne">1 元素</string>
 
     <string id="StTitle">设置</string>
     <string id="StMoveBottom">将完成的项目移动到底部</string>
@@ -69,6 +72,8 @@
     <string id="StResetDaily">每天</string>
     <string id="StResetWeekly">每周</string>
     <string id="StResetMonthly">每月</string>
+    <string id="StResetBtn">重置列表</string>
+    <string id="StResetSuccess">列表已重置</string>
 
     <string id="ErrHint">请在你的智能手机上向我报告此错误，以便我能帮助你。</string>
     <string id="ErrHintTouch">(点击此处，打开手机应用中的联系方式)</string>
@@ -76,6 +81,7 @@
     <string id="ErrReport">请打开智能手机</string>
     <string id="ErrListRec">传输列表时发生错误：</string>
     <string id="ErrListDel">删除列表时发生错误：</string>
+    <string id="ErrUnknown">未知错误</string>
 
     <string id="GlNumLists" scope="glance">%d 份清单</string>
     <string id="GlOneList" scope="glance">1 列表</string>

@@ -5,82 +5,82 @@ import Toybox.Time;
 import Lists;
 import Controls;
 import Controls.Listitems;
-import Helper;
+import Exceptions;
 
 module Views {
     class ListsSelectView extends ItemView {
         private const _listIconCode = 48;
         private var _firstDisplay = true;
-        private var _numLists as Number? = null;
+        private var _show_error_view = null as ErrorView.ECode?;
 
-        function initialize(first_display as Boolean) {
+        private enum {
+            STORE = 0,
+        }
+
+        function initialize(first_display as Boolean, show_errorview_on_start as ErrorView.ECode?) {
             ItemView.initialize();
             self.ScrollMode = SCROLL_DRAG;
             self._firstDisplay = first_display;
-        }
-
-        function onLayout(dc as Dc) as Void {
-            ItemView.onLayout(dc);
-            if ($.getApp().ListsManager != null) {
-                $.getApp().ListsManager.addListChangedListener(self);
-                self.publishLists($.getApp().ListsManager.GetLists());
-            }
+            self._show_error_view = show_errorview_on_start;
         }
 
         function onShow() as Void {
             ItemView.onShow();
-            if (self.Items.size() == 0) {
-                self.publishLists($.getApp().ListsManager.GetLists());
+            if (self._show_error_view != null) {
+                Views.ErrorView.Show(self._show_error_view, null);
+                self._show_error_view = null;
+                return;
             }
+
+            if ($.getApp().ListsManager != null) {
+                $.getApp().ListsManager.addListIndexChangedListener(self);
+            }
+            self.publishLists($.getApp().ListsManager.GetListsIndex(), false);
             Helper.Properties.Store(Helper.Properties.LASTLIST, "");
         }
 
-        function onDoubleTap(x as Number, y as Number) as Boolean {
-            if (!ItemView.onDoubleTap(x, y)) {
-                if (self.Items.size() > 0) {
-                    var item = self.Items[0];
-                    if (item.BoundObject instanceof String && item.BoundObject.equals("store") && Helper.Properties.Get(Helper.Properties.INIT, 0) < 0) {
-                        ListsApp.openGooglePlay();
-                        return true;
-                    }
-                }
+        function onHide() as Void {
+            ItemView.onHide();
+            self.Items = [];
+            if ($.getApp().ListsManager != null) {
+                $.getApp().ListsManager.removeListIndexChangedListener(self);
             }
-            return false;
         }
 
-        function onKeyMenu() as Void {
-            ItemView.onKeyMenu();
-            self.openSettings();
+        function onKeyMenu() as Boolean {
+            if (!ItemView.onKeyMenu()) {
+                self.openSettings();
+            }
+            return true;
         }
 
-        function onKeyEsc() as Void {
-            ItemView.onKeyEsc();
-            System.exit();
+        function onKeyEsc() as Boolean {
+            if (!ItemView.onKeyEsc()) {
+                System.exit();
+            }
+            return true;
         }
 
-        function onListsChanged(index as ListIndex) as Void {
-            self.publishLists(index);
+        function onListIndexChanged(index as Array<Lists.ListIndexItem>?) as Void {
+            self.publishLists(index, true);
         }
 
         function onSettingsChanged() as Void {
             ItemView.onSettingsChanged();
             if ($.getApp().ListsManager != null) {
-                self._numLists = null;
-                self.publishLists($.getApp().ListsManager.GetLists());
+                self.publishLists($.getApp().ListsManager.GetListsIndex(), true);
             }
         }
 
-        private function publishLists(index as ListIndex?) as Void {
-            if (self._firstDisplay) {
+        private function publishLists(index as Lists.ListIndex?, request_update as Boolean) as Void {
+            if (self._firstDisplay && index != null) {
                 self._firstDisplay = false;
-                var startuplist = Helper.Properties.Get(Helper.Properties.LASTLIST, "");
-                if (startuplist.length() > 0) {
-                    if (index.hasKey(startuplist)) {
-                        var startscroll = Helper.Properties.Get(Helper.Properties.LASTLISTSCROLL, -1);
-                        Helper.Properties.Store(Helper.Properties.LASTLIST, "");
-                        self.GotoList(startuplist, startscroll);
-                        return;
-                    }
+                var startuplist = Helper.Properties.Get(Helper.Properties.LASTLIST, null);
+                if (startuplist != null && index.hasKey(startuplist)) {
+                    var startscroll = Helper.Properties.Get(Helper.Properties.LASTLISTSCROLL, -1);
+                    Helper.Properties.Store(Helper.Properties.LASTLIST, "");
+                    self.GotoList(startuplist, startscroll);
+                    return;
                 }
             }
 
@@ -91,30 +91,37 @@ module Views {
             self._snapPosition = 0;
 
             if (index == null || index.size() == 0) {
-                self.noLists();
+                self.noLists(request_update);
                 return;
             }
 
             var lists = index.values() as Array<ListIndexItem>;
-            lists = Helper.MergeSort.Sort(lists, "order");
+            lists = Helper.MergeSort.Sort(lists, Lists.List.ORDER);
+            index = null;
 
             self.Items = [] as Array<Item>;
-            for (var i = 0; i < lists.size(); i++) {
-                var list = lists[i] as ListIndexItem;
+            while (lists.size() > 0) {
+                var item = lists[0];
+                lists = lists.slice(1, null);
+                var uuid = item.get(Lists.List.UUID);
+                var items = item.get(Lists.List.ITEMS);
+                var date = item.get(Lists.List.DATE);
+                var title = item.get(Lists.List.TITLE);
                 var substring = "";
-                var items = list.get("items") as Number;
                 if (items != null) {
-                    substring = Application.loadResource(Rez.Strings.LMSub) as String;
-                    substring = Helper.StringUtil.stringReplace(substring, "%s", items.toString());
+                    if (items == 1) {
+                        substring = Application.loadResource(Rez.Strings.LMSubOne);
+                    } else {
+                        substring = Helper.StringUtil.stringReplace(Application.loadResource(Rez.Strings.LMSub), "%s", items.toString());
+                    }
                 }
-                var date = list.get("date");
                 if (date != null) {
                     if (substring.length() > 0) {
                         substring += "\n";
                     }
-                    substring += Helper.DateUtil.DatetoString(date, null);
+                    substring += Helper.DateUtil.DateToString(date, null);
                 }
-                self.addItem(list.get("name") as String, substring, list.get("key") as String, self._listIconCode, i);
+                self.addItem(title, substring, uuid, self._listIconCode, item.get("o"));
             }
 
             //no line below the last item
@@ -131,35 +138,41 @@ module Views {
                 self.addBackButton(true);
             }
 
-            if (self._numLists == null || self._numLists != lists.size()) {
-                self._numLists = lists.size();
+            if (request_update) {
                 WatchUi.requestUpdate();
             }
         }
 
-        private function noLists() as Void {
+        private function noLists(request_update as Boolean) as Void {
             self.Items = [] as Array<Item>;
-            var item = new Listitems.Item(self._mainLayer, Application.loadResource(Rez.Strings.NoLists), null, "store", null, ($.screenHeight * 0.1).toNumber(), 0, null);
+            var item = new Listitems.Item(self._mainLayer, Application.loadResource(Rez.Strings.NoLists), null, STORE, null, ($.screenHeight * 0.1).toNumber(), 0, null);
             item.DrawLine = false;
             item.TitleJustification = Graphics.TEXT_JUSTIFY_CENTER;
             item.isSelectable = false;
             self.Items.add(item);
 
-            var init = Helper.Properties.Get(Helper.Properties.INIT, 0);
-            if (init < 1) {
+            if ($.getApp().GlobalStates.indexOf(ListsApp.LEGACYLIST) >= 0) {
+                item = new Listitems.Item(self._mainLayer, null, Application.loadResource(Rez.Strings.ListLegacy), STORE, null, null, 1, null);
+                item.setSubFont(Helper.Fonts.Normal());
+                item.DrawLine = false;
+                item.isSelectable = false;
+                item.SubtitleJustification = Graphics.TEXT_JUSTIFY_CENTER;
+                self.Items.add(item);
+            } else if (Helper.Properties.Get(Helper.Properties.INIT, 0) < 1) {
                 var txtRez;
                 if (System.getDeviceSettings().isTouchScreen) {
                     txtRez = Rez.Strings.NoListsLink;
                 } else {
                     txtRez = Rez.Strings.NoListsLinkBtn;
                 }
-                item = new Listitems.Item(self._mainLayer, null, Application.loadResource(txtRez), "store", null, null, 0, null);
+                item = new Listitems.Item(self._mainLayer, null, Application.loadResource(txtRez), STORE, null, null, 0, null);
                 item.setSubFont(Helper.Fonts.Normal());
                 item.DrawLine = false;
                 item.isSelectable = false;
                 item.SubtitleJustification = Graphics.TEXT_JUSTIFY_CENTER;
                 self.Items.add(item);
             }
+
             if (self.DisplayButtonSupport()) {
                 self.addSettingsButton();
             }
@@ -171,29 +184,37 @@ module Views {
             self._scrollOffset = 0;
             self.moveIterator(0);
             self._needValidation = true;
+
+            if (request_update) {
+                WatchUi.requestUpdate();
+            }
         }
 
         protected function interactItem(item as Listitems.Item, doubletap as Boolean) as Boolean {
             if (!ItemView.interactItem(item, doubletap)) {
-                if (item.BoundObject instanceof String) {
-                    if (item.BoundObject.equals("settings")) {
+                if (item.BoundObject instanceof Number) {
+                    if (item.BoundObject == ItemView.SETTINGS) {
                         self.openSettings();
                         return true;
-                    } else if (item.BoundObject.equals("store")) {
+                    } else if (item.BoundObject == STORE) {
                         if (doubletap && Helper.Properties.Get(Helper.Properties.INIT, 0) <= 0) {
-                            ListsApp.openGooglePlay();
+                            $.openGooglePlay();
                             return true;
                         }
                     } else {
-                        self.GotoList(item.BoundObject, -1);
+                        self.GotoList(item.BoundObject as Number, -1);
                         return true;
                     }
+                } else if (item.BoundObject instanceof String) {
+                    self.GotoList(item.BoundObject as String, -1);
+                    return true;
                 }
+                return false;
             }
-            return false;
+            return true;
         }
 
-        private function GotoList(uuid as String, scroll as Number) as Void {
+        private function GotoList(uuid as String or Number, scroll as Number) as Void {
             var view = new ListDetailsView(uuid, scroll > 0 ? scroll : null);
             WatchUi.pushView(view, new ItemViewDelegate(view), WatchUi.SLIDE_LEFT);
         }

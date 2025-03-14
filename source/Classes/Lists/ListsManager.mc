@@ -3,411 +3,478 @@ import Toybox.WatchUi;
 import Toybox.Lang;
 import Toybox.Time;
 import Toybox.System;
-import Helper;
+import Toybox.Timer;
+import Exceptions;
 import Controls.Listitems;
 import Views;
 
 module Lists {
-    typedef ListItemsItem as Dictionary<String, String or Array<String> or Boolean or Number>; /* a list item (with key "i" for item-text, "n" for note-text, "d" for done?) */
-    typedef List as Dictionary<String, String or Array<ListItemsItem> or Boolean or Number>; /* a list */
-    (:glance)
-    typedef ListIndexItem as Dictionary<String, String or Number>; /* data of a list, stored in list index */
-    (:glance)
-    typedef ListIndex as Dictionary<String, ListIndexItem>; /* the list-index, with list uuid as key, and some list data as value */
+    (:background)
+    typedef ListIndexItem as Dictionary<Number, String or Number>;
+    (:background)
+    typedef ListIndex as Dictionary<String or Number, ListIndexItem>;
 
+    (:background)
+    public enum {
+        RECEIVED_LEGACY_LIST = "rec_legacy_list",
+    }
+
+    (:background)
     class ListsManager {
-        private var onListsChangedListeners as Array<WeakReference> = [];
+        private var onListChangedListeners as Array<WeakReference>?;
+        private var onListIndexChangedListeners as Array<WeakReference>?;
+        private var _batchQueue = null as Array<AddListBatch>?;
+        private var _batchTimer = null as Timer?;
+        private var _app as ListsApp;
 
-        function addList(data as Dictionary) as Boolean {
-            var keys = data.keys();
-            var listuuid = null;
-            var listname = null;
-            var listorder = null;
-            var listitems = {};
-            var listdate = null;
-            var reset = null;
-            var reset_interval = null;
-            var reset_hour = null;
-            var reset_minute = null;
-            var reset_weekday = null;
-            var reset_day = null;
+        function initialize(app as ListsApp) {
+            self._app = app;
+        }
 
-            for (var i = 0; i < keys.size(); i++) {
-                var key = keys[i];
-                var val = data.get(key);
-                if (key.equals("uuid")) {
-                    listuuid = val.toString();
-                } else if (key.equals("name")) {
-                    listname = val.toString();
-                } else if (key.equals("order")) {
-                    listorder = val.toNumber();
-                } else if (key.equals("date")) {
-                    listdate = val.toLong();
-                    if (listdate != null) {
-                        if (listdate > 999999999) {
-                            // date is in milliseconds
-                            listdate /= 1000;
-                            listdate = listdate.toNumber();
-                        }
-                    }
-                } else if (key.substring(0, 4).equals("item")) {
-                    var index = key.substring(4, 5).toNumber();
-                    var split = Helper.StringUtil.split(key.substring(5, key.length()), "_", 2);
-                    var prop = split.size() > 1 ? split[1] : null;
-                    if (prop != null) {
-                        var item;
-                        if (listitems.hasKey(index)) {
-                            item = listitems.get(index);
-                        } else {
-                            item = { "d" => false };
-                        }
-                        if (prop.equals("item")) {
-                            item.put("i", val.toString());
-                        } else if (prop.equals("note")) {
-                            item.put("n", val.toString());
-                        }
-                        listitems.put(index, item);
-                    }
-                } else if (key.substring(0, 5).equals("reset")) {
-                    if (key.equals("reset_active")) {
-                        val = Helper.StringUtil.StringToBool(val);
-                        if (val != null) {
-                            reset = val;
-                        }
-                    } else if (key.equals("reset_interval")) {
-                        reset_interval = val.toString(); //no reference
-                    } else if (key.equals("reset_hour")) {
-                        val = val.toNumber();
-                        if (val != null) {
-                            reset_hour = val;
-                        }
-                    } else if (key.equals("reset_minute")) {
-                        val = val.toNumber();
-                        if (val != null) {
-                            reset_minute = val;
-                        }
-                    } else if (key.equals("reset_weekday")) {
-                        val = val.toNumber();
-                        if (val != null) {
-                            reset_weekday = val;
-                        }
-                    } else if (key.equals("reset_day")) {
-                        val = val.toNumber();
-                        if (val != null) {
-                            reset_day = val;
-                        }
-                    }
-                }
-            }
-
-            //verify data
-            if (listname == null || listorder == null || listuuid == null) {
-                var missing = [] as Array<String>;
-                if (listname == null) {
-                    missing.add("name");
-                }
-                if (listorder == null) {
-                    missing.add("order");
-                }
-                if (listuuid == null) {
-                    missing.add("uuid");
-                }
-                Debug.Log("Could not add list: missing properties - " + missing);
-                self.reportError(2, { "data" => data, "missing" => missing });
-                return false;
-            }
-
-            if (listdate == null) {
-                listdate = Time.now().value();
-            }
-
-            var list = {};
-            list.put("name", listname);
-
-            //reduce items to a simple array, ordered by item-index
-            var itemsArr = [];
-            if (listitems.size() > 0) {
-                var itemKeys = listitems.keys();
-                itemKeys = Helper.Quicksort.Sort(itemKeys);
-                for (var i = 0; i < itemKeys.size(); i++) {
-                    itemsArr.add(listitems.get(itemKeys[i]));
-                }
-            }
-            list.put("items", itemsArr);
-
-            if (reset != null) {
-                var missing = [] as Array<String>;
-                if (reset_interval != null && reset_hour != null && reset_minute != null) {
-                    if (reset_interval == "w" && reset_weekday == null) {
-                        missing.add("weekday");
-                    } else if (reset_interval == "m" && reset_day == null) {
-                        missing.add("day");
-                    }
-                } else {
-                    if (reset_interval == null) {
-                        missing.add("interval");
-                    }
-                    if (reset_hour == null) {
-                        missing.add("hour");
-                    }
-                    if (reset_minute == null) {
-                        missing.add("minute");
-                    }
-                }
-
-                if (missing.size() > 0) {
-                    Debug.Log("Could not add list reset: missing properties - " + missing);
-                } else {
-                    list.put("r_a", reset);
-                    list.put("r_i", reset_interval);
-                    list.put("r_h", reset_hour);
-                    list.put("r_m", reset_minute);
-                    if (reset_interval.equals("w")) {
-                        list.put("r_wd", reset_weekday);
-                    } else if (reset_interval.equals("m")) {
-                        list.put("r_d", reset_day);
-                    }
-                    list.put("r_last", Time.now().value());
-                }
-            }
-
-            var save = self.saveList(listuuid, list);
-            if (save[0] == true) {
-                //Store Index...
-                var listindex = self.GetLists();
-                var indexitem =
-                    ({
-                        "key" => listuuid,
-                        "name" => listname,
-                        "order" => listorder,
-                        "items" => listitems.size(),
-                        "date" => listdate,
-                    }) as ListIndexItem;
-
-                listindex.put(listuuid, indexitem);
-
-                var saveIndex = self.StoreIndex(listindex);
-                if (saveIndex[0] == false) {
-                    Application.Storage.deleteValue(listuuid);
-                    self.reportError(4, { "data" => data, "list" => list, "exception" => saveIndex[1].getErrorMessage() });
-                    return false;
-                }
-
-                Helper.Properties.Store(Helper.Properties.INIT, 1);
-
-                Debug.Log("Added list " + listuuid + "(" + listname + ")");
-                Helper.ToastUtil.Toast(Rez.Strings.ListRec, Helper.ToastUtil.SUCCESS);
-
-                return true;
+        function addList(data as Array) as Void {
+            var batch = new AddListBatch(data);
+            if (self._batchQueue == null) {
+                self._batchQueue = [batch];
             } else {
-                self.reportError(3, { "data" => data, "list" => list, "exception" => save[1].getErrorMessage() });
-                return false;
+                self._batchQueue.add(batch);
+            }
+            if (self._batchTimer == null) {
+                self.BatchTimer();
             }
         }
 
-        function GetLists() as ListIndex {
-            var index = Application.Storage.getValue("listindex") as ListIndex;
-            index = self.checkListIndex(index);
+        function GetListsIndex() as ListIndex {
+            var index = Application.Storage.getValue("listindex") as ListIndex?;
+            if (index == null || !(index instanceof Dictionary) || index.size() == 0) {
+                return {};
+            }
+            try {
+                self._app.MemoryCheck.Check();
+            } catch (ex instanceof Exceptions.OutOfMemoryException) {
+                Debug.Log("Could not get list index: " + ex.toString());
+                return {};
+            }
             return index;
         }
 
-        function getList(uuid as String) as List? {
+        function GetList(uuid as String) as List? {
             try {
-                var list = Application.Storage.getValue(uuid);
-                return list;
+                var list = new List(Application.Storage.getValue(uuid));
+                self._app.MemoryCheck.Check();
+                if (list.IsValid()) {
+                    return list;
+                } else {
+                    return null;
+                }
+            } catch (ex instanceof Exceptions.OutOfMemoryException) {
+                Debug.Log("Could not get list " + uuid + ": " + ex.toString());
+                return null;
+            } catch (ex instanceof Exceptions.LegacyNotSupportedException) {
+                self.clearAll();
+                Debug.Log("Legacy list data found in storage - cleared memory...");
+                if (self._app.GlobalStates.indexOf(ListsApp.LEGACYLIST) < 0) {
+                    self._app.GlobalStates.add(ListsApp.LEGACYLIST);
+                    self._app.GlobalStates.add(ListsApp.STARTPAGE);
+                }
+                return null;
             } catch (ex instanceof Lang.Exception) {
                 Debug.Log("Could not load list " + uuid + ": " + ex.getErrorMessage());
                 return null;
             }
         }
 
-        function updateListitem(uuid as String, position as Number, state as Boolean) as Void {
-            if (position < 0) {
+        function updateListitem(uuid as String, order as Number, done as Boolean) as Void {
+            if (order < 0) {
                 return;
             }
-            var list = self.getList(uuid);
-            if (list != null && list.hasKey("items")) {
-                var items = list.get("items");
-                if (items.size() > position) {
-                    items[position].put("d", state);
-                    list.put("items", items);
-                    var name = list.get("name");
-                    if (name == null) {
-                        name = "";
+            try {
+                var list = self.GetList(uuid);
+                if (list != null) {
+                    var item = list.GetItem(order);
+                    self._app.MemoryCheck.Check();
+
+                    if (item != null) {
+                        item.Done = done;
+                        var save = list.ToBackend();
+                        if (save != null) {
+                            try {
+                                Application.Storage.setValue(uuid, save);
+                                Debug.Log("Updated list " + list.toString());
+                            } catch (e instanceof Lang.StorageFullException) {
+                                if (!self._app.isBackground) {
+                                    Helper.ToastUtil.Toast(Rez.Strings.EStorageFull, Helper.ToastUtil.ERROR);
+                                }
+                                Debug.Log("Could not update list " + list.toString() + ": storage is full: " + e.getErrorMessage());
+                            } catch (e instanceof Lang.Exception) {
+                                if (!self._app.isBackground) {
+                                    Helper.ToastUtil.Toast(Rez.Strings.EStorageError, Helper.ToastUtil.ERROR);
+                                }
+                                Debug.Log("Could not update list " + list.toString() + ": " + e.getErrorMessage());
+                            }
+                        }
                     }
-                    try {
-                        Application.Storage.setValue(uuid, list);
-                        Debug.Log("Updated list " + uuid);
-                    } catch (e instanceof Lang.StorageFullException) {
-                        Helper.ToastUtil.Toast(Rez.Strings.EStorageFull, Helper.ToastUtil.ERROR);
-                        Debug.Log("Could not update list '" + name + "' (" + uuid + "): storage is full: " + e.getErrorMessage());
-                    } catch (e instanceof Lang.Exception) {
-                        Helper.ToastUtil.Toast(Rez.Strings.EStorageError, Helper.ToastUtil.ERROR);
-                        Debug.Log("Could not update list '" + name + "' (" + uuid + "): " + e.getErrorMessage());
-                    }
+                } else {
+                    Debug.Log("Could not update list " + uuid + " - not found");
                 }
+            } catch (ex instanceof Exceptions.OutOfMemoryException) {
+                Debug.Log("Could not set item in list " + uuid + " to " + done.toString() + ": " + ex.toString());
             }
         }
 
-        function saveList(uuid as String, list as List) as Array<Boolean or Lang.Exception or Null> {
-            var listname = list.get("name");
-            if (listname == null) {
-                listname = "?";
-            }
+        function ResetList(uuid as String or Number) as Boolean {
             try {
-                Application.Storage.setValue(uuid, list);
+                var list = self.GetList(uuid);
+                if (list != null) {
+                    var store = false;
+                    for (var i = 0; i < list.Items.size(); i++) {
+                        if (list.Items[i].Done == true) {
+                            list.Items[i].Done = false;
+                            store = true;
+                        }
+                    }
+                    if (store) {
+                        store = self.StoreList(list);
+                        if (store[0] == true) {
+                            Debug.Log("Reset list " + list.toString() + " manually");
+                        } else {
+                            Debug.Log("Could not reset list " + list.toString() + " manually");
+                        }
 
-                if (Helper.Properties.Get(Helper.Properties.LASTLIST, "").equals(uuid)) {
+                        return store[0];
+                    } else {
+                        return true;
+                    }
+                } else {
+                    Debug.Log("Could not reset list " + uuid + " - not found");
+                }
+            } catch (ex instanceof Exceptions.OutOfMemoryException) {
+                Debug.Log("Could not reset list " + uuid + " manually: " + ex.toString());
+            }
+            return false;
+        }
+
+        function StoreList(list as List) as Array<Boolean or Exception or String or Null> {
+            if (!list.IsValid()) {
+                return [false, "invalid-list"];
+            }
+
+            try {
+                self._app.MemoryCheck.Check();
+                Application.Storage.setValue(list.Uuid, list.ToBackend());
+
+                if (!self._app.isBackground && Helper.Properties.Get(Helper.Properties.LASTLIST, "").equals(list.Uuid)) {
                     Helper.Properties.Store(Helper.Properties.LASTLISTSCROLL, -1);
                 }
 
-                Debug.Log("Stored list " + uuid + "(" + listname + ")");
+                Debug.Log("Stored list " + list.toString());
+                self._app.MemoryCheck.Check();
+                self.triggerOnListChanged(list);
                 return [true, null];
-            } catch (e instanceof Lang.StorageFullException) {
-                Debug.Log("Could not store list '" + listname + "' (" + uuid + "): storage is full: " + e);
-                Helper.ToastUtil.Toast(Rez.Strings.EStorageFull, Helper.ToastUtil.ERROR);
-                return [false, e];
-            } catch (e) {
-                Debug.Log("Could not store list '" + listname + "' (" + uuid + "): " + e);
-                Helper.ToastUtil.Toast(Rez.Strings.EStorageError, Helper.ToastUtil.ERROR);
-                return [false, e];
+            } catch (ex instanceof Exceptions.OutOfMemoryException) {
+                Debug.Log("Could not store list " + list.toString() + ": " + ex.toString());
+                return [false, ex];
+            } catch (ex instanceof Lang.StorageFullException) {
+                Debug.Log("Could not store list " + list.toString() + ": storage is full: " + ex.getErrorMessage());
+                if (!self._app.isBackground) {
+                    Helper.ToastUtil.Toast(Rez.Strings.EStorageFull, Helper.ToastUtil.ERROR);
+                }
+                return [false, ex];
+            } catch (ex) {
+                Debug.Log("Could not store list " + list.toString() + ": " + ex.getErrorMessage());
+                if (!self._app.isBackground) {
+                    Helper.ToastUtil.Toast(Rez.Strings.EStorageError, Helper.ToastUtil.ERROR);
+                }
+                return [false, ex];
             }
         }
 
-        function deleteList(uuid as String, with_toast as Boolean) as Void {
-            var index = self.GetLists();
-            var index_log = index;
+        function deleteList(uuid as String or Number, with_toast as Boolean) as Boolean {
+            var index = self.GetListsIndex();
             index.remove(uuid);
-            var store = self.StoreIndex(index);
+
+            var store = self.storeIndex(index);
             if (store[0] == true) {
                 Application.Storage.deleteValue(uuid);
-                if (with_toast == true) {
+                if (with_toast == true && !self._app.isBackground) {
                     Helper.ToastUtil.Toast(Rez.Strings.ListDel, Helper.ToastUtil.SUCCESS);
                 }
-                if (Helper.Properties.Get(Helper.Properties.LASTLIST, "").equals(uuid)) {
+                if (!self._app.isBackground && Helper.Properties.Get(Helper.Properties.LASTLIST, "").equals(uuid)) {
                     Helper.Properties.Store(Helper.Properties.LASTLISTSCROLL, -1);
                     Helper.Properties.Store(Helper.Properties.LASTLIST, "");
                 }
                 Debug.Log("Deleted list " + uuid);
+                self.triggerOnListChanged(null);
+                return true;
             } else {
-                self.reportError(5, { "index" => index_log, "delete" => uuid, "exception" => store[1].getErrorMessage() });
+                if (!self._app.isBackground && !(store[1] instanceof Exceptions.OutOfMemoryException)) {
+                    Views.ErrorView.Show(Views.ErrorView.LIST_DEL_FAILED, ["index=" + index.toString(), "delete=" + uuid, "exception=" + store[1].getErrorMessage()]);
+                }
+                return false;
             }
         }
 
         function clearAll() as Void {
             Application.Storage.clearValues();
             Debug.Log("Deleted all lists!");
-            Helper.ToastUtil.Toast(Rez.Strings.StDelAllDone, Helper.ToastUtil.SUCCESS);
-            self.triggerOnListsChanged(null);
+            if (!self._app.isBackground) {
+                Helper.ToastUtil.Toast(Rez.Strings.StDelAllDone, Helper.ToastUtil.SUCCESS);
+            }
+            self.triggerOnListChanged(null);
+            self.triggerOnListIndexChanged(null);
         }
 
         function addListChangedListener(obj as Object) as Void {
-            var del = [];
-            for (var i = 0; i < self.onListsChangedListeners.size(); i++) {
-                var weak = self.onListsChangedListeners[i];
-                if (weak.stillAlive()) {
-                    var o = weak.get();
-                    if (o == null || !(o has :onListsChanged)) {
+            if (self.onListChangedListeners != null) {
+                var del = [];
+                for (var i = 0; i < self.onListChangedListeners.size(); i++) {
+                    var weak = self.onListChangedListeners[i];
+                    if (weak.stillAlive()) {
+                        var o = weak.get();
+                        if (o == null || !(o has :onListChanged)) {
+                            del.add(weak);
+                        }
+                    } else {
                         del.add(weak);
                     }
-                } else {
-                    del.add(weak);
                 }
-            }
-            if (del.size() > 0) {
-                for (var i = 0; i < del.size(); i++) {
-                    self.onListsChangedListeners.remove(del[i]);
+                if (del.size() > 0) {
+                    for (var i = 0; i < del.size(); i++) {
+                        self.onListChangedListeners.remove(del[i]);
+                    }
                 }
+            } else {
+                self.onListChangedListeners = [];
             }
 
-            if (obj has :onListsChanged) {
+            if (obj has :onListChanged) {
                 var ref = obj.weak();
-                if (self.onListsChangedListeners.indexOf(ref) < 0) {
-                    self.onListsChangedListeners.add(ref);
+                if (self.onListChangedListeners.indexOf(ref) < 0) {
+                    self.onListChangedListeners.add(ref);
                 }
             }
         }
 
-        private function checkListIndex(index as ListIndex?) as ListIndex {
-            if (index != null && index.size() > 0) {
-                var delete = [] as Array<String>;
-                for (var i = 0; i < index.keys().size(); i++) {
-                    var key = index.keys()[i] as String;
-                    var dict = index.get(key);
-                    if (dict != null && dict instanceof Dictionary) {
-                        //check of all keys are present
-                        if (!dict.hasKey("key") || !(dict.get("key") instanceof String) || !dict.hasKey("name") || !(dict.get("name") instanceof String)) {
-                            delete.add(key);
-                            continue;
-                        }
+        function removeListChangedListener(obj as Object) as Void {
+            if (self.onListChangedListeners != null) {
+                self.onListChangedListeners.removeAll(obj.weak());
+                if (self.onListChangedListeners.size() == 0) {
+                    self.onListChangedListeners = null;
+                }
+            }
+        }
 
-                        //check if the list still exists in storage
-                        var storage_key = dict.get("key") as String;
-                        if (Application.Storage.getValue(storage_key) == null) {
-                            delete.add(key);
+        function addListIndexChangedListener(obj as Object) as Void {
+            if (self.onListIndexChangedListeners != null) {
+                var del = [];
+                for (var i = 0; i < self.onListIndexChangedListeners.size(); i++) {
+                    var weak = self.onListIndexChangedListeners[i];
+                    if (weak.stillAlive()) {
+                        var o = weak.get();
+                        if (o == null || !(o has :onListIndexChanged)) {
+                            del.add(weak);
                         }
                     } else {
-                        delete.add(key);
+                        del.add(weak);
                     }
                 }
+                if (del.size() > 0) {
+                    for (var i = 0; i < del.size(); i++) {
+                        self.onListIndexChangedListeners.remove(del[i]);
+                    }
+                }
+            } else {
+                self.onListIndexChangedListeners = [];
+            }
 
-                if (delete.size() > 0) {
-                    for (var i = 0; i < delete.size(); i++) {
-                        index.remove(delete[i]);
+            if (obj has :onListIndexChanged) {
+                var ref = obj.weak();
+                if (self.onListIndexChangedListeners.indexOf(ref) < 0) {
+                    self.onListIndexChangedListeners.add(ref);
+                }
+            }
+        }
+
+        function removeListIndexChangedListener(obj as Object) as Void {
+            if (self.onListIndexChangedListeners != null) {
+                self.onListIndexChangedListeners.removeAll(obj.weak());
+                if (self.onListIndexChangedListeners.size() == 0) {
+                    self.onListIndexChangedListeners = null;
+                }
+            }
+        }
+
+        public function BatchTimer() as Void {
+            var background = self._app.BackgroundService;
+            if (self._batchQueue != null && self._batchQueue.size() > 0) {
+                var batch = (self._batchQueue as Array<AddListBatch>)[0];
+                var finish = null;
+                try {
+                    finish = batch.ProcessBatch(self._app.MemoryCheck);
+                } catch (ex instanceof Exceptions.OutOfMemoryException) {
+                    Debug.Log("Could not add list " + batch.List.toString() + ": " + ex.toString());
+                } catch (ex instanceof Exceptions.LegacyNotSupportedException) {
+                    if (!self._app.isBackground && self._app.Initialized == true) {
+                        Views.ErrorView.Show(Views.ErrorView.LEGACY_APP, null);
+                        Application.Storage.deleteValue(RECEIVED_LEGACY_LIST);
+                    } else {
+                        Application.Storage.setValue(RECEIVED_LEGACY_LIST, true);
+                    }
+                }
+                if (finish instanceof Lang.Array) {
+                    if (finish[0] == true) {
+                        if (self._batchQueue.size() > 1) {
+                            self._batchQueue = self._batchQueue.slice(0, 1);
+                        } else {
+                            self._batchQueue = null;
+                        }
+                        if (finish[1] == false) {
+                            if (!self._app.isBackground) {
+                                Views.ErrorView.Show(Views.ErrorView.LIST_REC_INVALID, null);
+                            }
+                        } else {
+                            var save = self.StoreList(batch.List);
+                            if (save[0] == true) {
+                                //Store Index...
+                                var listindex = self.GetListsIndex();
+                                listindex.put(batch.List.Uuid, batch.List.ToIndex());
+                                var saveIndex = self.storeIndex(listindex);
+                                if (saveIndex[0] == false) {
+                                    Application.Storage.deleteValue(batch.List.Uuid);
+                                    if (!self._app.isBackground && !(saveIndex[1] instanceof Exceptions.OutOfMemoryException)) {
+                                        Views.ErrorView.Show(Views.ErrorView.LIST_REC_INDEX_STORE_FAILED, ["list=" + batch.List.ToBackend(), "exception=" + saveIndex[1].getErrorMessage()]);
+                                    }
+                                } else {
+                                    if (!self._app.isBackground) {
+                                        Helper.Properties.Store(Helper.Properties.INIT, 1);
+
+                                        if (batch.IsSync == false) {
+                                            Helper.ToastUtil.Toast(Rez.Strings.ListRec, Helper.ToastUtil.SUCCESS);
+                                        }
+                                    }
+                                }
+                            } else if (!(save[1] instanceof Exceptions.OutOfMemoryException)) {
+                                if (!self._app.isBackground) {
+                                    Views.ErrorView.Show(Views.ErrorView.LIST_REC_STORE_FAILED, ["list=" + batch.List.ToBackend(), "exception=" + save[1].getErrorMessage()]);
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    if (self._batchQueue.size() > 1) {
+                        self._batchQueue = self._batchQueue.slice(0, 1);
+                    } else {
+                        self._batchQueue = null;
+                    }
+                }
+            }
+
+            if (self._batchQueue == null || self._batchQueue.size() <= 0) {
+                self._batchQueue = null;
+                if (self._batchTimer != null) {
+                    self._batchTimer.stop();
+                    self._batchTimer = null;
+                }
+                if (background != null) {
+                    background.Finish(true);
+                }
+            } else if (background != null) {
+                /* doe to Timer.Timer() is not available in background -> send it to the next foreground session */
+                background.Finish(false);
+            } else {
+                if (self._batchTimer == null) {
+                    self._batchTimer = new Timer.Timer();
+                }
+                self._batchTimer.start(method(:BatchTimer), 50, false);
+            }
+        }
+
+        private function purgeIndex(index as ListIndex?) as ListIndex? {
+            if (index != null && index.size() > 0) {
+                if (!self._app.isBackground) {
+                    var delete = [] as Array<String or Number>;
+                    var keys = index.keys();
+                    for (var i = 0; i < keys.size(); i++) {
+                        var item = index.get(keys[i]);
+                        if (item instanceof Dictionary) {
+                            if (!List.IsValidIndex(item)) {
+                                delete.add(keys[i]);
+                            } else if (Application.Storage.getValue(item.get(List.UUID)) == null) {
+                                delete.add(keys[i]);
+                            }
+                        } else {
+                            delete.add(keys[i]);
+                        }
                     }
 
-                    Debug.Log("Deleted " + delete.size() + " lists from index: " + delete);
-                    self.StoreIndex(index);
+                    if (delete.size() > 0) {
+                        for (var i = 0; i < delete.size(); i++) {
+                            index.remove(delete[i]);
+                        }
+
+                        Debug.Log("Deleted " + delete.size() + " invalid lists from index: " + delete);
+                    }
                 }
 
                 return index;
             }
 
-            return ({}) as ListIndex;
+            return null;
         }
 
-        private function StoreIndex(index as ListIndex) as Array<Boolean or Lang.Exception or Null> {
+        private function storeIndex(index as ListIndex) as Array<Boolean or Lang.Exception or Null> {
             try {
-                Application.Storage.setValue("listindex", index);
-                Debug.Log("Stored list index with " + index.size() + " items");
-            } catch (e instanceof Lang.StorageFullException) {
-                Helper.ToastUtil.Toast(Rez.Strings.EStorageFull, Helper.ToastUtil.ERROR);
-                Debug.Log("Could not store list index, storage is full: " + e.getErrorMessage());
-                return [false, e];
-            } catch (e instanceof Lang.Exception) {
-                Debug.Log("Could not store list index: " + e.getErrorMessage());
-                Helper.ToastUtil.Toast(Rez.Strings.EStorageError, Helper.ToastUtil.ERROR);
-                return [false, e];
+                index = self.purgeIndex(index);
+                if (index == null || index.size() == 0) {
+                    self.clearAll();
+                    self.triggerOnListIndexChanged(null);
+                } else {
+                    self._app.MemoryCheck.Check();
+                    Application.Storage.setValue("listindex", index);
+                    self.triggerOnListIndexChanged(index);
+                    Debug.Log("Stored list index with " + index.size() + " items");
+                }
+            } catch (ex instanceof Lang.StorageFullException) {
+                if (!self._app.isBackground) {
+                    Helper.ToastUtil.Toast(Rez.Strings.EStorageFull, Helper.ToastUtil.ERROR);
+                }
+                Debug.Log("Could not store list index, storage is full: " + ex.getErrorMessage());
+                return [false, ex];
+            } catch (ex instanceof Exceptions.OutOfMemoryException) {
+                Debug.Log("Could not store list index: " + ex.toString());
+                return [false, ex];
+            } catch (ex instanceof Lang.Exception) {
+                Debug.Log("Could not store list index: " + ex.getErrorMessage());
+                if (!self._app.isBackground) {
+                    Helper.ToastUtil.Toast(Rez.Strings.EStorageError, Helper.ToastUtil.ERROR);
+                }
+                return [false, ex];
             }
-            self.triggerOnListsChanged(index);
-
             return [true, null];
         }
 
-        private function reportError(code as Number, payload as Dictionary<String, Object>?) as Void {
-            var msg = null as Lang.ResourceId?;
-            switch (code) {
-                case 1:
-                case 2:
-                case 3:
-                case 4:
-                    msg = Rez.Strings.ErrListRec;
-                    break;
-                case 5:
-                    msg = Rez.Strings.ErrListDel;
-                    break;
+        private function triggerOnListChanged(list as List?) as Void {
+            if (self.onListChangedListeners != null && !self._app.isBackground) {
+                for (var i = 0; i < self.onListChangedListeners.size(); i++) {
+                    var listener = self.onListChangedListeners[i];
+                    if (listener.stillAlive()) {
+                        var obj = listener.get();
+                        if (obj != null && obj has :onListChanged) {
+                            obj.onListChanged(list);
+                        }
+                    }
+                }
             }
-            var errorView = new Views.ErrorView(msg, code, payload);
-            WatchUi.pushView(errorView, new Views.ItemViewDelegate(errorView), WatchUi.SLIDE_BLINK);
         }
 
-        private function triggerOnListsChanged(index as ListIndex?) as Void {
-            for (var i = 0; i < self.onListsChangedListeners.size(); i++) {
-                var listener = self.onListsChangedListeners[i];
-                if (listener.stillAlive()) {
-                    var obj = listener.get();
-                    if (obj != null && obj has :onListsChanged) {
-                        obj.onListsChanged(index);
+        private function triggerOnListIndexChanged(index as ListIndex?) as Void {
+            if (self.onListIndexChangedListeners != null && !self._app.isBackground) {
+                for (var i = 0; i < self.onListIndexChangedListeners.size(); i++) {
+                    var listener = self.onListIndexChangedListeners[i];
+                    if (listener.stillAlive()) {
+                        var obj = listener.get();
+                        if (obj != null && obj has :onListIndexChanged) {
+                            obj.onListIndexChanged(index);
+                        }
                     }
                 }
             }

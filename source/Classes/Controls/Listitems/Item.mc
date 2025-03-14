@@ -1,11 +1,11 @@
 import Toybox.Lang;
 import Toybox.Graphics;
 import Toybox.WatchUi;
-import Helper;
+import Exceptions;
 
 module Controls {
     module Listitems {
-        typedef ViewItemIcon as WatchUi.BitmapResource or Graphics.BitmapReference;
+        typedef ViewItemIcon as WatchUi.BitmapResource or Graphics.BitmapReference or Null;
 
         class Item {
             var Title as String or Label or Null;

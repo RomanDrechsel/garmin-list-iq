@@ -6,7 +6,7 @@ import Toybox.System;
 (:glance)
 module Helper {
     class DateUtil {
-        public static function DatetoString(timestamp as Number or Time.Moment, date_separator as String?) as String {
+        public static function DateToString(timestamp as Number or Time.Moment, date_separator as String?) as String {
             var moment = timestamp instanceof Time.Moment ? timestamp : new Time.Moment(timestamp);
             var greg = Time.Gregorian.info(moment, Time.FORMAT_SHORT);
             var greg_long = Time.Gregorian.info(moment, Time.FORMAT_LONG);
@@ -57,6 +57,7 @@ module Helper {
             return date + date_separator + time;
         }
 
+        (:background)
         public static function toLogString(time as Number or Time.Moment or Time.Gregorian.Info, offset_seconds as Boolean or Number or Null) as String {
             if (time instanceof Lang.Number) {
                 time = new Time.Moment(time);
@@ -92,9 +93,10 @@ module Helper {
             return moment;
         }
 
+        (:background)
         public static function TimezoneOffset() as Number? {
             var offset_seconds = System.getClockTime().timeZoneOffset;
-            if (offset_seconds == null && $.isDebug) {
+            if (Debug.isDebug) {
                 offset_seconds = 7200;
             }
             return offset_seconds;

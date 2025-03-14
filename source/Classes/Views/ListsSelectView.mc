@@ -11,19 +11,27 @@ module Views {
     class ListsSelectView extends ItemView {
         private const _listIconCode = 48;
         private var _firstDisplay = true;
+        private var _show_error_view = null as ErrorView.ECode?;
 
         private enum {
             STORE = 0,
         }
 
-        function initialize(first_display as Boolean) {
+        function initialize(first_display as Boolean, show_errorview_on_start as ErrorView.ECode?) {
             ItemView.initialize();
             self.ScrollMode = SCROLL_DRAG;
             self._firstDisplay = first_display;
+            self._show_error_view = show_errorview_on_start;
         }
 
         function onShow() as Void {
             ItemView.onShow();
+            if (self._show_error_view != null) {
+                Views.ErrorView.Show(self._show_error_view, null);
+                self._show_error_view = null;
+                return;
+            }
+
             if ($.getApp().ListsManager != null) {
                 $.getApp().ListsManager.addListIndexChangedListener(self);
             }

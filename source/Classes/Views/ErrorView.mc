@@ -15,7 +15,7 @@ module Views {
         private var _errorPayload as Array<String>?;
 
         private static var _instance as ErrorView? = null;
-        public static var ErrorCode = null as ECode;
+        public static var ErrorCode = null as ECode?;
         private var _isValid = false;
 
         public enum ECode {

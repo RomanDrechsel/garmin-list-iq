@@ -9,7 +9,7 @@ module Lists {
         private var _linesPerTick = 50;
 
         function initialize(data as Array<String>) {
-            if (data[0] == "issync") {
+            if (data.size() > 0 && data[0].equals("issync")) {
                 self.IsSync = true;
                 data = data.slice(1, null);
             }

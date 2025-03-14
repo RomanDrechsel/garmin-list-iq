@@ -124,8 +124,6 @@ module Lists {
                             item.Text = val.toString();
                         } else if (prop.equals("n")) {
                             item.Note = val.toString();
-                        } else if (prop.equals("d")) {
-                            item.Done = Helper.StringUtil.StringToBool(val);
                         } else if (prop.equals("uuid")) {
                             var num = Helper.StringUtil.StringToNumber(val);
                             item.Uuid = num != null ? num : val;
@@ -181,15 +179,15 @@ module Lists {
         }
 
         public function FinishBatch() as Boolean {
+            if (self.Revision == null) {
+                Debug.Log("No revision number in list received from phone");
+                throw new Exceptions.LegacyNotSupportedException();
+            }
+            if (self.Revision != self.CurrentRevision) {
+                Debug.Log("Old list revision number: " + self.Revision + " <> " + self.CurrentRevision);
+                throw new Exceptions.LegacyNotSupportedException();
+            }
             if (self.IsValid()) {
-                if (self.Revision == null) {
-                    Debug.Log("No revision number in list received from phone");
-                    throw new Exceptions.LegacyNotSupportedException();
-                }
-                if (self.Revision != self.CurrentRevision) {
-                    Debug.Log("Old list revision number: " + self.Revision + " <> " + self.CurrentRevision);
-                    throw new Exceptions.LegacyNotSupportedException();
-                }
                 if (self.Reset != null) {
                     var missing = [];
                     if (self.ResetInterval != null && self.ResetHour != null && self.ResetMinute != null) {
@@ -245,16 +243,22 @@ module Lists {
             return self.Uuid != null && self.Title != null && self.Order != null;
         }
 
-        public function GetItem(index as Number) as Listitem? {
-            if (self.Items.size() > index) {
-                return self.Items[index];
+        public function GetItem(order as Number) as Listitem? {
+            if (self.Items.size() > 0) {
+                for (var i = 0; i < self.Items.size(); i++) {
+                    if (self.Items[i].Order == order) {
+                        return self.Items[i];
+                    }
+                }
             }
             return null;
         }
 
         public function ReduceItem() as Listitem? {
-            var item = self.GetItem(0);
-            if (item != null) {
+            var item = null;
+
+            if (self.Items.size() > 0) {
+                item = self.Items[0];
                 self.Items = self.Items.slice(1, null);
             }
             return item;

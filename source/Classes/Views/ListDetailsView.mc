@@ -53,6 +53,8 @@ module Views {
 
                         item.BoundObject = active;
 
+                        Debug.Log("Update Item: " + item.ItemPosition + " - " + active.toString());
+
                         $.getApp().ListsManager.updateListitem(self._listUuid, item.ItemPosition, active);
                         if (self._moveDown) {
                             self.publishItems(true, null);
@@ -143,11 +145,10 @@ module Views {
                         var ordered = [] as Array<Listitem>;
                         var done = [] as Array<Listitem>;
 
-                        var index = 0;
+                        var count = 0;
                         var listitem = list.ReduceItem();
                         while (listitem != null) {
-                            listitem.Order = index;
-                            index += 1;
+                            count += 1;
                             if (!listitem.isValid()) {
                                 continue;
                             }
@@ -183,7 +184,7 @@ module Views {
                         }
                         ordered = null;
 
-                        if (index <= 0) {
+                        if (count <= 0) {
                             var item = new Listitems.Item(self._mainLayer, null, Application.loadResource(Rez.Strings.ListEmpty), null, null, null, 0, null);
                             item.SubtitleJustification = Graphics.TEXT_JUSTIFY_CENTER;
                             item.isSelectable = false;

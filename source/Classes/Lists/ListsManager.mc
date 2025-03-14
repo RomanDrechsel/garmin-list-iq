@@ -15,6 +15,11 @@ module Lists {
     typedef ListIndex as Dictionary<String or Number, ListIndexItem>;
 
     (:background)
+    public enum {
+        RECEIVED_LEGACY_LIST = "rec_legacy_list",
+    }
+
+    (:background)
     class ListsManager {
         private var onListChangedListeners as Array<WeakReference>?;
         private var onListIndexChangedListeners as Array<WeakReference>?;
@@ -78,14 +83,14 @@ module Lists {
             }
         }
 
-        function updateListitem(uuid as String, position as Number, done as Boolean) as Void {
-            if (position < 0) {
+        function updateListitem(uuid as String, order as Number, done as Boolean) as Void {
+            if (order < 0) {
                 return;
             }
             try {
                 var list = self.GetList(uuid);
                 if (list != null) {
-                    var item = list.GetItem(position);
+                    var item = list.GetItem(order);
                     self._app.MemoryCheck.Check();
 
                     if (item != null) {
@@ -308,8 +313,11 @@ module Lists {
                 } catch (ex instanceof Exceptions.OutOfMemoryException) {
                     Debug.Log("Could not add list " + batch.List.toString() + ": " + ex.toString());
                 } catch (ex instanceof Exceptions.LegacyNotSupportedException) {
-                    if (!$.getApp().isBackground) {
+                    if (!self._app.isBackground && self._app.Initialized == true) {
                         Views.ErrorView.Show(Views.ErrorView.LEGACY_APP, null);
+                        Application.Storage.deleteValue(RECEIVED_LEGACY_LIST);
+                    } else {
+                        Application.Storage.setValue(RECEIVED_LEGACY_LIST, true);
                     }
                 }
                 if (finish instanceof Lang.Array) {

@@ -29,6 +29,7 @@ class ListsApp extends Application.AppBase {
     var isBackground = false;
     var NoBackButton = false;
     var ListCacher = null as BG.ListCacher?;
+    var Initialized = false as Boolean;
     private var onSettingsChangedListeners as Array<WeakReference> = [];
     (:withBackground)
     private var _backgroundReceive as Array<Array<Object> > = [];
@@ -44,7 +45,7 @@ class ListsApp extends Application.AppBase {
     }
 
     function getInitialView() as [WatchUi.Views] or [WatchUi.Views, WatchUi.InputDelegates] {
-        var appVersion = "2025.03.1300";
+        var appVersion = "2025.03.1401";
         Application.Properties.setValue("appVersion", appVersion);
 
         self.Debug = new Debug.DebugStorage();
@@ -59,7 +60,13 @@ class ListsApp extends Application.AppBase {
         self.Inactivity = new Helper.Inactivity();
         self.processBackground();
 
-        var startview = new Views.ListsSelectView(true);
+        var show_error_view_on_startup = null;
+        if (Application.Storage.getValue(Lists.RECEIVED_LEGACY_LIST) != null) {
+            Application.Storage.deleteValue(Lists.RECEIVED_LEGACY_LIST);
+            show_error_view_on_startup = Views.ErrorView.LEGACY_APP;
+        }
+
+        var startview = new Views.ListsSelectView(true, show_error_view_on_startup);
 
         //just clean up the storage, if there are any relics
         if (self.ListCacher == null) {
@@ -69,6 +76,7 @@ class ListsApp extends Application.AppBase {
             }
         }
 
+        self.Initialized = true;
         return [startview, new Views.ItemViewDelegate(startview)];
     }
 

@@ -45,7 +45,7 @@ class ListsApp extends Application.AppBase {
     }
 
     function getInitialView() as [WatchUi.Views] or [WatchUi.Views, WatchUi.InputDelegates] {
-        var appVersion = "2025.03.1500";
+        var appVersion = "2025.03.1501";
         Application.Properties.setValue("appVersion", appVersion);
 
         self.Debug = new Debug.DebugStorage();
@@ -96,6 +96,7 @@ class ListsApp extends Application.AppBase {
     }
 
     function onSettingsChanged() as Void {
+        Debug.Log("Settings changed out of app");
         self.triggerOnSettingsChanged();
     }
 
@@ -115,7 +116,6 @@ class ListsApp extends Application.AppBase {
     }
 
     function triggerOnSettingsChanged() as Void {
-        Debug.Log("Settings changed");
         if (self.Debug != null) {
             self.Debug.onSettingsChanged();
         }
@@ -162,7 +162,7 @@ class ListsApp extends Application.AppBase {
         ret.add("Firmware: " + settings.firmwareVersion);
         ret.add("Monkey Version: " + settings.monkeyVersion);
         ret.add("Memory: " + stats.usedMemory + " / " + stats.totalMemory);
-        ret.add("LowBGMemory: " + !$.hasBackgroundCapability);
+        ret.add("BG Capability: " + $.hasBackgroundCapability);
         ret.add("Language: " + settings.systemLanguage);
         ret.add("Lists in Storage: " + self.ListsManager.GetListsIndex().size());
         return ret;

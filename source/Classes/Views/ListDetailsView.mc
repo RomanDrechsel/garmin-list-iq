@@ -52,7 +52,6 @@ module Views {
                         }
 
                         item.BoundObject = active;
-                        Debug.Log("Update Item: " + item.ItemPosition + " - " + active.toString());
 
                         $.getApp().ListsManager.updateListitem(self._listUuid, item.ItemPosition, active);
                         if (self._moveDown) {
@@ -185,6 +184,11 @@ module Views {
                         }
                     }
 
+                    //no lone below the last items
+                    if (self.Items.size() > 0) {
+                        self.Items[self.Items.size() - 1].DrawLine = false;
+                    }
+
                     if (self.DisplayButtonSupport()) {
                         self.addSettingsButton();
                     }
@@ -197,11 +201,6 @@ module Views {
                         Debug.Log("Displaying list " + list.toString());
                     }
                     list = null;
-
-                    //no lone below the last items
-                    if (self.Items.size() > 0) {
-                        self.Items[self.Items.size() - 1].DrawLine = false;
-                    }
 
                     if (self._startScroll != null && self._startScroll > 0) {
                         self._scrollOffset = self._startScroll;

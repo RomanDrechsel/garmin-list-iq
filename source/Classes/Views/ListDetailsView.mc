@@ -52,7 +52,6 @@ module Views {
                         }
 
                         item.BoundObject = active;
-
                         Debug.Log("Update Item: " + item.ItemPosition + " - " + active.toString());
 
                         $.getApp().ListsManager.updateListitem(self._listUuid, item.ItemPosition, active);
@@ -84,13 +83,6 @@ module Views {
         function onKeyMenu() as Boolean {
             if (!IconItemView.onKeyMenu()) {
                 self.openSettings();
-            }
-            return true;
-        }
-
-        function onTap(x as Number, y as Number) as Boolean {
-            if (!IconItemView.onTap(x, y)) {
-                self.goBack();
             }
             return true;
         }
@@ -167,20 +159,20 @@ module Views {
 
                         for (var i = 0; i < ordered.size(); i++) {
                             var item = ordered[i];
-                            var icon, iconInvert, obj;
+                            var icon, iconInvert, bound;
 
                             if (item.Done == true) {
                                 icon = self._itemIconDone;
                                 iconInvert = self._itemIconDoneInvert;
-                                obj = true;
+                                bound = true;
                             } else {
                                 icon = self._itemIcon;
                                 iconInvert = self._itemIconInvert;
-                                obj = false;
+                                bound = false;
                             }
-                            var itemObj = self.addItem(item.Text, show_notes ? item.Note : null, obj, icon, item.Order);
+                            var itemObj = self.addItem(item.Text, show_notes ? item.Note : null, bound, icon, item.Order);
                             itemObj.setIconInvert(iconInvert);
-                            itemObj.isDisabled = obj;
+                            itemObj.isDisabled = item.Done;
                         }
                         ordered = null;
 
@@ -191,13 +183,14 @@ module Views {
                             item.DrawLine = false;
                             self.Items.add(item);
                         }
-                        if (self.DisplayButtonSupport()) {
-                            self.addSettingsButton();
-                        }
+                    }
 
-                        if ($.getApp().NoBackButton) {
-                            self.addBackButton(false);
-                        }
+                    if (self.DisplayButtonSupport()) {
+                        self.addSettingsButton();
+                    }
+
+                    if ($.getApp().NoBackButton) {
+                        self.addBackButton(false);
                     }
 
                     if (request_update == false) {

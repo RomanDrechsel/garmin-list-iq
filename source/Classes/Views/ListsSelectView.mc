@@ -119,7 +119,7 @@ module Views {
                     if (substring.length() > 0) {
                         substring += "\n";
                     }
-                    substring += Helper.DateUtil.DateToString(date, null);
+                    substring += Helper.DateUtil.DateToString(date, "\n");
                 }
                 self.addItem(title, substring, uuid, self._listIconCode, item.get("o"));
             }

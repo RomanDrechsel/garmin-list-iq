@@ -19,14 +19,11 @@ module Helper {
                 date = Application.loadResource(Rez.Strings.ListDateFormat);
             }
 
-            var nbsp = (0x00a0).toChar().toString();
-
             date = StringUtil.stringReplace(date, "%y", greg.year.toString());
             date = StringUtil.stringReplace(date, "%M", greg_long.month);
             date = StringUtil.stringReplace(date, "%m", greg.month.format("%02d"));
             date = StringUtil.stringReplace(date, "%d", greg.day.format("%02d"));
             date = StringUtil.stringReplace(date, "%D", greg_long.day_of_week);
-            date = StringUtil.stringReplace(date, " ", nbsp);
 
             var time = Application.loadResource(Rez.Strings.ListTimeFormat);
 
@@ -48,7 +45,6 @@ module Helper {
             }
             time = StringUtil.stringReplace(time, "%i", greg.min.format("%02d"));
             time = StringUtil.stringReplace(time, "%s", greg.sec.format("%02d"));
-            time = StringUtil.stringReplace(time, " ", nbsp);
 
             if (date_separator == null) {
                 date_separator = " ";

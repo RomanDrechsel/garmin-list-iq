@@ -63,7 +63,7 @@ module Views {
         function onSwipe(swipeEvent as SwipeEvent) as Boolean {
             self._view.Interaction();
             if (self._noDrag == true) {
-                var delta = self._view.ScrollMode == ItemView.SCROLL_SNAP ? 1 : ($.screenHeight * 0.5).toNumber();
+                var delta = self._view.ScrollMode == ItemView.SCROLL_SNAP ? 1 : ($.screenHeight * 0.21).toNumber();
                 if (swipeEvent.getDirection() == WatchUi.SWIPE_UP) {
                     self._view.onScroll(delta);
                     return true;

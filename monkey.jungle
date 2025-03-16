@@ -496,5 +496,5 @@ vivoactive4s.excludeAnnotations = regularVersion;withoutBackground;withGlance;wi
 
 # vívoactive® 5
 # Round Display, background capability, 390x390 AMOLES touch display, 2 buttons, glance
-vivoactive5.resourcePath = $(base.resourcePath);resources-touch;resources-highcolor
+vivoactive5.resourcePath = $(base.resourcePath);resources-touch
 vivoactive5.excludeAnnotations = regularVersion;withoutBackground;withoutHighColor

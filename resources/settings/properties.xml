@@ -11,5 +11,4 @@
     <property type="number" id="LastListScroll">-1</property>
     <property type="number" id="AutoExit">0</property>
     <property type="boolean" id="HWBCtrl">true</property>
-    <property type="boolean" id="LowColors">true</property>
 </properties>

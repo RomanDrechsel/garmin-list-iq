@@ -91,7 +91,7 @@ module Views {
         }
 
         function onListChanged(list as Lists.List?) as Void {
-            if (list != null && list.Uuid.equals(self.ListUuid)) {
+            if (list == null || list.Uuid.equals(self.ListUuid)) {
                 self.readList(list);
                 self.loadItems(true);
             }
@@ -165,11 +165,13 @@ module Views {
                 list = $.getApp().ListsManager.GetList(self.ListUuid) as Lists.List?;
             }
             if (list != null) {
+                if (self._resetActive != null && list.Reset == null) {
+                    self._scrollOffset = 0;
+                }
                 self._resetActive = list.Reset;
                 self._resetInterval = list.ResetInterval;
             } else {
-                self._resetActive = null;
-                self._resetInterval = null;
+                self.goBack();
             }
         }
     }

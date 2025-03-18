@@ -2,7 +2,7 @@ import Toybox.WatchUi;
 import Toybox.Lang;
 import Toybox.Graphics;
 
-(:glance)
+(:glance,:background)
 module Helper {
     class FontsService {
         private var _fontBig as FontType;

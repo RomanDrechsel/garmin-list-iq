@@ -1,6 +1,7 @@
 module Themes {
     class BlackAndWhite extends ThemeSettingsBase {
         function initialize() {
+            ThemeSettingsBase.initialize();
             self.LineBitmap = Application.loadResource(Rez.Drawables.LineWhite);
 
             self.MainColor = 0xffffff;

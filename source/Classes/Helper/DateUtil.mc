@@ -6,7 +6,7 @@ import Toybox.System;
 (:glance)
 module Helper {
     class DateUtil {
-        public static function DatetoString(timestamp as Number or Time.Moment, date_separator as String?) as String {
+        public static function DateToString(timestamp as Number or Time.Moment, date_separator as String?) as String {
             var moment = timestamp instanceof Time.Moment ? timestamp : new Time.Moment(timestamp);
             var greg = Time.Gregorian.info(moment, Time.FORMAT_SHORT);
             var greg_long = Time.Gregorian.info(moment, Time.FORMAT_LONG);
@@ -19,14 +19,11 @@ module Helper {
                 date = Application.loadResource(Rez.Strings.ListDateFormat);
             }
 
-            var nbsp = (0x00a0).toChar().toString();
-
             date = StringUtil.stringReplace(date, "%y", greg.year.toString());
             date = StringUtil.stringReplace(date, "%M", greg_long.month);
             date = StringUtil.stringReplace(date, "%m", greg.month.format("%02d"));
             date = StringUtil.stringReplace(date, "%d", greg.day.format("%02d"));
             date = StringUtil.stringReplace(date, "%D", greg_long.day_of_week);
-            date = StringUtil.stringReplace(date, " ", nbsp);
 
             var time = Application.loadResource(Rez.Strings.ListTimeFormat);
 
@@ -48,7 +45,6 @@ module Helper {
             }
             time = StringUtil.stringReplace(time, "%i", greg.min.format("%02d"));
             time = StringUtil.stringReplace(time, "%s", greg.sec.format("%02d"));
-            time = StringUtil.stringReplace(time, " ", nbsp);
 
             if (date_separator == null) {
                 date_separator = " ";
@@ -57,6 +53,7 @@ module Helper {
             return date + date_separator + time;
         }
 
+        (:background)
         public static function toLogString(time as Number or Time.Moment or Time.Gregorian.Info, offset_seconds as Boolean or Number or Null) as String {
             if (time instanceof Lang.Number) {
                 time = new Time.Moment(time);
@@ -92,9 +89,10 @@ module Helper {
             return moment;
         }
 
+        (:background)
         public static function TimezoneOffset() as Number? {
             var offset_seconds = System.getClockTime().timeZoneOffset;
-            if (offset_seconds == null && $.isDebug) {
+            if (Debug.isDebug) {
                 offset_seconds = 7200;
             }
             return offset_seconds;

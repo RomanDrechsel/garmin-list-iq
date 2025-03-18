@@ -14,6 +14,8 @@
     <string id="ListRec">Liste reçue.</string>
     <string id="EStorageFull">Le stockage est plein !</string>
     <string id="EStorageError">Impossible de sauvegarder la liste !</string>
+    <string id="ListRecOOM">La mémoire de l'application est insuffisante pour traiter la liste reçue.\n\nVeuillez envisager une liste plus petite.</string>
+    <string id="ListLegacy">Veuillez transférer vos listes à nouveau.\nEn raison de l'optimisation de la mémoire, les anciennes listes ne peuvent plus être affichées !</string>
     <string id="ListDel">Liste supprimée.</string>
     <string id="LegacyPhoneApp">Il semble que tu utilises une ancienne version de l'application pour smartphone.\nVeuillez la mettre à jour.</string>
 
@@ -25,6 +27,7 @@
     <string id="ListEmpty">La liste est vide.</string>
 
     <string id="LMSub">%s points</string>
+    <string id="LMSubOne">1 point</string>
 
     <string id="StTitle">Paramètres</string>
     <string id="StMoveBottom">Déplacer les éléments terminés vers le bas</string>
@@ -69,6 +72,8 @@
     <string id="StResetDaily">Quotidien</string>
     <string id="StResetWeekly">Hebdomadaire</string>
     <string id="StResetMonthly">Mensuel</string>
+    <string id="StResetBtn">Réinitialiser la liste</string>
+    <string id="StResetSuccess">Liste réinitialisée</string>
 
     <string id="ErrHint">Veuillez me signaler l'erreur sur votre smartphone afin que je puisse vous aider.</string>
     <string id="ErrHintTouch">(Appuyez ici pour ouvrir la possibilité de contact dans l'application sur votre smartphone)</string>
@@ -76,6 +81,7 @@
     <string id="ErrReport">Veuillez ouvrir le smartphone</string>
     <string id="ErrListRec">Une erreur est survenue lors du transfert de la liste:</string>
     <string id="ErrListDel">Une erreur est survenue lors de la suppression de la liste:</string>
+    <string id="ErrUnknown">Erreur inconnue</string>
 
     <string id="GlNumLists" scope="glance">%d listes</string>
     <string id="GlOneList" scope="glance">1 liste</string>

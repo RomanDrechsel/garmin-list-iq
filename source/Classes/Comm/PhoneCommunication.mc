@@ -7,22 +7,26 @@ using Toybox.Communications;
 import Views;
 
 module Comm {
+    (:background)
     class PhoneCommunication extends Toybox.Communications.ConnectionListener {
-        private enum EMessageType {
+        public enum EMessageType {
             LIST = "list",
             DELETE_LIST = "dellist",
             REQUEST_LOGS = "req_logs",
         }
 
-        function initialize() {
-            Communications.registerForPhoneAppMessages(method(:phoneMessageCallback));
+        private var _app as ListsApp;
+
+        function initialize(app as ListsApp, register_callback as Boolean) {
+            ConnectionListener.initialize();
+            self._app = app;
+
+            if (register_callback) {
+                Communications.registerForPhoneAppMessages(method(:phoneMessageCallback));
+            }
         }
 
         function phoneMessageCallback(msg as Communications.PhoneAppMessage) as Void {
-            if ($.getApp().ListsManager == null) {
-                Debug.Log("No ListsManager found, cannot handle phone app messages");
-                return;
-            }
             var message = msg.data as Application.PropertyValueType;
             if (message instanceof Array) {
                 self.processData(message);
@@ -52,8 +56,16 @@ module Comm {
             Debug.Log("Send to phone failed!");
         }
 
-        private function processData(data as Array) as Void {
-            var size = Helper.StringUtil.formatBytes(data.toString().length());
+        function processData(data as Array) as Void {
+            if (self._app.ListsManager == null) {
+                Debug.Log("No ListsManager found, cannot handle phone app messages");
+                if (self._app.BackgroundService != null) {
+                    self._app.BackgroundService.Finish(false);
+                }
+                return;
+            }
+
+            var size = Helper.StringUtil.formatBytes(Helper.StringUtil.getSize(data));
             var message_type = null;
             if (data[0] instanceof String) {
                 message_type = data[0];
@@ -61,36 +73,34 @@ module Comm {
                 Debug.Log("Received unknown message from phone (" + size + ")");
                 return;
             }
-
             Debug.Log("Received message " + message_type + " (" + size + ")");
 
             data = data.slice(1, null);
+            if (message_type.equals(LIST)) {
+                self._app.ListsManager.addList(data);
+            } else if (message_type.equals(DELETE_LIST)) {
+                if (data.size() > 0) {
+                    var uuid = Helper.StringUtil.StringToNumber(data[0] as String);
+                    if (self._app.ListsManager.deleteList(uuid != null ? uuid : data[0] as String, false) == false) {
+                        Debug.Log("Could not delete list " + uuid);
+                    }
+                } else {
+                    Debug.Log("Received delete list but no uuid provided - ignoring");
+                }
+            } else if (message_type.equals(REQUEST_LOGS)) {
+                if (!self._app.isBackground) {
+                    var tid = null;
+                    var split = Helper.StringUtil.split(data[0] as String, "=", 2);
+                    if (split.size() > 1) {
+                        tid = split[1];
+                    }
 
-            var types = [LIST, DELETE_LIST, REQUEST_LOGS];
-            if (types.indexOf(message_type) >= 0) {
-                if (message_type.equals(LIST)) {
-                    var dict = self.ArrayToDict(data);
-                    if ($.getApp().ListsManager.addList(dict) == false) {
-                        Debug.Log("Could not store list");
-                    }
-                } else if (message_type.equals(DELETE_LIST)) {
-                    if (data.size() > 0) {
-                        var uuid = data[0];
-                        if ($.getApp().ListsManager.deleteList(uuid, false) == false) {
-                            Debug.Log("Could not delete list " + uuid);
-                        }
-                    } else {
-                        Debug.Log("Received delete list but no uuid provided - ignoring");
-                    }
-                } else if (message_type.equals(REQUEST_LOGS)) {
-                    var message = self.ArrayToDict(data);
-                    var tid = message.get("tid") as String?;
                     var resp = [];
                     if (tid != null && tid.length() > 0) {
                         resp.add("tid=" + tid);
                     }
-                    if ($.getApp().Debug != null) {
-                        var logs = $.getApp().Debug.GetLogs();
+                    if (self._app.Debug != null) {
+                        var logs = self._app.Debug.GetLogs() as Array<String>;
                         for (var i = 0; i < logs.size(); i++) {
                             resp.add(i + "=" + logs[i]);
                         }
@@ -105,22 +115,9 @@ module Comm {
         private function processDataLegacy(message as Dictionary) as Void {
             var size = Helper.StringUtil.formatBytes(message.toString().length());
             Debug.Log("Received legacy message (" + size + ")");
-            var error = new Views.ErrorViewLegacyApp();
-            WatchUi.pushView(error, new Views.ItemViewDelegate(error), WatchUi.SLIDE_IMMEDIATE);
-        }
-
-        protected function ArrayToDict(arr as Array) as Dictionary {
-            var dict = {};
-            for (var i = 0; i < arr.size(); i++) {
-                var split = Helper.StringUtil.split(arr[i], "=", 2);
-                if (split.size() == 1) {
-                    dict.put(split[0], "");
-                } else {
-                    dict.put(split[0], split[1]);
-                }
+            if (!self._app.isBackground) {
+                Views.ErrorView.Show(Views.ErrorView.LEGACY_APP, null);
             }
-
-            return dict;
         }
     }
 }

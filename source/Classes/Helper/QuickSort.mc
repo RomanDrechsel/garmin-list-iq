@@ -1,7 +1,8 @@
 import Toybox.Lang;
 
+(:background,:debug)
 module Helper {
-    class Quicksort {
+    class QuickSort {
         static function SortNumbers(arr as Array<Number>) as Array<Number> {
             if (arr.size() <= 1) {
                 return arr;
@@ -14,11 +15,9 @@ module Helper {
 
             for (var i = 0; i < arr.size(); i++) {
                 var item = arr[i];
-                var comp = item - pivot;
-
-                if (comp < 0) {
+                if (item < pivot) {
                     left.add(item);
-                } else if (comp > 0) {
+                } else if (item > pivot) {
                     right.add(item);
                 } else {
                     equal.add(item);
@@ -32,7 +31,7 @@ module Helper {
             return ret;
         }
 
-        /*static function compareStrings(str1, str2) as Number {
+        /*static function compareStrings(str1 as String, str2 as String) as Number {
             if (Lang.String has :compareTo) {
                 return str1.compareTo(str2);
             }

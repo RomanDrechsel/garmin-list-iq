@@ -2,11 +2,12 @@ import Toybox.Lang;
 import Toybox.Application;
 using Toybox.Application.Properties as Props;
 
-(:glance)
 module Helper {
     class Properties {
+        (:glance,:background)
         typedef PropType as Number or Boolean or String;
 
+        (:glance,:background)
         public enum EProps {
             INIT = "Init",
             THEME = "Theme",
@@ -22,6 +23,9 @@ module Helper {
         }
 
         public static function Store(prop as EProps or String, value as PropType) as Void {
+            if ($.getApp().isBackground) {
+                return;
+            }
             var no_log = [LASTLISTSCROLL, INIT, LASTLIST];
 
             try {
@@ -34,7 +38,8 @@ module Helper {
             }
         }
 
-        public static function Get(prop as EProps or String, default_value as PropType?) as PropType {
+        (:glance,:background)
+        public static function Get(prop as EProps or String, default_value as PropType?) as PropType? {
             try {
                 return Props.getValue(prop as String);
             } catch (ex instanceof Lang.Exception) {

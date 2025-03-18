@@ -14,6 +14,8 @@
     <string id="ListRec">Список отримано.</string>
     <string id="EStorageFull">Пам’ять переповнена!</string>
     <string id="EStorageError">Не вдалося зберегти список!</string>
+    <string id="ListRecOOM">Пам’яті додатка недостатньо для обробки отриманого списку.\n\nБудь ласка, розгляньте можливість використання меншого списку.</string>
+    <string id="ListLegacy">Будь ласка, передайте свої списки заново.\nЧерез оптимізацію пам’яті старі списки більше не можуть відображатися!</string>
     <string id="ListDel">Список видалено.</string>
     <string id="LegacyPhoneApp">Здається, ви використовуєте стару версію програми для смартфона.\nБудь ласка, оновіть її.</string>
 
@@ -21,11 +23,11 @@
     <string id="NoListsLink">Подвійне торкання, щоб відкрити Android Play Store на телефоні.</string>
     <string id="NoListsLinkBtn">Натисніть клавішу Enter, щоб відкрити Android Play Store на телефоні.</string>
 
-
     <string id="ListNotFound">Список не знайдено!</string>
     <string id="ListEmpty">Список порожній.</string>
 
-    <string id="LMSub">%s бали</string>
+    <string id="LMSub">%s елементи</string>
+    <string id="LMSubOne">1 елемент</string>
 
     <string id="StTitle">Налаштування</string>
     <string id="StMoveBottom">Перенести виконані пункти вниз</string>
@@ -66,10 +68,12 @@
     <string id="StSendLogsOff">Журнали деактивовано!</string>
     <string id="StSendLogsOk">Журнали надіслано</string>
 
-    <string id="StReset">Автоматичне скидання списку</string>
+    <string id="StReset">Автоматично скинути список</string>
     <string id="StResetDaily">Щоденно</string>
     <string id="StResetWeekly">Щотижня</string>
     <string id="StResetMonthly">Щомісяця</string>
+    <string id="StResetBtn">Скинути список</string>
+    <string id="StResetSuccess">Список скинуто</string>
 
     <string id="ErrHint">Будь ласка, повідомте мені про помилку на вашому смартфоні, щоб я міг вам допомогти.\n\n</string>
     <string id="ErrHintTouch">(Доторкніться тут, щоб відкрити спосіб зв'язку в додатку на вашому смартфоні)</string>
@@ -77,6 +81,7 @@
     <string id="ErrReport">Будь ласка, відкрийте смартфон</string>
     <string id="ErrListRec">Під час передачі списку сталася помилка:</string>
     <string id="ErrListDel">Виникла помилка при видаленні списку:</string>
+    <string id="ErrUnknown">Невідома помилка</string>
 
     <string id="GlNumLists" scope="glance">%d Списки</string>
     <string id="GlOneList" scope="glance">1 Список</string>

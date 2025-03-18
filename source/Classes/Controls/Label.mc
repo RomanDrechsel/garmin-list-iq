@@ -14,10 +14,8 @@ module Controls {
         function initialize(text as String or Array<String>, font as FontType, width as Number) {
             self._width = width;
             self._font = font;
-            if (text instanceof Array) {
-                text = Helper.StringUtil.join(text, "\n");
-            }
-            self._text = text;
+            self._text = "";
+            self.setText(text);
         }
 
         function draw(dc as Dc, x as Number, topY as Number, color as Number, justification as TextJustification) as Number {
@@ -37,6 +35,18 @@ module Controls {
         function SetMaxHeight(maxHeight as Number) as Void {
             self._maxHeight = maxHeight;
             self._needValidation = true;
+        }
+
+        function setText(text as String or Array<String>) as Void {
+            if (text instanceof Array) {
+                text = Helper.StringUtil.join(text, "\n");
+            }
+            self._text = text;
+            self._needValidation = true;
+        }
+
+        function getText() as String {
+            return self._text;
         }
 
         function getFont() as FontType {

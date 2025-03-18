@@ -14,6 +14,8 @@
     <string id="ListRec">Lista recibida.</string>
     <string id="EStorageFull">¡El almacenamiento está lleno!</string>
     <string id="EStorageError">¡No se pudo guardar la lista!</string>
+    <string id="ListRecOOM">La memoria de la aplicación no es suficiente para procesar la lista recibida.\n\nPor favor, considera una lista más pequeña.</string>
+    <string id="ListLegacy">Por favor, vuelve a transferir tus listas.\nDebido a optimizaciones de memoria, las listas antiguas ya no se pueden mostrar.</string>
     <string id="ListDel">Lista eliminada.</string>
     <string id="LegacyPhoneApp">Parece que estás utilizando una versión antigua de la aplicación para smartphone.\nPor favor, actualízala.</string>
 
@@ -24,7 +26,8 @@
     <string id="ListNotFound">¡Lista no encontrada!</string>
     <string id="ListEmpty">La lista está vacía.</string>
 
-    <string id="LMSub">%s puntos</string>
+    <string id="LMSub">%s elementos</string>
+    <string id="LMSubOne">1 elemento</string>
 
     <string id="StTitle">Configuración</string>
     <string id="StMoveBottom">Mover elementos completados hacia abajo</string>
@@ -69,6 +72,8 @@
     <string id="StResetDaily">Diariamente</string>
     <string id="StResetWeekly">Semanalmente</string>
     <string id="StResetMonthly">Mensualmente</string>
+    <string id="StResetBtn">Restablecer la lista</string>
+    <string id="StResetSuccess">Lista restablecida</string>
 
     <string id="ErrHint">Por favor, informa del error en tu teléfono móvil para que pueda ayudarte.</string>
     <string id="ErrHintTouch">(Toca aquí para abrir la opción de contacto en la aplicación en tu teléfono móvil)</string>
@@ -76,6 +81,7 @@
     <string id="ErrReport">Por favor, abre el teléfono móvil</string>
     <string id="ErrListRec">Se ha producido un error al transferir la lista:</string>
     <string id="ErrListDel">Se ha producido un error al eliminar la lista:</string>
+    <string id="ErrUnknown">Error desconocido</string>
 
     <string id="GlNumLists" scope="glance">%d Listas</string>
     <string id="GlOneList" scope="glance">1 Lista</string>

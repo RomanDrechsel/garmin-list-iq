@@ -3,10 +3,14 @@ import Toybox.Lang;
 import Toybox.Application;
 import Controls;
 import Controls.Listitems;
-import Helper;
+import Exceptions;
 
 module Views {
     class SettingsAutoexitView extends IconItemView {
+        function initialize() {
+            IconItemView.initialize();
+        }
+
         function onLayout(dc as Dc) as Void {
             IconItemView.onLayout(dc);
             self.loadList();
@@ -17,15 +21,19 @@ module Views {
             self.loadList();
         }
 
-        protected function interactItem(item as Listitems.Item, doubletap as Boolean) as Void {
-            var prop = Helper.Properties.Get(Helper.Properties.AUTOEXIT, 0);
-            if (prop != item.BoundObject) {
-                Helper.Properties.Store(Helper.Properties.AUTOEXIT, item.BoundObject);
-                if ($.getApp().ListsManager != null) {
-                    $.getApp().triggerOnSettingsChanged();
+        protected function interactItem(item as Listitems.Item, doubletap as Boolean) as Boolean {
+            if (!IconItemView.interactItem(item, doubletap)) {
+                var prop = Helper.Properties.Get(Helper.Properties.AUTOEXIT, 0);
+                if (item.BoundObject instanceof Number && prop != item.BoundObject) {
+                    Helper.Properties.Store(Helper.Properties.AUTOEXIT, item.BoundObject as Number);
+                    if ($.getApp().ListsManager != null) {
+                        $.getApp().triggerOnSettingsChanged();
+                    }
+                    self.goBack();
                 }
-                self.goBack();
+                return true;
             }
+            return true;
         }
 
         private function loadList() as Void {

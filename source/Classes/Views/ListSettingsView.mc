@@ -78,11 +78,7 @@ module Views {
         function deleteList() as Void {
             if ($.getApp().ListsManager != null) {
                 $.getApp().ListsManager.deleteList(self.ListUuid, true);
-                $.getApp().GlobalStates.add(ListsApp.MOVETOP);
             }
-            $.getApp().GlobalStates.add(ListsApp.STARTPAGE);
-            WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
-            WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
         }
 
         function onSettingsChanged() as Void {
@@ -157,12 +153,13 @@ module Views {
         }
 
         private function readList(list as Lists.List?) as Void {
-            if ($.getApp().ListsManager == null) {
+            var app = $.getApp();
+            if (app.ListsManager == null) {
                 return;
             }
 
             if (list == null) {
-                list = $.getApp().ListsManager.GetList(self.ListUuid) as Lists.List?;
+                list = app.ListsManager.GetList(self.ListUuid) as Lists.List?;
             }
             if (list != null) {
                 if (self._resetActive != null && list.Reset == null) {
@@ -171,6 +168,8 @@ module Views {
                 self._resetActive = list.Reset;
                 self._resetInterval = list.ResetInterval;
             } else {
+                app.GlobalStates.add(ListsApp.MOVETOP);
+                app.GlobalStates.add(ListsApp.STARTPAGE);
                 self.goBack();
             }
         }

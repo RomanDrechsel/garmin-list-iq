@@ -51,7 +51,7 @@ module Views {
 
         function deleteAllLists() as Void {
             if ($.getApp().ListsManager != null) {
-                $.getApp().ListsManager.clearAll();
+                $.getApp().ListsManager.clearAll(false);
             }
             self.goBack();
         }

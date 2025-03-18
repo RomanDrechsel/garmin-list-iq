@@ -5,8 +5,6 @@ For Smartphone
 adb -d forward tcp:7381 tcp:7381
 
 TEST: Background service
-WIP: Theme Switch with excludeAnnotations for Low-Color Displays
-TODO: test on fr945lte -> has 64k background but only 32k glance
 TODO: send success response to phone, when list added
 TODO: notes function
 
@@ -27,6 +25,3 @@ Touch, Round, 5 Buttons, 64 Colors:
 
 64 Colors
 - Vivoactive 3
-
-
-,

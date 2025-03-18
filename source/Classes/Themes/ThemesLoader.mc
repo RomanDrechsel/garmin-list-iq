@@ -27,13 +27,6 @@ module Themes {
                     break;
             }
         }
-
-        static function LowColors() as Boolean {
-            if (self._lowColors == null) {
-                self._lowColors = Helper.Properties.Get("LowColors", true);
-            }
-            return self._lowColors;
-        }
     }
 }
 

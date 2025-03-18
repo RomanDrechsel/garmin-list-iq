@@ -70,7 +70,7 @@ module Lists {
                 Debug.Log("Could not get list " + uuid + ": " + ex.toString());
                 return null;
             } catch (ex instanceof Exceptions.LegacyNotSupportedException) {
-                self.clearAll();
+                self.clearAll(true);
                 Debug.Log("Legacy list data found in storage - cleared memory...");
                 if (self._app.GlobalStates.indexOf(ListsApp.LEGACYLIST) < 0) {
                     self._app.GlobalStates.add(ListsApp.LEGACYLIST);
@@ -213,14 +213,16 @@ module Lists {
             }
         }
 
-        function clearAll() as Void {
+        function clearAll(silent as Boolean) as Void {
             Application.Storage.clearValues();
             Debug.Log("Deleted all lists!");
-            if (!self._app.isBackground) {
-                Helper.ToastUtil.Toast(Rez.Strings.StDelAllDone, Helper.ToastUtil.SUCCESS);
+            if (!silent) {
+                if (!self._app.isBackground) {
+                    Helper.ToastUtil.Toast(Rez.Strings.StDelAllDone, Helper.ToastUtil.SUCCESS);
+                }
+                self.triggerOnListChanged(null);
+                self.triggerOnListIndexChanged(null);
             }
-            self.triggerOnListChanged(null);
-            self.triggerOnListIndexChanged(null);
         }
 
         function addListChangedListener(obj as Object) as Void {
@@ -425,7 +427,7 @@ module Lists {
             try {
                 index = self.purgeIndex(index);
                 if (index == null || index.size() == 0) {
-                    self.clearAll();
+                    self.clearAll(true);
                     self.triggerOnListIndexChanged(null);
                 } else {
                     self._app.MemoryCheck.Check();

@@ -5,8 +5,6 @@ For Smartphone
 adb -d forward tcp:7381 tcp:7381
 
 TEST: Background service
-BUG: if in ListSettingsView and a list is updated with removed auto reset, it should be scrolled to top
-TODO: Theme Switch with excludeAnnotations for Low-Color Displays
 TODO: send success response to phone, when list added
 TODO: notes function
 
@@ -27,6 +25,3 @@ Touch, Round, 5 Buttons, 64 Colors:
 
 64 Colors
 - Vivoactive 3
-
-
-,

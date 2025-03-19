@@ -45,7 +45,7 @@ class ListsApp extends Application.AppBase {
     }
 
     function getInitialView() as [WatchUi.Views] or [WatchUi.Views, WatchUi.InputDelegates] {
-        var appVersion = "2025.03.1501";
+        var appVersion = "2025.03.1800";
         Application.Properties.setValue("appVersion", appVersion);
 
         self.Debug = new Debug.DebugStorage();
@@ -145,12 +145,6 @@ class ListsApp extends Application.AppBase {
             case System.SCREEN_SHAPE_RECTANGLE:
                 screenShape = "Square";
                 break;
-            case System.SCREEN_SHAPE_SEMI_OCTAGON:
-                screenShape = "Semi-Octagon";
-                break;
-            case System.SCREEN_SHAPE_SEMI_ROUND:
-                screenShape = "Semi-Round";
-                break;
         }
 
         var ret = [] as Array<String>;
@@ -158,7 +152,7 @@ class ListsApp extends Application.AppBase {
         ret.add("Display: " + screenShape);
         ret.add("Touchscreen: " + settings.isTouchScreen);
         ret.add("Controls: " + Views.ItemView.SupportedControls());
-        ret.add("LowColors Display: " + Themes.ThemesLoader.LowColors());
+        ret.add("High Color Display: " + $.hasHighColorDisplay);
         ret.add("Firmware: " + settings.firmwareVersion);
         ret.add("Monkey Version: " + settings.monkeyVersion);
         ret.add("Memory: " + stats.usedMemory + " / " + stats.totalMemory);
@@ -237,6 +231,10 @@ function openGooglePlay() as Void {
 var hasBackgroundCapability = true;
 (:withoutBackground)
 var hasBackgroundCapability = false;
+(:withHighColor)
+var hasHighColorDisplay = true;
+(:withoutHighColor)
+var hasHighColorDisplay = false;
 
 (:roundVersion)
 var isRoundDisplay = true;

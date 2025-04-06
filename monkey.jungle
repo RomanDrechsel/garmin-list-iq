@@ -498,3 +498,8 @@ vivoactive4s.excludeAnnotations = regularVersion;withoutBackground;withGlance;wi
 # Round Display, background capability, 390x390 AMOLES touch display, 2 buttons, glance
 vivoactive5.resourcePath = $(base.resourcePath);resources-touch
 vivoactive5.excludeAnnotations = regularVersion;withoutBackground;withoutHighColor
+
+#vívoactive® 6
+# Round Display, background capability, 390x390 AMOLES touch display, 2 buttons, glance
+vivoactive6.resourcePath = $(base.resourcePath);resources-touch
+vivoactive6.excludeAnnotations = regularVersion;withoutBackground;withoutHighColor

@@ -465,17 +465,19 @@ module Views {
 
         static function DisplayButtonSupport() as Boolean {
             if (self._buttonDisplay == null) {
-                if ((System.getDeviceSettings().inputButtons & System.BUTTON_INPUT_MENU) == 0) {
+                var inputButtons = System.getDeviceSettings().inputButtons;
+                if ((inputButtons & System.BUTTON_INPUT_MENU) == 0 && (inputButtons & System.BUTTON_INPUT_ESC) == 0) {
                     //only 1 button
-                    return true;
-                }
-                var controls = self.SupportedControls();
-                if (controls == CONTROLS_TOUCHSCREEN) {
-                    self._buttonDisplay = false;
-                } else if (controls == CONTROLS_BUTTONS) {
                     self._buttonDisplay = true;
                 } else {
-                    self._buttonDisplay = Helper.Properties.Get(Helper.Properties.HWBCTRL, false);
+                    var controls = self.SupportedControls();
+                    if (controls == CONTROLS_TOUCHSCREEN) {
+                        self._buttonDisplay = false;
+                    } else if (controls == CONTROLS_BUTTONS) {
+                        self._buttonDisplay = true;
+                    } else {
+                        self._buttonDisplay = Helper.Properties.Get(Helper.Properties.HWBCTRL, false);
+                    }
                 }
             }
             return self._buttonDisplay;

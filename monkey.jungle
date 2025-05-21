@@ -284,6 +284,16 @@ fr255s.excludeAnnotations = regularVersion;withBackground;withGlance;withHighCol
 fr255sm.resourcePath = $(base.resourcePath);resources-small
 fr255sm.excludeAnnotations = regularVersion;withBackground;withGlance;withHighColor
 
+# Forerunner® 570 42mm
+# Round Display, background capability, 390 x 390 AMOLED touch display, 5 buttons, glance
+fr57042mm.resourcePath = $(base.resourcePath);resources-touch-button
+fr57042mm.excludeAnnotations = regularVersion;withoutBackground;withoutHighColor
+
+# Forerunner® 570 47mm
+# Round Display, background capability, 454 x 454 AMOLED touch display, 5 buttons, glance
+fr57047mm.resourcePath = $(base.resourcePath);resources-touch-button
+fr57047mm.excludeAnnotations = regularVersion;withoutBackground;withoutHighColor
+
 # Forerunner® 265
 # Round Display, background capability, 416x416 AMOLED touch display, 5 buttons, glance
 fr265.resourcePath = $(base.resourcePath);resources-touch-button
@@ -333,6 +343,11 @@ fr955.excludeAnnotations = regularVersion;withoutBackground;withHighColor
 # Round Display, background capability, 454x454 AMOLED touch display, 5 buttons, glance
 fr965.resourcePath = $(base.resourcePath);resources-touch-button
 fr965.excludeAnnotations = regularVersion;withoutBackground;withoutHighColor
+
+# Forerunner® 970
+# Round Display, background capability, 454 x 454 AMOLED touch display, 5 buttons, glance
+fr970.resourcePath = $(base.resourcePath);resources-touch-button
+fr970.excludeAnnotations = regularVersion;withoutBackground;withoutHighColor
 
 # Instinct® 3 AMOLED 45mm
 # Round Display, background capability, 390x390 AMOLED display, 5 buttons, glance

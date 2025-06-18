@@ -484,6 +484,11 @@ venusq2m.excludeAnnotations = roundVersion;withoutBackground;withoutHighColor
 venusqm.resourcePath = $(base.resourcePath);resources-touch;resources-small
 venusqm.excludeAnnotations = roundVersion;withoutBackground;withGlance;withoutHighColor
 
+# Venu® X1
+# Rectangular Display, background capability, 448 x 486 AMOLED display, 2 buttons, with glance and high-color support
+venux1.resourcePath = $(base.resourcePath);resources-touch
+venux1.excludeAnnotations = roundVersion;withoutBackground;withoutHighColor
+
 # vívoactive® 3
 # Round Display, no background capability, 240x240 64 color touch display, 1 button, no glance
 vivoactive3.resourcePath = $(base.resourcePath);resources-touch;resources-small

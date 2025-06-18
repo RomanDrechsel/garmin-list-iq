@@ -14,7 +14,7 @@ module Lists {
                 data = data.slice(1, null);
             }
             self._data = data;
-            self.List = new List(null);
+            self.List = new Lists.List(null);
         }
 
         public function ProcessBatch(memoryChecker as Helper.MemoryChecker?) as Array<Boolean?> {

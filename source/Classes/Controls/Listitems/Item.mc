@@ -286,7 +286,7 @@ module Controls {
                 var iconwidth;
                 if (self._icon instanceof String && self._icon.length() > 0) {
                     iconwidth = dc.getTextWidthInPixels(self._icon, Helper.Fonts.Icons());
-                } else if (self._icon != null) {
+                } else if (self._icon != null && !(self._icon instanceof String)) {
                     iconwidth = self._icon.getWidth();
                 } else {
                     iconwidth = 0;

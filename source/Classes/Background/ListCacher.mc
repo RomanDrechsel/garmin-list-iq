@@ -81,7 +81,7 @@ module BG {
                         if (data.size() > 1) {
                             var uuid = data[1] as String;
                             try {
-                                var dellist = Application.Storage.getValue(DELETE_LIST);
+                                var dellist = Application.Storage.getValue(DELETE_LIST) as Array?;
                                 if (dellist == null || dellist.indexOf(uuid) < 0) {
                                     dellist.add(uuid);
                                     Application.Storage.setValue(DELETE_LIST, dellist);

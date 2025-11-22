@@ -59,6 +59,11 @@ d2deltas.excludeAnnotations = regularVersion;withBackground;withGlance;withHighC
 d2mach1.resourcePath = $(base.resourcePath);resources-touch
 d2mach1.excludeAnnotations = regularVersion;withoutBackground;withoutHighColor
 
+# D2™ Mach 2
+# Round Display, background capability, 454x454 AMOLED touch display, 5 buttons, glance
+d2mach2.resourcePath = $(base.resourcePath);resources-touch-button
+d2mach2.excludeAnnotations = regularVersion;withoutBackground;withoutHighColor
+
 # Descent™ G2
 # Round Display, background capability, 390x390 AMOLED touch display, 5 buttons, glance
 descentg2.resourcePath = $(base.resourcePath);resources-touch-button
@@ -223,6 +228,11 @@ fenix843mm.excludeAnnotations = regularVersion;withoutBackground;withoutHighColo
 # Round Display, background capability, 454x454 AMOLED touch display, 5 buttons, glance
 fenix847mm.resourcePath = $(base.resourcePath);resources-touch-button
 fenix847mm.excludeAnnotations = regularVersion;withoutBackground;withoutHighColor
+
+# fēnix® 8 Pro 47mm / 51mm / MicroLED
+# Round Display, background capability, 454x454 AMOLED touch display, 5 buttons, glance
+fenix8pro47mm.resourcePath = $(base.resourcePath);resources-touch-button
+fenix8pro47mm.excludeAnnotations = regularVersion;withoutBackground;withoutHighColor
 
 # fēnix® 8 Solar 47mm
 # Round Display, background capability, 260x260 64 color touch display, 5 buttons, glance
@@ -458,6 +468,16 @@ venu3.excludeAnnotations = regularVersion;withoutBackground;withoutHighColor
 # Round Display, background capability, 390x390 AMOLED touch display, 3 buttons, glance
 venu3s.resourcePath = $(base.resourcePath);resources-touch
 venu3s.excludeAnnotations = regularVersion;withoutBackground;withoutHighColor
+
+# Venu® 4 41mm
+# Round Display, background capability, 390x390 AMOLED touch display, 2 buttons, glance
+venu441mm.resourcePath = $(base.resourcePath);resources-touch
+venu441mm.excludeAnnotations = regularVersion;withoutBackground;withoutHighColor
+
+# Venu® 4 45mm / D2™ Air X15
+# Round Display, background capability, 454x454 AMOLED touch display, 2 buttons, glance
+venu445mm.resourcePath = $(base.resourcePath);resources-touch
+venu445mm.excludeAnnotations = regularVersion;withoutBackground;withoutHighColor
 
 # Venu® Mercedes-Benz® Collection
 # Round Display, background capability, 390x390 AMOLED touch display, 2 buttons, no glance

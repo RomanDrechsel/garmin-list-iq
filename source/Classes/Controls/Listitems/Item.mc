@@ -41,9 +41,9 @@ module Controls {
                 if (vert_margin != null) {
                     self._verticalMargin = vert_margin;
                 } else {
-                    self._verticalMargin = ($.screenHeight * 0.02).toNumber();
+                    self._verticalMargin = ($.screenHeight * 0.01).toNumber();
                 }
-                self._verticalPadding = ($.screenHeight * 0.03).toNumber();
+                self._verticalPadding = ($.screenHeight * 0.025).toNumber();
                 self.Title = title;
                 self.Subtitle = subtitle;
                 self.BoundObject = obj;

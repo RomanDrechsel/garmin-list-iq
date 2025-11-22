@@ -18,7 +18,6 @@ module Views {
             self._view = view;
 
             if (!(WatchUi.InputDelegate has :onDrag)) {
-                //self._view.ScrollMode = ItemView.SCROLL_SNAP;
                 self._noDrag = true;
             }
         }
@@ -27,7 +26,7 @@ module Views {
             self._view.Interaction();
             var tap = self._view.onTap(clickEvent.getCoordinates()[0], clickEvent.getCoordinates()[1]);
             var now = System.getTimer();
-            if (now - self._lastTap < 500) {
+            if (now - self._lastTap < 500 && now - self._lastTap > 50) {
                 self._lastTap = 0;
                 self._view.onDoubleTap(clickEvent.getCoordinates()[0], clickEvent.getCoordinates()[1]);
                 tap = true;

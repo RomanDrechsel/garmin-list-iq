@@ -34,7 +34,7 @@ class ListsApp extends Application.AppBase {
     (:withBackground)
     private var _backgroundReceive as Array<Array<Object> > = [];
     (:withBackground)
-    private var _backgroundReceiveTimer = null as Timer?;
+    private var _backgroundReceiveTimer = null as Timer.Timer?;
 
     function initialize() {
         AppBase.initialize();
@@ -45,7 +45,9 @@ class ListsApp extends Application.AppBase {
     }
 
     function getInitialView() as [WatchUi.Views] or [WatchUi.Views, WatchUi.InputDelegates] {
-        var appVersion = "2025.06.1800";
+        self.isBackground = false;
+
+        var appVersion = "2025.11.2200";
         Application.Properties.setValue("appVersion", appVersion);
 
         self.Debug = new Debug.DebugStorage();
@@ -55,7 +57,7 @@ class ListsApp extends Application.AppBase {
             self.NoBackButton = true;
         }
 
-        self.ListsManager = new ListsManager(self);
+        self.ListsManager = new Lists.ListsManager(self);
         self.Phone = new Comm.PhoneCommunication(self, true);
         self.Inactivity = new Helper.Inactivity();
         self.processBackground();
@@ -89,7 +91,7 @@ class ListsApp extends Application.AppBase {
     (:withBackground,:background)
     function getServiceDelegate() as [System.ServiceDelegate] {
         self.isBackground = true;
-        self.ListsManager = new ListsManager(self);
+        self.ListsManager = new Lists.ListsManager(self);
         self.Phone = new Comm.PhoneCommunication(self, false);
         self.BackgroundService = new BG.Service();
         return [self.BackgroundService];
@@ -158,7 +160,7 @@ class ListsApp extends Application.AppBase {
         ret.add("Memory: " + stats.usedMemory + " / " + stats.totalMemory);
         ret.add("BG Capability: " + $.hasBackgroundCapability);
         ret.add("Language: " + settings.systemLanguage);
-        ret.add("Lists in Storage: " + self.ListsManager.GetListsIndex().size());
+        ret.add("Lists in Storage: " + self.ListsManager.GetListsIndex.size());
         return ret;
     }
 

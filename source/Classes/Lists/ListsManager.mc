@@ -24,7 +24,7 @@ module Lists {
         private var onListChangedListeners as Array<WeakReference>?;
         private var onListIndexChangedListeners as Array<WeakReference>?;
         private var _batchQueue = null as Array<AddListBatch>?;
-        private var _batchTimer = null as Timer?;
+        private var _batchTimer = null as Timer.Timer?;
         private var _app as ListsApp;
 
         function initialize(app as ListsApp) {

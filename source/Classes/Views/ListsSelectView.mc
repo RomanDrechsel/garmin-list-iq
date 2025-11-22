@@ -119,7 +119,9 @@ module Views {
                     if (substring.length() > 0) {
                         substring += "\n";
                     }
-                    substring += Helper.DateUtil.DateToString(date, "\n");
+
+                    var sep = screenHeight > 350 ? " " : "\n";
+                    substring += Helper.DateUtil.DateToString(date, sep);
                 }
                 self.addItem(title, substring, uuid, self._listIconCode, item.get("o"));
             }

@@ -9,6 +9,10 @@ module Controls {
             private var _horMarginFactor = 0.03;
 
             function initialize(layer as LayerDef?, title as String, identifier as Object, margin as Number?, drawline as Boolean) {
+                if (margin == null) {
+                    margin = ($.screenHeight * 0.02).toNumber();
+                }
+
                 Item.initialize(layer, null, null, identifier, null, margin, -1, null);
                 self.Title = title;
                 self.Subtitle = null;

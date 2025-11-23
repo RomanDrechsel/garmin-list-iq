@@ -17,6 +17,14 @@ module Helper {
             self._lastInteraction = Time.now();
         }
 
+        function Stop() as Void {
+            if (self._timer != null) {
+                self._timer.stop();
+                self._timer = null;
+            }
+            $.getApp().removeSettingsChangedListener(self);
+        }
+
         function onSettingsChanged() as Void {
             self._lastInteraction = Time.now();
             self._autoexit = Helper.Properties.Get(Helper.Properties.AUTOEXIT, 0);
@@ -31,7 +39,7 @@ module Helper {
         }
 
         function onTimer() as Void {
-            if (self._autoexit > 0.0) {
+            if (self._autoexit > 0) {
                 var minutes = (Time.now().value() - self._lastInteraction.value()).toFloat() / 60.0;
                 if (minutes > self._autoexit.toFloat()) {
                     Debug.Log("Close app due to " + self._autoexit + " min. of inactivity (last interaction: " + Helper.DateUtil.toLogString(self._lastInteraction, null) + ")");

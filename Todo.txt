@@ -4,8 +4,8 @@ adb -e forward tcp:7381 tcp:7381
 For Smartphone
 adb -d forward tcp:7381 tcp:7381
 
-TEST: Background service
 TODO: background-Service overhaul: don't add list, just put the newest version of a list in storage and process it when app starts
+TEST: Background service
 TODO: send success response to phone, when list added
 TODO: notes function
 

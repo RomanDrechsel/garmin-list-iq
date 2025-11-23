@@ -25,9 +25,17 @@ module Views {
             if (!IconItemView.interactItem(item, doubletap)) {
                 var prop = Helper.Properties.Get(Helper.Properties.AUTOEXIT, 0);
                 if (item.BoundObject instanceof Number && prop != item.BoundObject) {
-                    Helper.Properties.Store(Helper.Properties.AUTOEXIT, item.BoundObject as Number);
-                    if ($.getApp().ListsManager != null) {
-                        $.getApp().triggerOnSettingsChanged();
+                    var autoexit = item.BoundObject as Number;
+                    var app = $.getApp();
+                    Helper.Properties.Store(Helper.Properties.AUTOEXIT, autoexit);
+                    if (app.ListsManager != null) {
+                        app.triggerOnSettingsChanged();
+                        if (autoexit > 0 && app.Inactivity == null) {
+                            app.Inactivity = new Helper.Inactivity();
+                        } else if (autoexit <= 0 && app.Inactivity != null) {
+                            app.Inactivity.Stop();
+                            app.Inactivity = null;
+                        }
                     }
                     self.goBack();
                 }

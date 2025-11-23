@@ -18,18 +18,18 @@ class ListsApp extends Application.AppBase {
         LEGACYLIST = 3,
     }
 
-    var Phone = null as PhoneCommunication?;
-    var ListsManager = null as ListsManager?;
-    var Debug = null as DebugStorage?;
-    var Inactivity = null as Helper.Inactivity?;
-    var BackgroundService = null as BG.Service?;
+    var Phone as PhoneCommunication? = null;
+    var ListsManager as ListsManager? = null;
+    var Debug as DebugStorage? = null;
+    var Inactivity as Helper.Inactivity? = null;
+    var BackgroundService as BG.Service? = null;
     var MemoryCheck as Helper.MemoryChecker;
     var GlobalStates as Array<EState> = [];
     var isGlanceView = false;
     var isBackground = false;
     var NoBackButton = false;
-    var ListCacher = null as BG.ListCacher?;
-    var Initialized = false as Boolean;
+    var ListCacher as BG.ListCacher? = null;
+    var Initialized as Boolean = false;
     private var onSettingsChangedListeners as Array<WeakReference> = [];
     (:withBackground)
     private var _backgroundReceive as Array<Array<Object> > = [];
@@ -57,9 +57,15 @@ class ListsApp extends Application.AppBase {
             self.NoBackButton = true;
         }
 
-        self.ListsManager = new Lists.ListsManager(self);
+        if (self.ListsManager == null) {
+            self.ListsManager = new Lists.ListsManager(self);
+        }
+
         self.Phone = new Comm.PhoneCommunication(self, true);
-        self.Inactivity = new Helper.Inactivity();
+
+        if (Helper.Properties.Get(Helper.Properties.AUTOEXIT, 0) > 0) {
+            self.Inactivity = new Helper.Inactivity();
+        }
         self.processBackground();
 
         var show_error_view_on_startup = null;
@@ -91,7 +97,9 @@ class ListsApp extends Application.AppBase {
     (:withBackground,:background)
     function getServiceDelegate() as [System.ServiceDelegate] {
         self.isBackground = true;
-        self.ListsManager = new Lists.ListsManager(self);
+        if (self.ListsManager == null) {
+            self.ListsManager = new Lists.ListsManager(self);
+        }
         self.Phone = new Comm.PhoneCommunication(self, false);
         self.BackgroundService = new BG.Service();
         return [self.BackgroundService];
@@ -100,6 +108,14 @@ class ListsApp extends Application.AppBase {
     function onSettingsChanged() as Void {
         Debug.Log("Settings changed out of app");
         self.triggerOnSettingsChanged();
+
+        var autoexit = Helper.Properties.Get(Helper.Properties.AUTOEXIT, 0);
+        if (self.Inactivity == null && autoexit > 0) {
+            self.Inactivity = new Helper.Inactivity();
+        } else if (self.Inactivity != null && autoexit <= 0) {
+            self.Inactivity.Stop();
+            self.Inactivity = null;
+        }
     }
 
     (:withBackground)
@@ -160,7 +176,7 @@ class ListsApp extends Application.AppBase {
         ret.add("Memory: " + stats.usedMemory + " / " + stats.totalMemory);
         ret.add("BG Capability: " + $.hasBackgroundCapability);
         ret.add("Language: " + settings.systemLanguage);
-        ret.add("Lists in Storage: " + self.ListsManager.GetListsIndex.size());
+        ret.add("Lists in Storage: " + self.ListsManager.GetListsIndex().size());
         return ret;
     }
 
@@ -189,6 +205,13 @@ class ListsApp extends Application.AppBase {
             if (self.onSettingsChangedListeners.indexOf(ref) < 0) {
                 self.onSettingsChangedListeners.add(ref);
             }
+        }
+    }
+
+    function removeSettingsChangedListener(obj as Object) as Void {
+        var ref = obj.weak();
+        if (self.onSettingsChangedListeners.indexOf(ref) >= 0) {
+            self.onSettingsChangedListeners.removeAll(ref);
         }
     }
 

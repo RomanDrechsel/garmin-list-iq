@@ -88,11 +88,11 @@ module Debug {
         var date = Helper.DateUtil.toLogString(info, null);
         var app = $.getApp();
 
-        if (app.isBackground || app.isGlanceView) {
+        if (app.AppType != ListsApp.APP) {
             var prefix = "";
-            if (app.isBackground) {
+            if (app.AppType == ListsApp.BACKGROUND) {
                 prefix = "[B] ";
-            } else if (app.isGlanceView) {
+            } else if (app.AppType == ListsApp.GLANCE) {
                 prefix = "[G] ";
             }
             Toybox.System.println(date + ": " + prefix + obj);

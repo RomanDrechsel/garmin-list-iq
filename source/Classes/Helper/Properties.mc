@@ -23,7 +23,7 @@ module Helper {
         }
 
         public static function Store(prop as EProps or String, value as PropType) as Void {
-            if ($.getApp().isBackground) {
+            if ($.getApp().AppType != ListsApp.APP) {
                 return;
             }
             var no_log = [LASTLISTSCROLL, INIT, LASTLIST];

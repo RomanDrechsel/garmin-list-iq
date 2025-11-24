@@ -4,25 +4,31 @@ adb -e forward tcp:7381 tcp:7381
 For Smartphone
 adb -d forward tcp:7381 tcp:7381
 
-TODO: background-Service overhaul: don't add list, just put the newest version of a list in storage and process it when app starts
+WIP: background-Service overhaul: don't add list, just put the newest version of a list in storage and process it when app starts
 TEST: Background service
 TODO: send success response to phone, when list added
 TODO: notes function
 
 1 Button, 64 Color:
-- Vivoactive 3
+
+-   Vivoactive 3
 
 Touch, Square, 2 Buttons:
-- Venu Sq2
+
+-   Venu Sq2
 
 no Touch, Round, 5 Buttons:
-- instinct3amoled50mm
+
+-   instinct3amoled50mm
 
 Touch, Round, 5 Buttons:
-- fenix847mm
+
+-   fenix847mm
 
 Touch, Round, 5 Buttons, 64 Colors:
-- Forerunner 955
+
+-   Forerunner 955
 
 64 Colors
-- Vivoactive 3
+
+-   Vivoactive 3

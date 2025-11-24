@@ -18,6 +18,12 @@ class ListsApp extends Application.AppBase {
         LEGACYLIST = 3,
     }
 
+    enum EApptype {
+        APP = 1,
+        BACKGROUND = 2,
+        GLANCE = 3,
+    }
+
     var Phone as PhoneCommunication? = null;
     var ListsManager as ListsManager? = null;
     var Debug as DebugStorage? = null;
@@ -25,8 +31,7 @@ class ListsApp extends Application.AppBase {
     var BackgroundService as BG.Service? = null;
     var MemoryCheck as Helper.MemoryChecker;
     var GlobalStates as Array<EState> = [];
-    var isGlanceView = false;
-    var isBackground = false;
+    var AppType as EApptype = APP;
     var NoBackButton = false;
     var ListCacher as BG.ListCacher? = null;
     var Initialized as Boolean = false;
@@ -45,8 +50,7 @@ class ListsApp extends Application.AppBase {
     }
 
     function getInitialView() as [WatchUi.Views] or [WatchUi.Views, WatchUi.InputDelegates] {
-        self.isBackground = false;
-
+        self.AppType = APP;
         var appVersion = "2025.11.2200";
         Application.Properties.setValue("appVersion", appVersion);
 
@@ -90,13 +94,13 @@ class ListsApp extends Application.AppBase {
 
     (:glance,:withGlance)
     function getGlanceView() as [WatchUi.GlanceView] or [WatchUi.GlanceView, WatchUi.GlanceViewDelegate] or Null {
-        self.isGlanceView = true;
+        self.AppType = GLANCE;
         return [new Views.GlanceView()];
     }
 
     (:withBackground,:background)
     function getServiceDelegate() as [System.ServiceDelegate] {
-        self.isBackground = true;
+        self.AppType = BACKGROUND;
         if (self.ListsManager == null) {
             self.ListsManager = new Lists.ListsManager(self);
         }

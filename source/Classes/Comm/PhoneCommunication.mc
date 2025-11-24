@@ -88,7 +88,7 @@ module Comm {
                     Debug.Log("Received delete list but no uuid provided - ignoring");
                 }
             } else if (message_type.equals(REQUEST_LOGS)) {
-                if (!self._app.isBackground) {
+                if (self._app.AppType != ListsApp.BACKGROUND) {
                     var tid = null;
                     var split = Helper.StringUtil.split(data[0] as String, "=", 2);
                     if (split.size() > 1) {
@@ -115,7 +115,7 @@ module Comm {
         private function processDataLegacy(message as Dictionary) as Void {
             var size = Helper.StringUtil.formatBytes(message.toString().length());
             Debug.Log("Received legacy message (" + size + ")");
-            if (!self._app.isBackground) {
+            if (self._app.AppType == ListsApp.APP) {
                 Views.ErrorView.Show(Views.ErrorView.LEGACY_APP, null);
             }
         }

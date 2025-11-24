@@ -32,7 +32,7 @@ module Themes {
 
 (:glance)
 function getTheme() as Themes.ThemeSettingsBase {
-    if ($.getApp().isGlanceView) {
+    if ($.getApp().AppType == ListsApp.GLANCE) {
         return new Themes.ThemeSettingsBase();
     }
 

@@ -31,7 +31,7 @@ module Views {
                     if (app.ListsManager != null) {
                         app.triggerOnSettingsChanged();
                         if (autoexit > 0 && app.Inactivity == null) {
-                            app.Inactivity = new Helper.Inactivity();
+                            app.Inactivity = new Common.Inactivity();
                         } else if (autoexit <= 0 && app.Inactivity != null) {
                             app.Inactivity.Stop();
                             app.Inactivity = null;

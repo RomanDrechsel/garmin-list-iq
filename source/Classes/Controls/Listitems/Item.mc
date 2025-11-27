@@ -34,8 +34,8 @@ module Controls {
             protected var _textOffsetX as Number = 0;
 
             function initialize(layer as LayerDef?, title as String or Array<String> or Null, subtitle as String or Array<String> or Null, obj as Object?, icon as Number or BitmapResource or Null, vert_margin as Number?, position as Number, fontoverride as FontType?) {
-                self._font = fontoverride != null ? fontoverride : Helper.Fonts.Normal();
-                self._subFont = Helper.Fonts.Small();
+                self._font = fontoverride != null ? fontoverride : Common.Fonts.Normal();
+                self._subFont = Common.Fonts.Small();
                 self.ItemPosition = position;
                 self._layer = layer;
                 if (vert_margin != null) {
@@ -83,9 +83,9 @@ module Controls {
                 var x = self._layer.getX();
 
                 if (self._icon instanceof String && self._icon.length() > 0) {
-                    var iconoffsety = (Graphics.getFontHeight(self._font) - dc.getFontHeight(Helper.Fonts.Icons())) / 2;
+                    var iconoffsety = (Graphics.getFontHeight(self._font) - dc.getFontHeight(Common.Fonts.Icons())) / 2;
                     dc.setColor(color, Graphics.COLOR_TRANSPARENT);
-                    dc.drawText(x, viewport_y + iconoffsety, Helper.Fonts.Icons(), self._icon, Graphics.TEXT_JUSTIFY_LEFT);
+                    dc.drawText(x, viewport_y + iconoffsety, Common.Fonts.Icons(), self._icon, Graphics.TEXT_JUSTIFY_LEFT);
                 } else if (self.isBitmap(self._icon)) {
                     var icon = specialColor && self._iconInvert != null ? self._iconInvert : self._icon;
                     var iconoffsety = (Graphics.getFontHeight(self._font) - icon.getHeight()) / 2;
@@ -96,7 +96,7 @@ module Controls {
                     viewport_y += self.Title.draw(dc, x + self.getIconWidth(dc), viewport_y, color, self.TitleJustification);
                 }
                 if (self.Subtitle != null) {
-                    viewport_y += Graphics.getFontAscent(Helper.Fonts.Small()) / 8; //little space between title and subtitle
+                    viewport_y += Graphics.getFontAscent(Common.Fonts.Small()) / 8; //little space between title and subtitle
                     viewport_y += self.Subtitle.draw(dc, x, viewport_y, colorSub, self.SubtitleJustification);
                 }
 
@@ -162,7 +162,7 @@ module Controls {
             function setSubFont(font as FontType?) as Void {
                 if (font != self._subFont) {
                     if (font == null) {
-                        font = Helper.Fonts.Small();
+                        font = Common.Fonts.Small();
                     }
                     self._subFont = font;
                     self.Invalidate();
@@ -285,7 +285,7 @@ module Controls {
             protected function getIconWidth(dc as Dc) as Number {
                 var iconwidth;
                 if (self._icon instanceof String && self._icon.length() > 0) {
-                    iconwidth = dc.getTextWidthInPixels(self._icon, Helper.Fonts.Icons());
+                    iconwidth = dc.getTextWidthInPixels(self._icon, Common.Fonts.Icons());
                 } else if (self._icon != null && !(self._icon instanceof String)) {
                     iconwidth = self._icon.getWidth();
                 } else {

@@ -22,7 +22,7 @@ module Lists {
             REVISION = 999,
         }
 
-        private const CurrentRevision = 1;
+        public const CurrentRevision = 1;
 
         public var Uuid as String or Number or Null;
         public var Title as String?;
@@ -74,168 +74,6 @@ module Lists {
                 if (self.Reset != null && self.ResetLast == null) {
                     self.ResetLast = Time.now().value();
                 }
-            }
-        }
-
-        public function ProcessBatch(data as Array, memoryChecker as Helper.MemoryChecker?) {
-            while (data.size() > 0) {
-                var rowsplit = Helper.StringUtil.split(data[0].toString(), "=", 2);
-                data = data.slice(1, null);
-                if (rowsplit.size() <= 1 || rowsplit[0].length == 0) {
-                    Debug.Log("No key value pair in list data " + rowsplit);
-                    continue;
-                }
-                var key = rowsplit[0];
-                var val = rowsplit[1];
-                rowsplit = null;
-                if (key.equals("uuid")) {
-                    self.Uuid = val.toString();
-                    var num = Helper.StringUtil.StringToNumber(self.Uuid);
-                    if (num != null) {
-                        self.Uuid = num;
-                    }
-                } else if (key.equals("t")) {
-                    self.Title = val.toString();
-                } else if (key.equals("o")) {
-                    self.Order = val.toNumber();
-                } else if (key.equals("d")) {
-                    var date = val.toLong();
-                    if (date != null) {
-                        if (date > 999999999) {
-                            // date is in milliseconds
-                            date /= 1000;
-                        }
-                        self.Date = date.toNumber();
-                    }
-                } else if (key.substring(0, 2).equals("it")) {
-                    var split = Helper.StringUtil.split(key.substring(2, key.length()), "_", 2);
-                    key = null;
-                    var index = split[0].toNumber();
-                    var prop = split.size() > 1 ? split[1] : null;
-                    split = null;
-                    if (prop != null && index != null) {
-                        var item = self.GetItem(index);
-                        if (item == null) {
-                            item = new Listitem(null);
-                            item.Order = index;
-                            self.Items.add(item);
-                        }
-                        if (prop.equals("i")) {
-                            item.Text = val.toString();
-                        } else if (prop.equals("n")) {
-                            item.Note = val.toString();
-                        } else if (prop.equals("uuid")) {
-                            var num = Helper.StringUtil.StringToNumber(val);
-                            item.Uuid = num != null ? num : val;
-                        }
-                    }
-                } else if (key.substring(0, 2).equals("r_")) {
-                    if (key.equals("r_a")) {
-                        val = Helper.StringUtil.StringToBool(val);
-                        if (val != null) {
-                            self.Reset = val;
-                        }
-                    } else if (key.equals("r_i")) {
-                        self.ResetInterval = val.toString(); //no reference
-                    } else if (key.equals("r_h")) {
-                        val = val.toNumber();
-                        if (val != null) {
-                            self.ResetHour = val;
-                        }
-                    } else if (key.equals("r_m")) {
-                        val = val.toNumber();
-                        if (val != null) {
-                            self.ResetMinute = val;
-                        }
-                    } else if (key.equals("r_w")) {
-                        val = val.toNumber();
-                        if (val != null) {
-                            self.ResetWeekday = val;
-                        }
-                    } else if (key.equals("r_d")) {
-                        val = val.toNumber();
-                        if (val != null) {
-                            self.ResetDay = val;
-                        }
-                    }
-                } else if (key.equals("r_l")) {
-                    var num = val.toNumber();
-                    if (num != null) {
-                        self.ResetLast = num;
-                    }
-                } else if (key.equals("rev")) {
-                    self.Revision = val.toNumber();
-                    if (self.Revision != self.CurrentRevision) {
-                        Debug.Log("Old list revision number: " + self.Revision + " <> " + self.CurrentRevision);
-                        throw new Exceptions.LegacyNotSupportedException();
-                    }
-                }
-                key = null;
-                val = null;
-                if (memoryChecker != null) {
-                    memoryChecker.Check();
-                }
-            }
-        }
-
-        public function FinishBatch() as Boolean {
-            if (self.Revision == null) {
-                Debug.Log("No revision number in list received from phone");
-                throw new Exceptions.LegacyNotSupportedException();
-            }
-            if (self.Revision != self.CurrentRevision) {
-                Debug.Log("Old list revision number: " + self.Revision + " <> " + self.CurrentRevision);
-                throw new Exceptions.LegacyNotSupportedException();
-            }
-            if (self.IsValid()) {
-                if (self.Reset != null) {
-                    var missing = [];
-                    if (self.ResetInterval != null && self.ResetHour != null && self.ResetMinute != null) {
-                        if (self.ResetInterval == "w" && self.ResetWeekday == null) {
-                            missing.add("weekday");
-                        } else if (self.ResetInterval == "m" && self.ResetDay == null) {
-                            missing.add("day");
-                        }
-                    } else {
-                        if (self.ResetInterval == null) {
-                            missing.add("interval");
-                        }
-                        if (self.ResetHour == null) {
-                            missing.add("hour");
-                        }
-                        if (self.ResetMinute == null) {
-                            missing.add("minute");
-                        }
-                    }
-                    if (missing.size() > 0) {
-                        Debug.Log("Could not load list: missing properties - " + missing);
-                    }
-                }
-                if (self.Date == null) {
-                    self.Date = Time.now().value();
-                }
-                if (self.Reset != null && self.ResetLast == null) {
-                    self.ResetLast = Time.now().value();
-                }
-                self.Items = self.sortItems(self.Items);
-                return true;
-            } else {
-                var missing = [];
-                if (self.Title == null) {
-                    missing.add("title");
-                }
-                if (self.Order == null) {
-                    missing.add("order");
-                }
-                if (self.Uuid == null) {
-                    missing.add("uuid");
-                }
-                if (missing.size() > 0) {
-                    Debug.Log("Could not load list: missing properties - " + missing);
-                } else {
-                    Debug.Log("Could not load list: missing properties");
-                }
-                return false;
             }
         }
 
@@ -361,7 +199,7 @@ module Lists {
             };
         }
 
-        private function sortItems(items as Array<Listitem>?) as Array<Listitem>? {
+        public function sortItems(items as Array<Listitem>?) as Array<Listitem>? {
             if (items == null || items.size() <= 1) {
                 return items;
             }

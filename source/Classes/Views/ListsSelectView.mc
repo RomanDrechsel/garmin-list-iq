@@ -155,7 +155,7 @@ module Views {
 
             if ($.getApp().GlobalStates.indexOf(ListsApp.LEGACYLIST) >= 0) {
                 item = new Listitems.Item(self._mainLayer, null, Application.loadResource(Rez.Strings.ListLegacy), STORE, null, null, 1, null);
-                item.setSubFont(Helper.Fonts.Normal());
+                item.setSubFont(Common.Fonts.Normal());
                 item.DrawLine = false;
                 item.isSelectable = false;
                 item.SubtitleJustification = Graphics.TEXT_JUSTIFY_CENTER;
@@ -168,7 +168,7 @@ module Views {
                     txtRez = Rez.Strings.NoListsLinkBtn;
                 }
                 item = new Listitems.Item(self._mainLayer, null, Application.loadResource(txtRez), STORE, null, null, 0, null);
-                item.setSubFont(Helper.Fonts.Normal());
+                item.setSubFont(Common.Fonts.Normal());
                 item.DrawLine = false;
                 item.isSelectable = false;
                 item.SubtitleJustification = Graphics.TEXT_JUSTIFY_CENTER;

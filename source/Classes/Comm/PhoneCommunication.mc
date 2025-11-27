@@ -7,7 +7,6 @@ using Toybox.Communications;
 import Views;
 
 module Comm {
-    (:background)
     class PhoneCommunication extends Toybox.Communications.ConnectionListener {
         public enum EMessageType {
             LIST = "list",
@@ -17,19 +16,17 @@ module Comm {
 
         private var _app as ListsApp;
 
-        function initialize(app as ListsApp, register_callback as Boolean) {
+        function initialize(app as ListsApp) {
             ConnectionListener.initialize();
             self._app = app;
-
-            if (register_callback) {
-                Communications.registerForPhoneAppMessages(method(:phoneMessageCallback));
-            }
+            Communications.registerForPhoneAppMessages(method(:phoneMessageCallback));
         }
 
         function phoneMessageCallback(msg as Communications.PhoneAppMessage) as Void {
+            Debug.Log("Received message from phone" + (self._app.AppType == ListsApp.BACKGROUND ? " in background" : ""));
             var message = msg.data as Application.PropertyValueType;
             if (message instanceof Array) {
-                self.processData(message);
+                self.processData(message, false);
             } else if (message instanceof Dictionary) {
                 self.processDataLegacy(message);
             } else if (message != null) {
@@ -56,7 +53,7 @@ module Comm {
             Debug.Log("Send to phone failed!");
         }
 
-        function processData(data as Array) as Void {
+        function processData(data as Array, from_bg as Boolean) as Void {
             if (self._app.ListsManager == null) {
                 Debug.Log("No ListsManager found, cannot handle phone app messages");
                 if (self._app.BackgroundService != null) {
@@ -70,14 +67,14 @@ module Comm {
             if (data[0] instanceof String) {
                 message_type = data[0];
             } else {
-                Debug.Log("Received unknown message from phone (" + size + ")");
+                Debug.Log("Received unknown message from phone (" + size + ")" + (from_bg ? " in background" : ""));
                 return;
             }
-            Debug.Log("Received message " + message_type + " (" + size + ")");
+            Debug.Log("Received message " + message_type + " (" + size + ")" + (from_bg ? " in background" : ""));
 
             data = data.slice(1, null);
             if (message_type.equals(LIST)) {
-                self._app.ListsManager.addList(data);
+                self._app.ListsManager.addList(data, from_bg);
             } else if (message_type.equals(DELETE_LIST)) {
                 if (data.size() > 0) {
                     var uuid = Helper.StringUtil.StringToNumber(data[0] as String);

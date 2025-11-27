@@ -1,23 +1,18 @@
 import Toybox.System;
 
-module Helper {
+module Common {
     (:background,:glance)
     class MemoryChecker {
-        private var _app as ListsApp;
-
-        function initialize(app as ListsApp) {
-            self._app = app;
-        }
-        function Check() as Void {
+        static function Check() as Void {
+            var app = $.getApp();
             var stats = System.getSystemStats();
             var usage = stats.usedMemory.toDouble() / stats.totalMemory.toDouble();
-            var maxusage = self._app.AppType != ListsApp.APP ? 0.9d : 0.8d;
-            if (usage > maxusage) {
-                if (self._app.BackgroundService != null) {
-                    self._app.BackgroundService.Finish(false);
-                } else {
+            if (usage > 0.9d) {
+                if (app.AppType == ListsApp.APP) {
                     Views.ErrorView.Show(Views.ErrorView.OUT_OF_MEMORY, null);
                     throw new Exceptions.OutOfMemoryException(usage, stats.usedMemory, stats.totalMemory);
+                } else if (app.AppType == ListsApp.BACKGROUND && app.BackgroundService != null) {
+                    app.BackgroundService.Finish(false);
                 }
             }
         }

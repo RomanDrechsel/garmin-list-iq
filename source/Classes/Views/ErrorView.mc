@@ -149,7 +149,7 @@ module Views {
             }
 
             if (self._errorCode != null) {
-                var errCode = new Listitems.Item(self._mainLayer, "0x" + self._errorCode.format("%04x"), null, null, null, null, 1, Helper.Fonts.Big());
+                var errCode = new Listitems.Item(self._mainLayer, "0x" + self._errorCode.format("%04x"), null, null, null, null, 1, Common.Fonts.Big());
                 errCode.DrawLine = false;
                 errCode.isSelectable = false;
                 errCode.TitleJustification = Graphics.TEXT_JUSTIFY_CENTER;
@@ -158,7 +158,7 @@ module Views {
 
             if (self._errorMsg2 != null) {
                 var hint = new Listitems.Item(self._mainLayer, null, Application.loadResource(self._errorMsg2), null, null, null, 2, null);
-                hint.setSubFont(Helper.Fonts.Normal());
+                hint.setSubFont(Common.Fonts.Normal());
                 hint.DrawLine = false;
                 hint.isSelectable = false;
                 hint.SubtitleJustification = Graphics.TEXT_JUSTIFY_CENTER;
@@ -167,7 +167,7 @@ module Views {
 
             if (self._errorMsg3 != null) {
                 var hint2 = new Listitems.Item(self._mainLayer, null, Application.loadResource(self._errorMsg3), null, null, null, 3, null);
-                hint2.setSubFont(Helper.Fonts.Normal());
+                hint2.setSubFont(Common.Fonts.Normal());
                 hint2.DrawLine = false;
                 hint2.isSelectable = false;
                 hint2.SubtitleJustification = Graphics.TEXT_JUSTIFY_CENTER;

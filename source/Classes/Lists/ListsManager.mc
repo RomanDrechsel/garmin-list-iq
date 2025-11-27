@@ -9,37 +9,68 @@ import Controls.Listitems;
 import Views;
 
 module Lists {
-    (:background)
     typedef ListIndexItem as Dictionary<Number, String or Number>;
-    (:background)
     typedef ListIndex as Dictionary<String or Number, ListIndexItem>;
 
-    (:background)
     public enum {
         RECEIVED_LEGACY_LIST = "rec_legacy_list",
     }
 
-    (:background)
     class ListsManager {
         private var onListChangedListeners as Array<WeakReference>?;
         private var onListIndexChangedListeners as Array<WeakReference>?;
-        private var _batchQueue = null as Array<AddListBatch>?;
-        private var _batchTimer = null as Timer.Timer?;
         private var _app as ListsApp;
 
         function initialize(app as ListsApp) {
             self._app = app;
         }
 
-        function addList(data as Array) as Void {
-            var batch = new AddListBatch(data);
-            if (self._batchQueue == null) {
-                self._batchQueue = [batch];
-            } else {
-                self._batchQueue.add(batch);
+        function addList(data as Array, from_bg as Boolean) as Void {
+            var list = null;
+            try {
+                var importer = new ListFromPhoneImporter();
+                list = importer.Import(data);
+            } catch (ex instanceof Exceptions.OutOfMemoryException) {
+                Debug.Log("Could not add list (OoM): " + ex.toString());
+            } catch (ex instanceof Exceptions.LegacyNotSupportedException) {
+                Debug.Log("Could not add list, due to legacy format");
+                if (self._app.AppType == ListsApp.APP && self._app.Initialized == true) {
+                    Views.ErrorView.Show(Views.ErrorView.LEGACY_APP, null);
+                    Application.Storage.deleteValue(RECEIVED_LEGACY_LIST);
+                } else {
+                    Application.Storage.setValue(RECEIVED_LEGACY_LIST, true);
+                }
             }
-            if (self._batchTimer == null) {
-                self.BatchTimer();
+            if (list != null) {
+                var save = self.StoreList(list);
+                if (save[0] == true) {
+                    //Store Index...
+                    var listindex = self.GetListsIndex();
+                    listindex.put(list.Uuid, list.ToIndex());
+                    var saveIndex = self.storeIndex(listindex);
+                    if (saveIndex[0] == false) {
+                        Application.Storage.deleteValue(list.Uuid);
+                        if (self._app.AppType == ListsApp.APP && !(saveIndex[1] instanceof Exceptions.OutOfMemoryException)) {
+                            Views.ErrorView.Show(Views.ErrorView.LIST_REC_INDEX_STORE_FAILED, ["list=" + list.ToBackend(), "exception=" + saveIndex[1].getErrorMessage()]);
+                        }
+                    } else {
+                        if (self._app.AppType == ListsApp.APP) {
+                            Helper.Properties.Store(Helper.Properties.INIT, 1);
+
+                            if (from_bg == false) {
+                                Helper.ToastUtil.Toast(Rez.Strings.ListRec, Helper.ToastUtil.SUCCESS);
+                            }
+                        }
+                    }
+                } else if (!(save[1] instanceof Exceptions.OutOfMemoryException)) {
+                    if (self._app.AppType == ListsApp.APP) {
+                        Views.ErrorView.Show(Views.ErrorView.LIST_REC_STORE_FAILED, ["list=" + list.ToBackend(), "exception=" + save[1].getErrorMessage()]);
+                    }
+                }
+            } else {
+                if (self._app.AppType == ListsApp.APP) {
+                    Views.ErrorView.Show(Views.ErrorView.LIST_REC_INVALID, null);
+                }
             }
         }
 
@@ -49,7 +80,7 @@ module Lists {
                 return {};
             }
             try {
-                self._app.MemoryCheck.Check();
+                Common.MemoryChecker.Check();
             } catch (ex instanceof Exceptions.OutOfMemoryException) {
                 Debug.Log("Could not get list index: " + ex.toString());
                 return {};
@@ -60,7 +91,7 @@ module Lists {
         function GetList(uuid as String) as List? {
             try {
                 var list = new List(Application.Storage.getValue(uuid));
-                self._app.MemoryCheck.Check();
+                Common.MemoryChecker.Check();
                 if (list.IsValid()) {
                     return list;
                 } else {
@@ -91,7 +122,7 @@ module Lists {
                 var list = self.GetList(uuid);
                 if (list != null) {
                     var item = list.GetItem(order);
-                    self._app.MemoryCheck.Check();
+                    Common.MemoryChecker.Check();
 
                     if (item != null) {
                         item.Done = done;
@@ -159,7 +190,7 @@ module Lists {
             }
 
             try {
-                self._app.MemoryCheck.Check();
+                Common.MemoryChecker.Check();
                 Application.Storage.setValue(list.Uuid, list.ToBackend());
 
                 if (self._app.AppType != ListsApp.APP && Helper.Properties.Get(Helper.Properties.LASTLIST, "").equals(list.Uuid)) {
@@ -167,11 +198,11 @@ module Lists {
                 }
 
                 Debug.Log("Stored list " + list.toString());
-                self._app.MemoryCheck.Check();
+                Common.MemoryChecker.Check();
                 self.triggerOnListChanged(list);
                 return [true, null];
             } catch (ex instanceof Exceptions.OutOfMemoryException) {
-                Debug.Log("Could not store list " + list.toString() + ": " + ex.toString());
+                Debug.Log("Could not store list " + list.toString() + ": OoM: " + ex.toString());
                 return [false, ex];
             } catch (ex instanceof Lang.StorageFullException) {
                 Debug.Log("Could not store list " + list.toString() + ": storage is full: " + ex.getErrorMessage());
@@ -305,91 +336,6 @@ module Lists {
             }
         }
 
-        public function BatchTimer() as Void {
-            var background = self._app.BackgroundService;
-            if (self._batchQueue != null && self._batchQueue.size() > 0) {
-                var batch = (self._batchQueue as Array<AddListBatch>)[0];
-                var finish = null;
-                try {
-                    finish = batch.ProcessBatch(self._app.MemoryCheck);
-                } catch (ex instanceof Exceptions.OutOfMemoryException) {
-                    Debug.Log("Could not add list " + batch.List.toString() + ": " + ex.toString());
-                } catch (ex instanceof Exceptions.LegacyNotSupportedException) {
-                    if (self._app.AppType == ListsApp.APP && self._app.Initialized == true) {
-                        Views.ErrorView.Show(Views.ErrorView.LEGACY_APP, null);
-                        Application.Storage.deleteValue(RECEIVED_LEGACY_LIST);
-                    } else {
-                        Application.Storage.setValue(RECEIVED_LEGACY_LIST, true);
-                    }
-                }
-                if (finish instanceof Lang.Array) {
-                    if (finish[0] == true) {
-                        if (self._batchQueue.size() > 1) {
-                            self._batchQueue = self._batchQueue.slice(0, 1);
-                        } else {
-                            self._batchQueue = null;
-                        }
-                        if (finish[1] == false) {
-                            if (self._app.AppType == ListsApp.APP) {
-                                Views.ErrorView.Show(Views.ErrorView.LIST_REC_INVALID, null);
-                            }
-                        } else {
-                            var save = self.StoreList(batch.List);
-                            if (save[0] == true) {
-                                //Store Index...
-                                var listindex = self.GetListsIndex();
-                                listindex.put(batch.List.Uuid, batch.List.ToIndex());
-                                var saveIndex = self.storeIndex(listindex);
-                                if (saveIndex[0] == false) {
-                                    Application.Storage.deleteValue(batch.List.Uuid);
-                                    if (self._app.AppType == ListsApp.APP && !(saveIndex[1] instanceof Exceptions.OutOfMemoryException)) {
-                                        Views.ErrorView.Show(Views.ErrorView.LIST_REC_INDEX_STORE_FAILED, ["list=" + batch.List.ToBackend(), "exception=" + saveIndex[1].getErrorMessage()]);
-                                    }
-                                } else {
-                                    if (self._app.AppType == ListsApp.APP) {
-                                        Helper.Properties.Store(Helper.Properties.INIT, 1);
-
-                                        if (batch.IsSync == false) {
-                                            Helper.ToastUtil.Toast(Rez.Strings.ListRec, Helper.ToastUtil.SUCCESS);
-                                        }
-                                    }
-                                }
-                            } else if (!(save[1] instanceof Exceptions.OutOfMemoryException)) {
-                                if (self._app.AppType == ListsApp.APP) {
-                                    Views.ErrorView.Show(Views.ErrorView.LIST_REC_STORE_FAILED, ["list=" + batch.List.ToBackend(), "exception=" + save[1].getErrorMessage()]);
-                                }
-                            }
-                        }
-                    }
-                } else {
-                    if (self._batchQueue.size() > 1) {
-                        self._batchQueue = self._batchQueue.slice(0, 1);
-                    } else {
-                        self._batchQueue = null;
-                    }
-                }
-            }
-
-            if (self._batchQueue == null || self._batchQueue.size() <= 0) {
-                self._batchQueue = null;
-                if (self._batchTimer != null) {
-                    self._batchTimer.stop();
-                    self._batchTimer = null;
-                }
-                if (background != null) {
-                    background.Finish(true);
-                }
-            } else if (background != null) {
-                /* doe to Timer.Timer() is not available in background -> send it to the next foreground session */
-                background.Finish(false);
-            } else {
-                if (self._batchTimer == null) {
-                    self._batchTimer = new Timer.Timer();
-                }
-                self._batchTimer.start(method(:BatchTimer), 50, false);
-            }
-        }
-
         private function purgeIndex(index as ListIndex?) as ListIndex? {
             if (index != null && index.size() > 0) {
                 if (self._app.AppType == ListsApp.APP) {
@@ -430,7 +376,7 @@ module Lists {
                     self.clearAll(true);
                     self.triggerOnListIndexChanged(null);
                 } else {
-                    self._app.MemoryCheck.Check();
+                    Common.MemoryChecker.Check();
                     Application.Storage.setValue("listindex", index);
                     self.triggerOnListIndexChanged(index);
                     Debug.Log("Stored list index with " + index.size() + " items");

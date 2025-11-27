@@ -1,6 +1,7 @@
 import Toybox.Lang;
 import Toybox.System;
 import Toybox.Communications;
+import Toybox.Background;
 
 module BG {
     (:background)
@@ -20,29 +21,26 @@ module BG {
 
         (:withBackground)
         function onPhoneAppMessage(msg as Communications.PhoneAppMessage) as Void {
-            var phone = $.getApp().Phone as Comm.PhoneCommunication?;
-            if (phone != null) {
-                self._pendingMessage = msg;
-                phone.phoneMessageCallback(msg);
-                return;
+            var app = $.getApp();
+            self._pendingMessage = msg;
+            if (app.AppType == ListsApp.APP) {
+                app.Phone.phoneMessageCallback(msg);
+            } else if (app.AppType == ListsApp.BACKGROUND) {
+                var cacher = new ListCacher();
+                cacher.Cache(msg.data);
             } else {
-                Debug.Log("Could not process background message");
-                Background.exit(msg.data);
+                self.Finish(false);
             }
+            self.Finish(true);
         }
 
         (:withBackground)
         function Finish(success as Boolean) as Void {
-            success = false;
             if (!success && self._pendingMessage != null) {
                 try {
-                    (new ListCacher($.getApp())).Cache(self._pendingMessage.data);
-                } catch (ex instanceof Exceptions.OutOfMemoryException) {
-                    Debug.Log("Could not cache message for foreground: " + ex.toString());
-                    Background.exit(OUTOFMEMORY);
-                } catch (ex instanceof Lang.Exception) {
-                    Debug.Log("Could not cache message for foreground: " + ex.getErrorMessage());
-                    Background.exit(NOT_STORED);
+                    Background.exit(self._pendingMessage.data);
+                } catch (ex instanceof Background.ExitDataSizeLimitException) {
+                    Debug.Log("Could not pass message to foreground - ExitDataSizeLimitException: " + ex.getErrorMessage());
                 }
             }
             Background.exit(null);

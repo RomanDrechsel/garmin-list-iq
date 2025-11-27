@@ -2,7 +2,7 @@ import Toybox.Timer;
 import Toybox.Lang;
 import Toybox.Time;
 
-module Helper {
+module Common {
     class Inactivity {
         private var _timer = new Timer.Timer();
         private var _autoexit as Number = 0;

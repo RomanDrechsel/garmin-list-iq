@@ -3,7 +3,7 @@ import Toybox.Lang;
 import Toybox.Graphics;
 
 (:glance,:background)
-module Helper {
+module Common {
     class FontsService {
         private var _fontBig as FontType;
         private var _fontNormal as FontType;

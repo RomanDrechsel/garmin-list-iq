@@ -25,6 +25,7 @@
 
     <string id="ListNotFound">¡Lista no encontrada!</string>
     <string id="ListEmpty">La lista está vacía.</string>
+    <string id="ProcessBg">Listas en proceso...</string>
 
     <string id="LMSub">%s elementos</string>
     <string id="LMSubOne">1 elemento</string>

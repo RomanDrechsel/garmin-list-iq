@@ -25,6 +25,7 @@
 
     <string id="ListNotFound">未找到列表！</string>
     <string id="ListEmpty">列表为空。</string>
+    <string id="ProcessBg">正在处理列表...</string>
 
     <string id="LMSub">%s 元素</string>
     <string id="LMSubOne">1 元素</string>

@@ -32,7 +32,7 @@ class ListsApp extends Application.AppBase {
     var GlobalStates as Array<EState> = [];
     var AppType as EApptype = APP;
     var NoBackButton = false;
-    var Initialized as Boolean = false;
+    var Initialized as Boolean = false; // needed??
     var ProcessingBackgroundData as Boolean? = null;
     private var onSettingsChangedListeners as Array<WeakReference> = [];
 
@@ -45,7 +45,7 @@ class ListsApp extends Application.AppBase {
 
     function getInitialView() as [WatchUi.Views] or [WatchUi.Views, WatchUi.InputDelegates] {
         self.AppType = APP;
-        var appVersion = "2025.11.2700";
+        var appVersion = "2025.11.2800";
         Application.Properties.setValue("appVersion", appVersion);
 
         self.Debug = new Debug.DebugStorage();
@@ -83,7 +83,7 @@ class ListsApp extends Application.AppBase {
 
         self.Initialized = true;
         var startview = new Views.ListsSelectView(true, show_error_view_on_startup);
-        return [startview, new Views.ItemViewDelegate(startview)];
+        return [startview, new Views.ListsSelectViewDelegate(startview)];
     }
 
     (:glance,:withGlance)

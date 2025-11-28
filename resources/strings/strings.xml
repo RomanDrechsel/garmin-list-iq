@@ -25,6 +25,7 @@
 
     <string id="ListNotFound">List not found!</string>
     <string id="ListEmpty">The list is empty.</string>
+    <string id="ProcessBg">Lists are being processed...</string>
 
     <string id="LMSub">%s items</string>
     <string id="LMSubOne">1 item</string>

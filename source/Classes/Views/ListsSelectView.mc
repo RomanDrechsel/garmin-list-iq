@@ -11,7 +11,9 @@ module Views {
     class ListsSelectView extends ItemView {
         private const _listIconCode = 48;
         private var _firstDisplay = true;
-        private var _show_error_view = null as ErrorView.ECode?;
+        private var _show_error_view as ErrorView.ECode? = null;
+        (:withBackground)
+        private var _processingBgDataLabel as Controls.Label? = null;
 
         private enum {
             STORE = 0,
@@ -32,10 +34,13 @@ module Views {
                 return;
             }
 
-            if ($.getApp().ListsManager != null) {
-                $.getApp().ListsManager.addListIndexChangedListener(self);
+            var app = $.getApp();
+            if (app.ListsManager != null) {
+                app.ListsManager.addListIndexChangedListener(self);
             }
+
             self.publishLists($.getApp().ListsManager.GetListsIndex(), false);
+
             Helper.Properties.Store(Helper.Properties.LASTLIST, "");
         }
 
@@ -44,6 +49,16 @@ module Views {
             self.Items = [];
             if ($.getApp().ListsManager != null) {
                 $.getApp().ListsManager.removeListIndexChangedListener(self);
+            }
+        }
+
+        (:withBackground)
+        function onUpdate(dc as Dc) as Void {
+            ItemView.onUpdate(dc);
+            if ($.getApp().ProcessingBackgroundData) {
+                self.drawProcessingBackgroundDataPopup(dc);
+            } else {
+                self.hideProcessingBackgroundDataPopup();
             }
         }
 
@@ -225,5 +240,36 @@ module Views {
             var settings = new SettingsView();
             WatchUi.pushView(settings, new ItemViewDelegate(settings), WatchUi.SLIDE_LEFT);
         }
+
+        (:withBackground)
+        private function drawProcessingBackgroundDataPopup(dc as Dc) as Void {
+            var txt = Application.loadResource(Rez.Strings.ProcessBg);
+            var padding = (dc.getWidth() / 10).toNumber();
+            var width = dc.getWidth() - 2 * padding;
+            if (self._processingBgDataLabel == null) {
+                self._processingBgDataLabel = new Controls.Label(txt, Common.Fonts.Normal(), width);
+            }
+
+            var height = self._processingBgDataLabel.getHeight(dc) + padding * 2;
+            var y = dc.getHeight() / 2 - height / 2;
+            dc.setColor(Themes.CurrentTheme.BackgroundColor, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(0, y, dc.getWidth(), height);
+            dc.setColor(Themes.CurrentTheme.TitleSeparatorColor, Graphics.COLOR_TRANSPARENT);
+            dc.setPenWidth(1);
+            dc.drawLine(0, y, dc.getWidth(), y);
+            dc.drawLine(0, y + height, dc.getWidth(), y + height);
+            self._processingBgDataLabel.draw(dc, padding, y + padding, Themes.CurrentTheme.MainColor, Graphics.TEXT_JUSTIFY_CENTER);
+        }
+
+        (:withoutBackground)
+        private function drawProcessingBackgroundDataPopup(dc as Dc) as Void {}
+
+        (:withBackground)
+        private function hideProcessingBackgroundDataPopup() as Void {
+            self._processingBgDataLabel = null;
+        }
+
+        (:withoutBackground)
+        private function hideProcessingBackgroundDataPopup() as Void {}
     }
 }

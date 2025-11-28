@@ -25,6 +25,7 @@
 
     <string id="ListNotFound">Список не знайдено!</string>
     <string id="ListEmpty">Список порожній.</string>
+    <string id="ProcessBg">Списки обробляються...</string>
 
     <string id="LMSub">%s елементи</string>
     <string id="LMSubOne">1 елемент</string>

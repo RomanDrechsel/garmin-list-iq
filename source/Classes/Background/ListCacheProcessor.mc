@@ -87,7 +87,7 @@ module BG {
 
             if ((self._processIndex != null && self._processIndex.size() > 0) || (self._processDelList != null && self._processDelList.size() > 0) || self._processLogRequest != null) {
                 self._processTimer = new Timer.Timer();
-                self._processTimer.start(method(:processCacheTimerCallback), 1, false);
+                self._processTimer.start(method(:processCacheTimerCallback), 100, false);
             } else {
                 self._processTimer.stop();
                 self._processTimer = null;

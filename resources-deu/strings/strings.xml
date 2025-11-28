@@ -25,6 +25,7 @@
 
     <string id="ListNotFound">Liste nicht gefunden!</string>
     <string id="ListEmpty">Die Liste ist leer.</string>
+    <string id="ProcessBg">Listen werden verarbeitet...</string>
 
     <string id="LMSub">%s Punkte</string>
     <string id="LMSubOne">1 Punkt</string>

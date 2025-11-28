@@ -25,6 +25,7 @@
 
     <string id="ListNotFound">リストが見つかりません！</string>
     <string id="ListEmpty">リストが空です。</string>
+    <string id="ProcessBg">リストを処理中...</string>
 
     <string id="LMSub">%s 項目</string>
     <string id="LMSubOne">1 項目</string>

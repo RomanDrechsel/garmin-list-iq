@@ -22,7 +22,7 @@ module Views {
             }
         }
 
-        function onTap(clickEvent) as Boolean {
+        function onTap(clickEvent as WatchUi.ClickEvent) as Boolean {
             self._view.Interaction();
             var tap = self._view.onTap(clickEvent.getCoordinates()[0], clickEvent.getCoordinates()[1]);
             var now = System.getTimer();

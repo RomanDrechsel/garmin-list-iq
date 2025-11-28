@@ -5,7 +5,7 @@ For Smartphone
 adb -d forward tcp:7381 tcp:7381
 
 WIP: background-Service overhaul: don't add list, just put the newest version of a list in storage and process it when app starts
---> TODO: add "loading" popup
+TODO: check for unneeded code
 TEST: Background service
 TODO: send success response to phone, when list added
 TODO: notes function

@@ -1,16 +1,17 @@
 import Toybox.Lang;
 import Toybox.Graphics;
+import Toybox.System;
 import Exceptions;
 
 module Controls {
     module Listitems {
         class Button extends Item {
-            private var _paddingFactor = 0.05;
-            private var _horMarginFactor = 0.03;
+            private const _paddingFactor = 0.05;
+            private const _horMarginFactor = 0.03;
 
             function initialize(layer as LayerDef?, title as String, identifier as Object, margin as Number?, drawline as Boolean) {
                 if (margin == null) {
-                    margin = ($.screenHeight * 0.02).toNumber();
+                    margin = (System.getDeviceSettings().screenHeight * 0.02).toNumber();
                 }
 
                 Item.initialize(layer, null, null, identifier, null, margin, -1, null);
@@ -26,7 +27,7 @@ module Controls {
                 }
                 self.validate(dc);
 
-                var viewport_y = self._listY - scrollOffset + self._layer.getY();
+                var viewport_y = self._listY - scrollOffset + self._layer.Y;
 
                 if (self.isVisible(scrollOffset, dc) == false) {
                     return self.getHeight(dc);
@@ -40,22 +41,23 @@ module Controls {
                 }
 
                 viewport_y += self._verticalPadding;
-                var margin = (self._layer.getWidth() * self._horMarginFactor).toNumber();
-                var x = self._layer.getX() + margin;
+                var margin = (self._layer.Width * self._horMarginFactor).toNumber();
+                var x = self._layer.X + margin;
 
                 //background
                 var button_width = self.getButtonWidth();
                 var padding = (button_width * self._paddingFactor).toNumber();
                 var button_height = self.Title.getHeight(dc) + 2 * padding;
-                dc.setColor($.getTheme().ButtonBackground, Graphics.COLOR_TRANSPARENT);
+                var theme = $.getTheme();
+                dc.setColor(theme.ButtonBackground, Graphics.COLOR_TRANSPARENT);
                 dc.fillRoundedRectangle(x, viewport_y, button_width, button_height, padding * 0.7);
 
-                dc.setColor($.getTheme().ButtonBorder, Graphics.COLOR_TRANSPARENT);
+                dc.setColor(theme.ButtonBorder, Graphics.COLOR_TRANSPARENT);
                 dc.setPenWidth(2);
                 dc.drawRoundedRectangle(x, viewport_y, button_width, button_height, padding * 0.7);
 
                 //text
-                self.Title.draw(dc, x + padding, viewport_y + padding, $.getTheme().ButtonColor, Graphics.TEXT_JUSTIFY_CENTER);
+                self.Title.draw(dc, x + padding, viewport_y + padding, theme.ButtonColor, Graphics.TEXT_JUSTIFY_CENTER);
                 viewport_y += button_height + self._verticalPadding;
 
                 if (self.DrawLine == true) {
@@ -90,15 +92,14 @@ module Controls {
                 if (self._layer == null) {
                     return 0;
                 }
-                var margin = (self._layer.getWidth() * self._horMarginFactor).toNumber();
-                return self._layer.getWidth() - 2 * margin;
+                var margin = (self._layer.Width * self._horMarginFactor).toNumber();
+                return self._layer.Width - 2 * margin;
             }
 
             protected function validate(dc as Dc) {
                 if (self._needValidation) {
                     if (self.Title instanceof String) {
-                        var buttonWidth = self.getButtonWidth();
-                        var padding = (buttonWidth * self._paddingFactor).toNumber();
+                        var padding = (self.getButtonWidth() * self._paddingFactor).toNumber();
                         var maxwidth = (self.getButtonWidth() - 2 * padding).toNumber();
                         self.Title = new Label(self.Title, self._font, maxwidth);
                     }

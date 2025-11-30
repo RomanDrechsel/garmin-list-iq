@@ -1,9 +1,8 @@
 import Toybox.Application;
 import Toybox.Lang;
 
-(:withGlance)
+(:withGlance,:glance)
 module Lists {
-    (:glance)
     class GlanceListsManager {
         typedef ListIndexItem as Dictionary<Number, String or Number>;
         typedef ListIndex as Dictionary<String or Number, ListIndexItem>;

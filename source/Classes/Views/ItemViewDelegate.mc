@@ -22,7 +22,7 @@ module Views {
             }
         }
 
-        function onTap(clickEvent as WatchUi.ClickEvent) as Boolean {
+        public function onTap(clickEvent as WatchUi.ClickEvent) as Boolean {
             self._view.Interaction();
             var tap = self._view.onTap(clickEvent.getCoordinates()[0], clickEvent.getCoordinates()[1]);
             var now = System.getTimer();
@@ -36,7 +36,7 @@ module Views {
             return tap;
         }
 
-        function onDrag(dragEvent as WatchUi.DragEvent) as Lang.Boolean {
+        public function onDrag(dragEvent as WatchUi.DragEvent) as Lang.Boolean {
             self._view.Interaction();
             var dragY = dragEvent.getCoordinates()[1];
 
@@ -59,10 +59,10 @@ module Views {
             return true;
         }
 
-        function onSwipe(swipeEvent as SwipeEvent) as Boolean {
+        public function onSwipe(swipeEvent as SwipeEvent) as Boolean {
             self._view.Interaction();
-            if (self._noDrag == true) {
-                var delta = self._view.ScrollMode == ItemView.SCROLL_SNAP ? 1 : ($.screenHeight * 0.21).toNumber();
+            if (self._noDrag) {
+                var delta = self._view.ScrollMode == ItemView.SCROLL_SNAP ? 1 : (System.getDeviceSettings().screenHeight * 0.21).toNumber();
                 if (swipeEvent.getDirection() == WatchUi.SWIPE_UP) {
                     self._view.onScroll(delta);
                     return true;
@@ -70,7 +70,7 @@ module Views {
                     self._view.onScroll(delta * -1);
                     return true;
                 } else if (swipeEvent.getDirection() == WatchUi.SWIPE_RIGHT) {
-                    ItemView.goBack();
+                    self._view.goBack();
                     return true;
                 }
             }
@@ -78,7 +78,7 @@ module Views {
             return false;
         }
 
-        function onKey(keyEvent as WatchUi.KeyEvent) as Boolean {
+        public function onKey(keyEvent as WatchUi.KeyEvent) as Boolean {
             self._view.Interaction();
             var key = keyEvent.getKey();
             if (key == WatchUi.KEY_ENTER) {
@@ -89,16 +89,14 @@ module Views {
                 return self._view.onKeyMenu();
             } else if (key == WatchUi.KEY_UP) {
                 if (self._view.ScrollMode == ItemView.SCROLL_DRAG) {
-                    var height = System.getDeviceSettings().screenHeight;
-                    self._view.onScroll((height * -0.21).toNumber());
+                    self._view.onScroll((System.getDeviceSettings().screenHeight * -0.21).toNumber());
                 } else {
                     self._view.onScroll(-1);
                 }
                 return true;
             } else if (key == WatchUi.KEY_DOWN) {
                 if (self._view.ScrollMode == ItemView.SCROLL_DRAG) {
-                    var height = System.getDeviceSettings().screenHeight;
-                    self._view.onScroll((height * 0.21).toNumber());
+                    self._view.onScroll((System.getDeviceSettings().screenHeight * 0.21).toNumber());
                 } else {
                     self._view.onScroll(1);
                 }

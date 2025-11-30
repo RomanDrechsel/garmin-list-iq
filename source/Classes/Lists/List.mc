@@ -1,6 +1,5 @@
 import Toybox.Lang;
 
-(:background)
 module Lists {
     typedef ListModel as Dictionary<Number or String, String or Number or Boolean or Array<ListitemModel> >;
 
@@ -28,7 +27,7 @@ module Lists {
         public var Title as String?;
         public var Order as Number?;
         public var Date as Number?;
-        public var Items as Array<Listitem>? = [];
+        public var Items as Array<Listitem> = [];
         public var Reset as Boolean?;
         public var ResetInterval as String?;
         public var ResetHour as Number?;
@@ -58,6 +57,8 @@ module Lists {
                         self.Items.add(item);
                     }
                     self.Items = self.sortItems(self.Items);
+                } else {
+                    self.Items = [];
                 }
 
                 self.Reset = data.get(RESET) as Boolean?;
@@ -82,11 +83,9 @@ module Lists {
         }
 
         public function GetItem(order as Number) as Listitem? {
-            if (self.Items.size() > 0) {
-                for (var i = 0; i < self.Items.size(); i++) {
-                    if (self.Items[i].Order == order) {
-                        return self.Items[i];
-                    }
+            for (var i = 0; i < self.Items.size(); i++) {
+                if (self.Items[i].Order == order) {
+                    return self.Items[i];
                 }
             }
             return null;
@@ -240,15 +239,6 @@ module Lists {
             }
 
             return result;
-        }
-
-        private function invalidate() as Void {
-            self.Title = null;
-            self.Order = null;
-            self.Date = null;
-            self.Items = null;
-            self.Revision = null;
-            self.RemoveReset();
         }
 
         public static function IsValidIndex(index as ListIndexItem?) as Boolean {

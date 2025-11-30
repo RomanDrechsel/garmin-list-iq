@@ -2,8 +2,8 @@ import Toybox.Lang;
 import Toybox.Timer;
 import Toybox.WatchUi;
 
+(:withBackground)
 module BG {
-    (:withBackground)
     class ListCacheProcessor {
         private var _processTimer as Timer.Timer? = null;
         private var _processIndex as Array<String>? = null; //array of uuid's

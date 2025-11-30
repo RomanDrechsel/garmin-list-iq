@@ -14,28 +14,30 @@ module Views {
             AUTO_RESET = 2,
         }
 
-        var ListUuid as String or Number;
+        private var _listUuid as String or Number;
         private var _resetActive as Boolean? = null;
         private var _resetInterval as String? = null;
 
         function initialize(uuid as String or Number) {
             IconItemView.initialize();
             self.ScrollMode = SCROLL_DRAG;
-            self.ListUuid = uuid;
+            self._listUuid = uuid;
             self.readList(null);
         }
 
         function onLayout(dc as Dc) {
             IconItemView.onLayout(dc);
-            if ($.getApp().ListsManager != null) {
-                $.getApp().ListsManager.addListChangedListener(self);
+            var listsmanager = $.getApp().ListsManager;
+            if (listsmanager != null) {
+                listsmanager.addListChangedListener(self);
             }
             self.loadItems(false);
         }
 
         protected function interactItem(item as Listitems.Item, doubletap as Boolean) as Boolean {
+            var listsmanager = $.getApp().ListsManager;
             if (!IconItemView.interactItem(item, doubletap)) {
-                if ($.getApp().ListsManager == null) {
+                if (listsmanager == null) {
                     return false;
                 }
 
@@ -44,13 +46,12 @@ module Views {
                         var dialog = new WatchUi.Confirmation(Application.loadResource(Rez.Strings.DeleteConfirm));
                         var delegate = new Controls.ConfirmDelegate(self.method(:deleteList));
                         WatchUi.pushView(dialog, delegate, WatchUi.SLIDE_BLINK);
-                        return true;
                     } else if (item.BoundObject == RESET) {
-                        if ($.getApp().ListsManager.ResetList(self.ListUuid)) {
+                        if (listsmanager.ResetList(self._listUuid)) {
                             Helper.ToastUtil.Toast(Rez.Strings.StResetSuccess, Helper.ToastUtil.SUCCESS);
                         }
                     } else if (item.BoundObject == AUTO_RESET) {
-                        var list = $.getApp().ListsManager.GetList(self.ListUuid) as Lists.List?;
+                        var list = listsmanager.GetList(self._listUuid);
                         if (list != null) {
                             if (list.Reset != null) {
                                 list.Reset = !list.Reset;
@@ -60,15 +61,17 @@ module Views {
                                 } else {
                                     Debug.Log("Deactivated auto reset for list " + list.toString());
                                 }
-                                $.getApp().ListsManager.StoreList(list);
+                                listsmanager.StoreList(list);
                             } else {
                                 Debug.Log("List " + list.toString() + " has no reset settings.");
                             }
                         } else {
-                            Debug.Log("List " + self.ListUuid + " not found for toggling reset setting");
+                            Debug.Log("List " + self._listUuid + " not found for toggling reset setting");
                         }
-                        return true;
+                    } else {
+                        return false;
                     }
+                    return true;
                 }
                 return false;
             }
@@ -76,8 +79,9 @@ module Views {
         }
 
         function deleteList() as Void {
-            if ($.getApp().ListsManager != null) {
-                $.getApp().ListsManager.deleteList(self.ListUuid, true);
+            var listsmanager = $.getApp().ListsManager;
+            if (listsmanager != null) {
+                listsmanager.deleteList(self._listUuid, true);
             }
         }
 
@@ -87,7 +91,7 @@ module Views {
         }
 
         function onListChanged(list as Lists.List?) as Void {
-            if (list == null || list.Uuid.equals(self.ListUuid)) {
+            if (list == null || list.Uuid.equals(self._listUuid)) {
                 self.readList(list);
                 self.loadItems(true);
             }
@@ -159,7 +163,7 @@ module Views {
             }
 
             if (list == null) {
-                list = app.ListsManager.GetList(self.ListUuid) as Lists.List?;
+                list = app.ListsManager.GetList(self._listUuid);
             }
             if (list != null) {
                 if (self._resetActive != null && list.Reset == null) {

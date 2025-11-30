@@ -12,11 +12,11 @@ module Views {
         private var _errorMsg2 as Lang.ResourceId? = null;
         private var _errorMsg3 as Lang.ResourceId? = null;
         private var _errorCode as Lang.Number? = null;
-        private var _errorPayload as Array<String>?;
+        private var _errorPayload as Array<String>? = null;
 
         private static var _instance as ErrorView? = null;
-        public static var ErrorCode = null as ECode?;
-        private var _isValid = false;
+        private var _needReload = false;
+        public var ErrorCode as ECode? = null;
 
         public enum ECode {
             OUT_OF_MEMORY = 0,
@@ -43,7 +43,7 @@ module Views {
         }
 
         public function onUpdate(dc as Dc) as Void {
-            if (!self._isValid) {
+            if (self._needReload) {
                 self.loadVisuals();
             }
             ItemView.onUpdate(dc);
@@ -77,6 +77,7 @@ module Views {
             self._errorMsg = null;
             self._errorMsg2 = null;
             self._errorMsg3 = null;
+            self._needReload = true;
 
             if (code == OUT_OF_MEMORY) {
                 self._errorMsg = Rez.Strings.ListRecOOM;
@@ -96,8 +97,6 @@ module Views {
             } else {
                 self._errorMsg = Rez.Strings.ErrUnknown;
             }
-
-            self._isValid = false;
         }
 
         private function interact() as Void {
@@ -137,7 +136,7 @@ module Views {
 
         private function loadVisuals() as Void {
             if (self.Items.size() > 0) {
-                self.Items = new Array<Item>[0];
+                self.Items = [];
             }
 
             if (self._errorMsg != null) {
@@ -174,15 +173,15 @@ module Views {
                 self.Items.add(hint2);
             }
 
-            if ($.getApp().NoBackButton) {
+            if (self._noHardwareBackButton) {
                 self.addBackButton(false);
             }
-            self._isValid = true;
+            self._needReload = false;
         }
 
         public static function Show(code as ECode, payload as Array<String>?) {
             if (self._instance != null) {
-                if (self.ErrorCode != code) {
+                if (self._instance.ErrorCode != code) {
                     self._instance.SetError(code, payload);
                     WatchUi.requestUpdate();
                 }

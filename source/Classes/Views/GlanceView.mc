@@ -6,14 +6,13 @@ import Toybox.Lang;
 
 import Controls;
 
-(:withGlance)
 module Views {
-    (:glance)
+    (:glance,:withGlance)
     class GlanceView extends WatchUi.GlanceView {
         private var _title as Label? = null;
         private var _sub as Label? = null;
         private var _lists = new Lists.GlanceListsManager();
-        private var _timer = null as Timer.Timer?;
+        private var _timer as Timer.Timer? = null;
 
         function initialize() {
             GlanceView.initialize();
@@ -29,7 +28,7 @@ module Views {
         public function onShow() as Void {
             GlanceView.onShow();
             self._timer = new Timer.Timer();
-            self._timer.start(method(:updateLists), 10000, true);
+            self._timer.start(method(:updateListsCallback), 10000, true);
         }
 
         public function onHide() as Void {
@@ -45,7 +44,7 @@ module Views {
             self._sub.draw(dc, 0, yStart + height, Graphics.COLOR_LT_GRAY, Graphics.TEXT_JUSTIFY_LEFT);
         }
 
-        function updateLists() as Void {
+        function updateListsCallback() as Void {
             var text = self._lists.GetInfo();
             if (!self._sub.getText().equals(text)) {
                 self._sub.setText(text);

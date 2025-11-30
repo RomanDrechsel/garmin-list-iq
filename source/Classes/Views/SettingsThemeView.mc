@@ -22,30 +22,31 @@ module Views {
             };
         }
 
-        function onLayout(dc as Dc) as Void {
+        public function onLayout(dc as Dc) as Void {
             IconItemView.onLayout(dc);
             self.loadThemes();
         }
 
-        function onShow() as Void {
+        public function onShow() as Void {
             IconItemView.onShow();
             self._scrollOffset = self._lastScroll;
         }
 
-        function onSettingsChanged() as Void {
+        public function onSettingsChanged() as Void {
             IconItemView.onSettingsChanged();
             self._scrollOffset = self._lastScroll;
             self.loadThemes();
         }
 
-        function onScroll(delta as Number) as Void {
+        public function onScroll(delta as Number) as Void {
             IconItemView.onScroll(delta);
             self._lastScroll = self._scrollOffset;
         }
 
         protected function interactItem(item as Listitems.Item, doubletap as Boolean) as Boolean {
             if (!IconItemView.interactItem(item, doubletap)) {
-                if ($.getApp().ListsManager == null) {
+                var app = $.getApp();
+                if (app.ListsManager == null) {
                     return false;
                 }
 
@@ -53,7 +54,7 @@ module Views {
                 if (item.BoundObject instanceof Number && item.BoundObject != theme) {
                     if (self._themes.hasKey(item.BoundObject as Number)) {
                         Helper.Properties.Store(Helper.Properties.THEME, item.BoundObject as Number);
-                        $.getApp().triggerOnSettingsChanged();
+                        app.triggerOnSettingsChanged();
                         return true;
                     }
                 }
@@ -73,10 +74,6 @@ module Views {
             for (var i = 0; i < keys.size(); i++) {
                 var key = keys[i];
                 var name = self._themes.get(key);
-                if (name == null) {
-                    continue;
-                }
-
                 var item = self.addItem(name, null, key, key == theme ? self._itemIconDone : self._itemIcon, i);
                 if (key == theme) {
                     self._centerItemOnDraw = item;

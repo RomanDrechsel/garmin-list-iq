@@ -42,7 +42,7 @@ module Comm {
                 return;
             }
             Communications.transmit(value, {}, self);
-            Debug.Log("Send to phone...");
+            Debug.Log("Sent to phone...");
         }
 
         function onComplete() as Void {

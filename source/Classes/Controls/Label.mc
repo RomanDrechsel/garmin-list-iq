@@ -7,18 +7,20 @@ module Controls {
         private var _height = -1;
         private var _width as Number;
         private var _needValidation = true;
-        private var _text as String;
+        private var _text as String = "";
         private var _font as FontType;
         private var _maxHeight = 9999;
 
         function initialize(text as String or Array<String>, font as FontType, width as Number) {
             self._width = width;
             self._font = font;
-            self._text = "";
             self.setText(text);
         }
 
         function draw(dc as Dc, x as Number, topY as Number, color as Number, justification as TextJustification) as Number {
+            if (self._text.length() == 0) {
+                return 0;
+            }
             self.validate(dc);
 
             if (justification == Graphics.TEXT_JUSTIFY_CENTER) {

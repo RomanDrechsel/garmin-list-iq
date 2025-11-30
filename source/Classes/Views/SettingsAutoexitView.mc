@@ -39,7 +39,6 @@ module Views {
                     }
                     self.goBack();
                 }
-                return true;
             }
             return true;
         }
@@ -87,7 +86,7 @@ module Views {
                 }
             }
 
-            //no lone below the last items
+            //no line below the last items
             if (self.Items.size() > 0) {
                 self.Items[self.Items.size() - 1].DrawLine = false;
             }

@@ -31,10 +31,9 @@ class ListsApp extends Application.AppBase {
     var BackgroundService as BG.Service? = null;
     var GlobalStates as Array<EState> = [];
     var AppType as EApptype = APP;
-    var NoBackButton = false;
-    var Initialized as Boolean = false; // needed??
+    var Initialized as Boolean = false;
     var ProcessingBackgroundData as Boolean? = null;
-    private var onSettingsChangedListeners as Array<WeakReference> = [];
+    private var _onSettingsChangedListeners as Array<WeakReference> = [];
 
     function initialize() {
         AppBase.initialize();
@@ -49,14 +48,7 @@ class ListsApp extends Application.AppBase {
         Application.Properties.setValue("appVersion", appVersion);
 
         self.Debug = new Debug.DebugStorage();
-
-        var settings = System.getDeviceSettings();
-        if ((settings.inputButtons & System.BUTTON_INPUT_ESC) == 0) {
-            self.NoBackButton = true;
-        }
-
-        self.ListsManager = new Lists.ListsManager(self);
-
+        self.ListsManager = new Lists.ListsManager();
         self.Phone = new Comm.PhoneCommunication(self);
 
         if (Helper.Properties.Get(Helper.Properties.AUTOEXIT, 0) > 0) {
@@ -133,8 +125,8 @@ class ListsApp extends Application.AppBase {
             self.Debug.onSettingsChanged();
         }
         Themes.ThemesLoader.loadTheme();
-        for (var i = 0; i < self.onSettingsChangedListeners.size(); i++) {
-            var weak = self.onSettingsChangedListeners[i];
+        for (var i = 0; i < self._onSettingsChangedListeners.size(); i++) {
+            var weak = self._onSettingsChangedListeners[i];
             if (weak.stillAlive()) {
                 var obj = weak.get();
                 if (obj != null && obj has :onSettingsChanged) {
@@ -156,7 +148,7 @@ class ListsApp extends Application.AppBase {
                 screenShape = "Round";
                 break;
             case System.SCREEN_SHAPE_RECTANGLE:
-                screenShape = "Square";
+                screenShape = "Rect";
                 break;
         }
 
@@ -177,8 +169,8 @@ class ListsApp extends Application.AppBase {
 
     function addSettingsChangedListener(obj as Object) as Void {
         var del = [];
-        for (var i = 0; i < self.onSettingsChangedListeners.size(); i++) {
-            var weak = self.onSettingsChangedListeners[i];
+        for (var i = 0; i < self._onSettingsChangedListeners.size(); i++) {
+            var weak = self._onSettingsChangedListeners[i];
             if (weak.stillAlive()) {
                 var o = weak.get();
                 if (o == null || !(o has :onSettingsChanged)) {
@@ -190,23 +182,23 @@ class ListsApp extends Application.AppBase {
         }
         if (del.size() > 0) {
             for (var i = 0; i < del.size(); i++) {
-                self.onSettingsChangedListeners.remove(del[i]);
+                self._onSettingsChangedListeners.remove(del[i]);
             }
         }
 
         if (obj has :onSettingsChanged) {
             var ref = obj.weak();
 
-            if (self.onSettingsChangedListeners.indexOf(ref) < 0) {
-                self.onSettingsChangedListeners.add(ref);
+            if (self._onSettingsChangedListeners.indexOf(ref) < 0) {
+                self._onSettingsChangedListeners.add(ref);
             }
         }
     }
 
     function removeSettingsChangedListener(obj as Object) as Void {
         var ref = obj.weak();
-        if (self.onSettingsChangedListeners.indexOf(ref) >= 0) {
-            self.onSettingsChangedListeners.removeAll(ref);
+        if (self._onSettingsChangedListeners.indexOf(ref) >= 0) {
+            self._onSettingsChangedListeners.removeAll(ref);
         }
     }
 
@@ -237,10 +229,3 @@ var hasBackgroundCapability = false;
 var hasHighColorDisplay = true;
 (:withoutHighColor)
 var hasHighColorDisplay = false;
-
-(:roundVersion)
-var isRoundDisplay = true;
-(:regularVersion)
-var isRoundDisplay = false;
-
-var screenHeight = System.getDeviceSettings().screenHeight;

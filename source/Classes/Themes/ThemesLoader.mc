@@ -5,8 +5,6 @@ module Themes {
     var CurrentTheme = null;
 
     class ThemesLoader {
-        static var _lowColors as Boolean? = null;
-
         static function loadTheme() as Void {
             switch (Helper.Properties.Get(Helper.Properties.THEME, 0)) {
                 default:
@@ -30,12 +28,7 @@ module Themes {
     }
 }
 
-(:glance)
 function getTheme() as Themes.ThemeSettingsBase {
-    if ($.getApp().AppType == ListsApp.GLANCE) {
-        return new Themes.ThemeSettingsBase();
-    }
-
     if (Themes.CurrentTheme == null) {
         Themes.ThemesLoader.loadTheme();
     }

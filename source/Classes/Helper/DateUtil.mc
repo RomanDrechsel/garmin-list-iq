@@ -53,7 +53,7 @@ module Helper {
             return date + date_separator + time;
         }
 
-        (:background)
+        (:background,:glance)
         public static function toLogString(time as Number or Time.Moment or Time.Gregorian.Info, offset_seconds as Boolean or Number or Null) as String {
             if (time instanceof Lang.Number) {
                 time = new Time.Moment(time);
@@ -89,7 +89,7 @@ module Helper {
             return moment;
         }
 
-        (:background)
+        (:background,:glance)
         public static function TimezoneOffset() as Number? {
             var offset_seconds = System.getClockTime().timeZoneOffset;
             if (Debug.isDebug) {

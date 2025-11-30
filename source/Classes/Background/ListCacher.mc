@@ -2,10 +2,9 @@ import Toybox.Lang;
 import Toybox.Application;
 import Toybox.Time;
 
+(:background,:withBackground)
 module BG {
-    (:background)
     class ListCacher {
-        (:withBackground)
         public enum ECacheType {
             LIST = "bg_",
             LISTINDEX = "bg_listindex",
@@ -13,7 +12,6 @@ module BG {
             REQUEST_LOGS = "bg_requestlogs",
         }
 
-        (:withBackground)
         public function Cache(data as Object?) as Void {
             if (data instanceof Array) {
                 var message_type = null;
@@ -109,7 +107,6 @@ module BG {
             }
         }
 
-        (:withBackground)
         public function TrimCache(num as Number) as Void {
             var listindex = Application.Storage.getValue(LISTINDEX) as Array<String>?;
             if (listindex == null || !(listindex instanceof Array) || listindex.size() < num) {

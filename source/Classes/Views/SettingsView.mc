@@ -49,9 +49,10 @@ module Views {
             self._lastScroll = self._scrollOffset;
         }
 
-        function deleteAllLists() as Void {
-            if ($.getApp().ListsManager != null) {
-                $.getApp().ListsManager.clearAll(false);
+        function deleteAllStorage() as Void {
+            var listsmanager = $.getApp().ListsManager;
+            if (listsmanager != null) {
+                listsmanager.clearAll(false);
             }
             self.goBack();
         }
@@ -97,8 +98,9 @@ module Views {
 
             //auto exit
             prop = Helper.Properties.Get(Helper.Properties.AUTOEXIT, 0);
-            var txt = "";
+            var txt;
             switch (prop) {
+                default:
                 case 0:
                     txt = Application.loadResource(Rez.Strings.StAutoExitOff);
                     break;
@@ -164,7 +166,7 @@ module Views {
             item.isSelectable = false;
             self.Items.add(item);
 
-            if ($.getApp().NoBackButton) {
+            if (self._noHardwareBackButton) {
                 self.addBackButton(false);
             }
 
@@ -176,7 +178,7 @@ module Views {
                 if (item.BoundObject instanceof Number) {
                     if (item.BoundObject == SETTINGS_DELETEALL) {
                         var dialog = new WatchUi.Confirmation(Application.loadResource(Rez.Strings.StDelAllConfirm));
-                        var delegate = new Controls.ConfirmDelegate(self.method(:deleteAllLists));
+                        var delegate = new Controls.ConfirmDelegate(self.method(:deleteAllStorage));
                         WatchUi.pushView(dialog, delegate, WatchUi.SLIDE_BLINK);
                         return true;
                     } else if ([SETTINGS_MOVEDOWN, SETTINGS_DOUBLETAP, SETTINGS_SHOWNOTES].indexOf(item.BoundObject) >= 0) {
@@ -201,9 +203,7 @@ module Views {
                             item.setIcon(val ? self._itemIconDone : self._itemIcon);
                             item.setIconInvert(val ? self._itemIconDoneInvert : self._itemIconInvert);
                             WatchUi.requestUpdate();
-                            if ($.getApp().ListsManager != null) {
-                                $.getApp().GlobalStates.add(ListsApp.MOVETOP);
-                            }
+                            $.getApp().GlobalStates.add(ListsApp.MOVETOP);
                             return true;
                         }
                     } else if (item.BoundObject == SETTINGS_HWBCTRL) {
@@ -227,8 +227,9 @@ module Views {
                     } else if (item.BoundObject == SETTINGS_SENDLOGS) {
                         var prop = Helper.Properties.Get(Helper.Properties.LOGS, true);
                         if (prop == true) {
-                            if ($.getApp().Debug != null) {
-                                $.getApp().Debug.SendLogs();
+                            var debug = $.getApp().Debug;
+                            if (debug != null) {
+                                debug.SendLogs();
                             }
                             Helper.ToastUtil.Toast(Rez.Strings.StSendLogsOk, Helper.ToastUtil.SUCCESS);
                         } else {
@@ -247,11 +248,9 @@ module Views {
                         $.openGooglePlay();
                         return true;
                     }
-                    return false;
                 }
                 return false;
             }
-
             return true;
         }
     }

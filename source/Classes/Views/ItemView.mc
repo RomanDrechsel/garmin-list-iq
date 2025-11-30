@@ -27,11 +27,13 @@ module Views {
             QUIT = -3,
         }
 
-        var Items as Array<Item> = new Array<Item>[0];
+        protected var Items as Array<Listitems.Item> = [];
         protected var _selectedItem as Listitems.Item? = null;
 
         var ScrollMode = SCROLL_DRAG;
         var UI_dragThreshold = 40;
+
+        protected static const _noHardwareBackButton = (System.getDeviceSettings().inputButtons & System.BUTTON_INPUT_ESC) == 0 ? true : false;
 
         /** top-padding of the list in SCROLL_SNAP - mode  */
         private var _paddingTop as Number? = null;
@@ -44,7 +46,7 @@ module Views {
         protected var _snapPosition as Number = 0;
 
         /** percentage of the width of the scrollbar */
-        protected var _BarWidthFactor as Float = 0.05;
+        protected const _BarWidthFactor = 0.05f;
 
         /** scrollbar drawer */
         protected var _scrollbar as Scrollbar?;
@@ -68,30 +70,24 @@ module Views {
         /** is a new validation needed? */
         protected var _needValidation as Boolean = true;
 
-        /** what kind of controls does the view use */
-        protected static var _controls as EControls? = null;
-
         /**
          * center on an item on the next draw
          * useful if an item is set before self.validate(), e.g. in onLayout()
          */
         protected var _centerItemOnDraw as Number or Listitems.Item or Null = null;
 
-        /** display hardware button support? */
-        protected static var _buttonDisplay as Boolean? = null;
-
         function initialize() {
             WatchUi.View.initialize();
         }
 
-        function onLayout(dc as Dc) {
+        public function onLayout(dc as Dc) {
             View.onLayout(dc);
             if (dc has :setAntiAlias) {
                 dc.setAntiAlias(true);
             }
 
             self.Interaction();
-            self.Items = new Array<Item>[0];
+            self.Items = new Array<Listitems.Item>[0];
 
             self.UI_dragThreshold = (dc.getHeight() / 6).toNumber();
             var mainLayerMargin = self.getMargin(dc);
@@ -100,7 +96,7 @@ module Views {
             var layerheight = dc.getHeight() - 2 * mainLayerMargin[1];
 
             self._mainLayer = new Controls.LayerDef(mainLayerMargin[0], mainLayerMargin[1], layerwidth, layerheight);
-            if ($.isRoundDisplay) {
+            if (System.getDeviceSettings().screenShape == System.SCREEN_SHAPE_ROUND) {
                 self._scrollbarLayer = new Controls.LayerDef(dc.getWidth() / 2, 0, dc.getWidth() / 2, dc.getHeight());
             } else {
                 self._scrollbarLayer = new Controls.LayerDef(dc.getWidth() - scrollbarwidth, 0, scrollbarwidth, dc.getHeight());
@@ -108,37 +104,38 @@ module Views {
             self._scrollbar = new Controls.Scrollbar(self._scrollbarLayer, scrollbarwidth);
         }
 
-        function onShow() as Void {
-            if ($.getApp().GlobalStates.indexOf(ListsApp.STARTPAGE) >= 0) {
+        public function onShow() as Void {
+            var app = $.getApp();
+            if (app.GlobalStates.indexOf(ListsApp.STARTPAGE) >= 0) {
+                //jump back to startpage
                 if (!(self instanceof ListsSelectView)) {
                     WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
                     return;
                 } else {
-                    $.getApp().GlobalStates.removeAll(ListsApp.STARTPAGE);
+                    app.GlobalStates.removeAll(ListsApp.STARTPAGE);
                 }
             } else {
                 self.Interaction();
             }
-            if ($.getApp().GlobalStates.indexOf(ListsApp.MOVETOP) >= 0) {
+            if (app.GlobalStates.indexOf(ListsApp.MOVETOP) >= 0) {
+                //scroll to top
                 self._scrollOffset = 0;
                 self.setIterator(0);
-                $.getApp().GlobalStates.removeAll(ListsApp.MOVETOP);
+                app.GlobalStates.removeAll(ListsApp.MOVETOP);
             }
             WatchUi.View.onShow();
-            $.getApp().addSettingsChangedListener(self);
+            app.addSettingsChangedListener(self);
         }
 
-        function onHide() as Void {
+        public function onHide() as Void {
             WatchUi.View.onHide();
             self.Interaction();
         }
 
-        function onUpdate(dc as Dc) as Void {
+        public function onUpdate(dc as Dc) as Void {
             WatchUi.View.onUpdate(dc);
-            self.drawList(dc);
-        }
 
-        function drawList(dc as Dc) as Void {
+            //draw list of items
             dc.setColor(getTheme().BackgroundColor, getTheme().BackgroundColor);
             dc.clear();
 
@@ -164,7 +161,7 @@ module Views {
 
                 if (self.needScrollbar()) {
                     var viewport_height = dc.getHeight();
-                    if ($.isRoundDisplay) {
+                    if (System.getDeviceSettings().screenShape == System.SCREEN_SHAPE_ROUND) {
                         var margin = self.getMargin(dc);
                         viewport_height -= 2 * margin[1];
                     }
@@ -173,14 +170,123 @@ module Views {
             }
         }
 
-        function addItem(title as String or Array<String>, substring as String or Array<String> or Null, identifier as Object?, icon as Number or BitmapResource or Null, position as Number) as Listitems.Item {
+        public function onScroll(delta as Number) as Void {
+            if (delta == 0 || self._mainLayer == null) {
+                return;
+            }
+
+            var startoffset = self._scrollOffset;
+
+            if (self.ScrollMode == SCROLL_SNAP) {
+                self.moveIterator(delta > 0 ? 1 : -1);
+            } else if (self.needScrollbar()) {
+                //delta is negative when scrolling up, else positive
+                self._scrollOffset += delta;
+                if (self._scrollOffset < 0) {
+                    self._scrollOffset = 0;
+                } else if (self._scrollOffset > self._viewHeight - self._mainLayer.Height) {
+                    self._scrollOffset = self._viewHeight - self._mainLayer.Height;
+                }
+                self.setCenterItemSelected();
+            }
+
+            if (startoffset != self._scrollOffset) {
+                WatchUi.requestUpdate();
+            }
+        }
+
+        public function onDoubleTap(x as Number, y as Number) as Boolean {
+            for (var i = 0; i < self.Items.size(); i++) {
+                var item = self.Items[i];
+                if (item.Clicked(y, self._scrollOffset)) {
+                    return self.interactItem(item, true);
+                }
+            }
+            return false;
+        }
+
+        public function onTap(x as Number, y as Number) as Boolean {
+            for (var i = 0; i < self.Items.size(); i++) {
+                var item = self.Items[i];
+                if (item.Clicked(y, self._scrollOffset)) {
+                    return self.interactItem(item, false);
+                }
+            }
+
+            return false;
+        }
+
+        public function onSettingsChanged() as Void {
+            self.setIterator(0);
+            self._scrollOffset = 0;
+        }
+
+        public function Interaction() as Void {
+            var inactivity = $.getApp().Inactivity;
+            if (inactivity != null) {
+                inactivity.Interaction();
+            }
+        }
+
+        public function onKeyEnter() as Boolean {
+            if (!self._noHardwareBackButton && !self.DisplayButtonSupport()) {
+                return self.onKeyMenu();
+            } else if (self._selectedItem != null) {
+                return self.interactItem(self._selectedItem, true);
+            }
+            return false;
+        }
+
+        public function onKeyMenu() as Boolean {
+            return false;
+        }
+
+        public function onKeyEsc() as Boolean {
+            return false;
+        }
+
+        public function goBack() {
+            WatchUi.popView(WatchUi.SLIDE_RIGHT);
+        }
+
+        public static function SupportedControls() as EControls {
+            var settings = System.getDeviceSettings();
+            if (settings.isTouchScreen) {
+                if ((settings.inputButtons & System.BUTTON_INPUT_UP) != 0 && (settings.inputButtons & System.BUTTON_INPUT_DOWN) != 0) {
+                    return CONTROLS_BOTH;
+                } else {
+                    return CONTROLS_TOUCHSCREEN;
+                }
+            } else {
+                return CONTROLS_BUTTONS;
+            }
+        }
+
+        public static function DisplayButtonSupport() as Boolean {
+            var inputButtons = System.getDeviceSettings().inputButtons;
+            if ((inputButtons & System.BUTTON_INPUT_MENU) == 0 && (inputButtons & System.BUTTON_INPUT_ESC) == 0) {
+                //only 1 button
+                return true;
+            } else {
+                var controls = self.SupportedControls();
+                if (controls == CONTROLS_TOUCHSCREEN) {
+                    return false;
+                } else if (controls == CONTROLS_BUTTONS) {
+                    return true;
+                } else {
+                    return Helper.Properties.Get(Helper.Properties.HWBCTRL, false);
+                }
+            }
+        }
+
+        protected function addItem(title as String or Array<String>, substring as String or Array<String> or Null, identifier as Object?, icon as Number or BitmapResource or Null, position as Number) as Listitems.Item {
             var item = new Listitems.Item(self._mainLayer, title, substring, identifier, icon, null, position, null);
             self.Items.add(item);
             self._needValidation = true;
             return item;
         }
 
-        function setTitle(title as String?) as Void {
+        protected function setTitle(title as String?) as Void {
             if (title != null && title.length() > 0) {
                 var items = [];
                 if (self.Items.size() > 0 && self.Items[0] instanceof Listitems.Title) {
@@ -196,91 +302,11 @@ module Views {
             }
         }
 
-        function needScrollbar() as Boolean {
+        private function needScrollbar() as Boolean {
             if (self._needScrollbar == null) {
                 return false;
             }
             return self._needScrollbar;
-        }
-
-        function onScroll(delta as Number) as Void {
-            if (delta == 0 || self._mainLayer == null) {
-                return;
-            }
-
-            var startoffset = self._scrollOffset;
-
-            if (self.ScrollMode == SCROLL_SNAP) {
-                self.moveIterator(delta > 0 ? 1 : -1);
-            } else if (self.needScrollbar()) {
-                //delta is negative when scrolling up, else positive
-                self._scrollOffset += delta;
-                if (self._scrollOffset < 0) {
-                    self._scrollOffset = 0;
-                } else if (self._scrollOffset > self._viewHeight - self._mainLayer.getHeight()) {
-                    self._scrollOffset = self._viewHeight - self._mainLayer.getHeight();
-                }
-                self.setCenterItemSelected();
-            }
-
-            if (startoffset != self._scrollOffset) {
-                WatchUi.requestUpdate();
-            }
-        }
-
-        function onDoubleTap(x as Number, y as Number) as Boolean {
-            for (var i = 0; i < self.Items.size(); i++) {
-                var item = self.Items[i];
-                if (item.Clicked(y, self._scrollOffset)) {
-                    return self.interactItem(item, true);
-                }
-            }
-            return false;
-        }
-
-        function onTap(x as Number, y as Number) as Boolean {
-            for (var i = 0; i < self.Items.size(); i++) {
-                var item = self.Items[i];
-                if (item.Clicked(y, self._scrollOffset)) {
-                    return self.interactItem(item, false);
-                }
-            }
-
-            return false;
-        }
-
-        function onSettingsChanged() as Void {
-            self._buttonDisplay = null;
-            self.setIterator(0);
-            self._scrollOffset = 0;
-        }
-
-        function Interaction() as Void {
-            var inactivity = $.getApp().Inactivity;
-            if (inactivity != null) {
-                inactivity.Interaction();
-            }
-        }
-
-        function onKeyEnter() as Boolean {
-            if (!self.DisplayButtonSupport() && !$.getApp().NoBackButton) {
-                return self.onKeyMenu();
-            } else if (self._selectedItem != null) {
-                return self.interactItem(self._selectedItem, true);
-            }
-            return false;
-        }
-
-        function onKeyMenu() as Boolean {
-            return false;
-        }
-
-        function onKeyEsc() as Boolean {
-            return false;
-        }
-
-        static function goBack() {
-            WatchUi.popView(WatchUi.SLIDE_RIGHT);
         }
 
         protected function moveIterator(delta as Number?) as Void {
@@ -312,14 +338,6 @@ module Views {
             }
         }
 
-        private function getHeight() {
-            if (self._viewHeight != null) {
-                return self._viewHeight;
-            } else {
-                return 0;
-            }
-        }
-
         private function centerItem(item as Number or Listitems.Item) {
             if (item instanceof Number) {
                 if (item >= 0 && self.Items.size() > item) {
@@ -337,11 +355,11 @@ module Views {
             var h = item.getHeight(null); // height of the item
             var c = y + h / 2; // center point of the item
 
-            self._scrollOffset = c - self._mainLayer.getHeight() / 2;
+            self._scrollOffset = c - self._mainLayer.Height / 2;
             if (self._scrollOffset < 0) {
                 self._scrollOffset = 0;
-            } else if (self._scrollOffset > self._viewHeight - self._mainLayer.getHeight()) {
-                self._scrollOffset = self._viewHeight - self._mainLayer.getHeight();
+            } else if (self._scrollOffset > self._viewHeight - self._mainLayer.Height) {
+                self._scrollOffset = self._viewHeight - self._mainLayer.Height;
             }
 
             self._selectedItem = item;
@@ -350,15 +368,17 @@ module Views {
         /**
          * return the horizontal and vertical margin of the main-layer on round displays
          */
+        (:roundVersion)
         private function getMargin(dc as Dc) as Array<Number> {
-            if ($.isRoundDisplay) {
-                var radius = dc.getWidth() / 2;
-                var marginX = (radius - radius * Math.sin(Math.toRadians(55))).toNumber();
-                var marginY = (radius - radius * Math.cos(Math.toRadians(55))).toNumber();
-                return [marginX, marginY];
-            } else {
-                return [(dc.getWidth() / 20).toNumber(), 0];
-            }
+            var radius = dc.getWidth() / 2;
+            var marginX = (radius - radius * Math.sin(Math.toRadians(55))).toNumber();
+            var marginY = (radius - radius * Math.cos(Math.toRadians(55))).toNumber();
+            return [marginX, marginY];
+        }
+
+        (:regularVersion)
+        private function getMargin(dc as Dc) as Array<Number> {
+            return [(dc.getWidth() / 20).toNumber(), 0];
         }
 
         /**
@@ -367,15 +387,15 @@ module Views {
          */
         protected function validate(dc as Dc) as Void {
             if (self._needValidation == true) {
-                if (self.DisplayButtonSupport() || $.isRoundDisplay) {
+                if (self.DisplayButtonSupport() || System.getDeviceSettings().screenShape == System.SCREEN_SHAPE_ROUND) {
                     if (self.Items.size() > 0) {
                         if (self.Items[0] instanceof Listitems.Title) {
-                            self._paddingTop = self._mainLayer.getHeight() / 2 - self.Items[0].getHeight(dc);
+                            self._paddingTop = self._mainLayer.Height / 2 - self.Items[0].getHeight(dc);
                             if (self.Items.size() > 1) {
                                 self._paddingTop -= (self.Items[1].getHeight(dc) / 2).toNumber();
                             }
                         } else {
-                            self._paddingTop = self._mainLayer.getHeight() / 2 - (self.Items[0].getHeight(dc) / 2).toNumber();
+                            self._paddingTop = self._mainLayer.Height / 2 - (self.Items[0].getHeight(dc) / 2).toNumber();
                         }
                         if (self._paddingTop < 0) {
                             self._paddingTop = 0;
@@ -396,9 +416,9 @@ module Views {
                     y += item.getHeight(dc);
                 }
 
-                if (self.DisplayButtonSupport() || $.isRoundDisplay) {
+                if (self.DisplayButtonSupport() || System.getDeviceSettings().screenShape == System.SCREEN_SHAPE_ROUND) {
                     if (self.Items.size() > 0) {
-                        self._paddingBottom = self._mainLayer.getHeight() / 2 - (self.Items[self.Items.size() - 1].getHeight(dc) / 2).toNumber();
+                        self._paddingBottom = self._mainLayer.Height / 2 - (self.Items[self.Items.size() - 1].getHeight(dc) / 2).toNumber();
                         if (self._paddingBottom < 0) {
                             self._paddingBottom = 0;
                         }
@@ -409,19 +429,19 @@ module Views {
                     self._paddingBottom = 0;
                 }
                 self._viewHeight = y + self._paddingBottom;
-                self._needScrollbar = self._mainLayer.getHeight() < self._viewHeight;
+                self._needScrollbar = self._mainLayer.Height < self._viewHeight;
                 self._needValidation = false;
                 self.setCenterItemSelected();
             }
         }
 
         protected function addSettingsButton() as Void {
-            self.Items.add(new Listitems.Button(self._mainLayer, Application.loadResource(Rez.Strings.StTitle), SETTINGS, ($.screenHeight * 0.1).toNumber(), false));
+            self.Items.add(new Listitems.Button(self._mainLayer, Application.loadResource(Rez.Strings.StTitle), SETTINGS, (System.getDeviceSettings().screenHeight * 0.1).toNumber(), false));
         }
 
         protected function addBackButton(quit as Boolean) as Void {
             var rez = quit ? Rez.Strings.Quit : Rez.Strings.Back;
-            self.Items.add(new Listitems.Button(self._mainLayer, Application.loadResource(rez), quit ? QUIT : BACK, ($.screenHeight * 0.1).toNumber(), false));
+            self.Items.add(new Listitems.Button(self._mainLayer, Application.loadResource(rez), quit ? QUIT : BACK, (System.getDeviceSettings().screenHeight * 0.1).toNumber(), false));
         }
 
         protected function interactItem(item as Listitems.Item, doubletap as Boolean) as Boolean {
@@ -437,7 +457,7 @@ module Views {
         }
 
         protected function setCenterItemSelected() as Void {
-            var centerY = $.screenHeight / 2;
+            var centerY = System.getDeviceSettings().screenHeight / 2;
             for (var i = 0; i < self.Items.size(); i++) {
                 if (self.Items[i].Clicked(centerY, self._scrollOffset)) {
                     self._selectedItem = self.Items[i];
@@ -445,42 +465,6 @@ module Views {
                 }
             }
             self._selectedItem = null;
-        }
-
-        static function SupportedControls() as EControls {
-            if (self._controls == null) {
-                var settings = System.getDeviceSettings();
-                if (settings.isTouchScreen) {
-                    if ((settings.inputButtons & System.BUTTON_INPUT_UP) != 0 && (settings.inputButtons & System.BUTTON_INPUT_DOWN) != 0) {
-                        self._controls = CONTROLS_BOTH;
-                    } else {
-                        self._controls = CONTROLS_TOUCHSCREEN;
-                    }
-                } else {
-                    self._controls = CONTROLS_BUTTONS;
-                }
-            }
-            return self._controls;
-        }
-
-        static function DisplayButtonSupport() as Boolean {
-            if (self._buttonDisplay == null) {
-                var inputButtons = System.getDeviceSettings().inputButtons;
-                if ((inputButtons & System.BUTTON_INPUT_MENU) == 0 && (inputButtons & System.BUTTON_INPUT_ESC) == 0) {
-                    //only 1 button
-                    self._buttonDisplay = true;
-                } else {
-                    var controls = self.SupportedControls();
-                    if (controls == CONTROLS_TOUCHSCREEN) {
-                        self._buttonDisplay = false;
-                    } else if (controls == CONTROLS_BUTTONS) {
-                        self._buttonDisplay = true;
-                    } else {
-                        self._buttonDisplay = Helper.Properties.Get(Helper.Properties.HWBCTRL, false);
-                    }
-                }
-            }
-            return self._buttonDisplay;
         }
     }
 }

@@ -5,9 +5,9 @@ import Toybox.Math;
 module Controls {
     (:roundVersion)
     class Scrollbar {
+        private const _startDegree = 35.0;
         private var _scrollbarWidth = 10;
         private var _layer as LayerDef;
-        private static var _startDegree = 35;
 
         function initialize(layer as LayerDef, width as Number) {
             self._scrollbarWidth = width;
@@ -20,10 +20,10 @@ module Controls {
             }
 
             //background
-            var radius = self._layer.getWidth() - self._scrollbarWidth / 2;
+            var radius = self._layer.Width - self._scrollbarWidth / 2;
             dc.setPenWidth(self._scrollbarWidth);
             dc.setColor(getTheme().ScrollbarBackground, Graphics.COLOR_TRANSPARENT);
-            dc.drawArc(self._layer.getX(), self._layer.getY() + self._layer.getHeight() / 2, radius, Graphics.ARC_CLOCKWISE, self._startDegree, -self._startDegree);
+            dc.drawArc(self._layer.X, self._layer.Y + self._layer.Height / 2, radius, Graphics.ARC_CLOCKWISE, self._startDegree, -self._startDegree);
             self.drawDot(dc, self._startDegree, radius, self._scrollbarWidth);
             self.drawDot(dc, -self._startDegree, radius, self._scrollbarWidth);
 
@@ -44,7 +44,7 @@ module Controls {
             var drawY = thumbTop;
 
             dc.setColor(getTheme().ScrollbarThumbBorder, Graphics.COLOR_TRANSPARENT);
-            dc.drawArc(self._layer.getX(), self._layer.getY() + self._layer.getHeight() / 2, radius, Graphics.ARC_CLOCKWISE, startdegree, enddegree);
+            dc.drawArc(self._layer.X, self._layer.Y + self._layer.Height / 2, radius, Graphics.ARC_CLOCKWISE, startdegree, enddegree);
             self.drawDot(dc, startdegree, radius, self._scrollbarWidth);
             self.drawDot(dc, enddegree, radius, self._scrollbarWidth);
 
@@ -67,7 +67,7 @@ module Controls {
             var pen = self._scrollbarWidth - 2 * borderwidth;
             dc.setPenWidth(pen);
             dc.setColor(getTheme().ScrollbarThumbColor, Graphics.COLOR_TRANSPARENT);
-            dc.drawArc(self._layer.getX(), self._layer.getY() + self._layer.getHeight() / 2, radius, Graphics.ARC_CLOCKWISE, startdegree, enddegree);
+            dc.drawArc(self._layer.X, self._layer.Y + self._layer.Height / 2, radius, Graphics.ARC_CLOCKWISE, startdegree, enddegree);
 
             self.drawDot(dc, startdegree, radius, pen);
             self.drawDot(dc, enddegree, radius, pen);
@@ -77,7 +77,7 @@ module Controls {
             var yStart = dc.getHeight() / 2;
             var y = Math.sin(Math.toRadians(degree)) * radius;
             var x = Math.cos(Math.toRadians(degree)) * radius;
-            dc.fillCircle(self._layer.getX() + x, self._layer.getY() + yStart - y, penwidth / 2 - 1);
+            dc.fillCircle(self._layer.X + x, self._layer.Y + yStart - y, penwidth / 2 - 1);
         }
     }
 }

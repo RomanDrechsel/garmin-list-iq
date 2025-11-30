@@ -3,8 +3,8 @@ import Toybox.System;
 import Toybox.Communications;
 import Toybox.Background;
 
+(:background)
 module BG {
-    (:background)
     class Service extends System.ServiceDelegate {
         (:withBackground)
         public enum {

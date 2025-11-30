@@ -9,11 +9,11 @@ import Exceptions;
 
 module Views {
     class ListsSelectView extends ItemView {
-        private const _listIconCode = 48;
         private var _firstDisplay = true;
         private var _show_error_view as ErrorView.ECode? = null;
         (:withBackground)
         private var _processingBgDataLabel as Controls.Label? = null;
+        private var _showProcessBgDataPopup = false;
 
         private enum {
             STORE = 0,
@@ -26,7 +26,7 @@ module Views {
             self._show_error_view = show_errorview_on_start;
         }
 
-        function onShow() as Void {
+        public function onShow() as Void {
             ItemView.onShow();
             if (self._show_error_view != null) {
                 Views.ErrorView.Show(self._show_error_view, null);
@@ -34,56 +34,63 @@ module Views {
                 return;
             }
 
-            var app = $.getApp();
-            if (app.ListsManager != null) {
-                app.ListsManager.addListIndexChangedListener(self);
+            self._showProcessBgDataPopup = $.getApp().ProcessingBackgroundData;
+
+            var listsmanager = $.getApp().ListsManager;
+            if (listsmanager != null) {
+                listsmanager.addListIndexChangedListener(self);
             }
 
-            self.publishLists($.getApp().ListsManager.GetListsIndex(), false);
-
+            self.publishLists(listsmanager.GetListsIndex(), false);
             Helper.Properties.Store(Helper.Properties.LASTLIST, "");
         }
 
-        function onHide() as Void {
+        public function onHide() as Void {
             ItemView.onHide();
             self.Items = [];
-            if ($.getApp().ListsManager != null) {
-                $.getApp().ListsManager.removeListIndexChangedListener(self);
+            var listsmanager = $.getApp().ListsManager;
+            if (listsmanager != null) {
+                listsmanager.removeListIndexChangedListener(self);
             }
         }
 
         (:withBackground)
-        function onUpdate(dc as Dc) as Void {
+        public function onUpdate(dc as Dc) as Void {
             ItemView.onUpdate(dc);
-            if ($.getApp().ProcessingBackgroundData) {
-                self.drawProcessingBackgroundDataPopup(dc);
-            } else {
-                self.hideProcessingBackgroundDataPopup();
+
+            if (self._showProcessBgDataPopup) {
+                self._showProcessBgDataPopup = $.getApp().ProcessingBackgroundData;
+                if (self._showProcessBgDataPopup) {
+                    self.drawProcessingBackgroundDataPopup(dc);
+                } else {
+                    self.hideProcessingBackgroundDataPopup();
+                }
             }
         }
 
-        function onKeyMenu() as Boolean {
+        public function onKeyMenu() as Boolean {
             if (!ItemView.onKeyMenu()) {
                 self.openSettings();
             }
             return true;
         }
 
-        function onKeyEsc() as Boolean {
+        public function onKeyEsc() as Boolean {
             if (!ItemView.onKeyEsc()) {
                 System.exit();
             }
             return true;
         }
 
-        function onListIndexChanged(index as Array<Lists.ListIndexItem>?) as Void {
+        public function onListIndexChanged(index as Array<Lists.ListIndexItem>?) as Void {
             self.publishLists(index, true);
         }
 
-        function onSettingsChanged() as Void {
+        public function onSettingsChanged() as Void {
             ItemView.onSettingsChanged();
-            if ($.getApp().ListsManager != null) {
-                self.publishLists($.getApp().ListsManager.GetListsIndex(), true);
+            var listsmanager = $.getApp().ListsManager;
+            if (listsmanager != null) {
+                self.publishLists(listsmanager.GetListsIndex(), true);
             }
         }
 
@@ -135,10 +142,10 @@ module Views {
                         substring += "\n";
                     }
 
-                    var sep = screenHeight > 350 ? " " : "\n";
+                    var sep = System.getDeviceSettings().screenWidth > 380 ? " " : "\n";
                     substring += Helper.DateUtil.DateToString(date, sep);
                 }
-                self.addItem(title, substring, uuid, self._listIconCode, item.get("o"));
+                self.addItem(title, substring, uuid, 48, item.get("o"));
             }
 
             //no line below the last item
@@ -151,7 +158,7 @@ module Views {
                 self.addSettingsButton();
             }
 
-            if ($.getApp().NoBackButton) {
+            if (self._noHardwareBackButton) {
                 self.addBackButton(true);
             }
 
@@ -161,8 +168,8 @@ module Views {
         }
 
         private function noLists(request_update as Boolean) as Void {
-            self.Items = [] as Array<Item>;
-            var item = new Listitems.Item(self._mainLayer, Application.loadResource(Rez.Strings.NoLists), null, STORE, null, ($.screenHeight * 0.1).toNumber(), 0, null);
+            self.Items = [];
+            var item = new Listitems.Item(self._mainLayer, Application.loadResource(Rez.Strings.NoLists), null, STORE, null, (System.getDeviceSettings().screenHeight * 0.1).toNumber(), 0, null);
             item.DrawLine = false;
             item.TitleJustification = Graphics.TEXT_JUSTIFY_CENTER;
             item.isSelectable = false;
@@ -194,7 +201,7 @@ module Views {
                 self.addSettingsButton();
             }
 
-            if ($.getApp().NoBackButton) {
+            if (self._noHardwareBackButton) {
                 self.addBackButton(true);
             }
 
@@ -267,6 +274,7 @@ module Views {
         (:withBackground)
         private function hideProcessingBackgroundDataPopup() as Void {
             self._processingBgDataLabel = null;
+            self._showProcessBgDataPopup = false;
         }
 
         (:withoutBackground)

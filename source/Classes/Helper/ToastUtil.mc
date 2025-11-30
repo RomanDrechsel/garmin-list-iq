@@ -31,12 +31,6 @@ module Helper {
                 }
 
                 Attention.vibrate([new Attention.VibeProfile(50, length)]);
-            } else if (Attention has :playTone) {
-                if (type == SUCCESS) {
-                    Attention.playTone(Attention.TONE_MSG);
-                } else if (type == ERROR) {
-                    Attention.playTone(Attention.TONE_ERROR);
-                }
             }
         }
     }

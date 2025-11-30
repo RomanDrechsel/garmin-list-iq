@@ -19,7 +19,7 @@ module Controls {
             var TitleJustification as TextJustification = Graphics.TEXT_JUSTIFY_LEFT;
             var SubtitleJustification as TextJustification = Graphics.TEXT_JUSTIFY_LEFT;
 
-            protected static var _iconPaddingFactor = 0.3;
+            protected static const _iconPaddingFactor = 0.3;
 
             protected var _needValidation as Boolean = true;
             protected var _font as FontType;
@@ -38,12 +38,15 @@ module Controls {
                 self._subFont = Common.Fonts.Small();
                 self.ItemPosition = position;
                 self._layer = layer;
+
+                var screenHeight = System.getDeviceSettings().screenHeight;
+
                 if (vert_margin != null) {
                     self._verticalMargin = vert_margin;
                 } else {
-                    self._verticalMargin = ($.screenHeight * 0.01).toNumber();
+                    self._verticalMargin = (screenHeight * 0.01).toNumber();
                 }
-                self._verticalPadding = ($.screenHeight * 0.025).toNumber();
+                self._verticalPadding = (screenHeight * 0.025).toNumber();
                 self.Title = title;
                 self.Subtitle = subtitle;
                 self.BoundObject = obj;
@@ -57,7 +60,7 @@ module Controls {
                     return 0;
                 }
                 self.validate(dc);
-                var viewport_y = self._listY - scrollOffset + self._layer.getY();
+                var viewport_y = self._listY - scrollOffset + self._layer.Y;
                 if (self.isVisible(scrollOffset, dc) == false) {
                     return self.getHeight(dc);
                 }
@@ -80,24 +83,23 @@ module Controls {
                 }
 
                 viewport_y += self._verticalPadding;
-                var x = self._layer.getX();
 
                 if (self._icon instanceof String && self._icon.length() > 0) {
                     var iconoffsety = (Graphics.getFontHeight(self._font) - dc.getFontHeight(Common.Fonts.Icons())) / 2;
                     dc.setColor(color, Graphics.COLOR_TRANSPARENT);
-                    dc.drawText(x, viewport_y + iconoffsety, Common.Fonts.Icons(), self._icon, Graphics.TEXT_JUSTIFY_LEFT);
-                } else if (self.isBitmap(self._icon)) {
+                    dc.drawText(self._layer.X, viewport_y + iconoffsety, Common.Fonts.Icons(), self._icon, Graphics.TEXT_JUSTIFY_LEFT);
+                } else if (self._icon instanceof WatchUi.BitmapResource || (Graphics has :BitmapReference && self._icon instanceof Graphics.BitmapReference)) {
                     var icon = specialColor && self._iconInvert != null ? self._iconInvert : self._icon;
                     var iconoffsety = (Graphics.getFontHeight(self._font) - icon.getHeight()) / 2;
-                    dc.drawBitmap(x, viewport_y + iconoffsety, icon);
+                    dc.drawBitmap(self._layer.X, viewport_y + iconoffsety, icon);
                 }
 
                 if (self.Title != null) {
-                    viewport_y += self.Title.draw(dc, x + self.getIconWidth(dc), viewport_y, color, self.TitleJustification);
+                    viewport_y += self.Title.draw(dc, self._layer.X + self.getIconWidth(dc), viewport_y, color, self.TitleJustification);
                 }
                 if (self.Subtitle != null) {
                     viewport_y += Graphics.getFontAscent(Common.Fonts.Small()) / 8; //little space between title and subtitle
-                    viewport_y += self.Subtitle.draw(dc, x, viewport_y, colorSub, self.SubtitleJustification);
+                    viewport_y += self.Subtitle.draw(dc, self._layer.X, viewport_y, colorSub, self.SubtitleJustification);
                 }
 
                 viewport_y += self._verticalPadding;
@@ -112,7 +114,7 @@ module Controls {
                 return self._height;
             }
 
-            function setListY(y as Number) {
+            function setListY(y as Number) as Void {
                 self._listY = y;
             }
 
@@ -126,7 +128,6 @@ module Controls {
                     if (self._height == null || self._height <= 0) {
                         self._height = self._verticalMargin + self._verticalPadding;
                         if (self.Title != null) {
-                            //self._height += self.Title.getHeight(dc);
                             self._height += self.Title.getHeight(dc);
                         }
                         if (self.Subtitle != null) {
@@ -186,7 +187,7 @@ module Controls {
                     return false;
                 }
 
-                var viewportY = self._listY - scrollOffset + self._layer.getY();
+                var viewportY = self._listY - scrollOffset + self._layer.Y;
                 if (tapy >= viewportY && tapy <= viewportY + self._height) {
                     return true;
                 }
@@ -211,15 +212,14 @@ module Controls {
                 if (self._layer == null) {
                     return false;
                 }
-                var viewportY = self.getViewportYTop(scrollOffset);
-                if (viewportY == null) {
+                if (self._listY == null) {
                     return true;
                 }
-
+                var viewportY = self._listY - scrollOffset + self._layer.Y;
                 if (viewportY + self._height <= 0) {
                     //above the top edge of the display
                     return false;
-                } else if (viewportY > $.screenHeight) {
+                } else if (viewportY > System.getDeviceSettings().screenHeight) {
                     //below the bottom edge of the display
                     return false;
                 } else {
@@ -228,15 +228,16 @@ module Controls {
             }
 
             protected function drawLine(dc as Dc, y as Number) as Number {
-                var line = $.getTheme().LineBitmap;
+                var theme = $.getTheme();
+                var line = theme.LineBitmap;
                 if (line != null) {
                     y += self._verticalMargin;
                     var x = (dc.getWidth() - line.getWidth()) / 2;
                     dc.drawBitmap(x, y, line);
                     y += line.getHeight();
-                } else if ($.getTheme().LineSeparatorColor != null) {
+                } else if (theme.LineSeparatorColor != null) {
                     y += self._verticalMargin;
-                    dc.setColor($.getTheme().LineSeparatorColor, Graphics.COLOR_TRANSPARENT);
+                    dc.setColor(theme.LineSeparatorColor, Graphics.COLOR_TRANSPARENT);
                     dc.setPenWidth(2);
                     dc.drawLine(0, y, dc.getWidth(), y);
                     y += 2;
@@ -275,7 +276,7 @@ module Controls {
             }
 
             protected function getTextWidth(dc as Dc, with_icon as Boolean) as Number {
-                var width = self._layer.getWidth();
+                var width = self._layer.Width;
                 if (with_icon) {
                     width -= self.getIconWidth(dc);
                 }
@@ -292,7 +293,7 @@ module Controls {
                     iconwidth = 0;
                 }
 
-                return iconwidth + iconwidth * self._iconPaddingFactor;
+                return iconwidth + (iconwidth * self._iconPaddingFactor).toNumber();
             }
 
             protected function drawSelectedBackground(dc as Dc, viewport_y as Number) as Void {
@@ -300,21 +301,6 @@ module Controls {
                 var height = self.getHeight(dc) - 2 * self._verticalMargin - self.getLineHeight();
                 dc.setColor(theme.SelectedItemBackground, theme.SelectedItemBackground);
                 dc.fillRectangle(0, viewport_y, dc.getWidth(), height);
-            }
-
-            protected function getViewportYTop(scrollOffset as Number) as Number? {
-                if (self._listY == null) {
-                    return null;
-                }
-                return self._listY - scrollOffset + self._layer.getY();
-            }
-
-            protected static function isBitmap(obj as Object) as Boolean {
-                if (obj instanceof WatchUi.BitmapResource || (Graphics has :BitmapReference && obj instanceof Graphics.BitmapReference)) {
-                    return true;
-                } else {
-                    return false;
-                }
             }
         }
     }

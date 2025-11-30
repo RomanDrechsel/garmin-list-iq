@@ -1,0 +1,6 @@
+<drawables>
+    <bitmap id="LineBlue" filename="LineBlue.png" packingFormat="default" />
+    <bitmap id="LineRed" filename="LineRed.png" packingFormat="default" />
+    <bitmap id="LineWhite" filename="LineWhite.png" packingFormat="default" />
+    <bitmap id="LineBlack" filename="LineBlack.png" packingFormat="default" />
+</drawables>

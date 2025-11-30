@@ -37,10 +37,7 @@ module Views {
             self._showProcessBgDataPopup = $.getApp().ProcessingBackgroundData;
 
             var listsmanager = $.getApp().ListsManager;
-            if (listsmanager != null) {
-                listsmanager.addListIndexChangedListener(self);
-            }
-
+            listsmanager.addListIndexChangedListener(self);
             self.publishLists(listsmanager.GetListsIndex(), false);
             Helper.Properties.Store(Helper.Properties.LASTLIST, "");
         }
@@ -48,10 +45,8 @@ module Views {
         public function onHide() as Void {
             ItemView.onHide();
             self.Items = [];
-            var listsmanager = $.getApp().ListsManager;
-            if (listsmanager != null) {
-                listsmanager.removeListIndexChangedListener(self);
-            }
+
+            $.getApp().ListsManager.removeListIndexChangedListener(self);
         }
 
         (:withBackground)
@@ -88,10 +83,7 @@ module Views {
 
         public function onSettingsChanged() as Void {
             ItemView.onSettingsChanged();
-            var listsmanager = $.getApp().ListsManager;
-            if (listsmanager != null) {
-                self.publishLists(listsmanager.GetListsIndex(), true);
-            }
+            self.publishLists($.getApp().ListsManager.GetListsIndex(), true);
         }
 
         private function publishLists(index as Lists.ListIndex?, request_update as Boolean) as Void {

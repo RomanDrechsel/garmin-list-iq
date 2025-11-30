@@ -4,7 +4,7 @@ adb -e forward tcp:7381 tcp:7381
 For Smartphone
 adb -d forward tcp:7381 tcp:7381
 
-TODO: Are the checks if self._app.ListsManager != null needed?
+TODO: Toast-Icons only on capable devices
 TODO: notes function
 
 1 Button, 64 Color:

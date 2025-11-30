@@ -50,10 +50,7 @@ module Views {
         }
 
         function deleteAllStorage() as Void {
-            var listsmanager = $.getApp().ListsManager;
-            if (listsmanager != null) {
-                listsmanager.clearAll(false);
-            }
+            $.getApp().ListsManager.clearAll(false);
             self.goBack();
         }
 
@@ -144,7 +141,7 @@ module Views {
             self.addItem(Application.loadResource(Rez.Strings.StLogs), null, SETTINGS_LOGS, prop ? self._itemIconDone : self._itemIcon, 0);
 
             //store logs persistent
-            prop = Helper.Properties.Get(Helper.Properties.PERSISTENTLOGS, true);
+            prop = Helper.Properties.Get(Helper.Properties.PERSISTENTLOGS, false);
             var persistent = new Listitems.Item(self._mainLayer, Application.loadResource(Rez.Strings.StPersistentLogs1), Application.loadResource(Rez.Strings.StPersistentLogs2), SETTINGS_PERSISTANTLOGS, prop ? self._itemIconDone : self._itemIcon, null, 0, null);
             persistent.DrawLine = true;
             persistent.SubtitleJustification = Graphics.TEXT_JUSTIFY_CENTER;

@@ -27,20 +27,13 @@ module Views {
 
         function onLayout(dc as Dc) {
             IconItemView.onLayout(dc);
-            var listsmanager = $.getApp().ListsManager;
-            if (listsmanager != null) {
-                listsmanager.addListChangedListener(self);
-            }
+            $.getApp().ListsManager.addListChangedListener(self);
             self.loadItems(false);
         }
 
         protected function interactItem(item as Listitems.Item, doubletap as Boolean) as Boolean {
             var listsmanager = $.getApp().ListsManager;
             if (!IconItemView.interactItem(item, doubletap)) {
-                if (listsmanager == null) {
-                    return false;
-                }
-
                 if (item.BoundObject instanceof Number) {
                     if (item.BoundObject == DELETE) {
                         var dialog = new WatchUi.Confirmation(Application.loadResource(Rez.Strings.DeleteConfirm));
@@ -79,10 +72,7 @@ module Views {
         }
 
         function deleteList() as Void {
-            var listsmanager = $.getApp().ListsManager;
-            if (listsmanager != null) {
-                listsmanager.deleteList(self._listUuid, true);
-            }
+            $.getApp().ListsManager.deleteList(self._listUuid, true);
         }
 
         function onSettingsChanged() as Void {
@@ -158,10 +148,6 @@ module Views {
 
         private function readList(list as Lists.List?) as Void {
             var app = $.getApp();
-            if (app.ListsManager == null) {
-                return;
-            }
-
             if (list == null) {
                 list = app.ListsManager.GetList(self._listUuid);
             }

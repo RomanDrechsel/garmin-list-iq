@@ -23,7 +23,6 @@ module Comm {
         }
 
         function phoneMessageCallback(msg as Communications.PhoneAppMessage) as Void {
-            Debug.Log("Received message from phone" + (self._app.AppType == ListsApp.BACKGROUND ? " in background" : ""));
             var message = msg.data as Application.PropertyValueType;
             if (message instanceof Array) {
                 self.processData(message, false);
@@ -54,14 +53,6 @@ module Comm {
         }
 
         function processData(data as Array, from_bg as Boolean) as Void {
-            if (self._app.ListsManager == null) {
-                Debug.Log("No ListsManager found, cannot handle phone app messages");
-                if (self._app.BackgroundService != null) {
-                    self._app.BackgroundService.Finish(false);
-                }
-                return;
-            }
-
             var size = Helper.StringUtil.formatBytes(Helper.StringUtil.getSize(data));
             var message_type = null;
             if (data[0] instanceof String) {

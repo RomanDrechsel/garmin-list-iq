@@ -237,9 +237,10 @@ module Controls {
                     y += line.getHeight();
                 } else if (theme.LineSeparatorColor != null) {
                     y += self._verticalMargin;
+                    var hor_padding = self._layer.Width / 10;
                     dc.setColor(theme.LineSeparatorColor, Graphics.COLOR_TRANSPARENT);
                     dc.setPenWidth(2);
-                    dc.drawLine(0, y, dc.getWidth(), y);
+                    dc.drawLine(self._layer.X + hor_padding, y, self._layer.Width, y);
                     y += 2;
                 }
 

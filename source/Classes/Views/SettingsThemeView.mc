@@ -45,16 +45,11 @@ module Views {
 
         protected function interactItem(item as Listitems.Item, doubletap as Boolean) as Boolean {
             if (!IconItemView.interactItem(item, doubletap)) {
-                var app = $.getApp();
-                if (app.ListsManager == null) {
-                    return false;
-                }
-
                 var theme = Helper.Properties.Get(Helper.Properties.THEME, 0);
                 if (item.BoundObject instanceof Number && item.BoundObject != theme) {
                     if (self._themes.hasKey(item.BoundObject as Number)) {
                         Helper.Properties.Store(Helper.Properties.THEME, item.BoundObject as Number);
-                        app.triggerOnSettingsChanged();
+                        $.getApp().triggerOnSettingsChanged();
                         return true;
                     }
                 }

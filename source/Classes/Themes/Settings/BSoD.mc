@@ -2,7 +2,9 @@ module Themes {
     class BSoD extends ThemeSettingsBase {
         function initialize() {
             ThemeSettingsBase.initialize();
-            self.LineBitmap = Application.loadResource(Rez.Drawables.LineWhite);
+            if (Rez.Drawables has :LineWhite) {
+                self.LineBitmap = Application.loadResource(Rez.Drawables.LineWhite);
+            }
 
             self.MainColor = 0xffffff;
             self.MainColorSelected = 0x0827f5;

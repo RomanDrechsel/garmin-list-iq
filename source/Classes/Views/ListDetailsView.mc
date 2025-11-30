@@ -87,12 +87,11 @@ module Views {
 
         private function publishItems(list as Lists.List?, init as Boolean) as Void {
             self.Items = [];
-            var app = $.getApp();
-            if (app.ListsManager == null || self._listUuid == null) {
+            if (self._listUuid == null) {
                 self.errorLoadingList();
             } else {
                 if (list == null) {
-                    list = app.ListsManager.GetList(self._listUuid) as List?;
+                    list = $.getApp().ListsManager.GetList(self._listUuid) as List?;
                 }
                 if (list == null) {
                     self.errorLoadingList();
@@ -179,10 +178,11 @@ module Views {
         }
 
         private function checkAutoreset(list as List) as Void {
-            var listsmanager = $.getApp().ListsManager;
-            if (listsmanager == null || list.Items.size() <= 0) {
+            if (list.Items.size() <= 0) {
                 return;
             }
+
+            var listsmanager = $.getApp().ListsManager;
 
             var do_reset = false;
             var store_list = false;

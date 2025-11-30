@@ -42,9 +42,11 @@ class ListsApp extends Application.AppBase {
         }
     }
 
-    function getInitialView() as [WatchUi.Views] or [WatchUi.Views, WatchUi.InputDelegates] {
+    public function getInitialView() as [WatchUi.Views] or [WatchUi.Views, WatchUi.InputDelegates] {
         self.AppType = APP;
-        Application.Properties.setValue("appVersion", "2025.11.3000");
+        Application.Properties.setValue("appVersion", "2025.11.3001");
+
+        self.configureOldDevicesAfterInstall();
 
         self.Debug = new Debug.DebugStorage();
         self.ListsManager = new Lists.ListsManager();
@@ -78,20 +80,29 @@ class ListsApp extends Application.AppBase {
     }
 
     (:glance,:withGlance)
-    function getGlanceView() as [WatchUi.GlanceView] or [WatchUi.GlanceView, WatchUi.GlanceViewDelegate] or Null {
+    public function getGlanceView() as [WatchUi.GlanceView] or [WatchUi.GlanceView, WatchUi.GlanceViewDelegate] or Null {
         self.AppType = GLANCE;
         return [new Views.GlanceView()];
     }
 
     (:withBackground,:background)
-    function getServiceDelegate() as [System.ServiceDelegate] {
+    public function getServiceDelegate() as [System.ServiceDelegate] {
         self.AppType = BACKGROUND;
         self.BackgroundService = new BG.Service();
 
         return [self.BackgroundService];
     }
 
-    function onSettingsChanged() as Void {
+    (:withoutBackground)
+    public function onAppInstall() as Void {
+        /*
+        only on old devices without background capability
+        Disable Logs by default for these devices
+        */
+        Application.Storage.setValue("old_device", true);
+    }
+
+    public function onSettingsChanged() as Void {
         Debug.Log("Settings changed out of app");
         self.triggerOnSettingsChanged();
 
@@ -108,7 +119,7 @@ class ListsApp extends Application.AppBase {
         this method handles data from background, that were forwarded to foreground via Background.exit(data);
     */
     (:withBackground)
-    function onBackgroundData(data as Application.PersistableType) as Void {
+    public function onBackgroundData(data as Application.PersistableType) as Void {
         if (data instanceof Array) {
             Debug.Log("Received message from phone in background");
             var cacher = new BG.ListCacher();
@@ -119,7 +130,7 @@ class ListsApp extends Application.AppBase {
         }
     }
 
-    function triggerOnSettingsChanged() as Void {
+    public function triggerOnSettingsChanged() as Void {
         if (self.Debug != null) {
             self.Debug.onSettingsChanged();
         }
@@ -137,7 +148,7 @@ class ListsApp extends Application.AppBase {
         WatchUi.requestUpdate();
     }
 
-    function getInfo() as Array<String> {
+    public function getInfo() as Array<String> {
         var settings = System.getDeviceSettings();
         var stats = System.getSystemStats();
 
@@ -166,7 +177,7 @@ class ListsApp extends Application.AppBase {
         return ret;
     }
 
-    function addSettingsChangedListener(obj as Object) as Void {
+    public function addSettingsChangedListener(obj as Object) as Void {
         var del = [];
         for (var i = 0; i < self._onSettingsChangedListeners.size(); i++) {
             var weak = self._onSettingsChangedListeners[i];
@@ -194,7 +205,7 @@ class ListsApp extends Application.AppBase {
         }
     }
 
-    function removeSettingsChangedListener(obj as Object) as Void {
+    public function removeSettingsChangedListener(obj as Object) as Void {
         var ref = obj.weak();
         if (self._onSettingsChangedListeners.indexOf(ref) >= 0) {
             self._onSettingsChangedListeners.removeAll(ref);
@@ -209,6 +220,19 @@ class ListsApp extends Application.AppBase {
 
     (:withoutBackground)
     private function processBackgroundData() as Void {}
+
+    (:withBackground)
+    private function configureOldDevicesAfterInstall() as Void {}
+
+    (:withoutBackground)
+    private function configureOldDevicesAfterInstall() as Void {
+        if (Application.Storage.getValue("old_device") == true) {
+            //no logs on old, weak devices
+            Helper.Properties.Store(Helper.Properties.LOGS, false);
+            Helper.Properties.Store(Helper.Properties.PERSISTENTLOGS, false);
+            Application.Storage.deleteValue("old_device");
+        }
+    }
 }
 
 (:glance,:background)

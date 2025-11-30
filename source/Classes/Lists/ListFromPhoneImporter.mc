@@ -8,7 +8,7 @@ module Lists {
                 var rowsplit = Helper.StringUtil.split(data[0].toString(), "=", 2);
                 data = data.slice(1, null);
                 if (rowsplit.size() <= 1 || rowsplit[0].length == 0) {
-                    Debug.Log("No key value pair in list data " + rowsplit);
+                    //no key value pair, maybe "issync" for a list
                     continue;
                 }
                 var key = rowsplit[0];

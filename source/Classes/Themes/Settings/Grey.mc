@@ -3,7 +3,9 @@ module Themes {
         (:withHighColor)
         function initialize() {
             ThemeSettingsBase.initialize();
-            self.LineBitmap = Application.loadResource(Rez.Drawables.LineBlue);
+            if (Rez.Drawables has :LineBlue) {
+                self.LineBitmap = Application.loadResource(Rez.Drawables.LineBlue);
+            }
 
             self.MainColor = 0xd7d7d7;
             self.MainColorSelected = self.MainColor;
@@ -30,8 +32,9 @@ module Themes {
         (:withoutHighColor)
         function initialize() {
             ThemeSettingsBase.initialize();
-            self.LineBitmap = Application.loadResource(Rez.Drawables.LineBlue);
-
+            if (Rez.Drawables has :LineBlue) {
+                self.LineBitmap = Application.loadResource(Rez.Drawables.LineBlue);
+            }
             self.MainColor = 0xffffff;
             self.MainColorSelected = self.MainColor;
             self.SecondColor = 0xaaaaaa;

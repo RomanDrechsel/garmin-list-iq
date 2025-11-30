@@ -72,7 +72,7 @@ module Debug {
 
         public function onSettingsChanged() {
             self._storeLogs = Helper.Properties.Get(Helper.Properties.LOGS, true) as Boolean;
-            self._persistentLogs = Helper.Properties.Get(Helper.Properties.PERSISTENTLOGS, true) as Boolean;
+            self._persistentLogs = Helper.Properties.Get(Helper.Properties.PERSISTENTLOGS, false) as Boolean;
             if (self._storeLogs == false || self._persistentLogs == false) {
                 Application.Storage.deleteValue("logs");
             }

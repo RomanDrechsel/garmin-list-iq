@@ -28,14 +28,12 @@ module Views {
                     var autoexit = item.BoundObject as Number;
                     var app = $.getApp();
                     Helper.Properties.Store(Helper.Properties.AUTOEXIT, autoexit);
-                    if (app.ListsManager != null) {
-                        app.triggerOnSettingsChanged();
-                        if (autoexit > 0 && app.Inactivity == null) {
-                            app.Inactivity = new Common.Inactivity();
-                        } else if (autoexit <= 0 && app.Inactivity != null) {
-                            app.Inactivity.Stop();
-                            app.Inactivity = null;
-                        }
+                    app.triggerOnSettingsChanged();
+                    if (autoexit > 0 && app.Inactivity == null) {
+                        app.Inactivity = new Common.Inactivity();
+                    } else if (autoexit <= 0 && app.Inactivity != null) {
+                        app.Inactivity.Stop();
+                        app.Inactivity = null;
                     }
                     self.goBack();
                 }

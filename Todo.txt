@@ -4,7 +4,6 @@ adb -e forward tcp:7381 tcp:7381
 For Smartphone
 adb -d forward tcp:7381 tcp:7381
 
-WIP: while loading bg cache lists, is requestUpdate() called twice? (in Processor and in view?)
 TODO: Are the checks if self._app.ListsManager != null needed?
 TODO: notes function
 

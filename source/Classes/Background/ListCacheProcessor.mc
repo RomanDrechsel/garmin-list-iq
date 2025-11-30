@@ -65,7 +65,6 @@ module BG {
                 if (list != null && list instanceof Array) {
                     self._app.Phone.processData(list, true);
                     Application.Storage.deleteValue(BG.ListCacher.LIST + uuid);
-                    WatchUi.requestUpdate();
                 } else {
                     Debug.Log("Could not find background cache for list " + uuid);
                 }
@@ -87,7 +86,7 @@ module BG {
 
             if ((self._processIndex != null && self._processIndex.size() > 0) || (self._processDelList != null && self._processDelList.size() > 0) || self._processLogRequest != null) {
                 self._processTimer = new Timer.Timer();
-                self._processTimer.start(method(:processCacheTimerCallback), 100, false);
+                self._processTimer.start(method(:processCacheTimerCallback), 1000, false);
             } else {
                 self._processTimer.stop();
                 self._processTimer = null;

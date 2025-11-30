@@ -392,9 +392,8 @@ module Lists {
                         } else {
                             del.add(listener);
                         }
-                    }
-                    if ($.getApp().AppType == ListsApp.APP) {
-                        Helper.ToastUtil.Toast(Rez.Strings.EStorageError, Helper.ToastUtil.ERROR);
+                    } else {
+                        del.add(listener);
                     }
                 }
                 for (var i = 0; i < del.size(); i++) {

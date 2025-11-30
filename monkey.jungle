@@ -16,17 +16,17 @@ round.excludeAnnotations = regularVersion;withoutBackground;withoutHighColor
 
 # Approach® S50
 # Round Display, background capability, 390x390 AMOLED touch display, glance
-approachs50.resourcePath = $(base.resourcePath);resources-touch;resources-highcolor
+approachs50.resourcePath = $(base.resourcePath);resources-touch;resources-highcolor;resources-toast
 approachs50.excludeAnnotations = regularVersion;withoutBackground;withoutHighColor
 
 # Approach® S70 42mm
 # Round Display, background capability, 390x390 AMOLED touch display, glance
-approachs7042mm.resourcePath = $(base.resourcePath);resources-touch;resources-highcolor
+approachs7042mm.resourcePath = $(base.resourcePath);resources-touch;resources-highcolor;resources-toast
 approachs7042mm.excludeAnnotations = regularVersion;withoutBackground;withoutHighColor
 
 # Approach® S70 47mm
 # Round Display, background capability, 454x454 AMOLED touch display, glance
-approachs7047mm.resourcePath = $(base.resourcePath);resources-touch;resources-highcolor
+approachs7047mm.resourcePath = $(base.resourcePath);resources-touch;resources-highcolor;resources-toast
 approachs7047mm.excludeAnnotations = regularVersion;withoutBackground;withoutHighColor
 
 # D2™ Air
@@ -36,7 +36,7 @@ d2air.excludeAnnotations = regularVersion;withoutBackground;withGlance;withoutHi
 
 # D2™ Air X10
 # Round Display, background capability, 416x416 AMOLED touch display, no glance
-d2airx10.resourcePath = $(base.resourcePath);resources-touch;resources-highcolor
+d2airx10.resourcePath = $(base.resourcePath);resources-touch;resources-highcolor;resources-toast
 d2airx10.excludeAnnotations = regularVersion;withoutBackground;withGlance;withoutHighColor
 
 # D2™ Delta
@@ -56,72 +56,72 @@ d2deltas.excludeAnnotations = regularVersion;withBackground;withGlance;withHighC
 
 # D2™ Mach 1
 # Round Display, background capability, 416x416 AMOLED touch display, 5 buttons, glance
-d2mach1.resourcePath = $(base.resourcePath);resources-touch;resources-highcolor
+d2mach1.resourcePath = $(base.resourcePath);resources-touch;resources-highcolor;resources-toast
 d2mach1.excludeAnnotations = regularVersion;withoutBackground;withoutHighColor
 
 # D2™ Mach 2
 # Round Display, background capability, 454x454 AMOLED touch display, 5 buttons, glance
-d2mach2.resourcePath = $(base.resourcePath);resources-touch-button;resources-highcolor
+d2mach2.resourcePath = $(base.resourcePath);resources-touch-button;resources-highcolor;resources-toast
 d2mach2.excludeAnnotations = regularVersion;withoutBackground;withoutHighColor
 
 # Descent™ G2
 # Round Display, background capability, 390x390 AMOLED touch display, 5 buttons, glance
-descentg2.resourcePath = $(base.resourcePath);resources-touch-button;resources-highcolor
+descentg2.resourcePath = $(base.resourcePath);resources-touch-button;resources-highcolor;resources-toast
 descentg2.excludeAnnotations = regularVersion;withoutBackground;withoutHighColor
 
 # Descent™ Mk2 / Descent™ Mk2i
 # Round Display, no background capability, 280x280 64 color display, 5 buttons, no glance
-descentmk2.resourcePath = $(base.resourcePath);resources-small
+descentmk2.resourcePath = $(base.resourcePath);resources-small;resources-toast
 descentmk2.excludeAnnotations = regularVersion;withBackground;withGlance;withHighColor
 
 # Descent™ Mk2 S
 # Round Display, no background capability, 240x240 64 color display, 5 buttons no glance
-descentmk2s.resourcePath = $(base.resourcePath);resources-small
+descentmk2s.resourcePath = $(base.resourcePath);resources-small;resources-toast
 descentmk2s.excludeAnnotations = regularVersion;withBackground;withGlance;withHighColor
 
 # Descent™ Mk3 43mm / Mk3i 43mm
 # Round Display, background capability, 390x390 AMOLED touch display, 5 buttons, glance
-descentmk343mm.resourcePath = $(base.resourcePath);resources-touch-button;resources-highcolor
+descentmk343mm.resourcePath = $(base.resourcePath);resources-touch-button;resources-highcolor;resources-toast
 descentmk343mm.excludeAnnotations = regularVersion;withoutBackground;withoutHighColor
 
 # Descent™ Mk3i 51mm
 # Round Display, background capability, 454x454 AMOLED touch display, 5 buttons, glance
-descentmk351mm.resourcePath = $(base.resourcePath);resources-touch-button;resources-highcolor
+descentmk351mm.resourcePath = $(base.resourcePath);resources-touch-button;resources-highcolor;resources-toast
 descentmk351mm.excludeAnnotations = regularVersion;withoutBackground;withoutHighColor
 
 # Enduro™
 # Round Display, no background capability, 280x280 64 color display, 5 buttons, no glance
-enduro.resourcePath = $(base.resourcePath);resources-small
+enduro.resourcePath = $(base.resourcePath);resources-small;resources-toast
 enduro.excludeAnnotations = regularVersion;withBackground;withGlance;withHighColor
 
 # Enduro™ 3
 # Round Display, no background capability, 280x280 64 color display, 5 buttons, no glance
-enduro3.resourcePath = $(base.resourcePath);resources-touch-button;resources-small
+enduro3.resourcePath = $(base.resourcePath);resources-touch-button;resources-small;resources-toast
 enduro3.excludeAnnotations = regularVersion;withBackground;withGlance;withoutHighColor
 
 # epix™ (Gen 2) / quatix® 7 Sapphire
 # Round Display, background capability, 416x416 AMOLED touch display, 5 buttons, no glance
-epix2.resourcePath = $(base.resourcePath);resources-touch-button;resources-highcolor
+epix2.resourcePath = $(base.resourcePath);resources-touch-button;resources-highcolor;resources-toast
 epix2.excludeAnnotations = regularVersion;withoutBackground;withGlance;withoutHighColor
 
 # epix™ Pro (Gen 2) 42mm
 # Round Display, background capability, 416x416 AMOLED touch display, 5 buttons, no glance
-epix2pro42mm.resourcePath = $(base.resourcePath);resources-touch-button;resources-highcolor
+epix2pro42mm.resourcePath = $(base.resourcePath);resources-touch-button;resources-highcolor;resources-toast
 epix2pro42mm.excludeAnnotations = regularVersion;withoutBackground;withGlance;withoutHighColor
 
 # epix™ Pro (Gen 2) 47mm / quatix® 7 Pro
 # Round Display, background capability, 416x416 AMOLED touch display, 5 buttons, glance
-epix2pro47mm.resourcePath = $(base.resourcePath);resources-touch-button;resources-highcolor
+epix2pro47mm.resourcePath = $(base.resourcePath);resources-touch-button;resources-highcolor;resources-toast
 epix2pro47mm.excludeAnnotations = regularVersion;withoutBackground;withoutHighColor
 
 # epix™ Pro (Gen 2) 47mm / quatix® 7 Pro system 7 preview
 # Round Display, background capability, 416x416 AMOLED touch display, 5 buttons, glance
-epix2pro47mmsystem7preview.resourcePath = $(base.resourcePath);resources-touch-button;resources-highcolor
+epix2pro47mmsystem7preview.resourcePath = $(base.resourcePath);resources-touch-button;resources-highcolor;resources-toast
 epix2pro47mmsystem7preview.excludeAnnotations = regularVersion;withoutBackground;withoutHighColor
 
 # epix™ Pro (Gen 2) 51mm / D2™ Mach 1 Pro / tactix® 7 – AMOLED Edition
 # Round Display, background capability, 454x454 AMOLED touch display, 5 buttons, glance
-epix2pro51mm.resourcePath = $(base.resourcePath);resources-touch-button;resources-highcolor
+epix2pro51mm.resourcePath = $(base.resourcePath);resources-touch-button;resources-highcolor;resources-toast
 epix2pro51mm.excludeAnnotations = regularVersion;withoutBackground;withoutHighColor
 
 # fēnix® 5 / quatix® 5
@@ -156,92 +156,92 @@ fenix5xplus.excludeAnnotations = regularVersion;withBackground;withGlance;withHi
 
 # fēnix® 6 / 6 Solar / 6 Dual Power
 # Round Display, no background capability, 260x260 64 color display, 5 buttons, no glance
-fenix6.resourcePath = $(base.resourcePath);resources-small
+fenix6.resourcePath = $(base.resourcePath);resources-small;resources-toast
 fenix6.excludeAnnotations = regularVersion;withBackground;withGlance;withHighColor
 
 # fēnix® 6 Pro / 6 Sapphire / 6 Pro Solar / 6 Pro Dual Power / quatix® 6
 # Round Display, no background capability, 260x260 64 color display, 5 buttons, no glance
-fenix6pro.resourcePath = $(base.resourcePath);resources-small
+fenix6pro.resourcePath = $(base.resourcePath);resources-small;resources-toast
 fenix6pro.excludeAnnotations = regularVersion;withBackground;withGlance;withHighColor
 
 # fēnix® 6S / 6S Solar / 6S Dual Power
 # Round Display, no background capability, 240x240 64 color display, 5 buttons, no glance
-fenix6s.resourcePath = $(base.resourcePath);resources-small
+fenix6s.resourcePath = $(base.resourcePath);resources-small;resources-toast
 fenix6s.excludeAnnotations = regularVersion;withBackground;withGlance;withHighColor
 
 # fēnix® 6S Pro / 6S Sapphire / 6S Pro Solar / 6S Pro Dual Power
 # Round Display, no background capability, 240x240 64 color display, 5 buttons, no glance
-fenix6spro.resourcePath = $(base.resourcePath);resources-small
+fenix6spro.resourcePath = $(base.resourcePath);resources-small;resources-toast
 fenix6spro.excludeAnnotations = regularVersion;withBackground;withGlance;withHighColor
 
 # fēnix® 6X Pro / 6X Sapphire / 6X Pro Solar / tactix® Delta Sapphire / Delta Solar / Delta Solar - Ballistics Edition / quatix® 6X / 6X Solar / 6X Dual Power
 # Round Display, no background capability, 280x280 64 color display, 5 buttons, no glance
-fenix6xpro.resourcePath = $(base.resourcePath);resources-small
+fenix6xpro.resourcePath = $(base.resourcePath);resources-small;resources-toast
 fenix6xpro.excludeAnnotations = regularVersion;withBackground;withGlance;withHighColor
 
 # fēnix® 7 / quatix® 7
 # Round Display, background capability, 260x260 64 color touch display, 5 buttons, glance
-fenix7.resourcePath = $(base.resourcePath);resources-touch-button;resources-small
+fenix7.resourcePath = $(base.resourcePath);resources-touch-button;resources-small;resources-toast
 fenix7.excludeAnnotations = regularVersion;withoutBackground;withHighColor
 
 # fēnix® 7 Pro
 # Round Display, background capability, 260x260 64 color touch display, 5 buttons, glance
-fenix7pro.resourcePath = $(base.resourcePath);resources-touch-button;resources-small
+fenix7pro.resourcePath = $(base.resourcePath);resources-touch-button;resources-small;resources-toast
 fenix7pro.excludeAnnotations = regularVersion;withoutBackground;withHighColor
 
 # fēnix® 7 Pro - Solar Edition (no Wi-Fi)
 # Round Display, background capability, 260x260 64 color touch display, 5 buttons, glance
-fenix7pronowifi.resourcePath = $(base.resourcePath);resources-touch-button;resources-small
+fenix7pronowifi.resourcePath = $(base.resourcePath);resources-touch-button;resources-small;resources-toast
 fenix7pronowifi.excludeAnnotations = regularVersion;withoutBackground;withHighColor
 
 # fēnix® 7S
 # Round Display, background capability, 240x240 64 color touch display, 5 buttons, glance
-fenix7s.resourcePath = $(base.resourcePath);resources-touch-button;resources-small
+fenix7s.resourcePath = $(base.resourcePath);resources-touch-button;resources-small;resources-toast
 fenix7s.excludeAnnotations = regularVersion;withoutBackground;withHighColor
 
 # fēnix® 7S Pro
 # Round Display, background capability, 240x240 64 color touch display, 5 buttons, glance
-fenix7spro.resourcePath = $(base.resourcePath);resources-touch-button;resources-small
+fenix7spro.resourcePath = $(base.resourcePath);resources-touch-button;resources-small;resources-toast
 fenix7spro.excludeAnnotations = regularVersion;withoutBackground;withHighColor
 
 # fēnix® 7X / tactix® 7 / quatix® 7X Solar / Enduro™ 2
 # Round Display, background capability, 280x280 64 color touch display, 5 buttons, glance
-fenix7x.resourcePath = $(base.resourcePath);resources-touch-button;resources-small
+fenix7x.resourcePath = $(base.resourcePath);resources-touch-button;resources-small;resources-toast
 fenix7x.excludeAnnotations = regularVersion;withoutBackground;withHighColor
 
 # fēnix® 7X Pro
 # Round Display, background capability, 280x280 64 color touch display, 5 buttons, glance
-fenix7xpro.resourcePath = $(base.resourcePath);resources-touch-button;resources-small
+fenix7xpro.resourcePath = $(base.resourcePath);resources-touch-button;resources-small;resources-toast
 fenix7xpro.excludeAnnotations = regularVersion;withoutBackground;withHighColor
 
 # fēnix® 7X Pro - Solar Edition (no Wi-Fi)
 # Round Display, background capability, 280x280 64 color touch display, 5 buttons, glance
-fenix7xpronowifi.resourcePath = $(base.resourcePath);resources-touch-button;resources-small
+fenix7xpronowifi.resourcePath = $(base.resourcePath);resources-touch-button;resources-small;resources-toast
 fenix7xpronowifi.excludeAnnotations = regularVersion;withoutBackground;withHighColor
 
 # fēnix® 8 43mm
 # Round Display, background capability, 416x416 AMOLED touch display, 5 buttons, glance
-fenix843mm.resourcePath = $(base.resourcePath);resources-touch-button;resources-highcolor
+fenix843mm.resourcePath = $(base.resourcePath);resources-touch-button;resources-highcolor;resources-toast
 fenix843mm.excludeAnnotations = regularVersion;withoutBackground;withoutHighColor
 
 # fēnix® 8 47mm / 51mm / tactix® 8 47mm / 51mm
 # Round Display, background capability, 454x454 AMOLED touch display, 5 buttons, glance
-fenix847mm.resourcePath = $(base.resourcePath);resources-touch-button;resources-highcolor
+fenix847mm.resourcePath = $(base.resourcePath);resources-touch-button;resources-highcolor;resources-toast
 fenix847mm.excludeAnnotations = regularVersion;withoutBackground;withoutHighColor
 
 # fēnix® 8 Pro 47mm / 51mm / MicroLED
 # Round Display, background capability, 454x454 AMOLED touch display, 5 buttons, glance
-fenix8pro47mm.resourcePath = $(base.resourcePath);resources-touch-button;resources-highcolor
+fenix8pro47mm.resourcePath = $(base.resourcePath);resources-touch-button;resources-highcolor;resources-toast
 fenix8pro47mm.excludeAnnotations = regularVersion;withoutBackground;withoutHighColor
 
 # fēnix® 8 Solar 47mm
 # Round Display, background capability, 260x260 64 color touch display, 5 buttons, glance
-fenix8solar47mm.resourcePath = $(base.resourcePath);resources-touch-button;resources-small
+fenix8solar47mm.resourcePath = $(base.resourcePath);resources-touch-button;resources-small;resources-toast
 fenix8solar47mm.excludeAnnotations = regularVersion;withoutBackground;withHighColor
 
 # fēnix® 8 Solar 51mm / tactix® 8 Solar 51mm
 # Round Display, background capability, 280x280 64 color touch display, 5 buttons, glance
-fenix8solar51mm.resourcePath = $(base.resourcePath);resources-touch-button;resources-small
+fenix8solar51mm.resourcePath = $(base.resourcePath);resources-touch-button;resources-small;resources-toast
 fenix8solar51mm.excludeAnnotations = regularVersion;withoutBackground;withHighColor
 
 # fēnix® Chronos
@@ -251,17 +251,17 @@ fenixchronos.excludeAnnotations = regularVersion;withBackground;withGlance;withH
 
 # fēnix® E
 # Round Display, background capability, 416x416 AMOLED touch display, 5 buttons, glance
-fenixe.resourcePath = $(base.resourcePath);resources-touch-button;resources-highcolor
+fenixe.resourcePath = $(base.resourcePath);resources-touch-button;resources-highcolor;resources-toast
 fenixe.excludeAnnotations = regularVersion;withoutBackground;withoutHighColor
 
 # Forerunner® 165
 # Round Display, background capability, 390x390 AMOLED touch display, 5 buttons, glance
-fr165.resourcePath = $(base.resourcePath);resources-touch-button;resources-highcolor
+fr165.resourcePath = $(base.resourcePath);resources-touch-button;resources-highcolor;resources-toast
 fr165.excludeAnnotations = regularVersion;withoutBackground;withoutHighColor
 
 # Forerunner® 165 Music
 # Round Display, background capability, 390x390 AMOLED touch display, 5 buttons, glance
-fr165m.resourcePath = $(base.resourcePath);resources-touch-button;resources-highcolor
+fr165m.resourcePath = $(base.resourcePath);resources-touch-button;resources-highcolor;resources-toast
 fr165m.excludeAnnotations = regularVersion;withoutBackground;withoutHighColor
 
 # Forerunner® 245
@@ -276,42 +276,42 @@ fr245m.excludeAnnotations = regularVersion;withBackground;withGlance;withHighCol
 
 # Forerunner® 255
 # Round Display, no background capability, 260x260 64 color display, 5 buttons, no glance
-fr255.resourcePath = $(base.resourcePath);resources-small
+fr255.resourcePath = $(base.resourcePath);resources-small;resources-toast
 fr255.excludeAnnotations = regularVersion;withBackground;withGlance;withHighColor
 
 # Forerunner® 255 Music
 # Round Display, no background capability, 260x260 64 color display, 5 buttons, no glance
-fr255m.resourcePath = $(base.resourcePath);resources-small
+fr255m.resourcePath = $(base.resourcePath);resources-small;resources-toast
 fr255m.excludeAnnotations = regularVersion;withBackground;withGlance;withHighColor
 
 # Forerunner® 255s
 # Round Display, no background capability, 218x218 64 color display, 5 buttons, no glance
-fr255s.resourcePath = $(base.resourcePath);resources-small
+fr255s.resourcePath = $(base.resourcePath);resources-small;resources-toast
 fr255s.excludeAnnotations = regularVersion;withBackground;withGlance;withHighColor
 
 # Forerunner® 255s Music
 # Round Display, no background capability, 218x218 64 color display, 5 buttons, no glance
-fr255sm.resourcePath = $(base.resourcePath);resources-small
+fr255sm.resourcePath = $(base.resourcePath);resources-small;resources-toast
 fr255sm.excludeAnnotations = regularVersion;withBackground;withGlance;withHighColor
 
 # Forerunner® 570 42mm
 # Round Display, background capability, 390 x 390 AMOLED touch display, 5 buttons, glance
-fr57042mm.resourcePath = $(base.resourcePath);resources-touch-button
+fr57042mm.resourcePath = $(base.resourcePath);resources-touch-button;resources-toast
 fr57042mm.excludeAnnotations = regularVersion;withoutBackground;withoutHighColor
 
 # Forerunner® 570 47mm
 # Round Display, background capability, 454 x 454 AMOLED touch display, 5 buttons, glance
-fr57047mm.resourcePath = $(base.resourcePath);resources-touch-button;resources-highcolor
+fr57047mm.resourcePath = $(base.resourcePath);resources-touch-button;resources-highcolor;resources-toast
 fr57047mm.excludeAnnotations = regularVersion;withoutBackground;withoutHighColor
 
 # Forerunner® 265
 # Round Display, background capability, 416x416 AMOLED touch display, 5 buttons, glance
-fr265.resourcePath = $(base.resourcePath);resources-touch-button;resources-highcolor
+fr265.resourcePath = $(base.resourcePath);resources-touch-button;resources-highcolor;resources-toast
 fr265.excludeAnnotations = regularVersion;withoutBackground;withoutHighColor
 
 # Forerunner® 265s
 # Round Display, background capability, 360x360 AMOLED touch display, 5 buttons, glance
-fr265s.resourcePath = $(base.resourcePath);resources-touch-button;resources-highcolor
+fr265s.resourcePath = $(base.resourcePath);resources-touch-button;resources-highcolor;resources-toast
 fr265s.excludeAnnotations = regularVersion;withoutBackground;withoutHighColor
 
 # Forerunner® 645
@@ -341,32 +341,32 @@ fr945.excludeAnnotations = regularVersion;withBackground;withGlance;withHighColo
 
 # Forerunner® 945 LTE
 # Round Display, background capability, 240x240 64 color display, 5 buttons, no glance
-fr945lte.resourcePath = $(base.resourcePath);resources-small
+fr945lte.resourcePath = $(base.resourcePath);resources-small;resources-toast
 fr945lte.excludeAnnotations = regularVersion;withoutBackground;withGlance;withHighColor
 
 # Forerunner® 955 / Solar
 # Round Display, background capability, 260x260 64 color touch display, 5 buttons, glance
-fr955.resourcePath = $(base.resourcePath);resources-touch-button;resources-small
+fr955.resourcePath = $(base.resourcePath);resources-touch-button;resources-small;resources-toast
 fr955.excludeAnnotations = regularVersion;withoutBackground;withHighColor
 
 # Forerunner® 965
 # Round Display, background capability, 454x454 AMOLED touch display, 5 buttons, glance
-fr965.resourcePath = $(base.resourcePath);resources-touch-button;resources-highcolor
+fr965.resourcePath = $(base.resourcePath);resources-touch-button;resources-highcolor;resources-toast
 fr965.excludeAnnotations = regularVersion;withoutBackground;withoutHighColor
 
 # Forerunner® 970
 # Round Display, background capability, 454 x 454 AMOLED touch display, 5 buttons, glance
-fr970.resourcePath = $(base.resourcePath);resources-touch-button;resources-highcolor
+fr970.resourcePath = $(base.resourcePath);resources-touch-button;resources-highcolor;resources-toast
 fr970.excludeAnnotations = regularVersion;withoutBackground;withoutHighColor
 
 # Instinct® 3 AMOLED 45mm
 # Round Display, background capability, 390x390 AMOLED display, 5 buttons, glance
-instinct3amoled45mm.resourcePath = $(base.resourcePath);resources-highcolor
+instinct3amoled45mm.resourcePath = $(base.resourcePath);resources-highcolor;resources-toast
 instinct3amoled45mm.excludeAnnotations = regularVersion;withoutBackground;withoutHighColor
 
 # Instinct® 3 AMOLED 50mm
 # Round Display, background capability, 416x416 AMOLED display, 5 buttons, glance
-instinct3amoled50mm.resourcePath = $(base.resourcePath);resources-highcolor
+instinct3amoled50mm.resourcePath = $(base.resourcePath);resources-highcolor;resources-toast
 instinct3amoled50mm.excludeAnnotations = regularVersion;withoutBackground;withoutHighColor
 
 # Captain Marvel
@@ -391,52 +391,52 @@ legacysagarey.excludeAnnotations = regularVersion;withoutBackground;withGlance;w
 
 # MARQ® (Gen 2) Athlete / Adventurer / Captain / Golfer / Carbon Edition / Commander - Carbon Edition
 # Round Display, background capability, 390x390 AMOLED touch display, 5 buttons, glance
-marq2.resourcePath = $(base.resourcePath);resources-touch-button;resources-highcolor
+marq2.resourcePath = $(base.resourcePath);resources-touch-button;resources-highcolor;resources-toast
 marq2.excludeAnnotations = regularVersion;withoutBackground;withoutHighColor
 
 # MARQ® (Gen 2) Aviator
 # Round Display, background capability, 390x390 AMOLED touch display, 5 buttons, glance
-marq2aviator.resourcePath = $(base.resourcePath);resources-touch-button;resources-highcolor
+marq2aviator.resourcePath = $(base.resourcePath);resources-touch-button;resources-highcolor;resources-toast
 marq2aviator.excludeAnnotations = regularVersion;withoutBackground;withoutHighColor
 
 # MARQ® Adventurer
 # Round Display, no background capability, 240x240 64 color display, 5 buttons, no glance
-marqadventurer.resourcePath = $(base.resourcePath);resources-small
+marqadventurer.resourcePath = $(base.resourcePath);resources-small;resources-toast
 marqadventurer.excludeAnnotations = regularVersion;withBackground;withGlance;withHighColor
 
 # MARQ® Athlete
 # Round Display, no background capability, 240x240 64 color display, 5 buttons, no glance
-marqathlete.resourcePath = $(base.resourcePath);resources-small
+marqathlete.resourcePath = $(base.resourcePath);resources-small;resources-toast
 marqathlete.excludeAnnotations = regularVersion;withBackground;withGlance;withHighColor
 
 # MARQ® Aviator
 # Round Display, no background capability, 240x240 64 color display, 5 buttons, no glance
-marqaviator.resourcePath = $(base.resourcePath);resources-small
+marqaviator.resourcePath = $(base.resourcePath);resources-small;resources-toast
 marqaviator.excludeAnnotations = regularVersion;withBackground;withGlance;withHighColor
 
 # MARQ® Captain / MARQ® Captain: American Magic Edition
 # Round Display, no background capability, 240x240 64 color display, 5 buttons, no glance
-marqcaptain.resourcePath = $(base.resourcePath);resources-small
+marqcaptain.resourcePath = $(base.resourcePath);resources-small;resources-toast
 marqcaptain.excludeAnnotations = regularVersion;withBackground;withGlance;withHighColor
 
 # MARQ® Commander
 # Round Display, no background capability, 240x240 64 color display, 5 buttons, no glance
-marqcommander.resourcePath = $(base.resourcePath);resources-small
+marqcommander.resourcePath = $(base.resourcePath);resources-small;resources-toast
 marqcommander.excludeAnnotations = regularVersion;withBackground;withGlance;withHighColor
 
 # MARQ® Driver
 # Round Display, no background capability, 240x240 64 color display, 5 buttons, no glance
-marqdriver.resourcePath = $(base.resourcePath);resources-small
+marqdriver.resourcePath = $(base.resourcePath);resources-small;resources-toast
 marqdriver.excludeAnnotations = regularVersion;withBackground;withGlance;withHighColor
 
 # MARQ® Expedition
 # Round Display, no background capability, 240x240 64 color display, 5 buttons, no glance
-marqexpedition.resourcePath = $(base.resourcePath);resources-small
+marqexpedition.resourcePath = $(base.resourcePath);resources-small;resources-toast
 marqexpedition.excludeAnnotations = regularVersion;withBackground;withGlance;withHighColor
 
 # MARQ® Golfer
 # Round Display, no background capability, 240x240 64 color display, 5 buttons, no glance
-marqgolfer.resourcePath = $(base.resourcePath);resources-small
+marqgolfer.resourcePath = $(base.resourcePath);resources-small;resources-toast
 marqgolfer.excludeAnnotations = regularVersion;withBackground;withGlance;withHighColor
 
 # Venu®
@@ -446,37 +446,37 @@ venu.excludeAnnotations = regularVersion;withoutBackground;withGlance;withoutHig
 
 # Venu® 2
 # Round Display, background capability, 416x416 AMOLED touch display, 3 buttons, glance
-venu2.resourcePath = $(base.resourcePath);resources-touch;resources-highcolor
+venu2.resourcePath = $(base.resourcePath);resources-touch;resources-highcolor;resources-toast
 venu2.excludeAnnotations = regularVersion;withoutBackground;withoutHighColor
 
 # Venu® 2 Plus
 # Round Display, background capability, 416x416 AMOLED touch display, 3 buttons, glance
-venu2plus.resourcePath = $(base.resourcePath);resources-touch;resources-highcolor
+venu2plus.resourcePath = $(base.resourcePath);resources-touch;resources-highcolor;resources-toast
 venu2plus.excludeAnnotations = regularVersion;withoutBackground;withoutHighColor
 
 # Venu® 2S
 # Round Display, background capability, 360x360 AMOLED touch display, 2 buttons, glance
-venu2s.resourcePath = $(base.resourcePath);resources-touch;resources-highcolor
+venu2s.resourcePath = $(base.resourcePath);resources-touch;resources-highcolor;resources-toast
 venu2s.excludeAnnotations = regularVersion;withoutBackground;withoutHighColor
 
 # Venu® 3
 # Round Display, background capability, 454x454 AMOLED touch display, 3 buttons, glance
-venu3.resourcePath = $(base.resourcePath);resources-touch;resources-highcolor
+venu3.resourcePath = $(base.resourcePath);resources-touch;resources-highcolor;resources-toast
 venu3.excludeAnnotations = regularVersion;withoutBackground;withoutHighColor
 
 # Venu® 3S
 # Round Display, background capability, 390x390 AMOLED touch display, 3 buttons, glance
-venu3s.resourcePath = $(base.resourcePath);resources-touch;resources-highcolor
+venu3s.resourcePath = $(base.resourcePath);resources-touch;resources-highcolor;resources-toast
 venu3s.excludeAnnotations = regularVersion;withoutBackground;withoutHighColor
 
 # Venu® 4 41mm
 # Round Display, background capability, 390x390 AMOLED touch display, 2 buttons, glance
-venu441mm.resourcePath = $(base.resourcePath);resources-touch;resources-highcolor
+venu441mm.resourcePath = $(base.resourcePath);resources-touch;resources-highcolor;resources-toast
 venu441mm.excludeAnnotations = regularVersion;withoutBackground;withoutHighColor
 
 # Venu® 4 45mm / D2™ Air X15
 # Round Display, background capability, 454x454 AMOLED touch display, 2 buttons, glance
-venu445mm.resourcePath = $(base.resourcePath);resources-touch;resources-highcolor
+venu445mm.resourcePath = $(base.resourcePath);resources-touch;resources-highcolor;resources-toast
 venu445mm.excludeAnnotations = regularVersion;withoutBackground;withoutHighColor
 
 # Venu® Mercedes-Benz® Collection
@@ -491,12 +491,12 @@ venusq.excludeAnnotations = roundVersion;withBackground;withGlance;withoutHighCo
 
 # Venu® Sq 2
 # Rectangular Display, background capability, 320x360 AMOLED touch display, 2 buttons, glance
-venusq2.resourcePath = $(base.resourcePath);resources-touch;resources-highcolor
+venusq2.resourcePath = $(base.resourcePath);resources-touch;resources-highcolor;resources-toast
 venusq2.excludeAnnotations = roundVersion;withoutBackground;withoutHighColor
 
 # Venu® Sq 2 Music
 # Rectangular Display, background capability, 320x360 AMOLED touch display, 2 buttons, glance
-venusq2m.resourcePath = $(base.resourcePath);resources-touch;resources-highcolor
+venusq2m.resourcePath = $(base.resourcePath);resources-touch;resources-highcolor;resources-toast
 venusq2m.excludeAnnotations = roundVersion;withoutBackground;withoutHighColor
 
 # Venu® Sq. Music Edition
@@ -506,7 +506,7 @@ venusqm.excludeAnnotations = roundVersion;withoutBackground;withGlance;withoutHi
 
 # Venu® X1
 # Rectangular Display, background capability, 448 x 486 AMOLED display, 2 buttons, with glance and high-color support
-venux1.resourcePath = $(base.resourcePath);resources-touch;resources-highcolor
+venux1.resourcePath = $(base.resourcePath);resources-touch;resources-highcolor;resources-toast
 venux1.excludeAnnotations = roundVersion;withoutBackground;withoutHighColor
 
 # vívoactive® 3
@@ -536,10 +536,10 @@ vivoactive4s.excludeAnnotations = regularVersion;withoutBackground;withGlance;wi
 
 # vívoactive® 5
 # Round Display, background capability, 390x390 AMOLED touch display, 2 buttons, glance
-vivoactive5.resourcePath = $(base.resourcePath);resources-touch;resources-highcolor
+vivoactive5.resourcePath = $(base.resourcePath);resources-touch;resources-highcolor;resources-toast
 vivoactive5.excludeAnnotations = regularVersion;withoutBackground;withoutHighColor
 
 #vívoactive® 6
 # Round Display, background capability, 390x390 AMOLED touch display, 2 buttons, glance
-vivoactive6.resourcePath = $(base.resourcePath);resources-touch;resources-highcolor
+vivoactive6.resourcePath = $(base.resourcePath);resources-touch;resources-highcolor;resources-toast
 vivoactive6.excludeAnnotations = regularVersion;withoutBackground;withoutHighColor

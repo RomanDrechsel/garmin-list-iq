@@ -15,19 +15,22 @@ module Helper {
             if (WatchUi has :showToast) {
                 var str = Application.loadResource(msg_id);
 
-                if (type == SUCCESS) {
-                    WatchUi.showToast(str, { :icon => Rez.Drawables.Success });
-                } else if (type == ERROR) {
-                    WatchUi.showToast(str, { :icon => Rez.Drawables.Error });
-                } else if (type == ATTENTION) {
-                    WatchUi.showToast(str, { :icon => Rez.Drawables.Attention });
+                var options = null;
+                if (type == SUCCESS && Rez.Drawables has :Success) {
+                    options = { :icon => Rez.Drawables.Success };
+                } else if (type == ERROR && Rez.Drawables has :Error) {
+                    options = { :icon => Rez.Drawables.Error };
+                } else if (type == ATTENTION && Rez.Drawables has :Attention) {
+                    options = { :icon => Rez.Drawables.Attention };
                 }
+
+                WatchUi.showToast(str, options);
             }
 
             if (Attention has :vibrate) {
                 var length = 100;
                 if (type == ERROR) {
-                    length = 1000;
+                    length = 500;
                 }
 
                 Attention.vibrate([new Attention.VibeProfile(50, length)]);

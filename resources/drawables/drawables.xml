@@ -1,8 +1,5 @@
 <drawables>
     <bitmap id="LauncherIcon" filename="launcher_icon.png" />
-    <bitmap id="Attention" filename="Attention.png" packingFormat="default" />
-    <bitmap id="Error" filename="Error.png" packingFormat="default" />
-    <bitmap id="Success" filename="Success.png" packingFormat="default" />
     <bitmap id="Item" filename="Item.png" packingFormat="default" />
     <bitmap id="ItemDone" filename="ItemDone.png" packingFormat="default" />
     <bitmap id="bItem" filename="bItem.png" packingFormat="default" />

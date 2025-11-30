@@ -1,0 +1,5 @@
+<drawables>
+    <bitmap id="Attention" filename="Attention.png" packingFormat="default" />
+    <bitmap id="Error" filename="Error.png" packingFormat="default" />
+    <bitmap id="Success" filename="Success.png" packingFormat="default" />
+</drawables>

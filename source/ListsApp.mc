@@ -44,7 +44,7 @@ class ListsApp extends Application.AppBase {
 
     public function getInitialView() as [WatchUi.Views] or [WatchUi.Views, WatchUi.InputDelegates] {
         self.AppType = APP;
-        Application.Properties.setValue("appVersion", "2025.11.3001");
+        Application.Properties.setValue("appVersion", "2025.11.3002");
 
         self.configureOldDevicesAfterInstall();
 

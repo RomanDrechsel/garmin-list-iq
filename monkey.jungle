@@ -64,6 +64,11 @@ d2mach1.excludeAnnotations = regularVersion;withoutBackground;withoutHighColor
 d2mach2.resourcePath = $(base.resourcePath);resources-touch-button;resources-highcolor;resources-toast
 d2mach2.excludeAnnotations = regularVersion;withoutBackground;withoutHighColor
 
+# D2™ Mach 2 Pro
+# Round Display, background capability, 454 x 454 AMOLED touch display, 5 buttons, glance
+d2mach2pro.resourcePath =  $(base.resourcePath);resources-touch-button;resources-highcolor;resources-toast
+d2mach2pro.excludeAnnotations = regularVersion;withoutBackground;withoutHighColor
+
 # Descent™ G2
 # Round Display, background capability, 390x390 AMOLED touch display, 5 buttons, glance
 descentg2.resourcePath = $(base.resourcePath);resources-touch-button;resources-highcolor;resources-toast
@@ -254,6 +259,11 @@ fenixchronos.excludeAnnotations = regularVersion;withBackground;withGlance;withH
 fenixe.resourcePath = $(base.resourcePath);resources-touch-button;resources-highcolor;resources-toast
 fenixe.excludeAnnotations = regularVersion;withoutBackground;withoutHighColor
 
+# Forerunner® 70
+# Round Display, background capability, 390x390 AMOLED touch display, 5 buttons, glance
+fr70.resourcePath = $(base.resourcePath);resources-touch-button;resources-highcolor;resources-toast
+fr70.excludeAnnotations = regularVersion;withoutBackground;withoutHighColor
+
 # Forerunner® 165
 # Round Display, background capability, 390x390 AMOLED touch display, 5 buttons, glance
 fr165.resourcePath = $(base.resourcePath);resources-touch-button;resources-highcolor;resources-toast
@@ -263,6 +273,16 @@ fr165.excludeAnnotations = regularVersion;withoutBackground;withoutHighColor
 # Round Display, background capability, 390x390 AMOLED touch display, 5 buttons, glance
 fr165m.resourcePath = $(base.resourcePath);resources-touch-button;resources-highcolor;resources-toast
 fr165m.excludeAnnotations = regularVersion;withoutBackground;withoutHighColor
+
+# Forerunner® 170
+# Round Display, background capability, 390x390 AMOLED touch display, 5 buttons, glance
+fr170.resourcePath = $(base.resourcePath);resources-touch-button;resources-highcolor;resources-toast
+fr170.excludeAnnotations = regularVersion;withoutBackground;withoutHighColor
+
+# Forerunner® 170 Music
+# Round Display, background capability, 390x390 AMOLED touch display, 5 buttons, glance
+fr170m.resourcePath = $(base.resourcePath);resources-touch-button;resources-highcolor;resources-toast
+fr170m.excludeAnnotations = regularVersion;withoutBackground;withoutHighColor
 
 # Forerunner® 245
 # Round Display, no background capability, 240x240 64 color display, 5 buttons, no glance

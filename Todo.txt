@@ -4,28 +4,7 @@ adb -e forward tcp:7381 tcp:7381
 For Smartphone
 adb -d forward tcp:7381 tcp:7381
 
+
+
+TODO: new App-Icon
 TODO: notes function
-
-1 Button, 64 Color:
-
--   Vivoactive 3
-
-Touch, Square, 2 Buttons:
-
--   Venu Sq2
-
-no Touch, Round, 5 Buttons:
-
--   instinct3amoled50mm
-
-Touch, Round, 5 Buttons:
-
--   fenix847mm
-
-Touch, Round, 5 Buttons, 64 Colors:
-
--   Forerunner 955
-
-64 Colors
-
--   Vivoactive 3

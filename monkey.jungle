@@ -249,6 +249,41 @@ fenix8solar47mm.excludeAnnotations = regularVersion;withoutBackground;withHighCo
 fenix8solar51mm.resourcePath = $(base.resourcePath);resources-touch-button;resources-small;resources-toast
 fenix8solar51mm.excludeAnnotations = regularVersion;withoutBackground;withHighColor
 
+# fēnix® 9 43mm
+# Round Display, background capability, 416x416 AMOLED touch display, 5 buttons, glance
+fenix943mm.resourcePath = $(base.resourcePath);resources-touch-button;resources-highcolor;resources-toast
+fenix943mm.excludeAnnotations = regularVersion;withoutBackground;withoutHighColor
+
+# fēnix® 9 47mm / 51mm
+# Round Display, background capability, 454x454 AMOLED touch display, 5 buttons, glance
+fenix947mm.resourcePath = $(base.resourcePath);resources-touch-button;resources-highcolor;resources-toast
+fenix947mm.excludeAnnotations = regularVersion;withoutBackground;withoutHighColor
+
+# fēnix® 9 Pro 43mm
+# Round Display, background capability, 416x416 AMOLED touch display, 5 buttons, glance
+fenix9pro43mm.resourcePath = $(base.resourcePath);resources-touch-button;resources-highcolor;resources-toast
+fenix9pro43mm.excludeAnnotations = regularVersion;withoutBackground;withoutHighColor
+
+# fēnix® 9 Pro 47mm
+# Round Display, background capability, 454x454 AMOLED touch display, 5 buttons, glance
+fenix9pro47mm.resourcePath = $(base.resourcePath);resources-touch-button;resources-highcolor;resources-toast
+fenix9pro47mm.excludeAnnotations = regularVersion;withoutBackground;withoutHighColor
+
+# fēnix® 9 Pro 51mm
+# Round Display, background capability, 466x466 AMOLED touch display, 5 buttons, glance
+fenix9pro51mm.resourcePath = $(base.resourcePath);resources-touch-button;resources-highcolor;resources-toast
+fenix9pro51mm.excludeAnnotations = regularVersion;withoutBackground;withoutHighColor
+
+# fēnix® 9 Pro Solar 47mm
+# Round Display, background capability, 260x260 64 color touch display, 5 buttons, glance
+fenix9prosolar47mm.resourcePath = $(base.resourcePath);resources-touch-button;resources-small
+fenix9prosolar47mm.excludeAnnotations = regularVersion;withoutBackground;withHighColor
+
+# fēnix® 9 Pro Solar 51mm
+# Round Display, background capability, 280x280 64 color touch display, 5 buttons, glance
+fenix9prosolar51mm.resourcePath = $(base.resourcePath);resources-touch-button;resources-small
+fenix9prosolar51mm.excludeAnnotations = regularVersion;withoutBackground;withHighColor
+
 # fēnix® Chronos
 # Round Display, no background capability, 218x218 64 color display, 5 buttons, no glance
 fenixchronos.resourcePath = $(base.resourcePath);resources-small
